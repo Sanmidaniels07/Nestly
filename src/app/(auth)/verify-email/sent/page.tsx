@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { MailCheck, ArrowLeft, RefreshCw } from "lucide-react";
@@ -7,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 
 import Button from "@/src/components/ui/button";
 
-export default function VerifyEmailSentPage() {
+function VerifyEmailSentContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email");
 
@@ -74,5 +75,14 @@ export default function VerifyEmailSentPage() {
         </div>
       </motion.div>
     </div>
+    
+  );
+}
+
+export default function VerifyEmailSentPage() {
+  return (
+    <Suspense fallback={null}>
+      <VerifyEmailSentContent />
+    </Suspense>
   );
 }
