@@ -47,7 +47,7 @@ export const useLogin = () => {
 
       if (!user.isVerified) {
         router.push(
-          `/verify-email-sent?email=${encodeURIComponent(
+          `/verify-email/sent?email=${encodeURIComponent(
             user.email
           )}`
         );
