@@ -1,19 +1,18 @@
 import { api } from "../lib/axios";
-import { LoginPayload, ResetPasswordPayload, SignupPayload } from "../types/auth";
+import { AuthResponse, LoginPayload, ResetPasswordPayload, SignupPayload } from "../types/auth";
 
 
-export const login =
-  async (
-    data: LoginPayload
-  ) => {
-    const response =
-      await api.post(
-        "/auth/login",
-        data
-      );
+export const login = async (
+  data: LoginPayload
+): Promise<AuthResponse> => {
+  const response =
+    await api.post<AuthResponse>(
+      "/auth/login",
+      data
+    );
 
-    return response.data;
-  };
+  return response.data;
+};
 
 export const signup =
   async (

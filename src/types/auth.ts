@@ -3,6 +3,7 @@ export interface User {
   name: string;
   email: string;
   role: "USER" | "ADMIN";
+  isVerified: boolean;
 }
 
 export interface LoginPayload {
@@ -29,4 +30,9 @@ export interface AuthResponse {
 export interface ResetPasswordPayload {
   token: string;
   password: string;
+}
+
+export interface ApiErrorResponse {
+  success: boolean;
+  message: string;
 }
