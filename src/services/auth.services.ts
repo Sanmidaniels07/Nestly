@@ -74,7 +74,7 @@ export const resetPassword =
   ) => {
     const response =
       await api.post(
-        "/verify-email/resend",
+        "/verify-email/resend-verification",
         {
           email,
         }
