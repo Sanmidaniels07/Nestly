@@ -9,6 +9,7 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Sparkles, User, Mail, Lock, LockKeyhole } from "lucide-react";
+import GuestGuard from "@/src/components/guards/GuestGuard";
 
 export default function SignupPage() {
   const {
@@ -30,9 +31,9 @@ export default function SignupPage() {
   };
 
   return (
+    <GuestGuard>
     <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center pt-20 pb-12 px-6">
       <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
-        {/* Left Side - Visual / Branding */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
@@ -145,5 +146,6 @@ export default function SignupPage() {
         </motion.div>
       </div>
     </div>
+    </GuestGuard>
   );
 }

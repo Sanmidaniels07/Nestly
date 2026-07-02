@@ -9,6 +9,7 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { useForgotPassword } from "@/src/hooks/use-forgot-password";
 import { forgotPasswordSchema, ForgotPasswordValues } from "@/src/lib/validations/auth";
+import GuestGuard from "@/src/components/guards/GuestGuard";
 
 
 export default function ForgotPasswordPage() {
@@ -27,6 +28,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
+    <GuestGuard>
     <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center p-6 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -75,5 +77,6 @@ export default function ForgotPasswordPage() {
         </div>
       </motion.div>
     </div>
+    </GuestGuard>
   );
 }

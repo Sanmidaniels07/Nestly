@@ -4,9 +4,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Users, Sparkles } from "lucide-react";
 import LoginForm from "@/src/components/auth/LoginForm";
+import GuestGuard from "@/src/components/guards/GuestGuard";
 
 export default function LoginPage() {
   return (
+      <GuestGuard>
     <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center p-6">
       <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
         {/* Left Side - Visual */}
@@ -74,5 +76,7 @@ export default function LoginPage() {
         </motion.div>
       </div>
     </div>
+        </GuestGuard>
+
   );
 }
