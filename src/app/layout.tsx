@@ -2,6 +2,7 @@ import Navbar from "../components/ui/navbar";
 import "./globals.css";
 import Providers from "./providers";
 import { Toaster } from "react-hot-toast";
+import { fraunces, jetbrainsMono } from "@/src/lib/fonts";
 
 
 export default function RootLayout({
@@ -10,7 +11,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning   className={`${fraunces.variable} ${jetbrainsMono.variable}`}
+>
       <body>
         <Providers>
           <Navbar/>
