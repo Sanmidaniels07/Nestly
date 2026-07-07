@@ -35,3 +35,30 @@ body {
   background: var(--background);
   color: var(--foreground);
 }
+
+/* Hover-reveal scrollbar — invisible by default, visible only while hovering the scroll container */
+.hover-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+.hover-scroll:hover {
+  scrollbar-color: rgba(124, 58, 237, 0.25) transparent;
+}
+
+.hover-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hover-scroll::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  border-radius: 999px;
+}
+
+.hover-scroll:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(124, 58, 237, 0.25);
+}
+
+.hover-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
