@@ -3,6 +3,7 @@
 import Link from "next/link";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import Button from "@/src/components/ui/button";
+import CartButton from "./cart-button";
 
 export default function Navbar() {
   return (
@@ -26,8 +27,10 @@ export default function Navbar() {
           </a>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-3">
           <ThemeToggle />
+
+          <CartButton />
           <Link href="/login">
             <Button variant="outline" size="sm" className="hidden sm:flex">
               Log in

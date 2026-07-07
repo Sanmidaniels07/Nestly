@@ -6,4 +6,6 @@ export interface CartItem {
   quantity: number;
 
   selected: boolean;
+
+  
 }

@@ -7,6 +7,9 @@ import { MarketplaceProduct } from "@/src/mocks/marketplace";
 import QuantitySelector from "./buy-box-components/quantity-selector";
 import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
+import { useRouter } from "next/navigation";
+
+import { useCartStore } from "@/src/store/cart-store";
 
 interface Props {
   product: MarketplaceProduct;
@@ -25,13 +28,31 @@ export default function BuyBox({ product }: Props) {
   const [added, setAdded] = useState(false);
   const [saved, setSaved] = useState(false);
 
+  const router = useRouter();
+
+  const addToCart = useCartStore((state) => state.addToCart);
+
   const outOfStock = product.stock === 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
 
   const handleAddToCart = () => {
     if (outOfStock) return;
+
+    addToCart(product, quantity);
+
     setAdded(true);
-    setTimeout(() => setAdded(false), 2000);
+
+    setTimeout(() => {
+      setAdded(false);
+    }, 2000);
+  };
+
+  const handleBuyNow = () => {
+    if (outOfStock) return;
+
+    addToCart(product, quantity);
+
+    router.push("/marketplace/checkout");
   };
 
   return (
@@ -51,25 +72,37 @@ export default function BuyBox({ product }: Props) {
         <div className="mt-2.5 flex items-center gap-1.5">
           <span
             className={`h-1.5 w-1.5 rounded-full ${
-              outOfStock ? "bg-red-500" : lowStock ? "bg-amber-500" : "bg-emerald-500"
+              outOfStock
+                ? "bg-red-500"
+                : lowStock
+                  ? "bg-amber-500"
+                  : "bg-emerald-500"
             }`}
           />
           <span
             className={`text-[13px] font-medium ${
-              outOfStock ? "text-red-600" : lowStock ? "text-amber-600" : "text-emerald-600"
+              outOfStock
+                ? "text-red-600"
+                : lowStock
+                  ? "text-amber-600"
+                  : "text-emerald-600"
             }`}
           >
             {outOfStock
               ? "Out of stock"
               : lowStock
-              ? `Only ${product.stock} left`
-              : "In stock"}
+                ? `Only ${product.stock} left`
+                : "In stock"}
           </span>
         </div>
       </div>
 
       {!outOfStock && (
-        <QuantitySelector quantity={quantity} setQuantity={setQuantity} stock={product.stock} />
+        <QuantitySelector
+          quantity={quantity}
+          setQuantity={setQuantity}
+          stock={product.stock}
+        />
       )}
 
       <DeliveryEstimate product={product} />
@@ -77,7 +110,7 @@ export default function BuyBox({ product }: Props) {
       <div className="space-y-2.5">
         <button
           onClick={handleAddToCart}
-          disabled={outOfStock}
+          disabled={outOfStock || added}
           className={`
             flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[14px] font-semibold text-white
             transition-all disabled:cursor-not-allowed disabled:opacity-40
@@ -99,6 +132,7 @@ export default function BuyBox({ product }: Props) {
         </button>
 
         <button
+          onClick={handleBuyNow}
           disabled={outOfStock}
           className="w-full rounded-xl border border-violet-600 py-3.5 text-[14px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:border-[#E5E7EB] disabled:text-[#94A3B8] disabled:hover:bg-transparent"
         >
@@ -110,11 +144,16 @@ export default function BuyBox({ product }: Props) {
         <button
           onClick={() => setSaved(!saved)}
           className={`flex flex-1 items-center justify-center rounded-xl border py-2.5 transition-colors ${
-            saved ? "border-red-200 bg-red-50" : "border-[#ECE9F6] hover:bg-[#F8F7FC]"
+            saved
+              ? "border-red-200 bg-red-50"
+              : "border-[#ECE9F6] hover:bg-[#F8F7FC]"
           }`}
           aria-label={saved ? "Remove from saved" : "Save item"}
         >
-          <Heart size={17} className={saved ? "fill-red-500 text-red-500" : "text-[#64748B]"} />
+          <Heart
+            size={17}
+            className={saved ? "fill-red-500 text-red-500" : "text-[#64748B]"}
+          />
         </button>
 
         <button
@@ -133,8 +172,12 @@ export default function BuyBox({ product }: Props) {
             <ShieldCheck size={16} className="text-emerald-600" />
           </div>
           <div>
-            <p className="text-[13px] font-semibold text-[#13131A]">Buyer protection</p>
-            <p className="text-[11.5px] text-[#64748B]">Secure payment and refund support.</p>
+            <p className="text-[13px] font-semibold text-[#13131A]">
+              Buyer protection
+            </p>
+            <p className="text-[11.5px] text-[#64748B]">
+              Secure payment and refund support.
+            </p>
           </div>
         </div>
       </div>
