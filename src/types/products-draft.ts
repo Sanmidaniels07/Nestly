@@ -1,3 +1,5 @@
+import { ProductImage } from "./product-image";
+
 export interface ProductDraft {
   // Step 1
   name: string;
@@ -16,17 +18,32 @@ export interface ProductDraft {
   status: "Active" | "Draft";
 
   // Step 3
- specifications: {
+  specifications: {
     id: string;
     key: string;
     value: string;
-}[];
+  }[];
 
   // Step 4
-  images: File[];
-
+  images: ProductImage[];
   // Step 5
   weight: string;
+
+  length: string;
+
+  width: string;
+
+  height: string;
+
   shippingFee: string;
+
   deliveryTime: string;
+
+  pickupAvailable: boolean;
+
+  deliveryAvailable: boolean;
+
+  freeDelivery: boolean;
+
+  shippingRegions: string[];
 }

@@ -7,11 +7,15 @@ import { ProductDraft } from "@/src/types/products-draft";
 import BasicInformation from "./components/basic-information";
 import PricingInventory from "./components/price-inventory";
 import Specifications from "./components/specification";
+import ProductImages from "./components/product-images";
+import Shipping from "./components/shipping";
+import ReviewPublish from "./components/review-publish";
 
 export default function AddProductPage() {
   const [step, setStep] = useState(1);
 
   const [draft, setDraft] = useState<ProductDraft>({
+    // Step 1
     name: "",
     category: "",
     brand: "",
@@ -20,19 +24,30 @@ export default function AddProductPage() {
     sku: "",
     tags: [],
 
+    // Step 2
     price: "",
     comparePrice: "",
     stock: "",
     lowStock: "",
     status: "Draft",
 
+    // Step 3
     specifications: [],
 
+    // Step 4
     images: [],
 
+    // Step 5
     weight: "",
+    length: "",
+    width: "",
+    height: "",
     shippingFee: "",
     deliveryTime: "",
+    pickupAvailable: false,
+    deliveryAvailable: true,
+    freeDelivery: false,
+    shippingRegions: [],
   });
 
   return (
@@ -42,11 +57,7 @@ export default function AddProductPage() {
       <AddProductStepper currentStep={step} />
 
       {step === 1 && (
-        <BasicInformation
-          draft={draft}
-          setDraft={setDraft}
-          onNext={() => setStep(2)}
-        />
+        <BasicInformation draft={draft} setDraft={setDraft} onNext={() => setStep(2)} />
       )}
 
       {step === 2 && (
@@ -67,25 +78,32 @@ export default function AddProductPage() {
         />
       )}
 
-      {/* {step === 4 && (
+      {step === 4 && (
         <ProductImages
+          draft={draft}
+          setDraft={setDraft}
           onBack={() => setStep(3)}
           onNext={() => setStep(5)}
         />
-      )} */}
+      )}
 
-      {/* {step === 5 && (
+      {step === 5 && (
         <Shipping
+          draft={draft}
+          setDraft={setDraft}
           onBack={() => setStep(4)}
           onNext={() => setStep(6)}
         />
-      )} */}
+      )}
 
-      {/* {step === 6 && (
+      {step === 6 && (
         <ReviewPublish
+          draft={draft}
           onBack={() => setStep(5)}
+          onPublish={() => console.log("Product published")}
+          onSaveDraft={() => console.log("Draft saved")}
         />
-      )} */}
+      )}
     </div>
   );
 }
