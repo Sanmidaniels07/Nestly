@@ -9,7 +9,7 @@ export default function TrendingSellers() {
     <section className="space-y-6">
       <SectionHeader title="Trending sellers" subtitle="Trusted stores"  action={{
           label: "View all",
-          href: "/marketplace/products",
+          href: "/marketplace/seller",
         }}/>
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">

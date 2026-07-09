@@ -1,12 +1,21 @@
-export default function Page() {
+"use client";
+
+import { useState } from "react";
+import SavedHeader from "./components/saved-header";
+import SavedToolbar from "./components/saved-toolbar";
+import SavedGrid from "./components/saved-grid";
+
+
+export default function SavedProductsPage() {
+  const [search, setSearch] = useState("");
+
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-        Coming soon
-      </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
-        This page is still under construction.
-      </p>
-    </section>
+    <div className="mx-auto max-w-[1600px] space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <SavedHeader />
+
+      <SavedToolbar search={search} onSearchChange={setSearch} />
+
+      <SavedGrid search={search} />
+    </div>
   );
 }

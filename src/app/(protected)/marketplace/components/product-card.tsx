@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { Heart, MapPin, BadgeCheck, Star, Truck, Zap } from "lucide-react";
+import { useSavedStore } from "@/src/store/saved-store";
 
 import { MarketplaceProduct } from "@/src/mocks/marketplace";
 
@@ -26,7 +27,13 @@ export default function ProductCard({
   compact = false,
   flashDeal = false,
 }: Props) {
-  const [saved, setSaved] = useState(false);
+  const add = useSavedStore((state) => state.add);
+
+  const remove = useSavedStore((state) => state.remove);
+
+  const isSaved = useSavedStore((state) => state.isSaved);
+
+  const saved = isSaved(product.id);
 
   return (
     <article
@@ -67,7 +74,7 @@ export default function ProductCard({
         </div>
 
         <button
-          onClick={() => setSaved(!saved)}
+          onClick={() => (saved ? remove(product.id) : add(product))}
           aria-label={saved ? "Remove from saved" : "Save item"}
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-transform hover:scale-105"
         >

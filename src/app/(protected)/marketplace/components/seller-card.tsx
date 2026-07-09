@@ -60,7 +60,7 @@ export default function SellerCard({ seller }: Props) {
       </div>
 
       <Link
-        href={`/marketplace/store/${seller.id}`}
+        href={`/marketplace/seller/${seller.id}`}
         className="
           mt-5 flex items-center justify-center gap-2 rounded-xl
           bg-gradient-to-r from-violet-600 to-indigo-600

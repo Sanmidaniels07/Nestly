@@ -4,6 +4,8 @@ import Link from "next/link";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
+import Tooltip from "./tooltip";
+import SavedButton from "./saved-button";
 
 export default function Navbar() {
   return (
@@ -19,18 +21,28 @@ export default function Navbar() {
         </Link>
 
         <div className="hidden items-center gap-8 text-[14px] font-medium md:flex">
-          <a href="#features" className="text-[#64748B] transition-colors hover:text-violet-600">
+          <a
+            href="#features"
+            className="text-[#64748B] transition-colors hover:text-violet-600"
+          >
             Features
           </a>
-          <a href="#preview" className="text-[#64748B] transition-colors hover:text-violet-600">
+          <a
+            href="#preview"
+            className="text-[#64748B] transition-colors hover:text-violet-600"
+          >
             Preview
           </a>
         </div>
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
-
-          <CartButton />
+          <Tooltip label="Saved products">
+            <SavedButton />
+          </Tooltip>
+          <Tooltip label="Cart">
+            <CartButton />
+          </Tooltip>{" "}
           <Link href="/login">
             <Button variant="outline" size="sm" className="hidden sm:flex">
               Log in

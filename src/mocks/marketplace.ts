@@ -1,7 +1,45 @@
+export interface SellerPolicy {
+  returns: string;
+  shipping: string;
+  warranty: string;
+}
+
+export interface SellerSocialLinks {
+  website?: string;
+  facebook?: string;
+  instagram?: string;
+  twitter?: string;
+}
+
+export interface SellerReview {
+  id: string;
+
+  customer: {
+    name: string;
+    avatar: string;
+  };
+
+  rating: number;
+
+  date: string;
+
+  verifiedBuyer: boolean;
+
+  purchasedProduct: string;
+
+  helpful: number;
+
+  comment: string;
+}
+
 export interface MarketplaceSeller {
   id: string;
+
   name: string;
+
   avatar: string;
+
+  coverImage: string;
 
   verified: boolean;
 
@@ -9,17 +47,33 @@ export interface MarketplaceSeller {
 
   reviews: number;
 
-  productsCount: number;
-
   followers: number;
+
+  following: number;
+
+  productsCount: number;
 
   joined: string;
 
   responseRate: number;
 
-  distance: string;
+  responseTime: string;
 
   bio: string;
+
+  email: string;
+
+  phone: string;
+
+  location: string;
+
+  distance: string;
+
+  policies: SellerPolicy;
+
+  socialLinks: SellerSocialLinks;
+
+  reviewsData: SellerReview[];
 }
 
 export interface ProductSpecification {
@@ -98,82 +152,229 @@ export interface ProductReview {
 }
 
 
+
 export const trendingSellers: MarketplaceSeller[] = [
   {
     id: "1",
     name: "Daniel Tech",
-
-    avatar: "https://i.pravatar.cc/150?img=12",
-
+    avatar: "https://i.pravatar.cc/300?img=12",
+    coverImage:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72",
     verified: true,
-
     rating: 4.9,
-
     reviews: 184,
-
-    productsCount: 148,
-
     followers: 3520,
-
+    following: 91,
+    productsCount: 148,
     joined: "2021",
-
     responseRate: 98,
-
+    responseTime: "Within 10 mins",
+    bio:
+      "Premium Apple devices, accessories and professional electronics with nationwide delivery and warranty.",
+    email: "hello@danieltech.ng",
+    phone: "+234 803 000 1122",
+    location: "Lekki, Lagos",
     distance: "2 km",
-
-    bio: "Trusted Apple devices seller with nationwide delivery.",
+    policies: {
+      returns: "Returns accepted within 7 days",
+      shipping: "Nationwide delivery",
+      warranty: "6 Months warranty",
+    },
+    socialLinks: {
+      website: "https://danieltech.ng",
+      instagram: "@danieltech",
+      facebook: "Daniel Tech",
+    },
+    reviewsData: [
+      {
+        id: "1",
+        customer: {
+          name: "John Paul",
+          avatar: "https://i.pravatar.cc/150?img=21",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 14,
+        date: "12 Nov 2025",
+        comment:
+          "Fantastic seller. Product arrived exactly as described and delivery was faster than expected.",
+      },
+      {
+        id: "2",
+        customer: {
+          name: "Sarah Johnson",
+          avatar: "https://i.pravatar.cc/150?img=45",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "iPhone 16 Pro",
+        helpful: 7,
+        date: "6 Nov 2025",
+        comment: "Very responsive seller and excellent packaging. I'll definitely purchase again.",
+      },
+      {
+        id: "3",
+        customer: {
+          name: "Michael James",
+          avatar: "https://i.pravatar.cc/150?img=18",
+        },
+        rating: 4,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 3,
+        date: "28 Oct 2025",
+        comment: "Everything was great. Communication was excellent throughout the purchase.",
+      },
+    ],
   },
-
   {
     id: "2",
-
     name: "Phone World",
-
     avatar: "https://i.pravatar.cc/150?img=33",
-
+    coverImage:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72",
     verified: true,
-
     rating: 4.8,
-
     reviews: 91,
-
-    productsCount: 93,
-
     followers: 2210,
-
+    following: 0,
+    productsCount: 93,
     joined: "2022",
-
     responseRate: 97,
-
+    responseTime: "Within 15 mins",
+    bio: "Smartphones and accessories. Premium mobile devices with great deals.",
+    email: "info@phoneworld.ng",
+    phone: "+234 803 111 2233",
+    location: "Ikeja, Lagos",
     distance: "4 km",
-
-    bio: "Smartphones and accessories.",
+    policies: {
+      returns: "Returns accepted within 5 days",
+      shipping: "Nationwide delivery",
+      warranty: "3 Months warranty",
+    },
+    socialLinks: {
+      website: "https://phoneworld.ng",
+      instagram: "@phoneworld",
+      facebook: "Phone World",
+    },
+    reviewsData: [
+      {
+        id: "1",
+        customer: {
+          name: "John Paul",
+          avatar: "https://i.pravatar.cc/150?img=21",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 14,
+        date: "12 Nov 2025",
+        comment:
+          "Fantastic seller. Product arrived exactly as described and delivery was faster than expected.",
+      },
+      {
+        id: "2",
+        customer: {
+          name: "Sarah Johnson",
+          avatar: "https://i.pravatar.cc/150?img=45",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "iPhone 16 Pro",
+        helpful: 7,
+        date: "6 Nov 2025",
+        comment: "Very responsive seller and excellent packaging. I'll definitely purchase again.",
+      },
+      {
+        id: "3",
+        customer: {
+          name: "Michael James",
+          avatar: "https://i.pravatar.cc/150?img=18",
+        },
+        rating: 4,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 3,
+        date: "28 Oct 2025",
+        comment: "Everything was great. Communication was excellent throughout the purchase.",
+      },
+    ],
   },
-
   {
     id: "3",
-
     name: "Auto Hub",
-
     avatar: "https://i.pravatar.cc/150?img=51",
-
+    coverImage:
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72",
     verified: false,
-
     rating: 4.7,
-
     reviews: 58,
-
-    productsCount: 61,
-
     followers: 980,
-
+    following: 0,
+    productsCount: 61,
     joined: "2023",
-
     responseRate: 92,
-
+    responseTime: "Within 30 mins",
+    bio: "Automobile gadgets and accessories. Quality auto electronics and parts.",
+    email: "hello@autohub.ng",
+    phone: "+234 803 222 3344",
+    location: "Victoria Island, Lagos",
     distance: "6 km",
+    policies: {
+      returns: "Returns accepted within 3 days",
+      shipping: "Nationwide delivery",
+      warranty: "1 Month warranty",
+    },
+    socialLinks: {
+      website: "https://autohub.ng",
+      instagram: "@autohub",
+      facebook: "Auto Hub",
+    },
 
-    bio: "Automobile gadgets and accessories.",
+    reviewsData: [
+      {
+        id: "1",
+        customer: {
+          name: "John Paul",
+          avatar: "https://i.pravatar.cc/150?img=21",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 14,
+        date: "12 Nov 2025",
+        comment:
+          "Fantastic seller. Product arrived exactly as described and delivery was faster than expected.",
+      },
+      {
+        id: "2",
+        customer: {
+          name: "Sarah Johnson",
+          avatar: "https://i.pravatar.cc/150?img=45",
+        },
+        rating: 5,
+        verifiedBuyer: true,
+        purchasedProduct: "iPhone 16 Pro",
+        helpful: 7,
+        date: "6 Nov 2025",
+        comment: "Very responsive seller and excellent packaging. I'll definitely purchase again.",
+      },
+      {
+        id: "3",
+        customer: {
+          name: "Michael James",
+          avatar: "https://i.pravatar.cc/150?img=18",
+        },
+        rating: 4,
+        verifiedBuyer: true,
+        purchasedProduct: "MacBook Pro M3",
+        helpful: 3,
+        date: "28 Oct 2025",
+        comment: "Everything was great. Communication was excellent throughout the purchase.",
+      },
+    ],
+    
   },
 ];
 

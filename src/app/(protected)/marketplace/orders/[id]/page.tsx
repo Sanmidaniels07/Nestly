@@ -1,12 +1,53 @@
-export default function Page() {
+"use client";
+
+import { use } from "react";
+import { notFound } from "next/navigation";
+
+import OrderHeader from "./components/order-header";
+import OrderProgress from "./components/order-progress";
+import ShippingAddress from "./components/shipping-address";
+import PaymentDetails from "./components/payment-details";
+import OrderSummary from "./components/order-summary";
+import OrderActions from "./components/order-actions";
+import SupportCard from "./components/support-card";
+import { getOrderById } from "@/src/mocks/order";
+import OrderTimeline from "./components/order-timeline";
+import OrderedProducts from "./components/ordered-products";
+
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default function OrderDetailsPage({ params }: Props) {
+  const { id } = use(params);
+  const order = getOrderById(id);
+
+  if (!order) {
+    notFound();
+  }
+
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-        Coming soon
-      </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
-        This page is still under construction.
-      </p>
-    </section>
+    <div className="mx-auto max-w-7xl space-y-6 px-5 py-8">
+      <OrderHeader order={order} />
+      <OrderProgress order={order} />
+
+      <div className="grid gap-6 xl:grid-cols-[1.7fr_420px]">
+        <section className="space-y-5">
+          <OrderedProducts order={order} />
+
+          <ShippingAddress order={order} />
+          <OrderTimeline order={order} />
+        </section>
+
+        <aside className="space-y-5">
+          <PaymentDetails order={order} />
+          <OrderSummary order={order} />
+          <OrderActions order={order} />
+          <SupportCard />
+        </aside>
+      </div>
+    </div>
   );
 }

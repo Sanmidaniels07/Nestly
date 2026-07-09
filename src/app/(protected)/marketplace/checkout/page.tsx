@@ -1,12 +1,39 @@
-export default function Page() {
+"use client";
+
+import CheckoutHeader from "./components/checkout-header";
+import CheckoutStepper from "./components/checkout-stepper";
+import CheckoutSummary from "./components/checkout-summary";
+import CouponSection from "./components/coupon-section";
+import DeliveryMethod from "./components/delivery-method";
+import OrderItems from "./components/order-item";
+import ShippingAddress from "./components/shipping-address";
+
+export default function CheckoutPage() {
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-        Coming soon
-      </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
-        This page is still under construction.
-      </p>
-    </section>
+    <div className="mx-auto max-w-7xl space-y-8 px-5 py-8">
+
+      <CheckoutHeader />
+
+      <CheckoutStepper step={2} />
+
+      <div className="grid gap-8 xl:grid-cols-[1.8fr_420px]">
+
+        <section className="space-y-6">
+
+          <ShippingAddress />
+
+          <DeliveryMethod />
+
+          <CouponSection />
+
+          <OrderItems /> 
+
+        </section>
+
+        <CheckoutSummary />
+
+      </div>
+
+    </div>
   );
 }

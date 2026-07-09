@@ -1,12 +1,44 @@
-export default function Page() {
+"use client";
+
+import { use } from "react";
+import { notFound } from "next/navigation";
+
+import { nearbyProducts, trendingSellers } from "@/src/mocks/marketplace";
+import SellerCover from "./components/seller-cover";
+import SellerProfile from "./components/seller-profile";
+import SellerStats from "./components/seller-stats";
+import SellerProducts from "./components/seller-products";
+import SellerReviews from "./components/seller-review";
+import SellerPolicies from "./components/seller-policies";
+import SellerAbout from "./components/seller-about";
+
+interface Props {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export default function SellerStorePage({ params }: Props) {
+  const { id } = use(params);
+
+  const seller = trendingSellers.find((seller) => seller.id === id);
+
+  if (!seller) {
+    notFound();
+  }
+
+  const products = nearbyProducts.filter((product) => product.seller.id === seller.id);
+
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-        Coming soon
-      </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
-        This page is still under construction.
-      </p>
-    </section>
+    <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 lg:px-8">
+      <SellerCover seller={seller} />
+      <SellerProfile seller={seller} />
+      <SellerStats seller={seller} />
+
+      <SellerAbout seller={seller} />
+      <SellerProducts products={products} />
+      <SellerReviews seller={seller} />
+      <SellerPolicies seller={seller} />
+    </div>
   );
 }

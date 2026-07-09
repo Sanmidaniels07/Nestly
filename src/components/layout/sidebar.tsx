@@ -1,33 +1,69 @@
 "use client";
 
 import Link from "next/link";
+import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { navigation } from "@/src/constants/navigation";
 import { cn } from "@/src/lib/utils";
 import { useAuthStore } from "@/src/store/auth-store";
+import SettingsPopover from "./settings-popover";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
 
   const isActive = (href: string) => {
-    if (href === "/dashboard") {
-      return pathname === href;
-    }
+    if (href === "/dashboard") return pathname === href;
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
   return (
-    <aside
-      className="
-        fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px]
-        flex-col border-r border-[#ECE9F6] bg-white/80 backdrop-blur-2xl lg:flex
-      "
-    >
-      {/* Navigation */}
+    <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px] flex-col border-r border-[#ECE9F6] bg-white/80 backdrop-blur-2xl lg:flex">
       <nav className="hover-scroll flex-1 space-y-1 overflow-y-auto px-4 py-6">
         {navigation.map((item) => {
           const active = isActive(item.href);
+          const isSettings = item.href === "/settings";
+
+          if (isSettings) {
+            return (
+              <div key={item.href} className="relative">
+                <button
+                  ref={settingsButtonRef}
+                  onClick={() => setSettingsOpen((prev) => !prev)}
+                  aria-expanded={settingsOpen}
+                  className={cn(
+                    "group relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
+                    settingsOpen || pathname.startsWith("/settings")
+                      ? "bg-violet-50 text-violet-700"
+                      : "text-[#64748B] hover:bg-[#F7F7FB] hover:text-[#13131A]"
+                  )}
+                >
+                  {(settingsOpen || pathname.startsWith("/settings")) && (
+                    <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-gradient-to-b from-violet-600 to-indigo-600" />
+                  )}
+                  <item.icon
+                    size={19}
+                    className={
+                      settingsOpen || pathname.startsWith("/settings")
+                        ? "text-violet-600"
+                        : "text-[#94A3B8] group-hover:text-violet-600"
+                    }
+                  />
+                  <span>{item.title}</span>
+                </button>
+
+                {settingsOpen && (
+                  <SettingsPopover
+                    email={user?.email}
+                    onClose={() => setSettingsOpen(false)}
+                    anchorRef={settingsButtonRef}
+                  />
+                )}
+              </div>
+            );
+          }
 
           return (
             <Link
@@ -44,7 +80,6 @@ export default function Sidebar() {
               {active && (
                 <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-gradient-to-b from-violet-600 to-indigo-600" />
               )}
-
               <item.icon
                 size={19}
                 className={active ? "text-violet-600" : "text-[#94A3B8] group-hover:text-violet-600"}
@@ -55,7 +90,6 @@ export default function Sidebar() {
         })}
       </nav>
 
-      {/* User card */}
       <div className="border-t border-[#F2F1F8] p-4">
         <Link
           href="/profile"
