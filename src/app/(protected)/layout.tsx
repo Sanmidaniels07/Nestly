@@ -1,5 +1,6 @@
 import AppShell
 from "@/src/components/layout/app-shell";
+import AuthGuard from "@/src/components/guards/AuthGuard";
 
 export default function ProtectedLayout({
   children,
@@ -7,8 +8,10 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AppShell>
-      {children}
-    </AppShell>
+    <AuthGuard>
+      <AppShell>
+        {children}
+      </AppShell>
+    </AuthGuard>
   );
 }

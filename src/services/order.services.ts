@@ -39,3 +39,11 @@ export const updateOrderItemStatus = async (orderItemId: string, status: string)
   );
   return response.data;
 };
+
+export const updateOrderTrackingNumber = async (id: string, trackingNumber: string) => {
+  const response = await api.patch<ApiResponse<Order>>(
+    `/orders/seller/${id}/tracking-number`,
+    { trackingNumber }
+  );
+  return response.data;
+};

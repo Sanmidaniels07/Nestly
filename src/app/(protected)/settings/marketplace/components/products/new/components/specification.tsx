@@ -5,6 +5,7 @@ import Button from "@/src/components/ui/button";
 
 import { ProductDraft } from "@/src/types/products-draft";
 import SpecificationRow from "./specification-row";
+import EditProfileTags from "@/src/app/(protected)/profile/components/edit-profile-tags";
 interface Props {
   draft: ProductDraft;
   setDraft: React.Dispatch<React.SetStateAction<ProductDraft>>;
@@ -84,6 +85,17 @@ export default function Specifications({ draft, setDraft, onBack, onNext }: Prop
         <Plus size={15} />
         Add specification
       </button>
+
+      <div className="mt-8 border-t border-[#F2F1F8] pt-6">
+        <EditProfileTags
+          title="Highlights"
+          description="Key selling points buyers see at a glance."
+          values={draft.highlights}
+          onChange={(highlights) => setDraft((prev) => ({ ...prev, highlights }))}
+          placeholder="e.g. Free returns, press Enter"
+          maxTags={10}
+        />
+      </div>
 
       <div className="mt-8 flex justify-between border-t border-[#F2F1F8] pt-6">
         <Button variant="outline" onClick={onBack} className="h-11 rounded-xl px-7">

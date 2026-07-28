@@ -1,14 +1,27 @@
 "use client";
 
 import { use } from "react";
-import { CalendarDays, Users } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { CalendarDays, Globe, MapPin, MessageCircle, Users } from "lucide-react";
+import {
+  FaLinkedin,
+  FaInstagram,
+  FaXTwitter,
+  FaFacebook,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa6";
+import { IconType } from "react-icons";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import { useUserProfile } from "@/src/hooks/use-user-profile";
 import { useFollowStatus } from "@/src/hooks/use-follow-status";
 import { useToggleFollow } from "@/src/hooks/use-toggle-follow";
 import { usePosts } from "@/src/hooks/use-posts";
+import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import FollowButton from "@/src/components/social/follow-button";
+import ReportButton from "@/src/components/ui/report-button";
 import PostCard from "../../feed/main-feed/post-card";
 
 function formatCount(n?: number) {
@@ -31,10 +44,29 @@ export default function UserProfilePage({
   params: Promise<{ identifier: string }>;
 }) {
   const { identifier } = use(params);
+  const router = useRouter();
   const authUser = useAuthStore((state) => state.user);
 
   const { data: user, isLoading } = useUserProfile(identifier);
   const isSelf = !!user && user.id === authUser?.id;
+
+  const { mutate: createConversation, isPending: isStartingChat } = useCreateConversation();
+
+  const handleMessage = () => {
+    if (!user) return;
+    createConversation(user.id, {
+      onSuccess: (response) => router.push(`/messages/${response.data.id}`),
+    });
+  };
+
+  const socialLinks: { href?: string; label: string; icon: IconType }[] = [
+    { href: user?.socialLinks?.twitter, label: "X", icon: FaXTwitter },
+    { href: user?.socialLinks?.instagram, label: "Instagram", icon: FaInstagram },
+    { href: user?.socialLinks?.facebook, label: "Facebook", icon: FaFacebook },
+    { href: user?.socialLinks?.linkedin, label: "LinkedIn", icon: FaLinkedin },
+    { href: user?.socialLinks?.tiktok, label: "TikTok", icon: FaTiktok },
+    { href: user?.socialLinks?.youtube, label: "YouTube", icon: FaYoutube },
+  ];
 
   const { data: postsData } = usePosts(
     { authorId: user?.id, sort: "desc" },
@@ -88,7 +120,25 @@ export default function UserProfilePage({
                 )}
               </div>
 
-              {!isSelf && <FollowStatusButton userId={user.id} />}
+              {!isSelf && (
+                <div className="flex items-center gap-2">
+                  <FollowStatusButton userId={user.id} />
+                  <button
+                    onClick={handleMessage}
+                    disabled={isStartingChat}
+                    className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] px-4 py-2 text-[13px] font-semibold text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-600 disabled:opacity-50"
+                  >
+                    <MessageCircle size={14} />
+                    Message
+                  </button>
+                  <ReportButton
+                    targetType="USER"
+                    targetId={user.id}
+                    label=""
+                    className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
+                  />
+                </div>
+              )}
             </div>
 
             {user.bio && (
@@ -97,13 +147,54 @@ export default function UserProfilePage({
               </p>
             )}
 
-            <div className="mt-4 flex items-center justify-center gap-1.5 text-[13px] text-[#64748B] sm:justify-start">
-              <CalendarDays size={15} />
-              Joined{" "}
-              <span className="font-[family-name:var(--font-mono)]">
-                {formatJoinedDate(user.createdAt)}
-              </span>
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-5 text-[13px] text-[#64748B] sm:justify-start">
+              {user.location && (
+                <div className="flex items-center gap-1.5">
+                  <MapPin size={15} />
+                  {user.location}
+                </div>
+              )}
+
+              {user.website && (
+                <Link
+                  href={user.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 text-violet-600 hover:underline"
+                >
+                  <Globe size={15} />
+                  Website
+                </Link>
+              )}
+
+              <div className="flex items-center gap-1.5">
+                <CalendarDays size={15} />
+                Joined{" "}
+                <span className="font-[family-name:var(--font-mono)]">
+                  {formatJoinedDate(user.createdAt)}
+                </span>
+              </div>
             </div>
+
+            {socialLinks.some((link) => link.href) && (
+              <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5 sm:justify-start">
+                {socialLinks.map(
+                  ({ href, label, icon: Icon }) =>
+                    href && (
+                      <Link
+                        key={label}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 rounded-full border border-[#E7E5F2] bg-white px-3.5 py-1.5 text-[12.5px] font-medium text-[#13131A] transition-all hover:border-violet-400 hover:text-violet-700"
+                      >
+                        <Icon size={13} />
+                        {label}
+                      </Link>
+                    )
+                )}
+              </div>
+            )}
           </div>
         </div>
 

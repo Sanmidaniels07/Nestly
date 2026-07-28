@@ -1,11 +1,6 @@
-export interface ProfileMedia {
-  id: string;
-  type: "photo" | "video";
-  image: string;
-  likes: number;
-  comments: number;
-  createdAt: string;
-}
+import { ProfileMedia } from "@/src/types/profile-media";
+
+export type { ProfileMedia };
 
 export const profileMedia: ProfileMedia[] = [
   {

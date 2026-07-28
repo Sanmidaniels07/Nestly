@@ -4,6 +4,7 @@ import { Product } from "@/src/types/product";
 import RatingSection from "./product-info-components/rating-section";
 import PriceSection from "./product-info-components/product-price";
 import AvailabilityBadges from "./product-info-components/availability.badges";
+import ProductHighlights from "./product-info-components/products-highlights";
 
 interface Props {
   product: Product;
@@ -33,6 +34,10 @@ export default function ProductInfo({ product }: Props) {
       </div>
 
       <AvailabilityBadges product={product} />
+
+      <div className="border-t border-[#F2F1F8] pt-6">
+        <ProductHighlights product={product} />
+      </div>
     </div>
   );
 }

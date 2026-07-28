@@ -31,6 +31,7 @@ export default function AddProductPage() {
     stock: "",
 
     specifications: [],
+    highlights: [],
 
     images: [],
 
@@ -67,6 +68,7 @@ export default function AddProductPage() {
       specifications: draft.specifications
         .filter((spec) => spec.key.trim())
         .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
+      highlights: draft.highlights,
     });
 
     const created = (response as { data: { id: string } }).data;

@@ -21,10 +21,14 @@ export default function Sidebar() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
+  const visibleNavigation = navigation.filter(
+    (item) => !item.adminOnly || user?.role === "ADMIN"
+  );
+
   return (
     <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px] flex-col border-r border-[#ECE9F6] bg-white/80 backdrop-blur-2xl lg:flex">
       <nav className="hover-scroll flex-1 space-y-1 overflow-y-auto px-4 py-6">
-        {navigation.map((item) => {
+        {visibleNavigation.map((item) => {
           const active = isActive(item.href);
           const isSettings = item.href === "/settings";
 

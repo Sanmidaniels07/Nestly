@@ -9,6 +9,8 @@ import {
   Settings,
   Users2,
   CalendarDays,
+  MessageCircle,
+  ShieldAlert,
 } from "lucide-react";
 
 export const navigation = [
@@ -21,6 +23,11 @@ export const navigation = [
     title: "Feed",
     href: "/feed",
     icon: Newspaper,
+  },
+  {
+    title: "Messages",
+    href: "/messages",
+    icon: MessageCircle,
   },
   {
     title: "Followers",
@@ -61,5 +68,11 @@ export const navigation = [
     title: "Settings",
     href: "/settings",
     icon: Settings,
+  },
+  {
+    title: "Admin",
+    href: "/admin",
+    icon: ShieldAlert,
+    adminOnly: true,
   },
 ];

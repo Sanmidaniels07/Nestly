@@ -2,14 +2,26 @@
 
 import { Store, ShoppingBag, PackageCheck, Star } from "lucide-react";
 
-const stats = [
-  { title: "Active listings", value: "12", icon: Store, chip: "bg-violet-50 text-violet-600" },
-  { title: "Sold items", value: "48", icon: PackageCheck, chip: "bg-emerald-50 text-emerald-600" },
-  { title: "Purchases", value: "15", icon: ShoppingBag, chip: "bg-amber-50 text-amber-600" },
-  { title: "Seller rating", value: "4.9", icon: Star, chip: "bg-rose-50 text-rose-600" },
-];
+interface Props {
+  activeCount: number;
+  soldCount: number;
+  purchaseCount: number;
+  rating?: number;
+}
 
-export default function ProfileMarketSummary() {
+export default function ProfileMarketSummary({
+  activeCount,
+  soldCount,
+  purchaseCount,
+  rating,
+}: Props) {
+  const stats = [
+    { title: "Active listings", value: activeCount.toString(), icon: Store, chip: "bg-violet-50 text-violet-600" },
+    { title: "Sold items", value: soldCount.toString(), icon: PackageCheck, chip: "bg-emerald-50 text-emerald-600" },
+    { title: "Purchases", value: purchaseCount.toString(), icon: ShoppingBag, chip: "bg-amber-50 text-amber-600" },
+    { title: "Seller rating", value: rating !== undefined ? rating.toFixed(1) : "—", icon: Star, chip: "bg-rose-50 text-rose-600" },
+  ];
+
   return (
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
       {stats.map((item) => (

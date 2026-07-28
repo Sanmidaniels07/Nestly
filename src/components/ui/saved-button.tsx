@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useWishlist } from "@/src/hooks/use-wishlist";
+import { useAuth } from "@/src/hooks/use-auth";
 
 export default function SavedButton() {
-  const { data: items } = useWishlist();
+  const { isAuthenticated } = useAuth();
+  const { data: items } = useWishlist({ enabled: isAuthenticated });
   const count = items?.length ?? 0;
 
   return (

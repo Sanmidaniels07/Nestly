@@ -3,9 +3,12 @@
 import { useMemo, useState } from "react";
 import { ImageOff } from "lucide-react";
 
+import { usePosts } from "@/src/hooks/use-posts";
+import { useAuthStore } from "@/src/store/auth-store";
+import { formatRelativeTime } from "@/src/lib/date";
+import type { ProfileMedia } from "@/src/types/profile-media";
 import ProfileMediaFilter from "../components/profile-media-filter";
 import ProfileMediaGrid from "../components/profile-media-grid";
-import { profileMedia } from "@/src/mocks/profile-media";
 import ProfileMediaLightbox from "../components/profile-media-box";
 
 type Filter = "All" | "Photos" | "Videos";
@@ -13,12 +16,41 @@ type Filter = "All" | "Photos" | "Videos";
 export default function ProfileMedia() {
   const [filter, setFilter] = useState<Filter>("All");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const userId = useAuthStore((state) => state.user?.id);
+
+  const { data, isLoading } = usePosts(
+    { authorId: userId, sort: "desc" },
+    { enabled: !!userId }
+  );
+
+  const allMedia = useMemo<ProfileMedia[]>(() => {
+    const posts = data?.pages.flatMap((page) => page.data.posts) ?? [];
+
+    return posts.flatMap((post) =>
+      (post.media ?? []).map((item, index) => ({
+        id: `${post.id}-${index}`,
+        type: item.type === "VIDEO" ? "video" : "photo",
+        image: item.url,
+        likes: post.likeCount ?? 0,
+        comments: 0,
+        createdAt: formatRelativeTime(post.createdAt),
+      }))
+    );
+  }, [data]);
 
   const media = useMemo(() => {
-    if (filter === "All") return profileMedia;
-    if (filter === "Photos") return profileMedia.filter((m) => m.type === "photo");
-    return profileMedia.filter((m) => m.type === "video");
-  }, [filter]);
+    if (filter === "All") return allMedia;
+    if (filter === "Photos") return allMedia.filter((m) => m.type === "photo");
+    return allMedia.filter((m) => m.type === "video");
+  }, [allMedia, filter]);
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+        Loading media...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

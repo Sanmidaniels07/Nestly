@@ -22,7 +22,7 @@ export default function SettingsPopover({
 }: Props) {
   const pathname = usePathname();
   const popoverRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
+  const [position, setPosition] = useState<{ bottom: number; left: number } | null>(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -33,8 +33,11 @@ export default function SettingsPopover({
     const updatePosition = () => {
       if (!anchorRef.current) return;
       const rect = anchorRef.current.getBoundingClientRect();
+      // Anchor to the button's bottom edge and grow upward — the trigger
+      // sits near the bottom of the sidebar, so opening downward pushes
+      // items off the bottom of the viewport.
       setPosition({
-        top: rect.bottom - rect.height,
+        bottom: window.innerHeight - rect.bottom,
         left: rect.right + 8,
       });
     };
@@ -79,8 +82,8 @@ export default function SettingsPopover({
   return createPortal(
     <div
       ref={popoverRef}
-      style={{ top: position.top, left: position.left }}
-      className="fixed z-[100] w-64 rounded-2xl border border-[#ECE9F6] bg-white p-2 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]"
+      style={{ bottom: position.bottom, left: position.left }}
+      className="fixed z-[100] max-h-[calc(100vh-2rem)] w-64 overflow-y-auto rounded-2xl border border-[#ECE9F6] bg-white p-2 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]"
     >
       {email && (
         <div className="border-b border-[#F2F1F8] px-3 py-2.5">

@@ -4,10 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getWishlist } from "../services/wishlist.services";
 
-export const useWishlist = () => {
+export const useWishlist = (options: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: ["wishlist"],
     queryFn: () => getWishlist({ limit: 100 }),
     select: (response) => response.data.items,
+    enabled: options.enabled,
   });
 };

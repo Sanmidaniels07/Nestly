@@ -31,14 +31,17 @@ const emptyDefaults: EditProfileBasicValues = {
   occupation: "",
   company: "",
   education: "",
+  dateOfBirth: "",
   website: "",
   skills: [],
   interests: [],
   languages: [],
-  github: "",
   linkedin: "",
   twitter: "",
   instagram: "",
+  facebook: "",
+  tiktok: "",
+  youtube: "",
 };
 
 export default function EditProfileForm({ onClose }: Props) {
@@ -70,6 +73,21 @@ export default function EditProfileForm({ onClose }: Props) {
       name: profile.name,
       username: profile.username ?? "",
       bio: profile.bio ?? "",
+      location: profile.location ?? "",
+      occupation: profile.occupation ?? "",
+      company: profile.company ?? "",
+      education: profile.education ?? "",
+      dateOfBirth: profile.dateOfBirth ? profile.dateOfBirth.slice(0, 10) : "",
+      website: profile.website ?? "",
+      skills: profile.skills ?? [],
+      interests: profile.interests ?? [],
+      languages: profile.languages ?? [],
+      linkedin: profile.socialLinks?.linkedin ?? "",
+      twitter: profile.socialLinks?.twitter ?? "",
+      instagram: profile.socialLinks?.instagram ?? "",
+      facebook: profile.socialLinks?.facebook ?? "",
+      tiktok: profile.socialLinks?.tiktok ?? "",
+      youtube: profile.socialLinks?.youtube ?? "",
     });
     setCover(profile.cover ?? "");
     setAvatar(profile.avatar ?? "");
@@ -94,6 +112,23 @@ export default function EditProfileForm({ onClose }: Props) {
       bio: values.bio,
       avatar: avatarUrl,
       cover: coverUrl,
+      location: values.location,
+      website: values.website,
+      occupation: values.occupation,
+      company: values.company,
+      education: values.education,
+      dateOfBirth: values.dateOfBirth || undefined,
+      skills: values.skills,
+      interests: values.interests,
+      languages: values.languages,
+      socialLinks: {
+        linkedin: values.linkedin,
+        twitter: values.twitter,
+        instagram: values.instagram,
+        facebook: values.facebook,
+        tiktok: values.tiktok,
+        youtube: values.youtube,
+      },
     });
     onClose();
   };

@@ -25,13 +25,34 @@ export default function OrderSummary({ order }: Props) {
         {order.subtotal !== undefined && (
           <SummaryRow label="Subtotal" value={money(order.subtotal)} />
         )}
-        {order.deliveryFee !== undefined && (
+
+        {order.shipping && order.shipping.length > 0 ? (
+          order.shipping.map((shipment) => (
+            <SummaryRow
+              key={shipment.id}
+              label={shipment.optionName}
+              value={money(shipment.fee)}
+            />
+          ))
+        ) : (
+          order.deliveryFee !== undefined && (
+            <SummaryRow
+              label="Delivery"
+              value={order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}
+            />
+          )
+        )}
+
+        {order.tax !== undefined && order.tax > 0 && (
+          <SummaryRow label="Tax" value={money(order.tax)} />
+        )}
+
+        {!!order.discountAmount && order.discountAmount > 0 && (
           <SummaryRow
-            label="Delivery"
-            value={order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}
+            label={order.couponCode ? `Coupon (${order.couponCode})` : "Discount"}
+            value={`-${money(order.discountAmount)}`}
           />
         )}
-        {order.tax !== undefined && <SummaryRow label="Tax" value={money(order.tax)} />}
 
         <div className="flex items-center justify-between border-t border-dashed border-[#ECE9F6] pt-3">
           <span className="text-[14px] font-semibold text-[#13131A]">Total</span>
@@ -40,6 +61,15 @@ export default function OrderSummary({ order }: Props) {
           </span>
         </div>
       </div>
+
+      {order.trackingNumber && (
+        <div className="mt-4 rounded-xl bg-[#F7F7FB] px-4 py-3">
+          <p className="text-[12px] text-[#94A3B8]">Tracking number</p>
+          <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13.5px] font-semibold text-[#13131A]">
+            {order.trackingNumber}
+          </p>
+        </div>
+      )}
     </section>
   );
 }

@@ -12,6 +12,7 @@ import SellerStats from "./components/seller-stats";
 import SellerProducts from "./components/seller-products";
 import SellerReviews from "./components/seller-review";
 import SellerAbout from "./components/seller-about";
+import SellerPolicies from "./components/seller-policies";
 
 interface Props {
   params: Promise<{
@@ -48,6 +49,7 @@ export default function SellerStorePage({ params }: Props) {
       <SellerStats store={store} productCount={productsData?.total ?? 0} />
 
       <SellerAbout store={store} />
+      <SellerPolicies store={store} />
       <SellerProducts products={products} />
       <SellerReviews rating={store.rating} reviews={reviews} total={reviewsData?.total ?? 0} />
     </div>

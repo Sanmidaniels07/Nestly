@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquarePlus } from "lucide-react";
+import { MessageSquarePlus, RotateCcw } from "lucide-react";
 import { Order, OrderItem } from "@/src/types/order";
 import WriteReviewForm from "./write-review-form";
+import RequestReturnForm from "./request-return-form";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -43,6 +44,7 @@ function OrderedProductItem({
   orderStatus: string;
 }) {
   const [reviewing, setReviewing] = useState(false);
+  const [returning, setReturning] = useState(false);
 
   const primaryImage =
     item.product.images.find((image) => image.isPrimary)?.url ?? item.product.images[0]?.url;
@@ -118,11 +120,25 @@ function OrderedProductItem({
                 Write a review
               </button>
             )}
+
+            {isDelivered && !returning && (
+              <button
+                onClick={() => setReturning(true)}
+                className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50"
+              >
+                <RotateCcw size={14} />
+                Request return
+              </button>
+            )}
           </div>
         </div>
 
         {reviewing && (
           <WriteReviewForm productId={item.productId} onDone={() => setReviewing(false)} />
+        )}
+
+        {returning && (
+          <RequestReturnForm orderItemId={item.id} onDone={() => setReturning(false)} />
         )}
       </div>
     </article>

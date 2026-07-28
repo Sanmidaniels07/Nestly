@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { Heart, MessageCircle, Play } from "lucide-react";
 import { motion } from "framer-motion";
-import { ProfileMedia } from "@/src/mocks/profile-media";
+import { ProfileMedia } from "@/src/types/profile-media";
 
 interface Props {
   media: ProfileMedia;

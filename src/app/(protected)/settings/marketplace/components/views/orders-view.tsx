@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
+import { useUpdateTrackingNumber } from "@/src/hooks/use-update-tracking-number";
+import { Order } from "@/src/types/order";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
 
@@ -100,12 +103,44 @@ export default function OrdersView() {
               );
             })}
           </div>
+
+          <TrackingNumberInput order={order} />
         </div>
       ))}
 
       {data && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
       )}
+    </div>
+  );
+}
+
+function TrackingNumberInput({ order }: { order: Order }) {
+  const [value, setValue] = useState(order.trackingNumber ?? "");
+  const { mutate: updateTracking, isPending } = useUpdateTrackingNumber();
+
+  useEffect(() => {
+    setValue(order.trackingNumber ?? "");
+  }, [order.trackingNumber]);
+
+  const canSave = value.trim().length > 0 && value.trim() !== (order.trackingNumber ?? "");
+
+  return (
+    <div className="mt-4 flex items-center gap-2 border-t border-[#F2F1F8] pt-4">
+      <Truck size={15} className="shrink-0 text-[#94A3B8]" />
+      <input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Add tracking number"
+        className="h-9 flex-1 rounded-lg border border-[#ECE9F6] bg-white px-3 text-[12.5px] text-[#334155] outline-none transition-colors focus:border-violet-400"
+      />
+      <button
+        onClick={() => updateTracking({ id: order.id, trackingNumber: value.trim() })}
+        disabled={!canSave || isPending}
+        className="h-9 shrink-0 rounded-lg bg-violet-600 px-3.5 text-[12.5px] font-semibold text-white transition-colors hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-40"
+      >
+        Save
+      </button>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+import { SocialLinks } from "./profile";
+
 export interface PublicUser {
   id: string;
   name: string;
@@ -12,6 +14,16 @@ export interface SuggestedUser extends PublicUser {
 
 export interface UserProfile extends PublicUser {
   cover?: string | null;
+  location?: string | null;
+  website?: string | null;
+  socialLinks?: SocialLinks | null;
+  occupation?: string | null;
+  company?: string | null;
+  education?: string | null;
+  dateOfBirth?: string | null;
+  skills?: string[];
+  interests?: string[];
+  languages?: string[];
   createdAt: string;
   followersCount: number;
   followingCount: number;

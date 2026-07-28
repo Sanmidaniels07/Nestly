@@ -1,13 +1,15 @@
 "use client";
 
 import { CheckCircle2 } from "lucide-react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
 }
 
 export default function ProductHighlights({ product }: Props) {
+  if (!product.highlights || product.highlights.length === 0) return null;
+
   return (
     <div>
       <h3 className="mb-3 font-[family-name:var(--font-fraunces)] text-[18px] italic text-[#13131A]">

@@ -5,6 +5,8 @@ import CheckoutStepper from "./components/checkout-stepper";
 import CheckoutSummary from "./components/checkout-summary";
 import OrderItems from "./components/order-item";
 import ShippingAddress from "./components/shipping-address";
+import StoreShipping from "./components/store-shipping";
+import CouponSection from "./components/coupon-section";
 
 export default function CheckoutPage() {
   return (
@@ -18,6 +20,10 @@ export default function CheckoutPage() {
           <ShippingAddress />
 
           <OrderItems />
+
+          <StoreShipping />
+
+          <CouponSection />
         </section>
 
         <CheckoutSummary />

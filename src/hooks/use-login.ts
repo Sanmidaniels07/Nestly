@@ -31,14 +31,12 @@ export const useLogin = () => {
     onSuccess: (response) => {
       const {
         accessToken,
-        refreshToken,
         user,
       } = response.data;
 
       setAuth(
         user,
-        accessToken,
-        refreshToken
+        accessToken
       );
 
       toast.success(

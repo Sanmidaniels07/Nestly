@@ -1,8 +1,8 @@
 "use client";
 
-import { LayoutDashboard, Package, ClipboardList, Users, BarChart3, Store } from "lucide-react";
+import { LayoutDashboard, Package, ClipboardList, Users, BarChart3, Store, RotateCcw } from "lucide-react";
 
-export type Tab = "dashboard" | "products" | "orders" | "customers" | "analytics" | "store";
+export type Tab = "dashboard" | "products" | "orders" | "customers" | "returns" | "analytics" | "store";
 
 interface Props {
   active: Tab;
@@ -14,6 +14,7 @@ const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "products", label: "Products", icon: Package },
   { id: "orders", label: "Orders", icon: ClipboardList },
   { id: "customers", label: "Customers", icon: Users },
+  { id: "returns", label: "Returns", icon: RotateCcw },
   { id: "analytics", label: "Analytics", icon: BarChart3 },
   { id: "store", label: "Store settings", icon: Store },
 ];

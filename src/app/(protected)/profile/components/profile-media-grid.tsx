@@ -1,6 +1,6 @@
 "use client";
 
-import { ProfileMedia } from "@/src/mocks/profile-media";
+import { ProfileMedia } from "@/src/types/profile-media";
 import ProfileMediaCard from "./profile-media-card";
 
 interface Props {

@@ -9,6 +9,9 @@ import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
 import OrdersView from "./components/views/orders-view";
+import CustomersView from "./components/views/customers-view";
+import StoreView from "./components/views/store-view";
+import ReturnsView from "./components/views/returns-view";
 
 function MarketplaceSettingsContent() {
   const searchParams = useSearchParams();
@@ -30,9 +33,10 @@ function MarketplaceSettingsContent() {
     dashboard: <DashboardView hasStore={hasStore} />,
     products: <ProductsView />,
     orders: <OrdersView />,
-    // customers: <CustomersView />,
+    customers: <CustomersView />,
+    returns: <ReturnsView />,
     // analytics: <AnalyticsView />,
-    // store: <StoreView />,
+    store: <StoreView />,
   };
 
   return (

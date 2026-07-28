@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Heart, MessageCircle, Play } from "lucide-react";
-import { ProfileMedia } from "@/src/mocks/profile-media";
+import { ProfileMedia } from "@/src/types/profile-media";
 
 interface Props {
   media: ProfileMedia[];

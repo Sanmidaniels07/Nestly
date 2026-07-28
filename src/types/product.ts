@@ -45,6 +45,7 @@ export interface Product {
   originalPrice?: number | null;
   stock: number;
   isFeatured?: boolean;
+  highlights?: string[];
   status: ProductStatus;
   images: ProductImage[];
   specifications: ProductSpecification[];
@@ -68,6 +69,7 @@ export interface CreateProductPayload {
   originalPrice?: number;
   stock: number;
   isFeatured?: boolean;
+  highlights?: string[];
   images?: ProductImage[];
   specifications?: ProductSpecification[];
   variants?: ProductVariant[];

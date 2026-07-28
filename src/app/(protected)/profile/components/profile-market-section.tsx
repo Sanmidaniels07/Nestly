@@ -1,12 +1,11 @@
 "use client";
 
-import { MarketplaceItem } from "@/src/mocks/profile-marketplace";
-import ProfileMarketCard from "./profile-marketplace-card";
+import ProfileMarketCard, { MarketCardItem } from "./profile-marketplace-card";
 
 interface Props {
   title: string;
   subtitle: string;
-  items: MarketplaceItem[];
+  items: MarketCardItem[];
 }
 
 export default function ProfileMarketSection({ title, subtitle, items }: Props) {

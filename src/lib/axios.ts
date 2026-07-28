@@ -5,6 +5,9 @@ import { useAuthStore } from "../store/auth-store";
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
+  // Lets the browser send the httpOnly refresh-token cookie on every
+  // request and accept new Set-Cookie headers back (login/refresh/logout).
+  withCredentials: true,
 });
 
 api.interceptors.request.use((config) => {
@@ -44,15 +47,13 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const { refreshToken, setTokens, logout } = useAuthStore.getState();
-
-    if (!refreshToken) {
-      logout();
-      return Promise.reject(error);
-    }
+    const { setAccessToken, logout } = useAuthStore.getState();
 
     originalRequest._retry = true;
 
+    // No refresh token to check client-side anymore — it's an httpOnly
+    // cookie the browser attaches on its own. If there isn't a valid one,
+    // the refresh call below simply 401s and we log out in the catch.
     if (isRefreshing) {
       const token = await new Promise<string | null>((resolve) => {
         refreshWaiters.push(resolve);
@@ -69,8 +70,8 @@ api.interceptors.response.use(
     isRefreshing = true;
 
     try {
-      const { data } = await refreshSession(refreshToken);
-      setTokens(data.accessToken, data.refreshToken);
+      const { data } = await refreshSession();
+      setAccessToken(data.accessToken);
       resolveWaiters(data.accessToken);
 
       originalRequest.headers.Authorization = `Bearer ${data.accessToken}`;
@@ -79,7 +80,11 @@ api.interceptors.response.use(
       resolveWaiters(null);
       logout();
 
-      if (typeof window !== "undefined") {
+      // Guard against redirecting to where we already are — without this,
+      // any unauthenticated request made from the login page itself (e.g. a
+      // component that queries a protected endpoint unconditionally) would
+      // reject, fail to refresh, and reload the same page forever.
+      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
         window.location.href = "/login";
       }
 

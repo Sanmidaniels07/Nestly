@@ -1,3 +1,27 @@
+export interface ShippingOption {
+  id: string;
+  storeId: string;
+  name: string;
+  fee: number;
+  etaDays?: number | null;
+  createdAt: string;
+}
+
+export interface CreateShippingOptionPayload {
+  name: string;
+  fee: number;
+  etaDays?: number;
+}
+
+export type UpdateShippingOptionPayload = Partial<CreateShippingOptionPayload>;
+
+export interface StoreSeller {
+  id: string;
+  status: "PENDING" | "APPROVED" | "REJECTED";
+  isVerified: boolean;
+  user: { id: string; name: string };
+}
+
 export interface Store {
   id: string;
   sellerId: string;
@@ -13,8 +37,17 @@ export interface Store {
   state?: string | null;
   country?: string | null;
   rating?: number;
+  totalSales?: number;
+  isVerified?: boolean;
+  returnPolicy?: string | null;
+  shippingPolicy?: string | null;
+  warrantyPolicy?: string | null;
   reviewCount?: number;
   productCount?: number;
+  seller?: StoreSeller;
+  shippingOptions?: ShippingOption[];
+  followersCount?: number;
+  isFollowing?: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -30,6 +63,9 @@ export interface CreateStorePayload {
   city?: string;
   state?: string;
   country?: string;
+  returnPolicy?: string;
+  shippingPolicy?: string;
+  warrantyPolicy?: string;
 }
 
 export type UpdateStorePayload = Partial<CreateStorePayload>;

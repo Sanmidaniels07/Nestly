@@ -60,13 +60,17 @@ export const editProfileSchema = z.object({
 
   languages: z.array(z.string()).max(6).optional(),
 
-  github: z.string().url("Enter a valid GitHub URL").or(z.literal("")),
-
   linkedin: z.string().url("Enter a valid LinkedIn URL").or(z.literal("")),
 
   twitter: z.string().url("Enter a valid X URL").or(z.literal("")),
 
   instagram: z.string().url("Enter a valid Instagram URL").or(z.literal("")),
+
+  facebook: z.string().url("Enter a valid Facebook URL").or(z.literal("")),
+
+  tiktok: z.string().url("Enter a valid TikTok URL").or(z.literal("")),
+
+  youtube: z.string().url("Enter a valid YouTube URL").or(z.literal("")),
 });
 
 // Inferred types

@@ -21,6 +21,7 @@ export interface ProductDraft {
     key: string;
     value: string;
   }[];
+  highlights: string[];
 
   // Step 4
   images: DraftImage[];

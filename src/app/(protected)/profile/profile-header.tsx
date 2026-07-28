@@ -4,21 +4,18 @@ import Link from "next/link";
 import { BadgeCheck, CalendarDays, Globe, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Profile } from "@/src/types/profile";
-import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import {
+  FaLinkedin,
+  FaInstagram,
+  FaXTwitter,
+  FaFacebook,
+  FaTiktok,
+  FaYoutube,
+} from "react-icons/fa6";
 import { IconType } from "react-icons";
 
-// location/website/social links have no backing fields on the real Profile
-// yet — kept optional so this UI stays intact for whenever the backend adds them.
 interface Props {
-  profile: Profile & Partial<{
-    location: string;
-    website: string;
-    github: string;
-    linkedin: string;
-    twitter: string;
-    instagram: string;
-  }>;
+  profile: Profile;
 }
 
 const socialLinkClass =
@@ -33,10 +30,12 @@ function formatJoinedDate(dateString: string) {
 
 export default function ProfileHeader({ profile }: Props) {
   const socialLinks: { href?: string; label: string; icon: IconType }[] = [
-    { href: profile.github, label: "GitHub", icon: FaGithub },
-    { href: profile.linkedin, label: "LinkedIn", icon: FaLinkedin },
-    { href: profile.twitter, label: "X", icon: FaXTwitter },
-    { href: profile.instagram, label: "Instagram", icon: FaInstagram },
+    { href: profile.socialLinks?.twitter, label: "X", icon: FaXTwitter },
+    { href: profile.socialLinks?.instagram, label: "Instagram", icon: FaInstagram },
+    { href: profile.socialLinks?.facebook, label: "Facebook", icon: FaFacebook },
+    { href: profile.socialLinks?.linkedin, label: "LinkedIn", icon: FaLinkedin },
+    { href: profile.socialLinks?.tiktok, label: "TikTok", icon: FaTiktok },
+    { href: profile.socialLinks?.youtube, label: "YouTube", icon: FaYoutube },
   ];
 
   return (

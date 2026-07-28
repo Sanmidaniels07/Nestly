@@ -4,26 +4,27 @@ import { ApiResponse } from "../types/api";
 
 interface RefreshResult {
   accessToken: string;
-  refreshToken: string;
 }
 
 // Uses a bare axios call (not the shared `api` instance) so a refresh never
-// recurses through the response interceptor that triggers it.
-export const refreshSession = async (
-  refreshToken: string
-): Promise<ApiResponse<RefreshResult>> => {
+// recurses through the response interceptor that triggers it. The refresh
+// token itself is never read or sent explicitly — it lives in an httpOnly
+// cookie that the browser attaches automatically because of withCredentials.
+export const refreshSession = async (): Promise<ApiResponse<RefreshResult>> => {
   const response = await axios.post<ApiResponse<RefreshResult>>(
     `${process.env.NEXT_PUBLIC_API_URL}/session/refresh`,
-    { refreshToken }
+    {},
+    { withCredentials: true }
   );
 
   return response.data;
 };
 
-export const logoutSession = async (refreshToken: string) => {
+export const logoutSession = async () => {
   const response = await axios.post(
     `${process.env.NEXT_PUBLIC_API_URL}/session/logout`,
-    { refreshToken }
+    {},
+    { withCredentials: true }
   );
 
   return response.data;

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Product } from "@/src/types/product";
+import ReportButton from "@/src/components/ui/report-button";
 
 interface Props {
   product: Product;
@@ -43,6 +44,10 @@ export default function ProductDescription({ product }: Props) {
       >
         {product.description}
       </p>
+
+      <div className="mt-5 border-t border-[#F2F1F8] pt-4">
+        <ReportButton targetType="PRODUCT" targetId={product.id} label="Report this listing" />
+      </div>
     </section>
   );
 }

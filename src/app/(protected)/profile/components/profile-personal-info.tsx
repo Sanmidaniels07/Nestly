@@ -8,21 +8,34 @@ import {
   MapPin,
   Building2,
 } from "lucide-react";
-import { PersonalInfo } from "@/src/mocks/profile-about";
 
 interface Props {
-  info: PersonalInfo;
+  location?: string | null;
+  occupation?: string | null;
+  company?: string | null;
+  education?: string | null;
+  website?: string | null;
+  joined: string;
 }
 
-export default function ProfilePersonalInfo({ info }: Props) {
+export default function ProfilePersonalInfo({
+  location,
+  occupation,
+  company,
+  education,
+  website,
+  joined,
+}: Props) {
   const items = [
-    { icon: MapPin, label: "Location", value: info.location },
-    { icon: Briefcase, label: "Occupation", value: info.occupation },
-    { icon: Building2, label: "Company", value: info.company },
-    { icon: GraduationCap, label: "Education", value: info.education },
-    { icon: Globe, label: "Website", value: info.website },
-    { icon: Calendar, label: "Joined", value: info.joined },
-  ];
+    { icon: MapPin, label: "Location", value: location },
+    { icon: Briefcase, label: "Occupation", value: occupation },
+    { icon: Building2, label: "Company", value: company },
+    { icon: GraduationCap, label: "Education", value: education },
+    { icon: Globe, label: "Website", value: website },
+    { icon: Calendar, label: "Joined", value: joined },
+  ].filter((item) => !!item.value);
+
+  if (items.length === 0) return null;
 
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">

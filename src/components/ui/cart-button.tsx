@@ -4,9 +4,11 @@ import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
 import { useCart } from "@/src/hooks/use-cart";
+import { useAuth } from "@/src/hooks/use-auth";
 
 export default function CartButton() {
-  const { data: items } = useCart();
+  const { isAuthenticated } = useAuth();
+  const { data: items } = useCart({ enabled: isAuthenticated });
   const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
 
   return (

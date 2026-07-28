@@ -1,9 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { BadgeCheck, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { Store } from "@/src/types/store";
 import UserAvatar from "@/src/components/ui/user-avatar";
+import ReportButton from "@/src/components/ui/report-button";
+import { useAuthStore } from "@/src/store/auth-store";
+import { useStoreFollowStatus } from "@/src/hooks/use-store-follow-status";
+import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
+import { useCreateConversation } from "@/src/hooks/use-create-conversation";
+import { useVerifyStore } from "@/src/hooks/use-verify-store";
 
 interface Props {
   store: Store;
@@ -11,6 +18,9 @@ interface Props {
 
 export default function SellerProfile({ store }: Props) {
   const location = [store.city, store.state].filter(Boolean).join(", ");
+  const authUser = useAuthStore((state) => state.user);
+  const isOwnStore = !!authUser && store.seller?.user.id === authUser.id;
+  const isAdmin = authUser?.role === "ADMIN";
 
   return (
     <section className="relative z-10 -mt-16 sm:-mt-20">
@@ -26,9 +36,20 @@ export default function SellerProfile({ store }: Props) {
             </div>
 
             <div className="min-w-0">
-              <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A] sm:text-[30px]">
-                {store.name}
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A] sm:text-[30px]">
+                  {store.name}
+                </h1>
+                {store.isVerified && (
+                  <BadgeCheck size={20} className="shrink-0 fill-violet-600 text-white" />
+                )}
+              </div>
+
+              {typeof store.followersCount === "number" && (
+                <p className="mt-1 font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+                  {store.followersCount} follower{store.followersCount === 1 ? "" : "s"}
+                </p>
+              )}
 
               {store.description && (
                 <p className="mt-2 max-w-xl text-[13.5px] leading-6 text-[#64748B]">
@@ -47,7 +68,22 @@ export default function SellerProfile({ store }: Props) {
             </div>
           </div>
 
-          <div className="flex gap-2.5">
+          <div className="flex flex-wrap gap-2.5">
+            {isAdmin && !isOwnStore && <VerifyStoreButton store={store} />}
+
+            {!isOwnStore && authUser && (
+              <>
+                <MessageSellerButton sellerId={store.seller!.user.id} />
+                <FollowStoreButton slug={store.slug} />
+                <ReportButton
+                  targetType="STORE"
+                  targetId={store.id}
+                  label=""
+                  className="flex h-11 items-center justify-center rounded-xl border border-[#E5E7EB] px-3.5 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
+                />
+              </>
+            )}
+
             {store.email && (
               <a
                 href={`mailto:${store.email}`}
@@ -71,5 +107,87 @@ export default function SellerProfile({ store }: Props) {
         </div>
       </div>
     </section>
+  );
+}
+
+function FollowStoreButton({ slug }: { slug: string }) {
+  const { data: isFollowingReal, isLoading } = useStoreFollowStatus(slug);
+
+  if (isLoading) {
+    return <div className="h-11 w-24 animate-pulse rounded-xl bg-[#F7F7FB]" />;
+  }
+
+  return (
+    <FollowStoreButtonInner
+      key={String(isFollowingReal)}
+      slug={slug}
+      initialIsFollowing={isFollowingReal ?? false}
+    />
+  );
+}
+
+function FollowStoreButtonInner({
+  slug,
+  initialIsFollowing,
+}: {
+  slug: string;
+  initialIsFollowing: boolean;
+}) {
+  const { isFollowing, toggleFollow, isToggling } = useToggleStoreFollow(
+    slug,
+    initialIsFollowing
+  );
+
+  return (
+    <button
+      onClick={toggleFollow}
+      disabled={isToggling}
+      className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
+        isFollowing
+          ? "border border-[#E5E7EB] text-[#64748B] hover:border-red-200 hover:text-red-500"
+          : "border border-violet-600 text-violet-700 hover:bg-violet-50"
+      }`}
+    >
+      {isFollowing ? "Following" : "Follow"}
+    </button>
+  );
+}
+
+function MessageSellerButton({ sellerId }: { sellerId: string }) {
+  const router = useRouter();
+  const { mutate: createConversation, isPending } = useCreateConversation();
+
+  return (
+    <button
+      onClick={() =>
+        createConversation(sellerId, {
+          onSuccess: (response) => router.push(`/messages/${response.data.id}`),
+        })
+      }
+      disabled={isPending}
+      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#E5E7EB] px-5 text-[13px] font-semibold text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-600 disabled:opacity-50"
+    >
+      <MessageCircle size={14} />
+      Message
+    </button>
+  );
+}
+
+function VerifyStoreButton({ store }: { store: Store }) {
+  const { mutate: verifyStore, isPending } = useVerifyStore(store.slug);
+
+  return (
+    <button
+      onClick={() => verifyStore({ id: store.id, isVerified: !store.isVerified })}
+      disabled={isPending}
+      className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
+        store.isVerified
+          ? "border border-red-200 text-red-600 hover:bg-red-50"
+          : "border border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+      }`}
+    >
+      <ShieldCheck size={15} />
+      {store.isVerified ? "Unverify store" : "Verify store"}
+    </button>
   );
 }

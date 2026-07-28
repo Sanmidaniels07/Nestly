@@ -22,6 +22,8 @@ export default function PaymentSummary() {
   const router = useRouter();
   const { data: items } = useCart();
   const addressId = useCheckoutStore((state) => state.addressId);
+  const shippingSelections = useCheckoutStore((state) => state.shippingSelections);
+  const appliedCoupon = useCheckoutStore((state) => state.appliedCoupon);
   const resetCheckout = useCheckoutStore((state) => state.resetCheckout);
 
   const { mutateAsync: initiateCheckout } = useInitiateCheckout();
@@ -32,6 +34,12 @@ export default function PaymentSummary() {
 
   const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
   const subtotal = items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
+  const deliveryFee = Object.values(shippingSelections).reduce(
+    (sum, selection) => sum + selection.fee,
+    0
+  );
+  const discountAmount = appliedCoupon?.discountAmount ?? 0;
+  const estimatedTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
   const handlePay = async () => {
     if (!addressId) {
@@ -43,7 +51,13 @@ export default function PaymentSummary() {
     setProcessing(true);
 
     try {
-      const response = await initiateCheckout({ addressId });
+      const response = await initiateCheckout({
+        addressId,
+        shippingSelections: Object.entries(shippingSelections).map(
+          ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
+        ),
+        couponCode: appliedCoupon?.code,
+      });
       const { accessCode, reference } = (response as { data: { accessCode: string; reference: string } }).data;
 
       await payWithPaystack(accessCode, {
@@ -80,13 +94,17 @@ export default function PaymentSummary() {
       <div className="space-y-3">
         <SummaryRow label="Items" value={totalItems.toString()} />
         <SummaryRow label="Subtotal" value={money(subtotal)} />
+        {deliveryFee > 0 && <SummaryRow label="Shipping" value={money(deliveryFee)} />}
+        {discountAmount > 0 && (
+          <SummaryRow label="Coupon discount" value={`-${money(discountAmount)}`} />
+        )}
 
         <div className="border-t border-dashed border-[#ECE9F6] pt-3">
-          <SummaryRow label="Amount to pay" value={money(subtotal)} bold />
+          <SummaryRow label="Amount to pay" value={money(estimatedTotal)} bold />
         </div>
 
         <p className="text-[11.5px] text-[#94A3B8]">
-          Final delivery fee, if any, is applied by Paystack at checkout.
+          The exact amount is confirmed by the server before payment.
         </p>
       </div>
 
@@ -108,7 +126,7 @@ export default function PaymentSummary() {
             Processing payment...
           </>
         ) : (
-          `Pay ${money(subtotal)}`
+          `Pay ${money(estimatedTotal)}`
         )}
       </button>
     </aside>

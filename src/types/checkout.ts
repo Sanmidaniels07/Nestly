@@ -1,7 +1,14 @@
 import { Order } from "./order";
 
+export interface ShippingSelection {
+  storeId: string;
+  shippingOptionId: string;
+}
+
 export interface InitiateCheckoutPayload {
   addressId: string;
+  shippingSelections?: ShippingSelection[];
+  couponCode?: string;
 }
 
 export interface InitiateCheckoutResponse {

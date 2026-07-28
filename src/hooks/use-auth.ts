@@ -12,11 +12,6 @@ export const useAuth = () => {
       (state) => state.accessToken
     );
 
-  const refreshToken =
-    useAuthStore(
-      (state) => state.refreshToken
-    );
-
   const logout =
     useAuthStore(
       (state) => state.logout
@@ -25,7 +20,6 @@ export const useAuth = () => {
   return {
     user,
     accessToken,
-    refreshToken,
     logout,
 
     isAuthenticated:

@@ -1,14 +1,36 @@
 "use client";
 
 import { Edit3, Settings, Share2 } from "lucide-react";
+import toast from "react-hot-toast";
 import Button from "@/src/components/ui/button";
 import { motion } from "framer-motion";
+import { useProfile } from "@/src/hooks/use-profile";
 
 interface Props {
   onEdit: () => void;
 }
 
 export default function ProfileActions({ onEdit }: Props) {
+  const { data: profile } = useProfile();
+
+  const handleShare = async () => {
+    if (!profile) return;
+
+    const url = `${window.location.origin}/users/${profile.username ?? profile.id}`;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `${profile.name} on Nestly`, url });
+      } catch {
+        // Share sheet dismissed by the user — nothing to do.
+      }
+      return;
+    }
+
+    await navigator.clipboard.writeText(url);
+    toast.success("Profile link copied");
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -25,7 +47,7 @@ export default function ProfileActions({ onEdit }: Props) {
         Edit profile
       </Button>
 
-      <Button variant="outline" className="h-11 rounded-xl px-6">
+      <Button onClick={handleShare} variant="outline" className="h-11 rounded-xl px-6">
         <Share2 size={16} className="mr-2" />
         Share profile
       </Button>

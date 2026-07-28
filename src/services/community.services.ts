@@ -27,6 +27,16 @@ export const getTrendingCommunities = async (limit?: number) => {
   return response.data;
 };
 
+export const getMyCommunities = async (
+  params: { page?: number; limit?: number } = {}
+) => {
+  const response = await api.get<ApiResponse<Paginated<"communities", Community>>>(
+    "/communities/me",
+    { params }
+  );
+  return response.data;
+};
+
 export const getCommunityBySlug = async (slug: string) => {
   const response = await api.get<ApiResponse<Community>>(`/communities/${slug}`);
   return response.data;

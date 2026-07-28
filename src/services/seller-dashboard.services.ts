@@ -1,7 +1,14 @@
 import { api } from "../lib/axios";
-import { ApiResponse } from "../types/api";
+import { ApiResponse, Paginated } from "../types/api";
 import { Order } from "../types/order";
 import { Product } from "../types/product";
+
+export interface SellerCustomer {
+  user: { id: string; name: string; email: string };
+  totalOrders: number;
+  totalSpent: number;
+  lastOrderAt: string;
+}
 
 export interface SellerDashboardStats {
   productCount: number;
@@ -59,5 +66,12 @@ export const getSellerTopProducts = async (limit?: number) => {
     "/seller/dashboard/top-products",
     { params: { limit } }
   );
+  return response.data;
+};
+
+export const getSellerCustomers = async (params: { page?: number; limit?: number }) => {
+  const response = await api.get<
+    ApiResponse<Paginated<"customers", SellerCustomer>>
+  >("/seller/dashboard/customers", { params });
   return response.data;
 };

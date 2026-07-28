@@ -1,9 +1,16 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Store } from "lucide-react";
 import Button from "@/src/components/ui/button";
 
-export default function ProfileMarketEmpty() {
+interface Props {
+  hasStore: boolean;
+}
+
+export default function ProfileMarketEmpty({ hasStore }: Props) {
+  const router = useRouter();
+
   return (
     <div className="rounded-2xl border border-dashed border-violet-200 bg-white py-16 text-center">
       <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-violet-50">
@@ -18,8 +25,16 @@ export default function ProfileMarketEmpty() {
         Listings, purchases and completed sales will appear here.
       </p>
 
-      <Button variant="tribely" className="mt-7">
-        Create listing
+      <Button
+        variant="tribely"
+        className="mx-auto mt-7 w-fit"
+        onClick={() =>
+          router.push(
+            hasStore ? "/settings/marketplace/components/products/new" : "/marketplace/sell"
+          )
+        }
+      >
+        {hasStore ? "Create listing" : "Become a seller"}
       </Button>
     </div>
   );

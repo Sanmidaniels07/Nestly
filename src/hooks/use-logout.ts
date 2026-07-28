@@ -8,12 +8,10 @@ import { useAuthStore } from "../store/auth-store";
 
 export const useLogout = () => {
   const router = useRouter();
-  const refreshToken = useAuthStore((state) => state.refreshToken);
   const logout = useAuthStore((state) => state.logout);
 
   return useMutation({
-    mutationFn: () =>
-      refreshToken ? logoutSession(refreshToken) : Promise.resolve(),
+    mutationFn: logoutSession,
 
     onSettled: () => {
       logout();

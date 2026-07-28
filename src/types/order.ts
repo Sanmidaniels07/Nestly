@@ -11,6 +11,16 @@ export interface OrderItem {
   status?: string;
 }
 
+export interface OrderShipping {
+  id: string;
+  orderId: string;
+  storeId: string;
+  optionName: string;
+  fee: number;
+  etaDays?: number | null;
+  createdAt: string;
+}
+
 export interface OrderTimelineEntry {
   title: string;
   description?: string;
@@ -25,7 +35,11 @@ export interface Order {
   subtotal?: number;
   deliveryFee?: number;
   tax?: number;
+  discountAmount?: number;
+  couponCode?: string | null;
+  trackingNumber?: string | null;
   items: OrderItem[];
+  shipping?: OrderShipping[];
   address?: Address;
   paymentReference?: string;
   paymentMethod?: string;

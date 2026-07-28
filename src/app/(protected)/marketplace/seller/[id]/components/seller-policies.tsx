@@ -1,23 +1,33 @@
 "use client";
 
-import { RotateCcw, Truck, ShieldCheck, CreditCard, Clock3, CheckCircle2 } from "lucide-react";
-import { MarketplaceSeller } from "@/src/mocks/marketplace";
+import { RotateCcw, Truck, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Store } from "@/src/types/store";
 
 interface Props {
-  seller: MarketplaceSeller;
+  store: Store;
 }
 
-export default function SellerPolicies({ seller }: Props) {
+export default function SellerPolicies({ store }: Props) {
   const policies = [
-    { icon: RotateCcw, title: "Returns", value: seller.policies.returns },
-    { icon: Truck, title: "Shipping", value: seller.policies.shipping },
-    { icon: ShieldCheck, title: "Warranty", value: seller.policies.warranty },
-    { icon: CreditCard, title: "Payment", value: "Card, bank transfer & wallet" },
-    { icon: Clock3, title: "Response", value: seller.responseTime },
+    {
+      icon: RotateCcw,
+      title: "Returns",
+      value: store.returnPolicy ?? "Not specified by this seller.",
+    },
+    {
+      icon: Truck,
+      title: "Shipping",
+      value: store.shippingPolicy ?? "Not specified by this seller.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Warranty",
+      value: store.warrantyPolicy ?? "Not specified by this seller.",
+    },
     {
       icon: CheckCircle2,
       title: "Verification",
-      value: seller.verified ? "Verified marketplace seller" : "Standard marketplace seller",
+      value: store.isVerified ? "Verified marketplace seller" : "Standard marketplace seller",
     },
   ];
 
@@ -32,7 +42,7 @@ export default function SellerPolicies({ seller }: Props) {
         </h2>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {policies.map((policy) => {
           const Icon = policy.icon;
 

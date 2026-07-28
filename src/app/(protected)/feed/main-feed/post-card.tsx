@@ -10,6 +10,7 @@ import { useUpdatePost } from "@/src/hooks/use-update-post";
 import { useDeletePost } from "@/src/hooks/use-delete-post";
 import { useAuthStore } from "@/src/store/auth-store";
 import UserAvatar from "@/src/components/ui/user-avatar";
+import ReportButton from "@/src/components/ui/report-button";
 import { formatRelativeTime } from "@/src/lib/date";
 import CommentSection from "./comment-section";
 
@@ -74,40 +75,48 @@ export default function PostCard({ post }: Props) {
           </div>
         </div>
 
-        {isAuthor && (
-          <div className="relative">
-            <button
-              onClick={() => setMenuOpen((prev) => !prev)}
-              className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-gray-100 hover:text-[#334155]"
-              aria-label="Post options"
-            >
-              <MoreHorizontal size={19} />
-            </button>
+        <div className="relative">
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-gray-100 hover:text-[#334155]"
+            aria-label="Post options"
+          >
+            <MoreHorizontal size={19} />
+          </button>
 
-            {menuOpen && (
-              <div className="absolute right-0 top-10 z-10 w-40 overflow-hidden rounded-xl border border-[#ECE9F6] bg-white shadow-lg">
-                <button
-                  onClick={() => {
-                    setIsEditing(true);
-                    setMenuOpen(false);
-                  }}
+          {menuOpen && (
+            <div className="absolute right-0 top-10 z-10 w-40 overflow-hidden rounded-xl border border-[#ECE9F6] bg-white shadow-lg">
+              {isAuthor ? (
+                <>
+                  <button
+                    onClick={() => {
+                      setIsEditing(true);
+                      setMenuOpen(false);
+                    }}
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-[#334155] hover:bg-[#F7F7FB]"
+                  >
+                    <Pencil size={14} /> Edit
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMenuOpen(false);
+                      handleDelete();
+                    }}
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-red-600 hover:bg-red-50"
+                  >
+                    <Trash2 size={14} /> Delete
+                  </button>
+                </>
+              ) : (
+                <ReportButton
+                  targetType="POST"
+                  targetId={post.id}
                   className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-[#334155] hover:bg-[#F7F7FB]"
-                >
-                  <Pencil size={14} /> Edit
-                </button>
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    handleDelete();
-                  }}
-                  className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-red-600 hover:bg-red-50"
-                >
-                  <Trash2 size={14} /> Delete
-                </button>
-              </div>
-            )}
-          </div>
-        )}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Content */}

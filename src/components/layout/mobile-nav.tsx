@@ -7,20 +7,26 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MoreHorizontal, X } from "lucide-react";
 import { navigation } from "@/src/constants/navigation";
 import { cn } from "@/src/lib/utils";
+import { useAuthStore } from "@/src/store/auth-store";
 
 const VISIBLE_COUNT = 4;
 
 export default function MobileNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const user = useAuthStore((state) => state.user);
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === href;
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
-  const primaryItems = navigation.slice(0, VISIBLE_COUNT);
-  const overflowItems = navigation.slice(VISIBLE_COUNT);
+  const visibleNavigation = navigation.filter(
+    (item) => !item.adminOnly || user?.role === "ADMIN"
+  );
+
+  const primaryItems = visibleNavigation.slice(0, VISIBLE_COUNT);
+  const overflowItems = visibleNavigation.slice(VISIBLE_COUNT);
 
   const isOverflowActive = overflowItems.some((item) => isActive(item.href));
 
