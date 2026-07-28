@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { ArrowRight, PackageOpen } from "lucide-react";
 import InventoryProductRow from "./inventory-product-row";
-import { sellerProducts } from "@/src/mocks/seller-products";
+import { useSellerInventory } from "@/src/hooks/use-seller-inventory";
 
 export default function InventorySnapshot() {
-  const products = sellerProducts.slice(0, 5);
+  const { data: products, isLoading } = useSellerInventory(5);
+  const items = (products ?? []).slice(0, 5);
 
   return (
     <section className="space-y-6">
@@ -21,24 +22,23 @@ export default function InventorySnapshot() {
         </div>
 
         <Link
-          href="/settings/marketplace/products"
+          href="/settings/marketplace/components/products"
           className="group flex shrink-0 items-center gap-1 text-[13.5px] font-semibold text-violet-600 hover:underline"
         >
           View all
-          <ArrowRight
-            size={15}
-            className="transition-transform group-hover:translate-x-0.5"
-          />
+          <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
         </Link>
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
-        {products.length === 0 ? (
+        {isLoading ? (
+          <div className="h-40 animate-pulse bg-[#F7F7FB]" />
+        ) : items.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <PackageOpen size={28} className="text-[#C4C0DC]" strokeWidth={1.5} />
-            <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No products yet</p>
+            <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No low-stock products</p>
             <p className="mt-1 text-[12.5px] text-[#94A3B8]">
-              Products you add will appear here.
+              Products running low on stock will appear here.
             </p>
           </div>
         ) : (
@@ -64,7 +64,7 @@ export default function InventorySnapshot() {
                 </tr>
               </thead>
               <tbody>
-                {products.map((product) => (
+                {items.map((product) => (
                   <InventoryProductRow key={product.id} product={product} />
                 ))}
               </tbody>

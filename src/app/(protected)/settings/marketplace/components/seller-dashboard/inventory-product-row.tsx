@@ -2,11 +2,11 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, Pencil } from "lucide-react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Eye } from "lucide-react";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
 }
 
 export default function InventoryProductRow({ product }: Props) {
@@ -14,21 +14,26 @@ export default function InventoryProductRow({ product }: Props) {
     product.stock > 5
       ? { label: "In stock", tone: "bg-emerald-50 text-emerald-700" }
       : product.stock > 0
-      ? { label: "Low stock", tone: "bg-amber-50 text-amber-700" }
-      : { label: "Out of stock", tone: "bg-red-50 text-red-700" };
+        ? { label: "Low stock", tone: "bg-amber-50 text-amber-700" }
+        : { label: "Out of stock", tone: "bg-red-50 text-red-700" };
+
+  const primaryImage =
+    product.images.find((image) => image.isPrimary)?.url ?? product.images[0]?.url;
 
   return (
     <tr className="border-t border-[#F2F1F8]">
       <td className="px-5 py-4">
         <div className="flex items-center gap-3.5">
           <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-[#F8F8FC]">
-            <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+            {primaryImage && (
+              <Image src={primaryImage} alt={product.title} fill className="object-cover" />
+            )}
           </div>
           <div className="min-w-0">
             <h3 className="truncate text-[13.5px] font-semibold text-[#13131A]">
-              {product.name}
+              {product.title}
             </h3>
-            <p className="mt-0.5 text-[12px] text-[#94A3B8]">{product.brand}</p>
+            {product.brand && <p className="mt-0.5 text-[12px] text-[#94A3B8]">{product.brand}</p>}
           </div>
         </div>
       </td>
@@ -48,22 +53,13 @@ export default function InventoryProductRow({ product }: Props) {
       </td>
 
       <td className="whitespace-nowrap px-5 py-4">
-        <div className="flex gap-2">
-          <Link
-            href={`/marketplace/products/${product.slug}`}
-            aria-label="View product"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F7FB] text-[#64748B] transition-colors hover:bg-[#EFEDF9] hover:text-violet-600"
-          >
-            <Eye size={15} />
-          </Link>
-          <Link
-            href={`/settings/marketplace/products/${product.id}/edit`}
-            aria-label="Edit product"
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-violet-50 text-violet-600 transition-colors hover:bg-violet-100"
-          >
-            <Pencil size={15} />
-          </Link>
-        </div>
+        <Link
+          href={`/marketplace/product/${product.id}`}
+          aria-label="View product"
+          className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F7FB] text-[#64748B] transition-colors hover:bg-[#EFEDF9] hover:text-violet-600"
+        >
+          <Eye size={15} />
+        </Link>
       </td>
     </tr>
   );

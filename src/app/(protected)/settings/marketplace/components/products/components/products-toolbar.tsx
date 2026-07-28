@@ -6,8 +6,6 @@ import Input from "@/src/components/ui/input";
 interface Props {
   search: string;
   onSearchChange: (value: string) => void;
-  category: string;
-  onCategoryChange: (value: string) => void;
   status: string;
   onStatusChange: (value: string) => void;
   sort: string;
@@ -45,8 +43,6 @@ function Select({
 export default function ProductsToolbar({
   search,
   onSearchChange,
-  category,
-  onCategoryChange,
   status,
   onStatusChange,
   sort,
@@ -54,7 +50,7 @@ export default function ProductsToolbar({
 }: Props) {
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
-      <div className="grid gap-3 xl:grid-cols-[1fr_170px_170px_170px]">
+      <div className="grid gap-3 xl:grid-cols-[1fr_170px_170px]">
         <Input
           value={search}
           onChange={(e) => onSearchChange(e.target.value)}
@@ -63,21 +59,15 @@ export default function ProductsToolbar({
         />
 
         <Select
-          value={category}
-          onChange={onCategoryChange}
-          options={["All categories", "Phones", "Laptops", "Accessories"]}
-        />
-
-        <Select
           value={status}
           onChange={onStatusChange}
-          options={["All status", "Active", "Inactive"]}
+          options={["All status", "Published", "Draft", "Archived"]}
         />
 
         <Select
           value={sort}
           onChange={onSortChange}
-          options={["Newest", "Oldest", "Price ↑", "Price ↓", "Most sold"]}
+          options={["Newest", "Oldest", "Price ↑", "Price ↓"]}
         />
       </div>
     </section>

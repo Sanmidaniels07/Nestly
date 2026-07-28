@@ -3,7 +3,15 @@
 import { create } from "zustand";
 
 import { MarketplaceProduct } from "@/src/mocks/marketplace";
-import { CartItem } from "@/src/types/cart";
+
+// Local legacy item shape — intentionally decoupled from the real `CartItem`
+// in src/types/cart.ts (which models the backend cart API) so this
+// not-yet-wired local store can keep compiling independently.
+interface CartItem {
+  product: MarketplaceProduct;
+  quantity: number;
+  selected: boolean;
+}
 
 interface CartStore {
   items: CartItem[];

@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, SlidersHorizontal, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import Input from "@/src/components/ui/input";
 
 interface Props {
@@ -8,19 +8,15 @@ interface Props {
   onSearchChange: (value: string) => void;
   status: string;
   onStatusChange: (value: string) => void;
-  onOpenFilters?: () => void;
-  activeFilterCount?: number;
+  statusOptions: string[];
 }
-
-const statusOptions = ["All", "Paid", "Processing", "Shipped", "Delivered", "Cancelled"];
 
 export default function OrdersToolbar({
   search,
   onSearchChange,
   status,
   onStatusChange,
-  onOpenFilters,
-  activeFilterCount = 0,
+  statusOptions,
 }: Props) {
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
@@ -43,21 +39,6 @@ export default function OrdersToolbar({
             <option key={option}>{option}</option>
           ))}
         </select>
-
-        {onOpenFilters && (
-          <button
-            onClick={onOpenFilters}
-            className="relative flex h-12 items-center justify-center gap-2 rounded-xl border border-[#ECE9F6] px-5 text-[13.5px] font-medium text-[#334155] transition-colors hover:bg-[#F8F7FC]"
-          >
-            <SlidersHorizontal size={16} />
-            Filters
-            {activeFilterCount > 0 && (
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-violet-600 font-[family-name:var(--font-mono)] text-[10px] font-semibold text-white">
-                {activeFilterCount}
-              </span>
-            )}
-          </button>
-        )}
       </div>
 
       {(search || status !== "All") && (
@@ -67,7 +48,7 @@ export default function OrdersToolbar({
               onClick={() => onSearchChange("")}
               className="flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1.5 text-[12.5px] font-medium text-violet-700 transition-colors hover:bg-violet-100"
             >
-              "{search}"
+              &quot;{search}&quot;
               <X size={12} />
             </button>
           )}

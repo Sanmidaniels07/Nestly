@@ -1,12 +1,15 @@
 "use client";
 
 import { CheckCircle2, Clock3 } from "lucide-react";
-import { MarketplaceOrder } from "@/src/mocks/order";
+import { Order } from "@/src/types/order";
+
 interface Props {
-  order: MarketplaceOrder;
+  order: Order;
 }
 
 export default function OrderTimeline({ order }: Props) {
+  const timeline = order.timeline ?? [];
+
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
@@ -14,8 +17,8 @@ export default function OrderTimeline({ order }: Props) {
       </h2>
 
       <div className="mt-6 space-y-5">
-        {order.timeline.map((step, index) => {
-          const isLast = index === order.timeline.length - 1;
+        {timeline.map((step, index) => {
+          const isLast = index === timeline.length - 1;
 
           return (
             <div key={index} className="relative flex gap-4">
@@ -44,7 +47,9 @@ export default function OrderTimeline({ order }: Props) {
                     </span>
                   )}
                 </div>
-                <p className="mt-0.5 text-[13px] leading-6 text-[#64748B]">{step.description}</p>
+                {step.description && (
+                  <p className="mt-0.5 text-[13px] leading-6 text-[#64748B]">{step.description}</p>
+                )}
               </div>
             </div>
           );

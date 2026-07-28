@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { ImageOff } from "lucide-react";
 import Button from "@/src/components/ui/button";
 import { ProductDraft } from "@/src/types/products-draft";
+import { useImageUpload } from "@/src/hooks/use-image-upload";
 import ImageUploadZone from "./image-upload-zone";
 import ImageCard from "./image-card";
 
@@ -17,20 +18,45 @@ interface Props {
 const MAX_IMAGES = 10;
 
 export default function ProductImages({ draft, setDraft, onBack, onNext }: Props) {
+  const { mutate: uploadImage } = useImageUpload();
+
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
 
-    const uploaded = Array.from(files).map((file, index) => ({
-      id: crypto.randomUUID(),
-      file,
-      preview: URL.createObjectURL(file),
-      isCover: draft.images.length === 0 && index === 0,
-    }));
+    Array.from(files).forEach((file, index) => {
+      const id = crypto.randomUUID();
 
-    setDraft((prev) => ({
-      ...prev,
-      images: [...prev.images, ...uploaded],
-    }));
+      setDraft((prev) => ({
+        ...prev,
+        images: [
+          ...prev.images,
+          {
+            id,
+            file,
+            preview: URL.createObjectURL(file),
+            isCover: prev.images.length === 0 && index === 0,
+            uploading: true,
+          },
+        ],
+      }));
+
+      uploadImage(file, {
+        onSuccess: (url) => {
+          setDraft((prev) => ({
+            ...prev,
+            images: prev.images.map((image) =>
+              image.id === id ? { ...image, url, uploading: false } : image
+            ),
+          }));
+        },
+        onError: () => {
+          setDraft((prev) => ({
+            ...prev,
+            images: prev.images.filter((image) => image.id !== id),
+          }));
+        },
+      });
+    });
   };
 
   const removeImage = (id: string) => {
@@ -40,7 +66,6 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
 
       const remaining = prev.images.filter((image) => image.id !== id);
 
-      // If the removed image was the cover, promote the next one automatically
       const hadCover = target?.isCover;
       const nextImages =
         hadCover && remaining.length > 0
@@ -61,7 +86,6 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
     }));
   };
 
-  // Revoke all object URLs when this step unmounts entirely (e.g. leaving the form)
   useEffect(() => {
     return () => {
       draft.images.forEach((image) => URL.revokeObjectURL(image.preview));
@@ -69,10 +93,8 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleContinue = () => {
-    if (draft.images.length === 0) return;
-    onNext();
-  };
+  const isUploading = draft.images.some((image) => image.uploading);
+  const canContinue = draft.images.length > 0 && !isUploading;
 
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
@@ -118,11 +140,11 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
         </Button>
         <Button
           variant="tribely"
-          onClick={handleContinue}
-          disabled={draft.images.length === 0}
+          onClick={onNext}
+          disabled={!canContinue}
           className="h-11 rounded-xl px-7"
         >
-          Continue
+          {isUploading ? "Uploading..." : "Continue"}
         </Button>
       </div>
     </section>

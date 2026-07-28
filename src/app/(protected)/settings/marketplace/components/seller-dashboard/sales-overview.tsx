@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { TrendingUp, TrendingDown } from "lucide-react";
 import SalesChart from "./sales-chart";
-import { monthlySales } from "@/src/mocks/seller-analytics";
+import { useSellerSalesOverview } from "@/src/hooks/use-seller-sales-overview";
 
 function formatNaira(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -14,14 +14,17 @@ function formatNaira(value: number) {
 }
 
 export default function SalesOverview() {
+  const { data: sales, isLoading } = useSellerSalesOverview(180);
+  const points = sales ?? [];
+
   const { total, change, isUp } = useMemo(() => {
-    const last = monthlySales[monthlySales.length - 1]?.sales ?? 0;
-    const prev = monthlySales[monthlySales.length - 2]?.sales ?? 0;
-    const total = monthlySales.reduce((sum, m) => sum + m.sales, 0);
+    const last = points[points.length - 1]?.sales ?? 0;
+    const prev = points[points.length - 2]?.sales ?? 0;
+    const total = points.reduce((sum, m) => sum + m.sales, 0);
     const change = prev === 0 ? 0 : ((last - prev) / prev) * 100;
 
     return { total, change: Math.abs(change).toFixed(1), isUp: last >= prev };
-  }, []);
+  }, [points]);
 
   return (
     <section className="space-y-6">
@@ -35,22 +38,24 @@ export default function SalesOverview() {
           </h2>
         </div>
 
-        <div className="flex items-baseline gap-3">
-          <p className="font-[family-name:var(--font-mono)] text-[26px] font-semibold text-[#13131A]">
-            {formatNaira(total)}
-          </p>
-          <span
-            className={`flex items-center gap-1 font-[family-name:var(--font-mono)] text-[13px] font-medium ${
-              isUp ? "text-emerald-600" : "text-red-500"
-            }`}
-          >
-            {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-            {change}%
-          </span>
-        </div>
+        {!isLoading && points.length > 0 && (
+          <div className="flex items-baseline gap-3">
+            <p className="font-[family-name:var(--font-mono)] text-[26px] font-semibold text-[#13131A]">
+              {formatNaira(total)}
+            </p>
+            <span
+              className={`flex items-center gap-1 font-[family-name:var(--font-mono)] text-[13px] font-medium ${
+                isUp ? "text-emerald-600" : "text-red-500"
+              }`}
+            >
+              {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
+              {change}%
+            </span>
+          </div>
+        )}
       </div>
 
-      <SalesChart />
+      <SalesChart data={points} isLoading={isLoading} />
     </section>
   );
 }

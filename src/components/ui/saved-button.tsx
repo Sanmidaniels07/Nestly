@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Heart } from "lucide-react";
-import { useSavedStore } from "@/src/store/saved-store";
+import { useWishlist } from "@/src/hooks/use-wishlist";
 
 export default function SavedButton() {
-  const count = useSavedStore((state) => state.items.length);
+  const { data: items } = useWishlist();
+  const count = items?.length ?? 0;
 
   return (
     <Link

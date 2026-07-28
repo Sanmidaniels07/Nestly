@@ -2,16 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Heart, MapPin, BadgeCheck, Star, Truck, Zap } from "lucide-react";
-import { useSavedStore } from "@/src/store/saved-store";
+import { Heart, MapPin, Star } from "lucide-react";
+import { useToggleWishlist } from "@/src/hooks/use-toggle-wishlist";
 
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
   compact?: boolean;
-  flashDeal?: boolean;
 }
 
 function formatPrice(price: number) {
@@ -22,18 +20,16 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function ProductCard({
-  product,
-  compact = false,
-  flashDeal = false,
-}: Props) {
-  const add = useSavedStore((state) => state.add);
+export default function ProductCard({ product, compact = false }: Props) {
+  const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
 
-  const remove = useSavedStore((state) => state.remove);
+  const primaryImage =
+    product.images.find((image) => image.isPrimary)?.url ??
+    product.images[0]?.url;
 
-  const isSaved = useSavedStore((state) => state.isSaved);
-
-  const saved = isSaved(product.id);
+  const location = [product.store?.city, product.store?.state]
+    .filter(Boolean)
+    .join(", ");
 
   return (
     <article
@@ -48,33 +44,28 @@ export default function ProductCard({
           compact ? "aspect-square" : "aspect-[4/3]"
         }`}
       >
-        <Image
-          fill
-          src={product.images[0]}
-          alt={product.name}
-          className="object-cover transition-transform duration-500 hover:scale-105"
-        />
+        {primaryImage && (
+          <Image
+            fill
+            src={primaryImage}
+            alt={product.title}
+            className="object-cover transition-transform duration-500 hover:scale-105"
+          />
+        )}
 
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
-          {flashDeal && (
-            <span className="flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 text-[11px] font-semibold text-white">
-              <Zap size={11} fill="white" />
-              Flash deal
-            </span>
-          )}
-
           <span
             className={`
               w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold
-              ${product.condition === "New" ? "bg-emerald-500 text-white" : "bg-amber-400 text-[#13131A]"}
+              ${product.condition === "NEW" ? "bg-emerald-500 text-white" : "bg-amber-400 text-[#13131A]"}
             `}
           >
-            {product.condition}
+            {product.condition === "NEW" ? "New" : "Used"}
           </span>
         </div>
 
         <button
-          onClick={() => (saved ? remove(product.id) : add(product))}
+          onClick={toggleSaved}
           aria-label={saved ? "Remove from saved" : "Save item"}
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-transform hover:scale-105"
         >
@@ -87,14 +78,11 @@ export default function ProductCard({
 
       {/* Content */}
       <div className={compact ? "space-y-2.5 p-4" : "space-y-3.5 p-5"}>
-        <div className="flex items-center gap-1.5">
-          {product.seller.verified && (
-            <BadgeCheck size={14} className="text-blue-500" />
-          )}{" "}
+        {product.store && (
           <span className="truncate text-[12px] text-[#64748B]">
-            {product.seller.name}
+            {product.store.name}
           </span>
-        </div>
+        )}
 
         <h3
           className={`
@@ -102,7 +90,7 @@ export default function ProductCard({
             ${compact ? "text-[17px]" : "text-[21px]"}
           `}
         >
-          {product.name}
+          {product.title}
         </h3>
 
         <p
@@ -114,31 +102,32 @@ export default function ProductCard({
         </p>
 
         {!compact && (
-          <>
-            <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
+            {product.rating !== undefined ? (
               <div className="flex items-center gap-1">
                 <Star size={14} className="fill-yellow-400 text-yellow-400" />
                 <span className="font-[family-name:var(--font-mono)] text-[13px] font-medium">
                   {product.rating}
                 </span>
-                <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
-                  ({product.reviews})
-                </span>
+                {product.reviewCount !== undefined && (
+                  <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                    ({product.reviewCount})
+                  </span>
+                )}
               </div>
+            ) : (
+              <span />
+            )}
 
+            {location && (
               <div className="flex items-center gap-1 text-[#64748B]">
                 <MapPin size={14} />
                 <span className="font-[family-name:var(--font-mono)] text-[12.5px]">
-                  {product.seller.distance}
+                  {location}
                 </span>
               </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 text-[13px] text-[#64748B]">
-              <Truck size={14} className="text-violet-600" />
-              {product.delivery ? "Delivery available" : "Pickup only"}
-            </div>
-          </>
+            )}
+          </div>
         )}
 
         <Link

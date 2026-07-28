@@ -1,61 +1,48 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
+import { Review } from "@/src/types/review";
 
 import ReviewFilter, { ReviewFilterValue } from "./product-review-components/review-filter";
 import RatingOverview from "./product-review-components/rating-overview";
 import RatingBreakdown from "./product-review-components/rating-breakdown";
 import ReviewCard from "./product-review-components/review-card";
+
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
+  reviews: Review[];
+  total: number;
 }
 
-export default function ProductReviews({ product }: Props) {
+export default function ProductReviews({ product, reviews, total }: Props) {
   const [filter, setFilter] = useState<ReviewFilterValue>("all");
-  const [activeStars, setActiveStars] = useState<number | null>(null);
 
   const breakdown = useMemo(() => {
     return [5, 4, 3, 2, 1].map((stars) => ({
       stars,
-      value: product.reviewsData.filter((r) => r.rating === stars).length,
+      value: reviews.filter((r) => r.rating === stars).length,
     }));
-  }, [product.reviewsData]);
+  }, [reviews]);
 
   const counts: Record<ReviewFilterValue, number> = useMemo(
     () => ({
-      all: product.reviewsData.length,
-      "5": product.reviewsData.filter((r) => r.rating === 5).length,
-      "4": product.reviewsData.filter((r) => r.rating === 4).length,
-      "3": product.reviewsData.filter((r) => r.rating === 3).length,
-      images: product.reviewsData.filter((r) => r.images && r.images.length > 0).length,
+      all: reviews.length,
+      "5": reviews.filter((r) => r.rating === 5).length,
+      "4": reviews.filter((r) => r.rating === 4).length,
+      "3": reviews.filter((r) => r.rating === 3).length,
+      "2": reviews.filter((r) => r.rating === 2).length,
+      "1": reviews.filter((r) => r.rating === 1).length,
     }),
-    [product.reviewsData]
+    [reviews]
   );
 
   const filteredReviews = useMemo(() => {
-    let result = product.reviewsData;
+    if (filter === "all") return reviews;
+    return reviews.filter((r) => r.rating === Number(filter));
+  }, [reviews, filter]);
 
-    if (activeStars !== null) {
-      result = result.filter((r) => r.rating === activeStars);
-    } else if (filter === "images") {
-      result = result.filter((r) => r.images && r.images.length > 0);
-    } else if (filter !== "all") {
-      result = result.filter((r) => r.rating === Number(filter));
-    }
-
-    return result;
-  }, [product.reviewsData, filter, activeStars]);
-
-  const handleFilterChange = (value: ReviewFilterValue) => {
-    setFilter(value);
-    setActiveStars(null);
-  };
-
-  const handleStarsSelect = (stars: number | null) => {
-    setActiveStars(stars);
-    setFilter("all");
-  };
+  if (total === 0) return null;
 
   return (
     <section className="mt-8 rounded-2xl border border-[#ECE9F6] bg-white p-6">
@@ -65,19 +52,19 @@ export default function ProductReviews({ product }: Props) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[260px_1fr]">
         <div>
-          <RatingOverview rating={product.rating} reviews={product.reviews} />
+          <RatingOverview rating={product.rating ?? 0} reviews={total} />
           <div className="mt-6">
             <RatingBreakdown
               breakdown={breakdown}
-              total={product.reviewsData.length}
-              activeStars={activeStars}
-              onSelectStars={handleStarsSelect}
+              total={reviews.length}
+              activeStars={filter === "all" ? null : Number(filter)}
+              onSelectStars={(stars) => setFilter(stars === null ? "all" : (String(stars) as ReviewFilterValue))}
             />
           </div>
         </div>
 
         <div>
-          <ReviewFilter active={filter} onChange={handleFilterChange} counts={counts} />
+          <ReviewFilter active={filter} onChange={setFilter} counts={counts} />
 
           <div className="mt-6 space-y-4">
             {filteredReviews.length === 0 ? (

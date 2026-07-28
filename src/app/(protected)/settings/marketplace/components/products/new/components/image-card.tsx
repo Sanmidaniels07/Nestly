@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { Star, Trash2, GripVertical } from "lucide-react";
-import { ProductImage } from "@/src/types/product-image";
+import { Star, Trash2, Loader2 } from "lucide-react";
+import { DraftImage } from "@/src/types/product-image";
 
 interface Props {
-  image: ProductImage;
+  image: DraftImage;
   onCover: () => void;
   onDelete: () => void;
 }
@@ -15,6 +15,12 @@ export default function ImageCard({ image, onCover, onDelete }: Props) {
     <div className="group relative overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white transition-shadow hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
       <div className="relative aspect-square bg-[#F8F8FC]">
         <Image src={image.preview} alt="" fill className="object-cover" />
+
+        {image.uploading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+            <Loader2 size={22} className="animate-spin text-white" />
+          </div>
+        )}
 
         {image.isCover && (
           <div className="absolute left-2.5 top-2.5 flex items-center gap-1 rounded-full bg-violet-600 px-2.5 py-1 text-[10.5px] font-semibold text-white">

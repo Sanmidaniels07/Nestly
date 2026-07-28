@@ -1,55 +1,46 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import OrdersToolbar from "./components/orders-toolbar";
 import OrdersList from "./components/orders-list";
 import Pagination from "@/src/components/ui/pagination";
-import { orders } from "@/src/mocks/order";
+import { useOrders } from "@/src/hooks/use-orders";
 import OrdersHeader from "./components/order-header";
-
-const PAGE_SIZE = 5;
 
 export default function OrdersPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [page, setPage] = useState(1);
 
+  const { data, isLoading, isError } = useOrders({
+    page,
+    limit: 5,
+    status: status !== "All" ? status : undefined,
+  });
+
+  const orders = data?.orders ?? [];
+
+  const statusOptions = useMemo(
+    () => ["All", ...Array.from(new Set(orders.map((order) => order.status)))],
+    [orders]
+  );
+
   const filteredOrders = useMemo(() => {
-    let data = [...orders];
+    if (!search.trim()) return orders;
 
-    if (status !== "All") {
-      data = data.filter((order) => order.status === status);
-    }
+    const value = search.toLowerCase();
+    return orders.filter(
+      (order) =>
+        order.id.toLowerCase().includes(value) ||
+        order.items.some((item) => item.product.title.toLowerCase().includes(value))
+    );
+  }, [orders, search]);
 
-    if (search.trim()) {
-      const value = search.toLowerCase();
-      data = data.filter(
-        (order) =>
-          order.orderNumber.toLowerCase().includes(value) ||
-          order.items.some((item) => item.product.name.toLowerCase().includes(value))
-      );
-    }
-
-    return data;
-  }, [search, status]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredOrders.length / PAGE_SIZE));
-
-  const paginatedOrders = useMemo(() => {
-    const start = (page - 1) * PAGE_SIZE;
-    return filteredOrders.slice(start, start + PAGE_SIZE);
-  }, [filteredOrders, page]);
-
-  // Reset to page 1 whenever search/status changes the result set
-  useEffect(() => {
+  const handleStatusChange = (value: string) => {
+    setStatus(value);
     setPage(1);
-  }, [search, status]);
-
-  // Guard against being stranded on a page that no longer exists
-  useEffect(() => {
-    if (page > totalPages) setPage(totalPages);
-  }, [totalPages, page]);
+  };
 
   const handlePageChange = (nextPage: number) => {
     setPage(nextPage);
@@ -64,18 +55,33 @@ export default function OrdersPage() {
         search={search}
         onSearchChange={setSearch}
         status={status}
-        onStatusChange={setStatus}
+        onStatusChange={handleStatusChange}
+        statusOptions={statusOptions}
       />
 
-      {filteredOrders.length > 0 && (
-        <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
-          {filteredOrders.length} order{filteredOrders.length !== 1 ? "s" : ""}
-        </p>
+      {isLoading && (
+        <p className="text-[13px] text-[#94A3B8]">Loading orders...</p>
       )}
 
-      <OrdersList orders={paginatedOrders} />
+      {isError && (
+        <p className="text-[13px] text-red-500">Couldn&apos;t load orders. Please try again.</p>
+      )}
 
-      <Pagination page={page} totalPages={totalPages} onPageChange={handlePageChange} />
+      {!isLoading && !isError && (
+        <>
+          {filteredOrders.length > 0 && (
+            <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+              {filteredOrders.length} order{filteredOrders.length !== 1 ? "s" : ""}
+            </p>
+          )}
+
+          <OrdersList orders={filteredOrders} />
+
+          {data && (
+            <Pagination page={data.page} totalPages={data.totalPages} onPageChange={handlePageChange} />
+          )}
+        </>
+      )}
     </div>
   );
 }

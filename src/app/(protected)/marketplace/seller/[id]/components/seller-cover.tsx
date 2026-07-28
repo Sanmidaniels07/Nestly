@@ -3,16 +3,18 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { MarketplaceSeller } from "@/src/mocks/marketplace";
+import { Store } from "@/src/types/store";
 
 interface Props {
-  seller: MarketplaceSeller;
+  store: Store;
 }
 
-export default function SellerCover({ seller }: Props) {
+export default function SellerCover({ store }: Props) {
   return (
-    <section className="relative h-[220px] overflow-hidden rounded-2xl sm:h-[260px]">
-      <Image src={seller.coverImage} alt={seller.name} fill className="object-cover" priority />
+    <section className="relative h-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-100 to-indigo-100 sm:h-[260px]">
+      {store.banner && (
+        <Image src={store.banner} alt={store.name} fill className="object-cover" priority />
+      )}
       <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
 
       <Link

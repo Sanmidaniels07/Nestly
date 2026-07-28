@@ -1,43 +1,40 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { useCreateProduct } from "@/src/hooks/use-create-product";
+import { useUpdateProduct } from "@/src/hooks/use-update-product";
+import { ProductDraft } from "@/src/types/products-draft";
 import AddProductHeader from "./components/add-products-header";
 import AddProductStepper from "./components/add-product-stepper";
-import { ProductDraft } from "@/src/types/products-draft";
 import BasicInformation from "./components/basic-information";
 import PricingInventory from "./components/price-inventory";
 import Specifications from "./components/specification";
 import ProductImages from "./components/product-images";
-import Shipping from "./components/shipping";
 import ReviewPublish from "./components/review-publish";
 
 export default function AddProductPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
 
   const [draft, setDraft] = useState<ProductDraft>({
-    // Step 1
     name: "",
-    category: "",
+    categoryId: "",
     brand: "",
     description: "",
-    condition: "",
+    condition: "NEW",
     sku: "",
-    tags: [],
 
-    // Step 2
     price: "",
     comparePrice: "",
     stock: "",
-    lowStock: "",
-    status: "Draft",
 
-    // Step 3
     specifications: [],
 
-    // Step 4
     images: [],
 
-    // Step 5
+    // Legacy shipping step defaults — unused by the real create-product flow
     weight: "",
     length: "",
     width: "",
@@ -50,11 +47,42 @@ export default function AddProductPage() {
     shippingRegions: [],
   });
 
+  const { mutateAsync: createProduct, isPending: isCreating } = useCreateProduct();
+  const { mutateAsync: updateProduct, isPending: isPublishing } = useUpdateProduct();
+
+  const handleSubmit = async (status: "PUBLISHED" | "DRAFT") => {
+    const response = await createProduct({
+      categoryId: draft.categoryId,
+      title: draft.name.trim(),
+      description: draft.description.trim(),
+      sku: draft.sku.trim(),
+      brand: draft.brand.trim() || undefined,
+      condition: draft.condition,
+      price: Number(draft.price),
+      originalPrice: draft.comparePrice ? Number(draft.comparePrice) : undefined,
+      stock: Number(draft.stock),
+      images: draft.images
+        .filter((image) => image.url)
+        .map((image) => ({ url: image.url as string, isPrimary: image.isCover })),
+      specifications: draft.specifications
+        .filter((spec) => spec.key.trim())
+        .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
+    });
+
+    const created = (response as { data: { id: string } }).data;
+
+    if (status === "PUBLISHED") {
+      await updateProduct({ id: created.id, data: { status: "PUBLISHED" } });
+    }
+
+    router.push("/settings/marketplace/components/products");
+  };
+
   return (
     <div className="space-y-8">
       <AddProductHeader />
 
-      <AddProductStepper currentStep={step} />
+      <AddProductStepper currentStep={step} onStepClick={setStep} />
 
       {step === 1 && (
         <BasicInformation draft={draft} setDraft={setDraft} onNext={() => setStep(2)} />
@@ -88,20 +116,13 @@ export default function AddProductPage() {
       )}
 
       {step === 5 && (
-        <Shipping
-          draft={draft}
-          setDraft={setDraft}
-          onBack={() => setStep(4)}
-          onNext={() => setStep(6)}
-        />
-      )}
-
-      {step === 6 && (
         <ReviewPublish
           draft={draft}
-          onBack={() => setStep(5)}
-          onPublish={() => console.log("Product published")}
-          onSaveDraft={() => console.log("Draft saved")}
+          isSubmitting={isCreating || isPublishing}
+          onBack={() => setStep(4)}
+          onPublish={() => handleSubmit("PUBLISHED")}
+          onSaveDraft={() => handleSubmit("DRAFT")}
+          onStepClick={setStep}
         />
       )}
     </div>

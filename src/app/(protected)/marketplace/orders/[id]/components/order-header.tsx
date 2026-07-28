@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import OrderStatusBadge from "../../components/order-status-badge";
-import { MarketplaceOrder } from "@/src/mocks/order";
+import { Order } from "@/src/types/order";
+import { formatRelativeTime } from "@/src/lib/date";
 
 interface Props {
-  order: MarketplaceOrder;
+  order: Order;
 }
 
 export default function OrderHeader({ order }: Props) {
@@ -24,31 +25,27 @@ export default function OrderHeader({ order }: Props) {
         <div>
           <p className="text-[13px] text-[#64748B]">Order number</p>
           <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[28px] italic text-[#13131A]">
-            {order.orderNumber}
+            #{order.id.slice(-8).toUpperCase()}
           </h1>
         </div>
         <OrderStatusBadge status={order.status} />
       </div>
 
-      <div className="mt-7 grid gap-5 border-t border-dashed border-[#ECE9F6] pt-6 md:grid-cols-3">
+      <div className="mt-7 grid gap-5 border-t border-dashed border-[#ECE9F6] pt-6 md:grid-cols-2">
         <div>
           <p className="text-[12px] uppercase tracking-wide text-[#94A3B8]">Ordered on</p>
-          <p className="mt-1 text-[13.5px] font-semibold text-[#13131A]">{order.createdAt}</p>
-        </div>
-        <div>
-          <p className="text-[12px] uppercase tracking-wide text-[#94A3B8]">
-            Estimated delivery
-          </p>
           <p className="mt-1 text-[13.5px] font-semibold text-[#13131A]">
-            {order.estimatedDelivery}
+            {formatRelativeTime(order.createdAt)}
           </p>
         </div>
-        <div>
-          <p className="text-[12px] uppercase tracking-wide text-[#94A3B8]">Payment method</p>
-          <p className="mt-1 text-[13.5px] font-semibold text-[#13131A]">
-            {order.payment.method}
-          </p>
-        </div>
+        {order.paymentMethod && (
+          <div>
+            <p className="text-[12px] uppercase tracking-wide text-[#94A3B8]">Payment method</p>
+            <p className="mt-1 text-[13.5px] font-semibold text-[#13131A]">
+              {order.paymentMethod}
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { ShoppingCart } from "lucide-react";
 
-import { useCartStore } from "@/src/store/cart-store";
+import { useCart } from "@/src/hooks/use-cart";
 
 export default function CartButton() {
-  const totalItems = useCartStore((state) => state.totalItems);
+  const { data: items } = useCart();
+  const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
 
   return (
     <Link

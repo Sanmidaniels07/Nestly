@@ -1,10 +1,10 @@
 "use client";
 
-import { MarketplaceSeller } from "@/src/mocks/marketplace";
+import { Store } from "@/src/types/store";
 import SellerCard from "./sellers-card";
 
 interface Props {
-  sellers: MarketplaceSeller[];
+  sellers: Store[];
 }
 
 export default function SellersGrid({ sellers }: Props) {

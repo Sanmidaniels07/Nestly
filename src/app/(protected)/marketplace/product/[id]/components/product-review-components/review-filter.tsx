@@ -1,6 +1,6 @@
 "use client";
 
-export type ReviewFilterValue = "all" | "5" | "4" | "3" | "images";
+export type ReviewFilterValue = "all" | "5" | "4" | "3" | "2" | "1";
 
 interface Props {
   active: ReviewFilterValue;
@@ -13,7 +13,8 @@ const filters: { label: string; value: ReviewFilterValue }[] = [
   { label: "5★", value: "5" },
   { label: "4★", value: "4" },
   { label: "3★", value: "3" },
-  { label: "With images", value: "images" },
+  { label: "2★", value: "2" },
+  { label: "1★", value: "1" },
 ];
 
 export default function ReviewFilter({ active, onChange, counts }: Props) {

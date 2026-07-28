@@ -2,9 +2,11 @@
 import Link from "next/link";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import { motion } from "framer-motion";
-import { Users, Gift, ShoppingBag, Heart, Calendar, Star } from "lucide-react";
+import { LogOut, Users, Gift, ShoppingBag, Heart, Calendar, Star } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
+import { useAuth } from "../hooks/use-auth";
+import { useLogout } from "../hooks/use-logout";
 
 export default function Home() {
   return (
@@ -23,6 +25,9 @@ export default function Home() {
 }
 
 function Nav() {
+  const { isAuthenticated } = useAuth();
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-[#E5E7EB] h-16 flex items-center px-6 md:px-8">
       <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
@@ -33,31 +38,47 @@ function Nav() {
           <div className="font-bold text-2xl tracking-tight">Nestly</div>
         </div>
 
-        <div className="hidden md:flex items-center gap-10 font-medium text-sm">
-          <a
-            href="#features"
-            className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
-          >
-            Features
-          </a>
-          <a
-            href="#preview"
-            className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
-          >
-            Preview
-          </a>
-        </div>
+        {!isAuthenticated && (
+          <div className="hidden md:flex items-center gap-10 font-medium text-sm">
+            <a
+              href="#features"
+              className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href="#preview"
+              className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
+            >
+              Preview
+            </a>
+          </div>
+        )}
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
-          <Link href="/login">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
-              Log In
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="tribely" size="sm">Get Started</Button>
-          </Link>
+
+          {isAuthenticated ? (
+            <button
+              onClick={() => logout()}
+              disabled={isLoggingOut}
+              aria-label="Log out"
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#6B7280] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+            >
+              <LogOut size={18} />
+            </button>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="outline" size="sm" className="hidden sm:flex">
+                  Log In
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button variant="tribely" size="sm">Get Started</Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

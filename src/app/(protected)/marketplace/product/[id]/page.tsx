@@ -1,4 +1,10 @@
-import { nearbyProducts } from "@/src/mocks/marketplace";
+"use client";
+
+import { use } from "react";
+
+import { useProduct } from "@/src/hooks/use-product";
+import { useRelatedProducts } from "@/src/hooks/use-related-products";
+import { useProductReviews } from "@/src/hooks/use-product-reviews";
 import ProductBreadcrumb from "./components/breadcrumb";
 import ProductGallery from "./components/product-gallery";
 import ProductInfo from "./components/product-info";
@@ -12,12 +18,22 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function ProductDetailsPage({ params }: Props) {
-  const { id } = await params;
+export default function ProductDetailsPage({ params }: Props) {
+  const { id } = use(params);
 
-  const product = nearbyProducts.find((item) => item.id === id);
+  const { data: product, isLoading, isError } = useProduct(id);
+  useRelatedProducts(id, 8);
+  const { data: reviewsData } = useProductReviews(id, { limit: 20 });
 
-  if (!product) {
+  if (isLoading) {
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-20 text-center text-[14px] text-[#94A3B8]">
+        Loading product...
+      </div>
+    );
+  }
+
+  if (isError || !product) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-20 text-center">
         <p className="text-[15px] font-medium text-[#13131A]">
@@ -39,12 +55,12 @@ export default async function ProductDetailsPage({ params }: Props) {
         <ProductInfo product={product} />
         <BuyBox product={product} />
       </div>
-      <SellerSummary seller={product.seller} />
+
+      {product.store && <SellerSummary store={product.store} />}
+
       <ProductDescription product={product} />
-
       <ProductSpecifications product={product} />
-      <ProductReviews product={product} />
-
+      <ProductReviews product={product} reviews={reviewsData?.reviews ?? []} total={reviewsData?.total ?? 0} />
     </div>
   );
 }

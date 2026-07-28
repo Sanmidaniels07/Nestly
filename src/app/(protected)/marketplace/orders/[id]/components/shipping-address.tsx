@@ -1,15 +1,13 @@
 "use client";
 
-import { MarketplaceOrder } from "@/src/mocks/order";
+import { Address } from "@/src/types/address";
 import { MapPin, Phone, User } from "lucide-react";
 
 interface Props {
-  order: MarketplaceOrder;
+  address: Address;
 }
 
-export default function ShippingAddress({ order }: Props) {
-  const address = order.shippingAddress;
-
+export default function ShippingAddress({ address }: Props) {
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">

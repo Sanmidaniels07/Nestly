@@ -15,7 +15,7 @@ export default function EmptyOrders() {
       </h2>
 
       <p className="mt-2 max-w-sm text-[14px] text-[#64748B]">
-        You haven't placed any orders yet. Browse the marketplace and purchase your first item.
+        You haven&apos;t placed any orders yet. Browse the marketplace and purchase your first item.
       </p>
 
       <Link

@@ -3,10 +3,10 @@
 import { CheckCircle2 } from "lucide-react";
 
 interface Props {
-  orderNumber: string;
+  orderId: string;
 }
 
-export default function SuccessHero({ orderNumber }: Props) {
+export default function SuccessHero({ orderId }: Props) {
   return (
     <section className="rounded-2xl bg-gradient-to-br from-violet-600 via-indigo-600 to-violet-700 p-8 text-white sm:p-10">
       <div className="mx-auto max-w-2xl text-center">
@@ -23,7 +23,7 @@ export default function SuccessHero({ orderNumber }: Props) {
         </p>
 
         <p className="mt-4 font-[family-name:var(--font-mono)] text-[13px] text-violet-200">
-          Order {orderNumber}
+          Order #{orderId.slice(-8).toUpperCase()}
         </p>
       </div>
     </section>

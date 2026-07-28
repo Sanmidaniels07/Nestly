@@ -1,15 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { BadgeCheck, Star, ThumbsUp } from "lucide-react";
-import { MarketplaceSeller } from "@/src/mocks/marketplace";
+import { Star } from "lucide-react";
+import { Review } from "@/src/types/review";
+import UserAvatar from "@/src/components/ui/user-avatar";
+import { formatRelativeTime } from "@/src/lib/date";
 
 interface Props {
-  seller: MarketplaceSeller;
+  rating?: number;
+  reviews: Review[];
+  total: number;
 }
 
-export default function SellerReviews({ seller }: Props) {
+export default function SellerReviews({ rating, reviews, total }: Props) {
   return (
     <section className="space-y-6">
       <div>
@@ -25,98 +27,72 @@ export default function SellerReviews({ seller }: Props) {
         <div className="flex flex-col gap-6 lg:flex-row">
           <div className="lg:w-56">
             <p className="font-[family-name:var(--font-mono)] text-[44px] font-bold leading-none text-violet-700">
-              {seller.rating}
+              {rating ?? "—"}
             </p>
 
             <div className="mt-2.5 flex gap-0.5">
               {Array.from({ length: 5 }).map((_, index) => (
-                <Star key={index} size={15} className="fill-yellow-400 text-yellow-400" />
+                <Star
+                  key={index}
+                  size={15}
+                  className={
+                    rating && index < Math.round(rating)
+                      ? "fill-yellow-400 text-yellow-400"
+                      : "text-[#E5E7EB]"
+                  }
+                />
               ))}
             </div>
 
             <p className="mt-3 font-[family-name:var(--font-mono)] text-[12.5px] text-[#64748B]">
-              Based on {seller.reviews} reviews
+              Based on {total} review{total !== 1 ? "s" : ""}
             </p>
           </div>
 
           <div className="flex-1 space-y-4">
-            {seller.reviewsData.map((review) => (
-              <ReviewItem key={review.id} review={review} />
+            {reviews.length === 0 && (
+              <p className="text-[13.5px] text-[#94A3B8]">No reviews yet.</p>
+            )}
+
+            {reviews.map((review) => (
+              <div key={review.id} className="rounded-xl border border-[#ECE9F6] p-4">
+                <div className="flex gap-3.5">
+                  <UserAvatar name={review.user?.name} size={44} />
+
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-[14px] font-semibold text-[#13131A]">
+                      {review.user?.name ?? "Unknown buyer"}
+                    </h4>
+
+                    <div className="mt-1.5 flex items-center gap-2.5">
+                      <div className="flex gap-0.5">
+                        {Array.from({ length: review.rating }).map((_, index) => (
+                          <Star key={index} size={12} className="fill-yellow-400 text-yellow-400" />
+                        ))}
+                      </div>
+                      <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                        {formatRelativeTime(review.createdAt)}
+                      </span>
+                    </div>
+
+                    {review.productTitle && (
+                      <p className="mt-2 text-[12.5px] font-medium text-violet-600">
+                        Purchased: {review.productTitle}
+                      </p>
+                    )}
+
+                    {review.comment && (
+                      <p className="mt-2.5 text-[13.5px] leading-relaxed text-[#475569]">
+                        {review.comment}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-function ReviewItem({ review }: { review: MarketplaceSeller["reviewsData"][number] }) {
-  const [marked, setMarked] = useState(false);
-  const [count, setCount] = useState(review.helpful);
-
-  const toggleHelpful = () => {
-    setMarked((prev) => !prev);
-    setCount((prev) => (marked ? prev - 1 : prev + 1));
-  };
-
-  return (
-    <div className="rounded-xl border border-[#ECE9F6] p-4">
-      <div className="flex gap-3.5">
-        <div className="rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 p-[2px]">
-          <div className="rounded-full bg-white p-[2px]">
-            <Image
-              src={review.customer.avatar}
-              alt={review.customer.name}
-              width={44}
-              height={44}
-              className="h-11 w-11 rounded-full object-cover"
-            />
-          </div>
-        </div>
-
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <h4 className="text-[14px] font-semibold text-[#13131A]">{review.customer.name}</h4>
-
-            {review.verifiedBuyer && (
-              <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700">
-                <BadgeCheck size={11} />
-                Verified buyer
-              </span>
-            )}
-          </div>
-
-          <div className="mt-1.5 flex items-center gap-2.5">
-            <div className="flex gap-0.5">
-              {Array.from({ length: review.rating }).map((_, index) => (
-                <Star key={index} size={12} className="fill-yellow-400 text-yellow-400" />
-              ))}
-            </div>
-            <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
-              {review.date}
-            </span>
-          </div>
-
-          <p className="mt-2 text-[12.5px] font-medium text-violet-600">
-            Purchased: {review.purchasedProduct}
-          </p>
-
-          <p className="mt-2.5 text-[13.5px] leading-relaxed text-[#475569]">
-            {review.comment}
-          </p>
-
-          <button
-            onClick={toggleHelpful}
-            className={`mt-3 flex items-center gap-1.5 text-[12.5px] font-medium transition-colors ${
-              marked ? "text-violet-600" : "text-[#64748B] hover:text-violet-600"
-            }`}
-          >
-            <ThumbsUp size={13} fill={marked ? "currentColor" : "none"} />
-            Helpful
-            <span className="font-[family-name:var(--font-mono)]">({count})</span>
-          </button>
-        </div>
-      </div>
-    </div>
   );
 }

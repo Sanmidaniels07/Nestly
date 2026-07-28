@@ -1,11 +1,11 @@
 "use client";
 
 import { Package, ShoppingBag } from "lucide-react";
-import { useCartStore } from "@/src/store/cart-store";
+import { useCart } from "@/src/hooks/use-cart";
 import CheckoutOrderItem from "./checkout-order-item";
 
 export default function OrderItems() {
-  const items = useCartStore((state) => state.items);
+  const { data: items, isLoading } = useCart();
 
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
@@ -18,12 +18,14 @@ export default function OrderItems() {
             Order items
           </h2>
           <p className="text-[13px] text-[#64748B]">
-            Review the products you're purchasing.
+            Review the products you&apos;re purchasing.
           </p>
         </div>
       </div>
 
-      {items.length === 0 ? (
+      {isLoading && <p className="text-[13px] text-[#94A3B8]">Loading cart...</p>}
+
+      {!isLoading && (!items || items.length === 0) ? (
         <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-10 text-center">
           <ShoppingBag size={28} className="text-[#C4C0DC]" strokeWidth={1.5} />
           <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">Your cart is empty</p>
@@ -31,8 +33,8 @@ export default function OrderItems() {
         </div>
       ) : (
         <div className="space-y-3">
-          {items.map((item) => (
-            <CheckoutOrderItem key={item.product.id} item={item} />
+          {items?.map((item) => (
+            <CheckoutOrderItem key={item.id} item={item} />
           ))}
         </div>
       )}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Button from "@/src/components/ui/button";
 import { Sunrise, Sun, Sunset, Moon, PenSquare, Compass } from "lucide-react";
 
@@ -59,6 +60,7 @@ function getTimeOfDay(): TimeOfDay {
 }
 
 export default function HeroCard({ name }: HeroCardProps) {
+  const router = useRouter();
   const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>("evening");
 
   useEffect(() => {
@@ -104,7 +106,10 @@ export default function HeroCard({ name }: HeroCardProps) {
         </p>
 
         <div className="mt-9 flex flex-wrap gap-3">
-          <Button className="bg-white px-7 py-5 text-[14px] font-semibold text-[#2A1B4D] shadow-lg hover:bg-white/90 sm:px-8 sm:py-6 sm:text-base">
+          <Button
+            onClick={() => router.push("/feed")}
+            className="bg-white px-7 py-5 text-[14px] font-semibold text-[#2A1B4D] shadow-lg hover:bg-white/90 sm:px-8 sm:py-6 sm:text-base"
+          >
             <PenSquare size={18} className="mr-2.5" />
             Create post
           </Button>

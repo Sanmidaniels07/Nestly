@@ -1,18 +1,18 @@
 "use client";
 
-import { Address } from "@/src/types/shipping-address";
-import { CheckCircle2, MapPin } from "lucide-react";
+import { Address } from "@/src/types/address";
+import { CheckCircle2, MapPin, Trash2 } from "lucide-react";
 
 interface Props {
   address: Address;
   selected: boolean;
   onSelect: () => void;
+  onDelete: () => void;
 }
 
-export default function AddressCard({ address, selected, onSelect }: Props) {
+export default function AddressCard({ address, selected, onSelect, onDelete }: Props) {
   return (
-    <button
-      onClick={onSelect}
+    <div
       className={`w-full rounded-2xl border p-5 text-left transition-colors ${
         selected
           ? "border-violet-600 bg-violet-50"
@@ -20,11 +20,11 @@ export default function AddressCard({ address, selected, onSelect }: Props) {
       }`}
     >
       <div className="flex justify-between gap-4">
-        <div className="min-w-0">
+        <button onClick={onSelect} className="min-w-0 flex-1 text-left">
           <div className="flex items-center gap-2">
             <MapPin size={16} className="shrink-0 text-violet-600" />
             <span className="text-[14px] font-semibold text-[#13131A]">
-              {address.label}
+              {address.fullName}
             </span>
             {address.isDefault && (
               <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[10.5px] font-medium text-white">
@@ -33,11 +33,7 @@ export default function AddressCard({ address, selected, onSelect }: Props) {
             )}
           </div>
 
-          <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">
-            {address.fullName}
-          </p>
-
-          <p className="mt-1 text-[13px] text-[#64748B]">{address.phone}</p>
+          <p className="mt-2 text-[13px] text-[#64748B]">{address.phone}</p>
 
           <p className="mt-2 text-[13px] leading-6 text-[#475569]">
             {address.address}
@@ -46,12 +42,19 @@ export default function AddressCard({ address, selected, onSelect }: Props) {
             <br />
             {address.country}
           </p>
-        </div>
+        </button>
 
-        {selected && (
-          <CheckCircle2 size={20} className="shrink-0 text-violet-600" />
-        )}
+        <div className="flex shrink-0 flex-col items-end gap-3">
+          {selected && <CheckCircle2 size={20} className="text-violet-600" />}
+          <button
+            onClick={onDelete}
+            aria-label="Delete address"
+            className="text-[#94A3B8] transition-colors hover:text-red-500"
+          >
+            <Trash2 size={16} />
+          </button>
+        </div>
       </div>
-    </button>
+    </div>
   );
 }

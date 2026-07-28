@@ -1,11 +1,11 @@
 "use client";
 
-import { MarketplaceOrder } from "@/src/mocks/order";
+import { Order } from "@/src/types/order";
 import EmptyOrders from "./empty-orders";
 import OrderCard from "./order-card";
 
 interface Props {
-  orders: MarketplaceOrder[];
+  orders: Order[];
 }
 
 export default function OrdersList({ orders }: Props) {

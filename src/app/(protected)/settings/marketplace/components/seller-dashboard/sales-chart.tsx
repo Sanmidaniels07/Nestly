@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -10,11 +9,12 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { monthlySales } from "@/src/mocks/seller-analytics";
+import { SellerSalesPoint } from "@/src/services/seller-dashboard.services";
 
-type Period = "6M" | "12M" | "ALL";
-
-const periods: Period[] = ["6M", "12M", "ALL"];
+interface Props {
+  data: SellerSalesPoint[];
+  isLoading?: boolean;
+}
 
 function formatCompact(value: number) {
   if (value >= 1_000_000) return `₦${(value / 1_000_000).toFixed(1)}M`;
@@ -22,7 +22,13 @@ function formatCompact(value: number) {
   return `₦${value}`;
 }
 
-function CustomTooltip({ active, payload, label }: any) {
+interface TooltipProps {
+  active?: boolean;
+  payload?: { value: number }[];
+  label?: string;
+}
+
+function CustomTooltip({ active, payload, label }: TooltipProps) {
   if (!active || !payload || !payload.length) return null;
 
   return (
@@ -37,35 +43,22 @@ function CustomTooltip({ active, payload, label }: any) {
   );
 }
 
-export default function SalesChart() {
-  const [period, setPeriod] = useState<Period>("6M");
+export default function SalesChart({ data, isLoading }: Props) {
+  if (isLoading) {
+    return <div className="h-[320px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />;
+  }
 
-  const data = useMemo(() => {
-    if (period === "6M") return monthlySales.slice(-6);
-    if (period === "12M") return monthlySales.slice(-12);
-    return monthlySales;
-  }, [period]);
+  if (data.length === 0) {
+    return (
+      <div className="flex h-[200px] items-center justify-center rounded-2xl border border-[#ECE9F6] bg-white text-[13.5px] text-[#94A3B8]">
+        No sales data yet.
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <div className="flex items-center justify-end">
-        <div className="flex gap-1 rounded-lg bg-[#F7F7FB] p-1">
-          {periods.map((p) => (
-            <button
-              key={p}
-              onClick={() => setPeriod(p)}
-              className={`
-                rounded-md px-3 py-1.5 font-[family-name:var(--font-mono)] text-[11.5px] font-medium transition-colors
-                ${period === p ? "bg-white text-violet-700 shadow-sm" : "text-[#94A3B8] hover:text-[#334155]"}
-              `}
-            >
-              {p}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-4 h-[320px]">
+      <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
             <defs>
@@ -78,7 +71,7 @@ export default function SalesChart() {
             <CartesianGrid strokeDasharray="3 3" stroke="#F2F1F8" vertical={false} />
 
             <XAxis
-              dataKey="month"
+              dataKey="date"
               axisLine={false}
               tickLine={false}
               tick={{ fill: "#94A3B8", fontSize: 12 }}

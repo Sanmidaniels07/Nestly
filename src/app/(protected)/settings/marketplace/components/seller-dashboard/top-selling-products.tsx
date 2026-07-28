@@ -1,10 +1,12 @@
 "use client";
 
-import { sellerProducts } from "@/src/mocks/seller-products";
 import TopProductCard from "./top-product-card";
+import { useSellerTopProducts } from "@/src/hooks/use-seller-top-products";
 
 export default function TopSellingProducts() {
-  const topProducts = sellerProducts.slice(0, 3);
+  const { data: topProducts, isLoading } = useSellerTopProducts(3);
+
+  if (!isLoading && !topProducts?.length) return null;
 
   return (
     <section className="space-y-6">
@@ -18,14 +20,19 @@ export default function TopSellingProducts() {
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
-        {topProducts.map((product, index) => (
-          <TopProductCard
-            key={product.id}
-            product={product}
-            sold={product.totalSold}
-            position={index + 1}
-          />
-        ))}
+        {isLoading
+          ? Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-[190px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />
+            ))
+          : topProducts?.map((entry, index) => (
+              <TopProductCard
+                key={entry.product.id}
+                product={entry.product}
+                sold={entry.sold}
+                revenue={entry.revenue}
+                position={index + 1}
+              />
+            ))}
       </div>
     </section>
   );

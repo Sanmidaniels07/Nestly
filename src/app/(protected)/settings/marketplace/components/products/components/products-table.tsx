@@ -1,11 +1,11 @@
 "use client";
 
-import { sellerProducts } from "@/src/mocks/seller-products";
+import { Product } from "@/src/types/product";
 import ManagementTable from "@/src/components/ui/management-tables";
 import ProductRow from "./product-row";
 
 interface Props {
-  products?: typeof sellerProducts;
+  products: Product[];
 }
 
 const columns = [
@@ -13,13 +13,11 @@ const columns = [
   { label: "SKU", align: "left" },
   { label: "Price", align: "right" },
   { label: "Stock", align: "right" },
-  { label: "Sold", align: "right" },
-  { label: "Views", align: "right" },
   { label: "Status", align: "left" },
   { label: "Actions", align: "right" },
 ] as const;
 
-export default function ProductsTable({ products = sellerProducts }: Props) {
+export default function ProductsTable({ products }: Props) {
   return (
     <ManagementTable>
       <thead>

@@ -7,13 +7,13 @@ interface Props {
   onStepClick?: (step: number) => void;
 }
 
-const steps = ["Basic info", "Pricing", "Specifications", "Images", "Shipping", "Review"];
+const steps = ["Basic info", "Pricing", "Specifications", "Images", "Review"];
 
 export default function AddProductStepper({ currentStep, onStepClick }: Props) {
   return (
     <div>
       {/* Progress bars */}
-      <div className="grid grid-cols-6 gap-1.5">
+      <div className="grid grid-cols-5 gap-1.5">
         {steps.map((step, index) => {
           const stepNumber = index + 1;
           const completed = currentStep > stepNumber;
@@ -31,7 +31,7 @@ export default function AddProductStepper({ currentStep, onStepClick }: Props) {
       </div>
 
       {/* Step labels — desktop: full row, mobile: current step only */}
-      <div className="mt-4 hidden gap-1.5 sm:grid sm:grid-cols-6">
+      <div className="mt-4 hidden gap-1.5 sm:grid sm:grid-cols-5">
         {steps.map((step, index) => {
           const stepNumber = index + 1;
           const completed = currentStep > stepNumber;

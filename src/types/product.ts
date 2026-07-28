@@ -1,0 +1,103 @@
+import { Category } from "./category";
+
+export interface ProductImage {
+  id?: string;
+  url: string;
+  isPrimary?: boolean;
+}
+
+export interface ProductSpecification {
+  id?: string;
+  name: string;
+  value: string;
+}
+
+export interface ProductVariant {
+  id?: string;
+  name: string;
+  value: string;
+  price?: number;
+  stock?: number;
+}
+
+export type ProductCondition = "NEW" | "USED";
+export type ProductStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+
+export interface ProductStoreSummary {
+  id: string;
+  name: string;
+  slug: string;
+  logo?: string | null;
+  city?: string | null;
+  state?: string | null;
+}
+
+export interface Product {
+  id: string;
+  storeId: string;
+  categoryId: string;
+  title: string;
+  description: string;
+  sku: string;
+  brand?: string | null;
+  condition: ProductCondition;
+  price: number;
+  originalPrice?: number | null;
+  stock: number;
+  isFeatured?: boolean;
+  status: ProductStatus;
+  images: ProductImage[];
+  specifications: ProductSpecification[];
+  variants: ProductVariant[];
+  store?: ProductStoreSummary;
+  category?: Category;
+  rating?: number;
+  reviewCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateProductPayload {
+  categoryId: string;
+  title: string;
+  description: string;
+  sku: string;
+  brand?: string;
+  condition: ProductCondition;
+  price: number;
+  originalPrice?: number;
+  stock: number;
+  isFeatured?: boolean;
+  images?: ProductImage[];
+  specifications?: ProductSpecification[];
+  variants?: ProductVariant[];
+}
+
+export type UpdateProductPayload = Partial<CreateProductPayload> & {
+  status?: ProductStatus;
+};
+
+export interface ProductListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  category?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  condition?: ProductCondition;
+  brand?: string;
+  sort?: "newest" | "oldest" | "price_asc" | "price_desc";
+}
+
+export interface NearbyProductParams {
+  city?: string;
+  state?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface MyProductParams {
+  page?: number;
+  limit?: number;
+  status?: ProductStatus;
+}

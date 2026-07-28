@@ -14,7 +14,12 @@ interface ProductsToolbarProps {
   onOpenFilters: () => void;
 }
 
-const sortOptions = ["Newest", "Highest Rated", "Price Low", "Price High"];
+const sortOptions = [
+  { label: "Newest", value: "newest" },
+  { label: "Oldest", value: "oldest" },
+  { label: "Price: Low to High", value: "price_asc" },
+  { label: "Price: High to Low", value: "price_desc" },
+];
 
 export default function ProductsToolbar({
   search,
@@ -43,7 +48,9 @@ export default function ProductsToolbar({
           className="h-12 rounded-xl border border-[#ECE9F6] bg-white px-4 text-[13.5px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
         >
           {sortOptions.map((option) => (
-            <option key={option}>{option}</option>
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
           ))}
         </select>
 

@@ -1,13 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import { LogOut } from "lucide-react";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
 import Tooltip from "./tooltip";
 import SavedButton from "./saved-button";
+import { useAuth } from "@/src/hooks/use-auth";
+import { useLogout } from "@/src/hooks/use-logout";
 
 export default function Navbar() {
+  const { isAuthenticated } = useAuth();
+  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-[#ECE9F6] bg-white/85 px-5 backdrop-blur-xl md:px-8">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
@@ -20,20 +26,22 @@ export default function Navbar() {
           </span>
         </Link>
 
-        <div className="hidden items-center gap-8 text-[14px] font-medium md:flex">
-          <a
-            href="#features"
-            className="text-[#64748B] transition-colors hover:text-violet-600"
-          >
-            Features
-          </a>
-          <a
-            href="#preview"
-            className="text-[#64748B] transition-colors hover:text-violet-600"
-          >
-            Preview
-          </a>
-        </div>
+        {!isAuthenticated && (
+          <div className="hidden items-center gap-8 text-[14px] font-medium md:flex">
+            <a
+              href="#features"
+              className="text-[#64748B] transition-colors hover:text-violet-600"
+            >
+              Features
+            </a>
+            <a
+              href="#preview"
+              className="text-[#64748B] transition-colors hover:text-violet-600"
+            >
+              Preview
+            </a>
+          </div>
+        )}
 
         <div className="flex items-center gap-3">
           <ThemeToggle />
@@ -42,17 +50,33 @@ export default function Navbar() {
           </Tooltip>
           <Tooltip label="Cart">
             <CartButton />
-          </Tooltip>{" "}
-          <Link href="/login">
-            <Button variant="outline" size="sm" className="hidden sm:flex">
-              Log in
-            </Button>
-          </Link>
-          <Link href="/signup">
-            <Button variant="tribely" size="sm">
-              Get started
-            </Button>
-          </Link>
+          </Tooltip>
+
+          {isAuthenticated ? (
+            <Tooltip label="Log out">
+              <button
+                onClick={() => logout()}
+                disabled={isLoggingOut}
+                aria-label="Log out"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+              >
+                <LogOut size={18} />
+              </button>
+            </Tooltip>
+          ) : (
+            <>
+              <Link href="/login">
+                <Button variant="outline" size="sm" className="hidden sm:flex">
+                  Log in
+                </Button>
+              </Link>
+              <Link href="/signup">
+                <Button variant="tribely" size="sm">
+                  Get started
+                </Button>
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

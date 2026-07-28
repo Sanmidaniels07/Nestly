@@ -4,7 +4,6 @@ import { useState } from "react";
 
 import Button from "@/src/components/ui/button";
 import Input from "@/src/components/ui/input";
-import FormSelect from "@/src/components/ui/form-select";
 import { ProductDraft } from "@/src/types/products-draft";
 
 interface Props {
@@ -17,7 +16,6 @@ interface Props {
 interface Errors {
   price?: string;
   stock?: string;
-  sku?: string;
 }
 
 export default function PricingInventory({ draft, setDraft, onBack, onNext }: Props) {
@@ -38,10 +36,6 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
     const stock = Number(draft.stock);
     if (draft.stock === "" || Number.isNaN(stock) || stock < 0) {
       nextErrors.stock = "Enter a valid stock quantity";
-    }
-
-    if (!draft.sku?.trim()) {
-      nextErrors.sku = "SKU is required";
     }
 
     setErrors(nextErrors);
@@ -101,10 +95,10 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
             Inventory
           </h2>
           <p className="mt-1 text-[13px] text-[#64748B]">
-            Track how much stock you have and how it's identified.
+            Track how much stock you have.
           </p>
 
-          <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="mt-5">
             <Input
               label="Stock quantity"
               placeholder="0"
@@ -115,32 +109,6 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
                 clearError("stock");
               }}
               error={errors.stock}
-            />
-            <Input
-              label="Low stock alert"
-              placeholder="5"
-              inputMode="numeric"
-              value={draft.lowStock}
-              onChange={(e) => setDraft((prev) => ({ ...prev, lowStock: e.target.value }))}
-            />
-            <Input
-              label="SKU"
-              placeholder="SKU-10001"
-              value={draft.sku}
-              onChange={(e) => {
-                setDraft((prev) => ({ ...prev, sku: e.target.value }));
-                clearError("sku");
-              }}
-              error={errors.sku}
-            />
-            <FormSelect
-              label="Status"
-              value={draft.status}
-              onChange={(value) => setDraft((prev) => ({ ...prev, status: value }))}
-              options={[
-                { label: "Active", value: "Active" },
-                { label: "Draft", value: "Draft" },
-              ]}
             />
           </div>
         </div>

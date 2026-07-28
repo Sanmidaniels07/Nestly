@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Image, PenSquare, Store, ArrowRight } from "lucide-react";
 
 const actions = [
@@ -8,22 +9,27 @@ const actions = [
     description: "Share your thoughts and ideas with your communities.",
     icon: PenSquare,
     color: "from-violet-500 to-purple-600",
+    href: "/feed",
   },
   {
     title: "Upload Photo",
     description: "Capture moments and share memories instantly.",
     icon: Image,
     color: "from-pink-500 to-rose-500",
+    href: undefined,
   },
   {
     title: "Sell Item",
     description: "List products and start selling in the marketplace.",
     icon: Store,
     color: "from-amber-500 to-orange-600",
+    href: "/marketplace/sell",
   },
 ];
 
 export default function QuickActions() {
+  const router = useRouter();
+
   return (
     <section>
       <div className="mb-8">
@@ -35,7 +41,9 @@ export default function QuickActions() {
         {actions.map((action, i) => (
           <button
             key={i}
-            className="group relative overflow-hidden rounded-3xl bg-white p-8 text-left shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100"
+            onClick={action.href ? () => router.push(action.href!) : undefined}
+            disabled={!action.href}
+            className="group relative overflow-hidden rounded-3xl bg-white p-8 text-left shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg"
           >
             {/* Gradient Accent */}
             <div className={`absolute top-0 right-0 h-2 w-24 bg-gradient-to-r ${action.color} rounded-bl-3xl`} />

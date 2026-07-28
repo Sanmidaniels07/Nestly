@@ -7,7 +7,7 @@ interface Props {
   onStepClick?: (step: number) => void;
 }
 
-const labels = ["Basic information", "Pricing & inventory", "Specifications", "Images", "Shipping"];
+const labels = ["Basic information", "Pricing & inventory", "Specifications", "Images"];
 
 export default function CompletionChecklist({ completed, onStepClick }: Props) {
   const doneCount = completed.filter(Boolean).length;

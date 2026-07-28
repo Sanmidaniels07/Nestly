@@ -24,7 +24,7 @@ export default function SavedHeader({ count }: Props) {
       </div>
 
       <p className="mt-3 max-w-2xl text-[14.5px] leading-relaxed text-[#64748B]">
-        Keep track of products you love and purchase them whenever you're ready.
+        Keep track of products you love and purchase them whenever you&apos;re ready.
         {typeof count === "number" && count > 0 && (
           <span className="font-[family-name:var(--font-mono)] text-[#94A3B8]"> ({count} saved)</span>
         )}

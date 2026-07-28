@@ -1,11 +1,13 @@
-import { MarketplaceProduct } from "../mocks/marketplace";
+import { Product } from "./product";
 
 export interface CartItem {
-  product: MarketplaceProduct;
-
+  id: string;
+  productId: string;
   quantity: number;
+  product: Product;
+}
 
-  selected: boolean;
-
-  
+export interface AddToCartPayload {
+  productId: string;
+  quantity?: number;
 }

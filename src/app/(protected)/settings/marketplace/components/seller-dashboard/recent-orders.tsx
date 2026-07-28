@@ -3,10 +3,11 @@
 import Link from "next/link";
 import { ArrowRight, ClipboardList } from "lucide-react";
 import RecentOrderRow from "./recent-order-row";
-import { sellerOrders } from "@/src/mocks/seller-order";
+import { useSellerRecentOrders } from "@/src/hooks/use-seller-recent-orders";
 
 export default function RecentOrders() {
-  const orders = sellerOrders.slice(0, 5);
+  const { data, isLoading } = useSellerRecentOrders(5);
+  const orders = data ?? [];
 
   return (
     <section className="space-y-6">
@@ -21,7 +22,7 @@ export default function RecentOrders() {
         </div>
 
         <Link
-          href="/settings/marketplace/orders"
+          href="/settings/marketplace?tab=orders"
           className="group flex shrink-0 items-center gap-1 text-[13.5px] font-semibold text-violet-600 hover:underline"
         >
           View all
@@ -30,7 +31,9 @@ export default function RecentOrders() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
-        {orders.length === 0 ? (
+        {isLoading ? (
+          <div className="h-40 animate-pulse bg-[#F7F7FB]" />
+        ) : orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
             <ClipboardList size={28} className="text-[#C4C0DC]" strokeWidth={1.5} />
             <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No orders yet</p>

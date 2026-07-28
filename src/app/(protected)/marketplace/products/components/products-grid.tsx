@@ -1,11 +1,11 @@
 "use client";
 
 import ProductCard from "../../components/product-card";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 import ProductsEmpty from "./products-empty-state";
 
 interface Props {
-  products: MarketplaceProduct[];
+  products: Product[];
 }
 
 export default function ProductsGrid({ products }: Props) {

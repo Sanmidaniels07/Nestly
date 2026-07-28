@@ -1,22 +1,26 @@
 "use client";
 
 interface Props {
-  value: "All" | "New" | "Used";
-  onChange: (value: "All" | "New" | "Used") => void;
+  value: "All" | "NEW" | "USED";
+  onChange: (value: "All" | "NEW" | "USED") => void;
 }
 
-const conditions: ("All" | "New" | "Used")[] = ["All", "New", "Used"];
+const conditions: { label: string; value: "All" | "NEW" | "USED" }[] = [
+  { label: "All", value: "All" },
+  { label: "New", value: "NEW" },
+  { label: "Used", value: "USED" },
+];
 
 export default function ConditionFilter({ value, onChange }: Props) {
   return (
     <div className="flex flex-wrap gap-2">
       {conditions.map((condition) => {
-        const active = value === condition;
+        const active = value === condition.value;
 
         return (
           <button
-            key={condition}
-            onClick={() => onChange(condition)}
+            key={condition.value}
+            onClick={() => onChange(condition.value)}
             className={`
               rounded-full px-4 py-2 text-[13px] font-medium transition-colors
               ${
@@ -26,7 +30,7 @@ export default function ConditionFilter({ value, onChange }: Props) {
               }
             `}
           >
-            {condition}
+            {condition.label}
           </button>
         );
       })}

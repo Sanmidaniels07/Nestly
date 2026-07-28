@@ -1,21 +1,35 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
+import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
+import OrdersView from "./components/views/orders-view";
 
-export default function MarketplaceSettingsPage() {
-  const [tab, setTab] = useState<Tab>("dashboard");
+function MarketplaceSettingsContent() {
+  const searchParams = useSearchParams();
+  const initialTab = (searchParams.get("tab") as Tab) || "dashboard";
+  const [tab, setTab] = useState<Tab>(initialTab);
 
-  const hasStore = false;
+  const { data: seller, isLoading } = useMySeller();
+  const hasStore = !!seller?.store;
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
+        Loading...
+      </div>
+    );
+  }
 
   const tabViews: Partial<Record<Tab, React.ReactNode>> = {
     dashboard: <DashboardView hasStore={hasStore} />,
     products: <ProductsView />,
-    // orders: <OrdersView />,
+    orders: <OrdersView />,
     // customers: <CustomersView />,
     // analytics: <AnalyticsView />,
     // store: <StoreView />,
@@ -33,5 +47,19 @@ export default function MarketplaceSettingsPage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function MarketplaceSettingsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
+          Loading...
+        </div>
+      }
+    >
+      <MarketplaceSettingsContent />
+    </Suspense>
   );
 }

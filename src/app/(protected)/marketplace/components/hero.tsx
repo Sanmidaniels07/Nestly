@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   MapPin,
@@ -12,6 +13,8 @@ import Button from "@/src/components/ui/button";
 import MarketplaceSearchBar from "./search-bar";
 
 export default function MarketplaceHero() {
+  const router = useRouter();
+
   return (
     <motion.section
       initial={{ opacity: 0, y: 18 }}
@@ -81,7 +84,7 @@ export default function MarketplaceHero() {
               gap-3
             "
           >
-            <Button variant="tribely">
+            <Button variant="tribely" onClick={() => router.push("/marketplace/nearby")}>
               <ShoppingBag
                 size={18}
                 className="mr-2"
@@ -95,6 +98,7 @@ export default function MarketplaceHero() {
                 border-[#EDEBF5]
                 bg-white
               "
+              onClick={() => router.push("/marketplace/sell")}
             >
               <Store
                 size={18}
@@ -158,16 +162,14 @@ export default function MarketplaceHero() {
                 </h3>
 
                 <p className="mt-2 text-[#64748B]">
-                  Over
-                  <span className="mx-1 font-semibold text-violet-700">
-                    3,400+
-                  </span>
-                  products are currently available
-                  within 10 km.
+                  Browse thousands of products from verified sellers across
+                  Nestly.
                 </p>
               </div>
 
               <button
+                onClick={() => router.push("/marketplace/products")}
+                aria-label="Browse products"
                 className="
                   rounded-full
                   bg-violet-600

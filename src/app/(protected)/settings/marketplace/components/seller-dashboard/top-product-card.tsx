@@ -3,11 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TrendingUp } from "lucide-react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
   sold: number;
+  revenue: number;
   position: number;
 }
 
@@ -25,8 +26,9 @@ function formatNaira(value: number) {
   }).format(value);
 }
 
-export default function TopProductCard({ product, sold, position }: Props) {
-  const revenue = product.price * sold;
+export default function TopProductCard({ product, sold, revenue, position }: Props) {
+  const primaryImage =
+    product.images.find((image) => image.isPrimary)?.url ?? product.images[0]?.url;
 
   return (
     <Link
@@ -35,7 +37,9 @@ export default function TopProductCard({ product, sold, position }: Props) {
     >
       <div className="flex items-start justify-between">
         <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F8F8FC]">
-          <Image src={product.images[0]} alt={product.name} fill className="object-cover" />
+          {primaryImage && (
+            <Image src={primaryImage} alt={product.title} fill className="object-cover" />
+          )}
         </div>
 
         <div
@@ -48,9 +52,9 @@ export default function TopProductCard({ product, sold, position }: Props) {
       </div>
 
       <h3 className="mt-4 truncate text-[14.5px] font-semibold text-[#13131A]">
-        {product.name}
+        {product.title}
       </h3>
-      <p className="mt-0.5 text-[12.5px] text-[#94A3B8]">{product.brand}</p>
+      {product.brand && <p className="mt-0.5 text-[12.5px] text-[#94A3B8]">{product.brand}</p>}
 
       <div className="mt-4 flex items-center justify-between border-t border-[#F2F1F8] pt-3.5">
         <div>

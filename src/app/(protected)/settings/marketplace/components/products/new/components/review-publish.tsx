@@ -10,24 +10,31 @@ import RadioCard from "@/src/components/ui/radio-card";
 
 interface Props {
   draft: ProductDraft;
+  isSubmitting?: boolean;
   onBack: () => void;
   onPublish: () => void;
   onSaveDraft: () => void;
   onStepClick?: (step: number) => void;
 }
 
-export default function ReviewPublish({ draft, onBack, onPublish, onSaveDraft, onStepClick }: Props) {
+export default function ReviewPublish({
+  draft,
+  isSubmitting,
+  onBack,
+  onPublish,
+  onSaveDraft,
+  onStepClick,
+}: Props) {
   const [publishNow, setPublishNow] = useState(true);
 
   const completed = [
-    draft.name.trim() !== "",
-    draft.price !== "" && Number(draft.price) > 0,
+    draft.name.trim() !== "" && !!draft.categoryId && !!draft.sku.trim(),
+    draft.price !== "" && Number(draft.price) > 0 && draft.stock !== "",
     draft.specifications.some((s) => s.key.trim()),
     draft.images.length > 0,
-    draft.deliveryTime !== "",
   ];
 
-  const isFullyReady = completed[0] && completed[1] && completed[3]; // name, price, images are hard requirements
+  const isFullyReady = completed[0] && completed[1] && completed[3];
   const missingCount = completed.filter((c) => !c).length;
 
   return (
@@ -38,7 +45,7 @@ export default function ReviewPublish({ draft, onBack, onPublish, onSaveDraft, o
         <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
           <h2 className="text-[16px] font-semibold text-[#13131A]">Publish options</h2>
           <p className="mt-1 text-[13px] text-[#64748B]">
-            Choose whether this listing goes live now or stays hidden until you're ready.
+            Choose whether this listing goes live now or stays hidden until you&apos;re ready.
           </p>
 
           <div className="mt-5 space-y-2.5">
@@ -61,13 +68,12 @@ export default function ReviewPublish({ draft, onBack, onPublish, onSaveDraft, o
           {publishNow && !isFullyReady && (
             <div className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 p-3.5 text-[12.5px] text-amber-700">
               <AlertCircle size={15} className="mt-0.5 shrink-0" />
-              Add a name, price, and at least one image before publishing.
+              Complete the basic info, pricing, and at least one image before publishing.
             </div>
           )}
         </section>
       </div>
 
-      {/* Sticky sidebar */}
       <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
         <CompletionChecklist completed={completed} onStepClick={onStepClick} />
 
@@ -76,15 +82,16 @@ export default function ReviewPublish({ draft, onBack, onPublish, onSaveDraft, o
             <Button
               variant="tribely"
               onClick={publishNow ? onPublish : onSaveDraft}
-              disabled={publishNow && !isFullyReady}
+              disabled={isSubmitting || (publishNow && !isFullyReady)}
               className="h-11 w-full rounded-xl"
             >
-              {publishNow ? "Publish product" : "Save as draft"}
+              {isSubmitting ? "Saving..." : publishNow ? "Publish product" : "Save as draft"}
             </Button>
 
             {publishNow && (
               <button
                 onClick={onSaveDraft}
+                disabled={isSubmitting}
                 className="w-full rounded-xl border border-[#ECE9F6] py-2.5 text-[13px] font-medium text-[#64748B] transition-colors hover:bg-[#F7F7FB]"
               >
                 Save as draft instead

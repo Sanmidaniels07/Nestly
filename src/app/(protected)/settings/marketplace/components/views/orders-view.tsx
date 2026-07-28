@@ -1,0 +1,111 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+
+import { useSellerOrders } from "@/src/hooks/use-seller-orders";
+import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
+import Pagination from "@/src/components/ui/pagination";
+import { formatRelativeTime } from "@/src/lib/date";
+
+const STATUS_OPTIONS = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
+
+function money(value: number) {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+export default function OrdersView() {
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useSellerOrders({ page, limit: 10 });
+  const { mutate: updateStatus } = useUpdateOrderItemStatus();
+
+  const orders = data?.orders ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
+        Loading orders...
+      </div>
+    );
+  }
+
+  if (orders.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
+        <p className="text-[13.5px] text-[#94A3B8]">No orders yet.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-5">
+      {orders.map((order) => (
+        <div key={order.id} className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#F2F1F8] pb-4">
+            <div>
+              <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                Order #{order.id.slice(-8).toUpperCase()}
+              </p>
+              <p className="mt-0.5 text-[12.5px] text-[#64748B]">
+                {formatRelativeTime(order.createdAt)}
+              </p>
+            </div>
+            <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700">
+              {money(order.total)}
+            </p>
+          </div>
+
+          <div className="mt-4 space-y-3">
+            {order.items.map((item) => {
+              const primaryImage =
+                item.product.images.find((image) => image.isPrimary)?.url ??
+                item.product.images[0]?.url;
+
+              return (
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center gap-4 rounded-xl border border-[#F2F1F8] p-4"
+                >
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[#F8F8FC]">
+                    {primaryImage && (
+                      <Image src={primaryImage} alt={item.product.title} fill className="object-cover" />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                      {item.product.title}
+                    </p>
+                    <p className="mt-0.5 text-[12px] text-[#94A3B8]">
+                      Qty {item.quantity} · {money(item.price)}
+                    </p>
+                  </div>
+
+                  <select
+                    value={item.status ?? "PENDING"}
+                    onChange={(e) => updateStatus({ orderItemId: item.id, status: e.target.value })}
+                    className="h-10 rounded-lg border border-[#ECE9F6] bg-white px-3 text-[12.5px] font-medium text-[#334155] outline-none transition-colors focus:border-violet-400"
+                  >
+                    {STATUS_OPTIONS.map((status) => (
+                      <option key={status} value={status}>
+                        {status.charAt(0) + status.slice(1).toLowerCase()}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+
+      {data && (
+        <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
+      )}
+    </div>
+  );
+}

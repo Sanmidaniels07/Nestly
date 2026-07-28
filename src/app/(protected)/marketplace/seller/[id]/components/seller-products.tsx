@@ -1,69 +1,70 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
-import ProductCard from "@/src/app/(protected)/marketplace/components/product-card";
+import Image from "next/image";
+import Link from "next/link";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  products: MarketplaceProduct[];
+  products: Product[];
 }
 
-const sortOptions = ["Newest", "Price low", "Price high", "Highest rated"];
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("en-NG", {
+    style: "currency",
+    currency: "NGN",
+    maximumFractionDigits: 0,
+  }).format(price);
+}
 
 export default function SellerProducts({ products }: Props) {
-  const [sort, setSort] = useState("Newest");
-
-  const sortedProducts = useMemo(() => {
-    const list = [...products];
-    switch (sort) {
-      case "Price low":
-        list.sort((a, b) => a.price - b.price);
-        break;
-      case "Price high":
-        list.sort((a, b) => b.price - a.price);
-        break;
-      case "Highest rated":
-        list.sort((a, b) => b.rating - a.rating);
-        break;
-      default:
-        break;
-    }
-    return list;
-  }, [products, sort]);
-
   return (
     <section className="space-y-6">
-      <div className="flex flex-col gap-5 border-b border-dashed border-[#ECE9F6] pb-6 lg:flex-row lg:items-center lg:justify-between">
-        <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
-            Store products
-          </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-            Products
-          </h2>
-          <p className="mt-1.5 text-[13px] text-[#64748B]">
-            {products.length} product{products.length !== 1 ? "s" : ""} available
-          </p>
-        </div>
-
-        <select
-          value={sort}
-          onChange={(e) => setSort(e.target.value)}
-          className="h-11 rounded-xl border border-[#ECE9F6] bg-white px-4 text-[13px] font-medium text-[#334155] outline-none transition-colors focus:border-violet-400"
-        >
-          {sortOptions.map((item) => (
-            <option key={item} value={item}>
-              {item}
-            </option>
-          ))}
-        </select>
+      <div className="border-b border-dashed border-[#ECE9F6] pb-6">
+        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          Store products
+        </p>
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          Products
+        </h2>
+        <p className="mt-1.5 text-[13px] text-[#64748B]">
+          {products.length} product{products.length !== 1 ? "s" : ""} available
+        </p>
       </div>
 
-      {sortedProducts.length > 0 ? (
+      {products.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-          {sortedProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {products.map((product) => {
+            const primaryImage =
+              product.images.find((image) => image.isPrimary)?.url ??
+              product.images[0]?.url;
+
+            return (
+              <Link
+                key={product.id}
+                href={`/marketplace/product/${product.id}`}
+                className="overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white transition-all hover:-translate-y-1 hover:border-violet-200 hover:shadow-xl"
+              >
+                <div className="relative aspect-square bg-[#F8F8FC]">
+                  {primaryImage && (
+                    <Image
+                      src={primaryImage}
+                      alt={product.title}
+                      fill
+                      className="object-cover"
+                    />
+                  )}
+                </div>
+                <div className="space-y-1.5 p-4">
+                  <h3 className="line-clamp-1 text-[14px] font-medium text-[#13131A]">
+                    {product.title}
+                  </h3>
+                  <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700">
+                    {formatPrice(product.price)}
+                  </p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
       ) : (
         <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">

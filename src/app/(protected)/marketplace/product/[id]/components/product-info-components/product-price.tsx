@@ -1,9 +1,9 @@
 "use client";
 
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
 }
 
 function money(value: number) {
@@ -15,6 +15,11 @@ function money(value: number) {
 }
 
 export default function PriceSection({ product }: Props) {
+  const discount =
+    product.originalPrice && product.originalPrice > product.price
+      ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+      : undefined;
+
   return (
     <div className="flex flex-wrap items-end gap-2.5">
       <h2 className="font-[family-name:var(--font-mono)] text-[30px] font-bold text-violet-700">
@@ -27,9 +32,9 @@ export default function PriceSection({ product }: Props) {
         </span>
       )}
 
-      {product.discount && (
+      {discount !== undefined && (
         <span className="rounded-full bg-red-50 px-2.5 py-1 text-[11.5px] font-semibold text-red-600">
-          {product.discount}% OFF
+          {discount}% OFF
         </span>
       )}
     </div>

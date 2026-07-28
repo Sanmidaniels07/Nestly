@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
+import FormSelect from "@/src/components/ui/form-select";
+import { useCategories } from "@/src/hooks/use-categories";
 import { ProductDraft } from "@/src/types/products-draft";
 
 interface Props {
@@ -14,8 +16,12 @@ interface Props {
 const DESCRIPTION_MAX = 1000;
 
 export default function BasicInformation({ draft, setDraft, onNext }: Props) {
+  const { data: categories } = useCategories();
+
   const [nameError, setNameError] = useState("");
   const [descError, setDescError] = useState("");
+  const [categoryError, setCategoryError] = useState("");
+  const [skuError, setSkuError] = useState("");
 
   const descLength = draft.description?.length ?? 0;
   const descNearLimit = descLength > DESCRIPTION_MAX - 100;
@@ -27,10 +33,7 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
 
     let hasError = false;
 
-    if (!name) {
-      setNameError("Product name is required");
-      hasError = true;
-    } else if (name.length < 3) {
+    if (!name || name.length < 3) {
       setNameError("Product name must be at least 3 characters");
       hasError = true;
     } else {
@@ -42,6 +45,20 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
       hasError = true;
     } else {
       setDescError("");
+    }
+
+    if (!draft.categoryId) {
+      setCategoryError("Select a category");
+      hasError = true;
+    } else {
+      setCategoryError("");
+    }
+
+    if (!draft.sku.trim()) {
+      setSkuError("SKU is required");
+      hasError = true;
+    } else {
+      setSkuError("");
     }
 
     if (hasError) return;
@@ -68,6 +85,50 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
           }}
           error={nameError}
         />
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <FormSelect
+            label="Category"
+            placeholder="Select a category"
+            value={draft.categoryId}
+            onChange={(value) => {
+              setDraft((prev) => ({ ...prev, categoryId: value }));
+              if (categoryError) setCategoryError("");
+            }}
+            options={(categories ?? []).map((c) => ({ label: c.name, value: c.id }))}
+            error={categoryError}
+          />
+
+          <FormSelect
+            label="Condition"
+            value={draft.condition}
+            onChange={(value) => setDraft((prev) => ({ ...prev, condition: value as "NEW" | "USED" }))}
+            options={[
+              { label: "New", value: "NEW" },
+              { label: "Used", value: "USED" },
+            ]}
+          />
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <Input
+            label="Brand"
+            value={draft.brand}
+            placeholder="e.g. Apple"
+            onChange={(e) => setDraft((prev) => ({ ...prev, brand: e.target.value }))}
+          />
+
+          <Input
+            label="SKU"
+            value={draft.sku}
+            placeholder="SKU-10001"
+            onChange={(e) => {
+              setDraft((prev) => ({ ...prev, sku: e.target.value }));
+              if (skuError) setSkuError("");
+            }}
+            error={skuError}
+          />
+        </div>
 
         <div>
           <label className="mb-2 block text-[13px] font-medium text-[#334155]">

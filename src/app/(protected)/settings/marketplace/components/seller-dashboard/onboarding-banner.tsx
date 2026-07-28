@@ -42,7 +42,7 @@ export default function OnboardingBanner() {
         </div>
 
         <Link
-          href="/settings/marketplace/onboarding"
+          href="/marketplace/sell"
           className="mt-7 inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-[14px] font-semibold text-violet-700 transition-colors hover:bg-violet-50"
         >
           Become a seller

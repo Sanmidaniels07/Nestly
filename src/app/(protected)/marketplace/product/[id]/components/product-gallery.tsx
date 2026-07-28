@@ -4,18 +4,19 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Expand, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { MarketplaceProduct } from "@/src/mocks/marketplace";
+import { Product } from "@/src/types/product";
 
 interface Props {
-  product: MarketplaceProduct;
+  product: Product;
 }
 
 export default function ProductGallery({ product }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [zoomed, setZoomed] = useState(false);
 
-  const activeImage = product.images[activeIndex];
-  const total = product.images.length;
+  const images = product.images.length > 0 ? product.images : [{ url: "" }];
+  const activeImage = images[activeIndex]?.url;
+  const total = images.length;
 
   const goTo = useCallback(
     (index: number) => {
@@ -82,50 +83,51 @@ export default function ProductGallery({ product }: Props) {
           aria-label="Open full size image"
         >
           <AnimatePresence mode="wait">
-            <motion.div
-              key={activeImage}
-              initial={{ opacity: 0, scale: 1.02 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0"
-            >
-              <Image
-                fill
-                src={activeImage}
-                alt={product.name}
-                className="object-cover"
-                priority
-              />
-            </motion.div>
+            {activeImage && (
+              <motion.div
+                key={activeImage}
+                initial={{ opacity: 0, scale: 1.02 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  fill
+                  src={activeImage}
+                  alt={product.title}
+                  className="object-cover"
+                  priority
+                />
+              </motion.div>
+            )}
           </AnimatePresence>
         </button>
       </div>
 
       {total > 1 && (
         <div className="flex gap-2.5 overflow-x-auto pb-1 scrollbar-hide">
-          {product.images.map((image, index) => {
+          {images.map((image, index) => {
             const active = index === activeIndex;
 
             return (
               <button
-                key={image}
+                key={image.url + index}
                 onClick={() => setActiveIndex(index)}
                 className={`
                   relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors
                   ${active ? "border-violet-600" : "border-transparent hover:border-violet-200"}
                 `}
               >
-                <Image fill src={image} alt="" className="object-cover" />
+                <Image fill src={image.url} alt="" className="object-cover" />
               </button>
             );
           })}
         </div>
       )}
 
-      {/* Full-screen zoom */}
       <AnimatePresence>
-        {zoomed && (
+        {zoomed && activeImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -178,7 +180,7 @@ export default function ProductGallery({ product }: Props) {
               onClick={(e) => e.stopPropagation()}
               className="relative mx-4 aspect-square w-full max-w-2xl"
             >
-              <Image fill src={activeImage} alt={product.name} className="object-contain" />
+              <Image fill src={activeImage} alt={product.title} className="object-contain" />
             </motion.div>
           </motion.div>
         )}

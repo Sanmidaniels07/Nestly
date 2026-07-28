@@ -1,9 +1,13 @@
-export interface ProductImage {
+export interface DraftImage {
   id: string;
 
-  file: File;
+  file?: File;
 
   preview: string;
 
+  url?: string;
+
   isCover: boolean;
+
+  uploading: boolean;
 }

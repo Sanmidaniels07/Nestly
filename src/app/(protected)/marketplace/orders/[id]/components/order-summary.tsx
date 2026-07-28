@@ -1,10 +1,9 @@
 "use client";
 
-import { MarketplaceOrder } from "@/src/mocks/order";
-
+import { Order } from "@/src/types/order";
 
 interface Props {
-  order: MarketplaceOrder;
+  order: Order;
 }
 
 function money(value: number) {
@@ -23,12 +22,16 @@ export default function OrderSummary({ order }: Props) {
       </h2>
 
       <div className="mt-5 space-y-3">
-        <SummaryRow label="Subtotal" value={money(order.subtotal)} />
-        <SummaryRow
-          label="Delivery"
-          value={order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}
-        />
-        <SummaryRow label="Tax" value={money(order.tax)} />
+        {order.subtotal !== undefined && (
+          <SummaryRow label="Subtotal" value={money(order.subtotal)} />
+        )}
+        {order.deliveryFee !== undefined && (
+          <SummaryRow
+            label="Delivery"
+            value={order.deliveryFee === 0 ? "Free" : money(order.deliveryFee)}
+          />
+        )}
+        {order.tax !== undefined && <SummaryRow label="Tax" value={money(order.tax)} />}
 
         <div className="flex items-center justify-between border-t border-dashed border-[#ECE9F6] pt-3">
           <span className="text-[14px] font-semibold text-[#13131A]">Total</span>

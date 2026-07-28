@@ -1,88 +1,36 @@
 "use client";
 
-import {
-  Smartphone,
-  Shirt,
-  Sofa,
-  Laptop,
-  Car,
-  Apple,
-  Baby,
-  Gem,
-} from "lucide-react";
-
 import SectionHeader from "../components/section-header";
 import CategoryCard from "../components/category-card";
-
-const categories = [
-  {
-    title: "Electronics",
-    total: 2480,
-    icon: Smartphone,
-  },
-  {
-    title: "Fashion",
-    total: 1820,
-    icon: Shirt,
-  },
-  {
-    title: "Furniture",
-    total: 540,
-    icon: Sofa,
-  },
-  {
-    title: "Computers",
-    total: 690,
-    icon: Laptop,
-  },
-  {
-    title: "Vehicles",
-    total: 360,
-    icon: Car,
-  },
-  {
-    title: "Groceries",
-    total: 780,
-    icon: Apple,
-  },
-  {
-    title: "Baby Items",
-    total: 245,
-    icon: Baby,
-  },
-  {
-    title: "Luxury",
-    total: 132,
-    icon: Gem,
-  },
-];
+import { useFeaturedCategories } from "@/src/hooks/use-featured-categories";
 
 export default function CategoriesSection() {
+  const { data: categories, isLoading } = useFeaturedCategories(8);
+
+  if (!isLoading && !categories?.length) return null;
+
   return (
     <section className="space-y-8">
       <SectionHeader
         title="Browse Categories"
         subtitle="Marketplace"
-       action={{
+        action={{
           label: "View all",
-          href: "/marketplace/products",
+          href: "/marketplace/categories",
         }}
       />
 
-      <div
-        className="
-          grid
-          gap-5
-          sm:grid-cols-2
-          lg:grid-cols-4
-        "
-      >
-        {categories.map((category) => (
-          <CategoryCard
-            key={category.title}
-            {...category}
-          />
-        ))}
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {isLoading
+          ? Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="h-[164px] animate-pulse rounded-2xl border border-[#EDEBF5] bg-[#F7F7FB]"
+              />
+            ))
+          : categories?.map((category) => (
+              <CategoryCard key={category.id} category={category} />
+            ))}
       </div>
     </section>
   );

@@ -1,54 +1,40 @@
 "use client";
 
-import { Star, Package, Users, Clock3, TrendingUp, CalendarDays } from "lucide-react";
-import { MarketplaceSeller } from "@/src/mocks/marketplace";
+import { Star, Package, CalendarDays } from "lucide-react";
+import { Store } from "@/src/types/store";
 
 interface Props {
-  seller: MarketplaceSeller;
+  store: Store;
+  productCount: number;
 }
 
-export default function SellerStats({ seller }: Props) {
+export default function SellerStats({ store, productCount }: Props) {
+  const memberSince = new Date(store.createdAt).getFullYear();
+
   const stats = [
     {
       icon: Star,
       title: "Rating",
-      value: seller.rating,
-      subtitle: `${seller.reviews} reviews`,
+      value: store.rating !== undefined ? store.rating : "New",
+      subtitle:
+        store.reviewCount !== undefined ? `${store.reviewCount} reviews` : "No reviews yet",
     },
     {
       icon: Package,
       title: "Products",
-      value: seller.productsCount,
+      value: productCount,
       subtitle: "Active listings",
-    },
-    {
-      icon: Users,
-      title: "Followers",
-      value: seller.followers.toLocaleString(),
-      subtitle: "People following",
-    },
-    {
-      icon: TrendingUp,
-      title: "Response rate",
-      value: `${seller.responseRate}%`,
-      subtitle: "Usually replies",
-    },
-    {
-      icon: Clock3,
-      title: "Response time",
-      value: seller.responseTime,
-      subtitle: "Average reply",
     },
     {
       icon: CalendarDays,
       title: "Member since",
-      value: seller.joined,
-      subtitle: "Trusted seller",
+      value: memberSince,
+      subtitle: "On Nestly",
     },
   ];
 
   return (
-    <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+    <section className="grid gap-4 sm:grid-cols-3">
       {stats.map((stat) => {
         const Icon = stat.icon;
         return (
