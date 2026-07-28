@@ -20,8 +20,8 @@ export interface ProductVariant {
   stock?: number;
 }
 
-export type ProductCondition = "NEW" | "USED";
-export type ProductStatus = "DRAFT" | "PUBLISHED" | "ARCHIVED";
+export type ProductCondition = "NEW" | "USED" | "REFURBISHED";
+export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED";
 
 export interface ProductStoreSummary {
   id: string;

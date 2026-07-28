@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { X } from "lucide-react";
+import { useRef, useState } from "react";
+import { Image as ImageIcon, Loader2, Video, X } from "lucide-react";
 
 import { useCreatePost } from "@/src/hooks/use-create-post";
+import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { useAuthStore } from "@/src/store/auth-store";
+import { PostMedia } from "@/src/types/post";
 import UserAvatar from "@/src/components/ui/user-avatar";
 
 export default function CreatePostCard() {
@@ -12,22 +14,45 @@ export default function CreatePostCard() {
   const [expanded, setExpanded] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [media, setMedia] = useState<PostMedia[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: createPost, isPending } = useCreatePost();
+  const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles();
 
-  const canPost = title.trim().length > 0 && content.trim().length > 0;
+  const canPost =
+    title.trim().length > 0 && content.trim().length > 0 && !isUploading;
 
   const reset = () => {
     setTitle("");
     setContent("");
+    setMedia([]);
     setExpanded(false);
+  };
+
+  const handleFilesSelected = (files: FileList | null) => {
+    if (!files?.length) return;
+
+    uploadFiles(Array.from(files), {
+      onSuccess: (response) => setMedia((prev) => [...prev, ...response.data]),
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeMedia = (url: string) => {
+    setMedia((prev) => prev.filter((item) => item.url !== url));
   };
 
   const handleSubmit = () => {
     if (!canPost) return;
 
     createPost(
-      { title: title.trim(), content: content.trim() },
+      {
+        title: title.trim(),
+        content: content.trim(),
+        ...(media.length > 0 && { media }),
+      },
       { onSuccess: reset }
     );
   };
@@ -66,33 +91,96 @@ export default function CreatePostCard() {
                 maxLength={2000}
                 className="w-full resize-none rounded-2xl bg-[#F7F7FB] px-5 py-3.5 text-[15px] text-[#13131A] outline-none placeholder:text-[#94A3B8] focus:bg-[#F0EFF9]"
               />
+
+              {media.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {media.map((item) => (
+                    <div
+                      key={item.url}
+                      className="group relative h-20 w-20 overflow-hidden rounded-xl bg-[#F7F7FB]"
+                    >
+                      {item.type === "VIDEO" ? (
+                        <video src={item.url} className="h-full w-full object-cover" />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={item.url}
+                          alt="Attachment"
+                          className="h-full w-full object-cover"
+                        />
+                      )}
+                      <button
+                        onClick={() => removeMedia(item.url)}
+                        className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        aria-label="Remove attachment"
+                      >
+                        <X size={12} />
+                      </button>
+                    </div>
+                  ))}
+                  {isUploading && (
+                    <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[#F7F7FB]">
+                      <Loader2 size={18} className="animate-spin text-violet-600" />
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {expanded && (
-            <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
-              <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
-                {content.length}/2000
-              </span>
-              <button
-                onClick={reset}
-                className="rounded-full p-1.5 text-[#94A3B8] transition-colors hover:bg-gray-100"
-                aria-label="Cancel"
-              >
-                <X size={16} />
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={!canPost || isPending}
-                className="
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-1">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*,video/*"
+                  multiple
+                  hidden
+                  onChange={(e) => handleFilesSelected(e.target.files)}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  aria-label="Attach photo"
+                >
+                  <ImageIcon size={18} />
+                </button>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  aria-label="Attach video"
+                >
+                  <Video size={18} />
+                </button>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                  {content.length}/2000
+                </span>
+                <button
+                  onClick={reset}
+                  className="rounded-full p-1.5 text-[#94A3B8] transition-colors hover:bg-gray-100"
+                  aria-label="Cancel"
+                >
+                  <X size={16} />
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={!canPost || isPending}
+                  className="
           rounded-full bg-gradient-to-r from-violet-600 to-indigo-600
           px-5 py-2 text-[13px] font-semibold text-white
           transition-all hover:brightness-110
           disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:brightness-100
         "
-              >
-                {isPending ? "Posting..." : "Post"}
-              </button>
+                >
+                  {isPending ? "Posting..." : "Post"}
+                </button>
+              </div>
             </div>
           )}
         </div>

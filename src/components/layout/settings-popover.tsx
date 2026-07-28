@@ -6,17 +6,21 @@ import { usePathname } from "next/navigation";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState, RefObject } from "react";
 import { settingsNavigation } from "@/src/constants/settings-navigation";
-import { useLogout } from "@/src/hooks/use-logout";
 
 interface Props {
   email?: string;
   onClose: () => void;
+  onLogoutClick: () => void;
   anchorRef: RefObject<HTMLButtonElement | null>;
 }
 
-export default function SettingsPopover({ email, onClose, anchorRef }: Props) {
+export default function SettingsPopover({
+  email,
+  onClose,
+  onLogoutClick,
+  anchorRef,
+}: Props) {
   const pathname = usePathname();
-  const { mutate: logout, isPending: isLoggingOut } = useLogout();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState<{ top: number; left: number } | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -114,15 +118,14 @@ export default function SettingsPopover({ email, onClose, anchorRef }: Props) {
       <div className="border-t border-[#F2F1F8] py-1.5">
         <button
           type="button"
-          disabled={isLoggingOut}
           onClick={() => {
             onClose();
-            logout();
+            onLogoutClick();
           }}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-red-600 transition-colors hover:bg-red-50"
         >
           <LogOut size={16} />
-          {isLoggingOut ? "Logging out..." : "Log out"}
+          Log out
         </button>
       </div>
     </div>,

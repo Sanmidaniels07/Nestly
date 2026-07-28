@@ -3,11 +3,12 @@
 import { Edit3, Settings, Share2 } from "lucide-react";
 import Button from "@/src/components/ui/button";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import EditProfileModal from "./edit-profile-modal";
 
-export default function ProfileActions() {
-  const [opened, setOpened] = useState(false);
+interface Props {
+  onEdit: () => void;
+}
+
+export default function ProfileActions({ onEdit }: Props) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 16 }}
@@ -16,7 +17,7 @@ export default function ProfileActions() {
       className="mt-8 flex flex-col gap-3 sm:flex-row"
     >
       <Button
-        onClick={() => setOpened(true)}
+        onClick={onEdit}
         variant="tribely"
         className="h-11 rounded-xl px-6"
       >
@@ -39,8 +40,6 @@ export default function ProfileActions() {
       >
         <Settings size={18} />
       </button>
-
-      <EditProfileModal opened={opened} onClose={() => setOpened(false)} />
     </motion.div>
   );
 }

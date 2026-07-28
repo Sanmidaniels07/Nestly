@@ -148,6 +148,43 @@ export default function PostCard({ post }: Props) {
             {post.content}
           </p>
         )}
+
+        {!isEditing && post.hashtags && post.hashtags.length > 0 && (
+          <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1">
+            {post.hashtags.map((tag) => (
+              <span key={tag} className="text-[13.5px] font-medium text-violet-600">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {!isEditing && post.media && post.media.length > 0 && (
+          <div
+            className={`mt-3 grid gap-1.5 overflow-hidden rounded-2xl ${
+              post.media.length === 1 ? "grid-cols-1" : "grid-cols-2"
+            }`}
+          >
+            {post.media.map((item, index) =>
+              item.type === "VIDEO" ? (
+                <video
+                  key={index}
+                  src={item.url}
+                  controls
+                  className="max-h-[420px] w-full bg-black object-contain"
+                />
+              ) : (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  key={index}
+                  src={item.url}
+                  alt="Post attachment"
+                  className="max-h-[420px] w-full object-cover"
+                />
+              )
+            )}
+          </div>
+        )}
       </div>
 
       {/* Actions */}

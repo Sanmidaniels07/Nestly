@@ -1,11 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Profile } from "@/src/mocks/profile";
 import { Users, UserPlus, FileText, Store } from "lucide-react";
 
 interface Props {
-  profile: Profile;
+  followers: number;
+  following: number;
+  posts: number;
+  listings: number;
 }
 
 function formatNumber(value: number) {
@@ -14,14 +16,14 @@ function formatNumber(value: number) {
   return value.toString();
 }
 
-const stats = (profile: Profile) => [
-  { title: "Followers", value: profile.followers, icon: Users, chip: "bg-violet-50 text-violet-600" },
-  { title: "Following", value: profile.following, icon: UserPlus, chip: "bg-indigo-50 text-indigo-600" },
-  { title: "Posts", value: profile.posts, icon: FileText, chip: "bg-emerald-50 text-emerald-600" },
-  { title: "Marketplace", value: profile.listings, icon: Store, chip: "bg-amber-50 text-amber-600" },
+const stats = (data: Props) => [
+  { title: "Followers", value: data.followers, icon: Users, chip: "bg-violet-50 text-violet-600" },
+  { title: "Following", value: data.following, icon: UserPlus, chip: "bg-indigo-50 text-indigo-600" },
+  { title: "Posts", value: data.posts, icon: FileText, chip: "bg-emerald-50 text-emerald-600" },
+  { title: "Marketplace", value: data.listings, icon: Store, chip: "bg-amber-50 text-amber-600" },
 ];
 
-export default function ProfileStats({ profile }: Props) {
+export default function ProfileStats(props: Props) {
   return (
     <motion.section
       initial={{ opacity: 0, y: 16 }}
@@ -29,7 +31,7 @@ export default function ProfileStats({ profile }: Props) {
       transition={{ delay: 0.18 }}
       className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4"
     >
-      {stats(profile).map((item, index) => (
+      {stats(props).map((item, index) => (
         <motion.div
           key={item.title}
           initial={{ opacity: 0, y: 12 }}

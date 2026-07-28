@@ -1,13 +1,35 @@
 "use client";
 
 import { Eye, FileText, TrendingUp } from "lucide-react";
+import { useAuthStore } from "@/src/store/auth-store";
+import { useProfile } from "@/src/hooks/use-profile";
+import { useUserProfile } from "@/src/hooks/use-user-profile";
+import { usePosts } from "@/src/hooks/use-posts";
 
-const metrics = [
-  { icon: FileText, label: "Posts this week", value: 12 },
-  { icon: Eye, label: "Profile views", value: 324 },
-];
+const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default function QuickStats() {
+  const authUser = useAuthStore((state) => state.user);
+  const { data: profile } = useProfile();
+  const { data: userProfile } = useUserProfile(authUser?.id ?? "");
+  const { data: postsData } = usePosts(
+    { authorId: authUser?.id, sort: "desc" },
+    { enabled: !!authUser?.id }
+  );
+
+  const postsThisWeek =
+    postsData?.pages
+      .flatMap((page) => page.data.posts)
+      .filter((post) => Date.now() - new Date(post.createdAt).getTime() < ONE_WEEK_MS)
+      .length ?? 0;
+
+  const completion = profile?.profileCompletion ?? 0;
+
+  const metrics = [
+    { icon: FileText, label: "Posts this week", value: postsThisWeek },
+    { icon: Eye, label: "Profile views", value: userProfile?.profileViews ?? 0 },
+  ];
+
   return (
     <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
       <div className="flex items-center gap-2">
@@ -23,14 +45,14 @@ export default function QuickStats() {
             Profile completion
           </span>
           <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-600">
-            85%
+            {completion}%
           </span>
         </div>
 
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#F0EEF9]">
           <div
             className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600"
-            style={{ width: "85%" }}
+            style={{ width: `${completion}%` }}
           />
         </div>
       </div>

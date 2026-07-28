@@ -2,35 +2,41 @@
 
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { useAuthStore } from "@/src/store/auth-store";
+import { useUserProfile } from "@/src/hooks/use-user-profile";
+import UserAvatar from "@/src/components/ui/user-avatar";
 
-function formatCount(n: number) {
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return n.toString();
+function formatCount(n?: number) {
+  const value = n ?? 0;
+  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+  return value.toString();
 }
 
-const stats = [
-  { label: "Following", value: 345 },
-  { label: "Followers", value: 1834 },
-  { label: "Posts", value: 62 },
-];
-
 export default function ProfileSummary() {
+  const authUser = useAuthStore((state) => state.user);
+  const { data: profile } = useUserProfile(authUser?.id ?? "");
+
+  const stats = [
+    { label: "Following", value: profile?.followingCount },
+    { label: "Followers", value: profile?.followersCount },
+    { label: "Posts", value: profile?.postsCount },
+  ];
+
+  const name = profile?.name ?? authUser?.name;
+  const username = profile?.username;
+
   return (
     <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
       <div className="flex items-center gap-4">
-        <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[2.5px]">
-          <div className="rounded-full bg-white p-[3px]">
-            <div className="h-14 w-14 rounded-full bg-gradient-to-br from-violet-200 to-indigo-200" />
-          </div>
-        </div>
+        <UserAvatar name={name} src={profile?.avatar} size={56} />
 
         <div className="min-w-0">
           <h3 className="truncate text-[16px] font-semibold text-[#13131A]">
-            Daniel Sanmi
+            {name ?? "Your account"}
           </h3>
-          <p className="font-[family-name:var(--font-mono)] text-[13px] text-violet-600">
-            @daniel
+          <p className="truncate font-[family-name:var(--font-mono)] text-[13px] text-violet-600">
+            {username ? `@${username}` : ""}
           </p>
         </div>
       </div>

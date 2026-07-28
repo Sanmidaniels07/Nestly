@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { ProductDraft } from "@/src/types/products-draft";
+import { formatConditionLabel } from "@/src/lib/utils";
 
 interface Props {
   draft: ProductDraft;
@@ -70,7 +71,7 @@ export default function PreviewCard({ draft }: Props) {
           <div>
             <p className="text-[11px] text-[#94A3B8]">Condition</p>
             <p className="mt-0.5 text-[14px] font-medium text-[#13131A]">
-              {draft.condition === "NEW" ? "New" : "Used"}
+              {formatConditionLabel(draft.condition)}
             </p>
           </div>
           <div>

@@ -7,6 +7,8 @@ import {
   Bell,
   User,
   Settings,
+  Users2,
+  CalendarDays,
 } from "lucide-react";
 
 export const navigation = [
@@ -34,6 +36,16 @@ export const navigation = [
     title: "Marketplace",
     href: "/marketplace",
     icon: Store,
+  },
+  {
+    title: "Communities",
+    href: "/communities",
+    icon: Users2,
+  },
+  {
+    title: "Events",
+    href: "/events",
+    icon: CalendarDays,
   },
   {
     title: "Notifications",

@@ -1,4 +1,5 @@
 import { DraftImage } from "./product-image";
+import { ProductCondition } from "./product";
 
 export interface ProductDraft {
   // Step 1
@@ -6,7 +7,7 @@ export interface ProductDraft {
   categoryId: string;
   brand: string;
   description: string;
-  condition: "NEW" | "USED";
+  condition: ProductCondition;
   sku: string;
 
   // Step 2

@@ -8,6 +8,7 @@ import { CartItem as CartItemType } from "@/src/types/cart";
 import { useUpdateCartItem } from "@/src/hooks/use-update-cart-item";
 import { useRemoveCartItem } from "@/src/hooks/use-remove-cart-item";
 import { useToggleWishlist } from "@/src/hooks/use-toggle-wishlist";
+import { formatConditionLabel } from "@/src/lib/utils";
 
 interface Props {
   item: CartItemType;
@@ -76,7 +77,7 @@ export default function CartItem({ item }: Props) {
               )}
 
               <span className="mt-2.5 inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-700">
-                {product.condition === "NEW" ? "New" : "Used"}
+                {formatConditionLabel(product.condition)}
               </span>
             </div>
 

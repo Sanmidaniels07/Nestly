@@ -11,7 +11,7 @@ export default function RecentActivity() {
   const { mutate: markRead } = useMarkNotificationRead();
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-2xl p-8 border border-[#EDEBF5]">
       <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
 
       {isLoading && (

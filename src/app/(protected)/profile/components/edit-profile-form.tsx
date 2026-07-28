@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -15,56 +15,90 @@ import {
   editProfileSchema,
 } from "@/src/lib/validations/auth";
 import EditProfileSocial from "./edit-profile-social";
+import { useProfile } from "@/src/hooks/use-profile";
+import { useUpdateProfile } from "@/src/hooks/use-update-profile";
+import { useUploadFiles } from "@/src/hooks/use-upload-files";
 
 interface Props {
   onClose: () => void;
 }
 
+const emptyDefaults: EditProfileBasicValues = {
+  name: "",
+  username: "",
+  bio: "",
+  location: "",
+  occupation: "",
+  company: "",
+  education: "",
+  website: "",
+  skills: [],
+  interests: [],
+  languages: [],
+  github: "",
+  linkedin: "",
+  twitter: "",
+  instagram: "",
+};
+
 export default function EditProfileForm({ onClose }: Props) {
+  const { data: profile } = useProfile();
+  const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateProfile();
+  const { mutateAsync: uploadFiles, isPending: isUploading } = useUploadFiles();
+
   const methods = useForm<EditProfileBasicValues>({
     resolver: zodResolver(editProfileSchema),
-    defaultValues: {
-      name: "Daniel Sanmi",
-      username: "daniel",
-      bio: "Senior Software Engineer passionate about building products that connect people.",
-      location: "Lagos, Nigeria",
-      occupation: "Senior Software Engineer",
-      company: "Nestly Technologies",
-      education: "University of Lagos",
-      website: "https://danielsanmi.dev",
-      skills: ["React", "Next.js", "TypeScript", "Node.js"],
-      interests: ["Technology", "Travel", "AI"],
-      languages: ["English", "Yoruba"],
-      github: "https://github.com/danielsanmi",
-
-      linkedin: "https://linkedin.com/in/danielsanmi",
-
-      twitter: "https://x.com/danielsanmi",
-
-      instagram: "https://instagram.com/danielsanmi",
-    },
+    defaultValues: emptyDefaults,
   });
 
-  const { watch, setValue, handleSubmit } = methods;
+  const { watch, setValue, handleSubmit, reset } = methods;
 
   const skills = watch("skills") ?? [];
   const interests = watch("interests") ?? [];
   const languages = watch("languages") ?? [];
 
-  const [cover, setCover] = useState("/images/profile-cover.jpg");
-  const [avatar, setAvatar] = useState("/images/avatar.jpg");
-  const [saving, setSaving] = useState(false);
+  const [cover, setCover] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const onSubmit = async () => {
-    setSaving(true);
-    try {
-      // TODO: wire to real update-profile mutation
-      await new Promise((resolve) => setTimeout(resolve, 900));
-      onClose();
-    } finally {
-      setSaving(false);
+  useEffect(() => {
+    if (!profile) return;
+
+    reset({
+      ...emptyDefaults,
+      name: profile.name,
+      username: profile.username ?? "",
+      bio: profile.bio ?? "",
+    });
+    setCover(profile.cover ?? "");
+    setAvatar(profile.avatar ?? "");
+  }, [profile, reset]);
+
+  const onSubmit = async (values: EditProfileBasicValues) => {
+    let avatarUrl = avatar;
+    let coverUrl = cover;
+
+    if (avatarFile) {
+      const uploaded = await uploadFiles([avatarFile]);
+      avatarUrl = uploaded.data[0].url;
     }
+    if (coverFile) {
+      const uploaded = await uploadFiles([coverFile]);
+      coverUrl = uploaded.data[0].url;
+    }
+
+    await updateProfile({
+      name: values.name,
+      username: values.username,
+      bio: values.bio,
+      avatar: avatarUrl,
+      cover: coverUrl,
+    });
+    onClose();
   };
+
+  const saving = isSaving || isUploading;
 
   return (
     <FormProvider {...methods}>
@@ -75,13 +109,22 @@ export default function EditProfileForm({ onClose }: Props) {
         <div className="flex-1 overflow-y-auto">
           <EditProfileCover
             cover={cover}
-            onRemove={() => setCover("")}
-            onChange={(file) => setCover(URL.createObjectURL(file))}
+            onRemove={() => {
+              setCover("");
+              setCoverFile(null);
+            }}
+            onChange={(file) => {
+              setCoverFile(file);
+              setCover(URL.createObjectURL(file));
+            }}
           />
 
           <EditProfileAvatar
             avatar={avatar}
-            onChange={(file) => setAvatar(URL.createObjectURL(file))}
+            onChange={(file) => {
+              setAvatarFile(file);
+              setAvatar(URL.createObjectURL(file));
+            }}
           />
 
           <div className="space-y-8 px-6 pb-8 pt-6 sm:px-8">

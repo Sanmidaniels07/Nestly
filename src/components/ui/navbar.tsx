@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { LogOut } from "lucide-react";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
@@ -7,12 +8,12 @@ import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
 import Tooltip from "./tooltip";
 import SavedButton from "./saved-button";
+import LogoutConfirmDialog from "./logout-confirm-dialog";
 import { useAuth } from "@/src/hooks/use-auth";
-import { useLogout } from "@/src/hooks/use-logout";
 
 export default function Navbar() {
   const { isAuthenticated } = useAuth();
-  const { mutate: logout, isPending: isLoggingOut } = useLogout();
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
 
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-[#ECE9F6] bg-white/85 px-5 backdrop-blur-xl md:px-8">
@@ -55,10 +56,9 @@ export default function Navbar() {
           {isAuthenticated ? (
             <Tooltip label="Log out">
               <button
-                onClick={() => logout()}
-                disabled={isLoggingOut}
+                onClick={() => setLogoutConfirmOpen(true)}
                 aria-label="Log out"
-                className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+                className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500"
               >
                 <LogOut size={18} />
               </button>
@@ -79,6 +79,11 @@ export default function Navbar() {
           )}
         </div>
       </div>
+
+      <LogoutConfirmDialog
+        open={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+      />
     </nav>
   );
 }

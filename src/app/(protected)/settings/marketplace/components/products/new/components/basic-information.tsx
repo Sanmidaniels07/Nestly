@@ -6,6 +6,7 @@ import Button from "@/src/components/ui/button";
 import FormSelect from "@/src/components/ui/form-select";
 import { useCategories } from "@/src/hooks/use-categories";
 import { ProductDraft } from "@/src/types/products-draft";
+import { ProductCondition } from "@/src/types/product";
 
 interface Props {
   draft: ProductDraft;
@@ -102,10 +103,13 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
           <FormSelect
             label="Condition"
             value={draft.condition}
-            onChange={(value) => setDraft((prev) => ({ ...prev, condition: value as "NEW" | "USED" }))}
+            onChange={(value) =>
+              setDraft((prev) => ({ ...prev, condition: value as ProductCondition }))
+            }
             options={[
               { label: "New", value: "NEW" },
               { label: "Used", value: "USED" },
+              { label: "Refurbished", value: "REFURBISHED" },
             ]}
           />
         </div>

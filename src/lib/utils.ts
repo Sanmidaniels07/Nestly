@@ -8,3 +8,13 @@ export function cn(
     clsx(inputs)
   );
 }
+
+const conditionLabels: Record<string, string> = {
+  NEW: "New",
+  USED: "Used",
+  REFURBISHED: "Refurbished",
+};
+
+export function formatConditionLabel(condition: string) {
+  return conditionLabels[condition] ?? condition;
+}

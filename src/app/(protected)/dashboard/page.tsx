@@ -25,7 +25,7 @@ export default function DashboardPage() {
 
         <div className="grid lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-8">
-            <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+            <div className="bg-white rounded-2xl p-8 border border-[#EDEBF5]">
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-semibold">Your Feed</h3>
                 <Link

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart, MapPin, Star } from "lucide-react";
 import { useToggleWishlist } from "@/src/hooks/use-toggle-wishlist";
+import { formatConditionLabel } from "@/src/lib/utils";
 
 import { Product } from "@/src/types/product";
 
@@ -60,7 +61,7 @@ export default function ProductCard({ product, compact = false }: Props) {
               ${product.condition === "NEW" ? "bg-emerald-500 text-white" : "bg-amber-400 text-[#13131A]"}
             `}
           >
-            {product.condition === "NEW" ? "New" : "Used"}
+            {formatConditionLabel(product.condition)}
           </span>
         </div>
 

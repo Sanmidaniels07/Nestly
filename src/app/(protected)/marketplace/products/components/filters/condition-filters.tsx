@@ -1,14 +1,17 @@
 "use client";
 
+import { ProductCondition } from "@/src/types/product";
+
 interface Props {
-  value: "All" | "NEW" | "USED";
-  onChange: (value: "All" | "NEW" | "USED") => void;
+  value: "All" | ProductCondition;
+  onChange: (value: "All" | ProductCondition) => void;
 }
 
-const conditions: { label: string; value: "All" | "NEW" | "USED" }[] = [
+const conditions: { label: string; value: "All" | ProductCondition }[] = [
   { label: "All", value: "All" },
   { label: "New", value: "NEW" },
   { label: "Used", value: "USED" },
+  { label: "Refurbished", value: "REFURBISHED" },
 ];
 
 export default function ConditionFilter({ value, onChange }: Props) {

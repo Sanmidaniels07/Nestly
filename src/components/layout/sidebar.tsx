@@ -7,11 +7,13 @@ import { navigation } from "@/src/constants/navigation";
 import { cn } from "@/src/lib/utils";
 import { useAuthStore } from "@/src/store/auth-store";
 import SettingsPopover from "./settings-popover";
+import LogoutConfirmDialog from "@/src/components/ui/logout-confirm-dialog";
 
 export default function Sidebar() {
   const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
 
   const isActive = (href: string) => {
@@ -58,6 +60,7 @@ export default function Sidebar() {
                   <SettingsPopover
                     email={user?.email}
                     onClose={() => setSettingsOpen(false)}
+                    onLogoutClick={() => setLogoutConfirmOpen(true)}
                     anchorRef={settingsButtonRef}
                   />
                 )}
@@ -111,6 +114,11 @@ export default function Sidebar() {
           </div>
         </Link>
       </div>
+
+      <LogoutConfirmDialog
+        open={logoutConfirmOpen}
+        onClose={() => setLogoutConfirmOpen(false)}
+      />
     </aside>
   );
 }

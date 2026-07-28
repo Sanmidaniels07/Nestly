@@ -43,7 +43,7 @@ export default function QuickActions() {
             key={i}
             onClick={action.href ? () => router.push(action.href!) : undefined}
             disabled={!action.href}
-            className="group relative overflow-hidden rounded-3xl bg-white p-8 text-left shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 border border-gray-100 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-lg"
+            className="group relative overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white p-8 text-left transition-all duration-500 hover:-translate-y-2 hover:border-violet-200 hover:shadow-xl disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:border-[#EDEBF5] disabled:hover:shadow-none"
           >
             {/* Gradient Accent */}
             <div className={`absolute top-0 right-0 h-2 w-24 bg-gradient-to-r ${action.color} rounded-bl-3xl`} />

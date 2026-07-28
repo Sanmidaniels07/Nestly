@@ -16,7 +16,7 @@ export default function MarketplacePicks() {
   const { data: products, isLoading } = useFeaturedProducts(2);
 
   return (
-    <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100">
+    <div className="bg-white rounded-2xl p-8 border border-[#EDEBF5]">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-xl font-semibold">Marketplace Picks</h3>
         <Link

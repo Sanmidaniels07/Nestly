@@ -3,17 +3,33 @@
 import Link from "next/link";
 import { BadgeCheck, CalendarDays, Globe, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
-import { Profile } from "@/src/mocks/profile";
+import { Profile } from "@/src/types/profile";
 import { FaGithub, FaLinkedin, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { IconType } from "react-icons";
 
+// location/website/social links have no backing fields on the real Profile
+// yet — kept optional so this UI stays intact for whenever the backend adds them.
 interface Props {
-  profile: Profile;
+  profile: Profile & Partial<{
+    location: string;
+    website: string;
+    github: string;
+    linkedin: string;
+    twitter: string;
+    instagram: string;
+  }>;
 }
 
 const socialLinkClass =
   "flex items-center gap-2 rounded-full border border-[#E7E5F2] bg-white px-4 py-2 text-sm font-medium text-[#13131A] transition-all hover:border-violet-400 hover:text-violet-700 hover:shadow-sm";
+
+function formatJoinedDate(dateString: string) {
+  return new Date(dateString).toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+}
 
 export default function ProfileHeader({ profile }: Props) {
   const socialLinks: { href?: string; label: string; icon: IconType }[] = [
@@ -35,38 +51,46 @@ export default function ProfileHeader({ profile }: Props) {
           {profile.name}
         </h1>
 
-        {profile.verified && <BadgeCheck className="text-blue-500" size={22} />}
+        {profile.isVerified && <BadgeCheck className="text-blue-500" size={22} />}
       </div>
 
-      <p className="mt-2 font-[family-name:var(--font-mono)] text-[14px] text-violet-600">
-        @{profile.username}
-      </p>
+      {profile.username && (
+        <p className="mt-2 font-[family-name:var(--font-mono)] text-[14px] text-violet-600">
+          @{profile.username}
+        </p>
+      )}
 
-      <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#475569]">
-        {profile.bio}
-      </p>
+      {profile.bio && (
+        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#475569]">
+          {profile.bio}
+        </p>
+      )}
 
       <div className="mt-6 flex flex-wrap justify-center gap-5 text-[13.5px] text-[#64748B] md:justify-start">
-        <div className="flex items-center gap-1.5">
-          <MapPin size={16} />
-          {profile.location}
-        </div>
+        {profile.location && (
+          <div className="flex items-center gap-1.5">
+            <MapPin size={16} />
+            {profile.location}
+          </div>
+        )}
 
-        <Link
-          href={profile.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-violet-600 hover:underline"
-        >
-          <Globe size={16} />
-          Website
-        </Link>
+        {profile.website && (
+          <Link
+            href={profile.website}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-violet-600 hover:underline"
+          >
+            <Globe size={16} />
+            Website
+          </Link>
+        )}
 
         <div className="flex items-center gap-1.5">
           <CalendarDays size={16} />
           Joined{" "}
           <span className="font-[family-name:var(--font-mono)]">
-            {profile.joined}
+            {formatJoinedDate(profile.createdAt)}
           </span>
         </div>
       </div>
