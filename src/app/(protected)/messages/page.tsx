@@ -5,6 +5,7 @@ import { MessageCircle } from "lucide-react";
 
 import { useConversations } from "@/src/hooks/use-conversations";
 import { formatRelativeTime } from "@/src/lib/date";
+import { ConversationListSkeleton } from "@/src/components/skeletons/conversation-list-skeleton";
 
 export default function MessagesPage() {
   const { data, isLoading } = useConversations({ limit: 30 });
@@ -20,10 +21,8 @@ export default function MessagesPage() {
       </div>
 
       {isLoading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-20 animate-pulse rounded-2xl bg-[#F7F7FB]" />
-          ))}
+        <div className="overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white">
+          <ConversationListSkeleton count={4} />
         </div>
       ) : conversations.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">

@@ -10,6 +10,7 @@ import { Coupon, CouponType } from "@/src/types/coupon";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import Pagination from "@/src/components/ui/pagination";
+import { TableSkeleton } from "@/src/components/skeletons/table-skeleton";
 
 function formatValue(coupon: Coupon) {
   return coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `₦${coupon.value.toLocaleString()}`;
@@ -36,7 +37,7 @@ export default function CouponsManager() {
       {createOpen && <CreateCouponForm onDone={() => setCreateOpen(false)} />}
 
       {isLoading ? (
-        <p className="text-[13px] text-[#94A3B8]">Loading coupons...</p>
+        <TableSkeleton rows={5} cols={4} />
       ) : coupons.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
           <Ticket className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />

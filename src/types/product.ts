@@ -103,3 +103,12 @@ export interface MyProductParams {
   limit?: number;
   status?: ProductStatus;
 }
+
+export interface BulkUpdateProductStatusPayload {
+  productIds: string[];
+  status: ProductStatus;
+}
+
+export interface BulkDeleteProductsPayload {
+  productIds: string[];
+}

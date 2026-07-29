@@ -19,3 +19,11 @@ export const deleteReview = async (id: string) => {
   const response = await api.delete<ApiResponse<null>>(`/reviews/${id}`);
   return response.data;
 };
+
+export const replyToReview = async (id: string, reply: string) => {
+  const response = await api.post<ApiResponse<Review>>(
+    `/reviews/${id}/reply`,
+    { reply }
+  );
+  return response.data;
+};

@@ -7,7 +7,7 @@ const actions = [
   {
     title: "Add product",
     description: "Create a new product listing.",
-    href: "/settings/marketplace/products/new",
+    href: "/settings/marketplace/components/products/new",
     icon: PackagePlus,
     color: "bg-violet-50",
     iconColor: "text-violet-600",
@@ -15,7 +15,7 @@ const actions = [
   {
     title: "Products",
     description: "Manage inventory and pricing.",
-    href: "/settings/marketplace/products",
+    href: "/settings/marketplace?tab=products",
     icon: Boxes,
     color: "bg-indigo-50",
     iconColor: "text-indigo-600",
@@ -23,7 +23,7 @@ const actions = [
   {
     title: "Orders",
     description: "View and fulfil customer orders.",
-    href: "/settings/marketplace/orders",
+    href: "/settings/marketplace?tab=orders",
     icon: ShoppingBag,
     color: "bg-amber-50",
     iconColor: "text-amber-600",
@@ -31,7 +31,7 @@ const actions = [
   {
     title: "Store settings",
     description: "Update store profile and policies.",
-    href: "/settings/marketplace/store",
+    href: "/settings/marketplace?tab=store",
     icon: Store,
     color: "bg-rose-50",
     iconColor: "text-rose-600",
@@ -39,7 +39,7 @@ const actions = [
   {
     title: "Analytics",
     description: "Track growth and sales.",
-    href: "/settings/marketplace/analytics",
+    href: "/settings/marketplace?tab=analytics",
     icon: BarChart3,
     color: "bg-blue-50",
     iconColor: "text-blue-600",
@@ -47,7 +47,7 @@ const actions = [
   {
     title: "Earnings",
     description: "Monitor payouts and revenue.",
-    href: "/settings/marketplace/earnings",
+    href: "/settings/marketplace?tab=earnings",
     icon: Wallet,
     color: "bg-emerald-50",
     iconColor: "text-emerald-600",

@@ -29,6 +29,10 @@ export const useLogin = () => {
     mutationFn: login,
 
     onSuccess: (response) => {
+      if ("requires2FA" in response.data) {
+        return;
+      }
+
       const {
         accessToken,
         user,

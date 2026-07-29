@@ -9,7 +9,7 @@ import { useComments } from "@/src/hooks/use-comments";
 import { useUpdatePost } from "@/src/hooks/use-update-post";
 import { useDeletePost } from "@/src/hooks/use-delete-post";
 import { useAuthStore } from "@/src/store/auth-store";
-import UserAvatar from "@/src/components/ui/user-avatar";
+import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import ReportButton from "@/src/components/ui/report-button";
 import { formatRelativeTime } from "@/src/lib/date";
 import CommentSection from "./comment-section";
@@ -63,11 +63,11 @@ export default function PostCard({ post }: Props) {
       {/* Header */}
       <div className="flex items-center justify-between p-5 sm:p-6">
         <div className="flex items-center gap-3.5">
-          <UserAvatar name={post.author?.name} size={44} />
+          <AuthorAvatarLink author={post.author} size={44} />
 
           <div>
             <h3 className="text-[15px] font-semibold text-[#13131A]">
-              {post.author?.name ?? "Unknown user"}
+              <AuthorNameLink author={post.author} />
             </h3>
             <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
               {formatRelativeTime(post.createdAt)}

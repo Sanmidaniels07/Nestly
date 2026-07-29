@@ -3,7 +3,7 @@
 import { use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { CalendarDays, Globe, MapPin, MessageCircle, Users } from "lucide-react";
+import { ArrowLeft, Ban, CalendarDays, Globe, MapPin, MessageCircle, ShieldOff, Users } from "lucide-react";
 import {
   FaLinkedin,
   FaInstagram,
@@ -23,6 +23,11 @@ import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import FollowButton from "@/src/components/social/follow-button";
 import ReportButton from "@/src/components/ui/report-button";
 import PostCard from "../../feed/main-feed/post-card";
+import { UserProfileHeaderSkeleton } from "@/src/components/skeletons/profile-header-skeleton";
+import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
+import { useBlockedUsers } from "@/src/hooks/use-blocked-users";
+import { useBlockUser } from "@/src/hooks/use-block-user";
+import { useUnblockUser } from "@/src/hooks/use-unblock-user";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -52,6 +57,11 @@ export default function UserProfilePage({
 
   const { mutate: createConversation, isPending: isStartingChat } = useCreateConversation();
 
+  const { data: blockedData } = useBlockedUsers({ limit: 100 });
+  const { mutate: blockUser, isPending: isBlocking } = useBlockUser();
+  const { mutate: unblockUser, isPending: isUnblocking } = useUnblockUser();
+  const isBlocked = !!user && (blockedData?.blockedUsers ?? []).some((b) => b.id === user.id);
+
   const handleMessage = () => {
     if (!user) return;
     createConversation(user.id, {
@@ -76,8 +86,9 @@ export default function UserProfilePage({
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl space-y-6 pb-20 pt-6">
-        <div className="h-40 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+      <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
+        <UserProfileHeaderSkeleton />
+        <PostListSkeleton count={2} />
       </div>
     );
   }
@@ -92,6 +103,14 @@ export default function UserProfilePage({
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
+      <button
+        onClick={() => router.back()}
+        className="flex items-center gap-1.5 text-[13px] font-medium text-[#64748B] transition-colors hover:text-violet-700"
+      >
+        <ArrowLeft size={14} />
+        Back
+      </button>
+
       <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
           {user.avatar ? (
@@ -137,6 +156,16 @@ export default function UserProfilePage({
                     label=""
                     className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
                   />
+                  <button
+                    onClick={() =>
+                      isBlocked ? unblockUser(user.id) : blockUser(user.id)
+                    }
+                    disabled={isBlocking || isUnblocking}
+                    aria-label={isBlocked ? "Unblock user" : "Block user"}
+                    className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+                  >
+                    {isBlocked ? <ShieldOff size={15} /> : <Ban size={15} />}
+                  </button>
                 </div>
               )}
             </div>

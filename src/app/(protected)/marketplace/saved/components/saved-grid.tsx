@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import ProductCard from "@/src/app/(protected)/marketplace/components/product-card";
 import { useWishlist } from "@/src/hooks/use-wishlist";
+import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 import EmptySaved from "./empty-saved";
 
 interface Props {
@@ -25,11 +26,7 @@ export default function SavedGrid({ search }: Props) {
   }, [items, search]);
 
   if (isLoading) {
-    return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-[#94A3B8]">
-        Loading saved products...
-      </div>
-    );
+    return <CardGridSkeleton count={8} className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4" />;
   }
 
   if (items.length === 0) {

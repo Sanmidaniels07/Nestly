@@ -10,6 +10,7 @@ import { useSendMessage } from "@/src/hooks/use-send-message";
 import { useMarkConversationRead } from "@/src/hooks/use-mark-conversation-read";
 import { useAuthStore } from "@/src/store/auth-store";
 import { formatRelativeTime } from "@/src/lib/date";
+import { MessageThreadSkeleton } from "@/src/components/skeletons/conversation-list-skeleton";
 
 export default function ConversationThreadPage({
   params,
@@ -81,7 +82,7 @@ export default function ConversationThreadPage({
 
       <div className="flex-1 space-y-3 overflow-y-auto py-5">
         {isLoading ? (
-          <p className="text-center text-[13px] text-[#94A3B8]">Loading messages...</p>
+          <MessageThreadSkeleton />
         ) : messages.length === 0 ? (
           <p className="text-center text-[13px] text-[#94A3B8]">
             Say hello to start the conversation.

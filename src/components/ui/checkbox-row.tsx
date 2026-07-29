@@ -7,15 +7,18 @@ interface Props {
   description?: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  disabled?: boolean;
 }
 
-export default function CheckboxRow({ label, description, checked, onChange }: Props) {
+export default function CheckboxRow({ label, description, checked, onChange, disabled }: Props) {
   return (
     <button
       type="button"
-      onClick={() => onChange(!checked)}
+      onClick={() => !disabled && onChange(!checked)}
+      disabled={disabled}
       className={`
         flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-colors
+        ${disabled ? "cursor-not-allowed opacity-50" : ""}
         ${checked ? "border-violet-300 bg-violet-50" : "border-[#ECE9F6] hover:border-violet-200"}
       `}
     >

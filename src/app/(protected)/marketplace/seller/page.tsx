@@ -7,6 +7,7 @@ import Pagination from "@/src/components/ui/pagination";
 import SellersHeader from "./components/sellers-header";
 import SellersToolbar from "./components/sellers-toolbar";
 import SellersGrid from "./components/sellers-grid";
+import { SellerGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 
 export default function SellersPage() {
   const [search, setSearch] = useState("");
@@ -26,11 +27,7 @@ export default function SellersPage() {
         }}
       />
 
-      {isLoading && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-[#94A3B8]">
-          Loading stores...
-        </div>
-      )}
+      {isLoading && <SellerGridSkeleton count={6} />}
 
       {isError && (
         <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">

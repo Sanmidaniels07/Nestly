@@ -13,7 +13,7 @@ import { useDeleteStory } from "@/src/hooks/use-delete-story";
 import { useReactToStory } from "@/src/hooks/use-react-to-story";
 import { useRemoveStoryReaction } from "@/src/hooks/use-remove-story-reaction";
 import { useStoryViewers } from "@/src/hooks/use-story-viewers";
-import { getStory } from "@/src/services/story.services";
+import { useStory } from "@/src/hooks/use-story";
 import { StoryAuthorGroup } from "@/src/types/story";
 
 const STORY_DURATION_MS = 5000;
@@ -52,6 +52,9 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
   const { mutate: reactToStory } = useReactToStory(story?.id ?? "");
   const { mutate: removeReaction } = useRemoveStoryReaction(story?.id ?? "");
   const { data: viewersData } = useStoryViewers(story?.id ?? "", { limit: 50 }, isOwn);
+  // Fetching by id is also what records the view server-side (skipped for
+  // the author) and is the only place `myReaction` is exposed.
+  const { data: storyDetail } = useStory(story?.id ?? "", !!story);
 
   const goNext = () => {
     if (!group) return;
@@ -92,21 +95,20 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
     onClose();
   };
 
-  // Reset per-story local state whenever the displayed story changes, and
-  // record the view server-side (the by-id endpoint upserts a StoryView as
-  // a side effect for anyone but the author).
+  // Reset per-story local state whenever the displayed story changes.
   useEffect(() => {
     if (!story) return;
 
-    setMyReaction(null);
     setReply("");
     setViewersOpen(false);
-
-    if (!isOwn) {
-      getStory(story.id).catch(() => {});
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [story?.id]);
+
+  // Seed the reaction toggle from the server once the by-id fetch for the
+  // current story resolves (also the only source of truth for it).
+  useEffect(() => {
+    setMyReaction(storyDetail?.myReaction ?? null);
+  }, [storyDetail?.myReaction]);
 
   // Auto-advance progress for image stories. Video stories drive progress
   // off their own playback instead (see the <video> element below).

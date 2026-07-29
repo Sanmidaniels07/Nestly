@@ -13,6 +13,7 @@ import SellerSummary from "./components/seller-summary";
 import ProductSpecifications from "./components/product-specifications";
 import ProductDescription from "./components/product-description";
 import ProductReviews from "./components/product-reviews";
+import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -27,8 +28,32 @@ export default function ProductDetailsPage({ params }: Props) {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-20 text-center text-[14px] text-[#94A3B8]">
-        Loading product...
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <Skeleton className="h-3.5 w-64" />
+
+        <div className="mt-8 grid gap-10 lg:grid-cols-[1.2fr_1fr_360px]">
+          <div className="space-y-3">
+            <Skeleton className="aspect-square w-full rounded-2xl" />
+            <div className="grid grid-cols-4 gap-3">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="aspect-square w-full rounded-xl" />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <Skeleton className="h-3 w-24" />
+            <Skeleton className="h-7 w-4/5" />
+            <Skeleton className="h-5 w-1/3" />
+            <div className="space-y-2 pt-2">
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3.5 w-full" />
+              <Skeleton className="h-3.5 w-2/3" />
+            </div>
+          </div>
+
+          <Skeleton className="h-80 w-full rounded-2xl" />
+        </div>
       </div>
     );
   }

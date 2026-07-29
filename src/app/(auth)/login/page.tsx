@@ -54,7 +54,7 @@ export default function LoginPage() {
             <div className="text-center mb-10">
               <div className="md:hidden flex justify-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">
-                  T
+                  N
                 </div>
               </div>
               <h2 className="text-3xl font-bold text-gray-900">Welcome back</h2>

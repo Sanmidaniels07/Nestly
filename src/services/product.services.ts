@@ -1,6 +1,8 @@
 import { api } from "../lib/axios";
 import { ApiResponse, Paginated } from "../types/api";
 import {
+  BulkDeleteProductsPayload,
+  BulkUpdateProductStatusPayload,
   CreateProductPayload,
   MyProductParams,
   NearbyProductParams,
@@ -87,4 +89,29 @@ export const updateProduct = async (id: string, data: UpdateProductPayload) => {
 export const deleteProduct = async (id: string) => {
   const response = await api.delete<ApiResponse<null>>(`/products/${id}`);
   return response.data;
+};
+
+export const bulkUpdateProductStatus = async (
+  data: BulkUpdateProductStatusPayload
+) => {
+  const response = await api.patch<ApiResponse<{ updatedCount: number }>>(
+    "/products/me/bulk-status",
+    data
+  );
+  return response.data;
+};
+
+export const bulkDeleteProducts = async (data: BulkDeleteProductsPayload) => {
+  const response = await api.post<ApiResponse<{ archivedCount: number }>>(
+    "/products/me/bulk-delete",
+    data
+  );
+  return response.data;
+};
+
+export const exportMyProductsCsv = async () => {
+  const response = await api.get("/products/me/export", {
+    responseType: "blob",
+  });
+  return response.data as Blob;
 };

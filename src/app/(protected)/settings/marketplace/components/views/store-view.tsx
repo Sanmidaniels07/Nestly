@@ -10,6 +10,7 @@ import { useCreateShippingOption } from "@/src/hooks/use-create-shipping-option"
 import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
+import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -24,8 +25,9 @@ export default function StoreView() {
 
   if (isLoading || !store) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
-        Loading store...
+      <div className="space-y-6">
+        <FormCardSkeleton fields={4} />
+        <FormCardSkeleton fields={3} />
       </div>
     );
   }

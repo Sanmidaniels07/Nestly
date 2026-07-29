@@ -10,6 +10,7 @@ import { useUpdateTrackingNumber } from "@/src/hooks/use-update-tracking-number"
 import { Order } from "@/src/types/order";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const STATUS_OPTIONS = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
 
@@ -29,11 +30,7 @@ export default function OrdersView() {
   const orders = data?.orders ?? [];
 
   if (isLoading) {
-    return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
-        Loading orders...
-      </div>
-    );
+    return <ListSkeleton count={4} withAvatar={false} />;
   }
 
   if (orders.length === 0) {

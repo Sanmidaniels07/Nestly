@@ -1,6 +1,7 @@
 "use client";
 
-import { Camera, BadgeCheck } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ArrowLeft, Camera, BadgeCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { Profile } from "@/src/types/profile";
 
@@ -10,6 +11,8 @@ interface Props {
 }
 
 export default function ProfileCover({ profile, onEditCover }: Props) {
+  const router = useRouter();
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -28,6 +31,18 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
         )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
+
+        <button
+          onClick={() => router.back()}
+          aria-label="Go back"
+          className="
+            absolute left-5 top-5 flex h-10 w-10 items-center justify-center
+            rounded-full bg-white/85 backdrop-blur-xl
+            transition-colors hover:bg-white
+          "
+        >
+          <ArrowLeft size={18} />
+        </button>
 
         <button
           onClick={onEditCover}

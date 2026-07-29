@@ -13,20 +13,19 @@ export default function ThemeToggle() {
   }, []);
 
   if (!mounted) {
-    return (
-      <div className="h-11 w-11 rounded-full border bg-card" />
-    );
+    return <div className="h-10 w-10" />;
   }
 
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="flex h-11 w-11 items-center justify-center rounded-full border bg-card shadow-sm hover:bg-muted transition-colors"
+      aria-label="Toggle theme"
+      className="flex h-10 w-10 items-center justify-center rounded-full text-[#64748B] transition-colors hover:bg-muted"
     >
       {theme === "dark" ? (
-        <Sun size={20} className="text-yellow-500" />
+        <Sun size={19} className="text-yellow-500" />
       ) : (
-        <Moon size={20} />
+        <Moon size={19} />
       )}
     </button>
   );

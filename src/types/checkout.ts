@@ -22,3 +22,10 @@ export interface VerifyCheckoutResponse {
   order: Order;
   status: string;
 }
+
+export interface ChargeSavedCardPayload {
+  addressId: string;
+  savedCardId: string;
+  shippingSelections?: ShippingSelection[];
+  couponCode?: string;
+}

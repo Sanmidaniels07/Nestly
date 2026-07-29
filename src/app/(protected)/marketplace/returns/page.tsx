@@ -7,6 +7,7 @@ import { ArrowLeft, RotateCcw } from "lucide-react";
 import { useReturnRequests } from "@/src/hooks/use-return-requests";
 import { formatRelativeTime } from "@/src/lib/date";
 import Pagination from "@/src/components/ui/pagination";
+import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const statusTone: Record<string, string> = {
   REQUESTED: "bg-amber-50 text-amber-700",
@@ -40,7 +41,7 @@ export default function MyReturnsPage() {
       </div>
 
       {isLoading ? (
-        <p className="text-[13px] text-[#94A3B8]">Loading returns...</p>
+        <ListSkeleton count={4} withAvatar={false} />
       ) : returns.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">
           <RotateCcw className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />

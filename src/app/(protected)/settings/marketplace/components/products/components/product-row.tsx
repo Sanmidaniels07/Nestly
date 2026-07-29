@@ -3,16 +3,18 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Archive, Eye } from "lucide-react";
+import { Archive, Eye, Pencil } from "lucide-react";
 
 import { Product } from "@/src/types/product";
 import { useDeleteProduct } from "@/src/hooks/use-delete-product";
 
 interface Props {
   product: Product;
+  selected: boolean;
+  onToggleSelect: () => void;
 }
 
-export default function ProductRow({ product }: Props) {
+export default function ProductRow({ product, selected, onToggleSelect }: Props) {
   const [confirmingArchive, setConfirmingArchive] = useState(false);
   const { mutate: archiveProduct } = useDeleteProduct();
 
@@ -44,7 +46,17 @@ export default function ProductRow({ product }: Props) {
 
   return (
     <tr className="group border-b border-[#F0F0F4] transition-colors last:border-0 hover:bg-[#FAFAFB]">
-      <td className="px-4 py-3 pl-5">
+      <td className="w-10 px-4 py-3 pl-5">
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={onToggleSelect}
+          aria-label={`Select ${product.title}`}
+          className="h-4 w-4 rounded border-[#D4D2E3] text-violet-600 focus:ring-violet-400"
+        />
+      </td>
+
+      <td className="px-4 py-3">
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[#F4F4F7]">
             {primaryImage && (
@@ -86,6 +98,14 @@ export default function ProductRow({ product }: Props) {
             className="flex h-7 w-7 items-center justify-center rounded-md text-[#94A3B8] transition-colors hover:bg-[#F0F0F4] hover:text-[#334155]"
           >
             <Eye size={14} />
+          </Link>
+
+          <Link
+            href={`/settings/marketplace/components/products/${product.id}/edit`}
+            aria-label="Edit product"
+            className="flex h-7 w-7 items-center justify-center rounded-md text-[#94A3B8] transition-colors hover:bg-[#F0F0F4] hover:text-[#334155]"
+          >
+            <Pencil size={14} />
           </Link>
 
           {product.status !== "ARCHIVED" && (

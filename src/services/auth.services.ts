@@ -1,5 +1,11 @@
 import { api } from "../lib/axios";
-import { AuthResponse, LoginPayload, ResetPasswordPayload, SignupPayload } from "../types/auth";
+import {
+  AuthResponse,
+  LoginPayload,
+  ResetPasswordPayload,
+  SignupPayload,
+  TwoFactorLoginPayload,
+} from "../types/auth";
 
 
 export const login = async (
@@ -81,3 +87,10 @@ export const resetPassword =
 
     return response.data;
   };
+
+export const loginWithTwoFactor = async (
+  data: TwoFactorLoginPayload
+): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>("/2fa/login", data);
+  return response.data;
+};

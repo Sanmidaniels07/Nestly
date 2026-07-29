@@ -27,6 +27,7 @@ export interface Profile {
   languages: string[];
   role: "USER" | "ADMIN";
   isVerified: boolean;
+  twoFactorEnabled: boolean;
   createdAt: string;
   profileCompletion: number;
 }

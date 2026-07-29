@@ -9,6 +9,7 @@ import { useDeleteAddress } from "@/src/hooks/use-delete-address";
 import { useCheckoutStore } from "@/src/store/checkout-store";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
+import Skeleton from "@/src/components/ui/skeleton";
 import AddressCard from "./address-card";
 
 const emptyForm = {
@@ -128,7 +129,10 @@ export default function ShippingAddress() {
       )}
 
       {isLoading && (
-        <p className="text-[13px] text-[#94A3B8]">Loading addresses...</p>
+        <div className="space-y-3">
+          <Skeleton className="h-20 w-full rounded-2xl" />
+          <Skeleton className="h-20 w-full rounded-2xl" />
+        </div>
       )}
 
       {!isLoading && addresses?.length === 0 && !showForm && (

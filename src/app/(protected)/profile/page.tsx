@@ -10,6 +10,7 @@ import ProfileCover from "./profile-cover";
 import ProfileActions from "./profile-actions";
 import ProfileTabs from "./profile-tabs";
 import EditProfileModal from "./edit-profile-modal";
+import { ProfileHeaderSkeleton } from "@/src/components/skeletons/profile-header-skeleton";
 
 export default function ProfilePage() {
   const [editOpen, setEditOpen] = useState(false);
@@ -20,7 +21,7 @@ export default function ProfilePage() {
   if (isLoading || !profile) {
     return (
       <div className="mx-auto max-w-6xl space-y-4 pb-20">
-        <div className="h-[220px] animate-pulse rounded-2xl bg-[#F7F7FB] md:h-[300px] lg:h-[360px]" />
+        <ProfileHeaderSkeleton />
       </div>
     );
   }

@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { Camera } from "lucide-react";
+import { Camera, User } from "lucide-react";
 
 interface Props {
   avatar: string;
@@ -21,11 +21,17 @@ export default function EditProfileAvatar({ avatar, onChange }: Props) {
       >
         <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[3.5px] shadow-xl">
           <div className="rounded-full bg-white p-[3.5px]">
-            <img
-              src={avatar}
-              alt="Avatar"
-              className="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
-            />
+            {avatar ? (
+              <img
+                src={avatar}
+                alt="Avatar"
+                className="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
+              />
+            ) : (
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-violet-100 to-indigo-100 sm:h-32 sm:w-32">
+                <User size={40} className="text-violet-300" />
+              </div>
+            )}
           </div>
         </div>
 

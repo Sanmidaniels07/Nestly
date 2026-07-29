@@ -5,6 +5,7 @@ import { CalendarDays, Users2 } from "lucide-react";
 
 import { useCommunity } from "@/src/hooks/use-community";
 import { useToggleCommunityMembership } from "@/src/hooks/use-toggle-community-membership";
+import Skeleton from "@/src/components/ui/skeleton";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -29,8 +30,17 @@ export default function CommunityDetailPage({
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-3xl space-y-6 pb-20 pt-6">
-        <div className="h-40 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+      <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
+        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+          <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
+            <Skeleton className="h-20 w-20 shrink-0 rounded-2xl" />
+            <div className="min-w-0 flex-1 space-y-3 text-center sm:text-left">
+              <Skeleton className="mx-auto h-6 w-40 sm:mx-0" />
+              <Skeleton className="mx-auto h-3.5 w-full max-w-md sm:mx-0" />
+              <Skeleton className="mx-auto h-3.5 w-32 sm:mx-0" />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

@@ -21,6 +21,7 @@ import { useUploadFiles } from "@/src/hooks/use-upload-files";
 
 interface Props {
   onClose: () => void;
+  variant?: "modal" | "page";
 }
 
 const emptyDefaults: EditProfileBasicValues = {
@@ -44,7 +45,7 @@ const emptyDefaults: EditProfileBasicValues = {
   youtube: "",
 };
 
-export default function EditProfileForm({ onClose }: Props) {
+export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
   const { data: profile } = useProfile();
   const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateProfile();
   const { mutateAsync: uploadFiles, isPending: isUploading } = useUploadFiles();
@@ -139,9 +140,9 @@ export default function EditProfileForm({ onClose }: Props) {
     <FormProvider {...methods}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex max-h-[85vh] flex-col"
+        className={variant === "modal" ? "flex max-h-[85vh] flex-col" : "flex flex-col"}
       >
-        <div className="flex-1 overflow-y-auto">
+        <div className={variant === "modal" ? "flex-1 overflow-y-auto" : ""}>
           <EditProfileCover
             cover={cover}
             onRemove={() => {

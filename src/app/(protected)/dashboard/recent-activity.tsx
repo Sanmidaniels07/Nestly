@@ -5,6 +5,7 @@ import { Bell } from "lucide-react";
 import { useNotifications } from "@/src/hooks/use-notifications";
 import { useMarkNotificationRead } from "@/src/hooks/use-mark-notification-read";
 import { formatRelativeTime } from "@/src/lib/date";
+import Skeleton from "@/src/components/ui/skeleton";
 
 export default function RecentActivity() {
   const { data: notifications, isLoading } = useNotifications();
@@ -15,7 +16,17 @@ export default function RecentActivity() {
       <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
 
       {isLoading && (
-        <p className="text-center text-sm text-gray-400 py-6">Loading...</p>
+        <div className="space-y-6">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex gap-4">
+              <Skeleton className="mt-0.5 h-5 w-5 shrink-0 rounded-full" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-3.5 w-4/5" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+            </div>
+          ))}
+        </div>
       )}
 
       {!isLoading && notifications?.length === 0 && (

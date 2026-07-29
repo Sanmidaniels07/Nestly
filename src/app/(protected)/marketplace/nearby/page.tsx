@@ -8,6 +8,7 @@ import { useNearbyProducts } from "@/src/hooks/use-nearby-products";
 import Input from "@/src/components/ui/input";
 import Pagination from "@/src/components/ui/pagination";
 import ProductCard from "../components/product-card";
+import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 
 export default function NearbyPage() {
   const [city, setCity] = useState("");
@@ -77,9 +78,7 @@ export default function NearbyPage() {
       )}
 
       {hasQuery && isLoading && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-[#94A3B8]">
-          Searching...
-        </div>
+        <CardGridSkeleton count={8} className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" />
       )}
 
       {hasQuery && isError && (

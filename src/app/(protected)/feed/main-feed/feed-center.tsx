@@ -4,6 +4,7 @@ import Stories from "./stories";
 import CreatePostCard from "./create-post-card";
 import PostCard from "./post-card";
 import { usePosts } from "@/src/hooks/use-posts";
+import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
 
 export default function FeedCenter() {
   const {
@@ -23,11 +24,7 @@ export default function FeedCenter() {
 
       <CreatePostCard />
 
-      {isLoading && (
-        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
-          Loading posts...
-        </div>
-      )}
+      {isLoading && <PostListSkeleton />}
 
       {isError && (
         <div className="rounded-2xl border border-[#EDEBF5] bg-white p-10 text-center text-[14px] text-red-500">

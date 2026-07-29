@@ -7,8 +7,9 @@ import { useComments } from "@/src/hooks/use-comments";
 import { useCreateComment } from "@/src/hooks/use-create-comment";
 import { useDeleteComment } from "@/src/hooks/use-delete-comment";
 import { useAuthStore } from "@/src/store/auth-store";
-import UserAvatar from "@/src/components/ui/user-avatar";
+import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import { formatRelativeTime } from "@/src/lib/date";
+import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
   postId: string;
@@ -52,7 +53,14 @@ export default function CommentSection({ postId }: Props) {
       </form>
 
       {isLoading && (
-        <p className="text-[13px] text-[#94A3B8]">Loading comments...</p>
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="flex items-start gap-3">
+              <Skeleton className="h-8 w-8 shrink-0 rounded-full" />
+              <Skeleton className="h-12 flex-1 rounded-2xl" />
+            </div>
+          ))}
+        </div>
       )}
 
       {!isLoading && comments?.length === 0 && (
@@ -64,12 +72,12 @@ export default function CommentSection({ postId }: Props) {
       <div className="space-y-4">
         {comments?.map((comment) => (
           <div key={comment.id} className="flex items-start gap-3">
-            <UserAvatar name={comment.author?.name} size={32} />
+            <AuthorAvatarLink author={comment.user} size={32} />
 
             <div className="flex-1 rounded-2xl bg-[#F7F7FB] px-4 py-2.5">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[13px] font-semibold text-[#13131A]">
-                  {comment.author?.name ?? "Unknown user"}
+                  <AuthorNameLink author={comment.user} />
                 </span>
 
                 <div className="flex items-center gap-2">
@@ -77,7 +85,7 @@ export default function CommentSection({ postId }: Props) {
                     {formatRelativeTime(comment.createdAt)}
                   </span>
 
-                  {comment.authorId === currentUserId && (
+                  {comment.userId === currentUserId && (
                     <button
                       onClick={() => deleteComment(comment.id)}
                       aria-label="Delete comment"

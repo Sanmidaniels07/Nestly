@@ -3,9 +3,11 @@ import { ApiResponse, Paginated } from "../types/api";
 import {
   CreateEventPayload,
   EventAttendee,
+  EventComment,
   EventListParams,
   NestlyEvent,
   RsvpStatus,
+  UpdateEventPayload,
 } from "../types/event";
 
 export const createEvent = async (data: CreateEventPayload) => {
@@ -46,5 +48,43 @@ export const rsvpEvent = async (id: string, status: RsvpStatus) => {
 
 export const cancelRsvp = async (id: string) => {
   const response = await api.delete<ApiResponse<null>>(`/events/${id}/rsvp`);
+  return response.data;
+};
+
+export const updateEvent = async (id: string, data: UpdateEventPayload) => {
+  const response = await api.patch<ApiResponse<NestlyEvent>>(
+    `/events/${id}`,
+    data
+  );
+  return response.data;
+};
+
+export const cancelEvent = async (id: string) => {
+  const response = await api.delete<ApiResponse<null>>(`/events/${id}`);
+  return response.data;
+};
+
+export const createEventComment = async (id: string, content: string) => {
+  const response = await api.post<ApiResponse<EventComment>>(
+    `/events/${id}/comments`,
+    { content }
+  );
+  return response.data;
+};
+
+export const getEventComments = async (
+  id: string,
+  params: { page?: number; limit?: number } = {}
+) => {
+  const response = await api.get<
+    ApiResponse<Paginated<"comments", EventComment>>
+  >(`/events/${id}/comments`, { params });
+  return response.data;
+};
+
+export const deleteEventComment = async (commentId: string) => {
+  const response = await api.delete<ApiResponse<null>>(
+    `/events/comments/${commentId}`
+  );
   return response.data;
 };

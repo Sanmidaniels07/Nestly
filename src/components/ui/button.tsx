@@ -57,6 +57,7 @@ export default function Button({
         items-center
         justify-center
         gap-2
+        whitespace-nowrap
         font-semibold
         transition-all
         hover:scale-[1.02]

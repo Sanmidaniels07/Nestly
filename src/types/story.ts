@@ -13,6 +13,7 @@ export interface Story {
 
 export interface StoryDetail extends Story {
   author: PublicUser;
+  myReaction: string | null;
   _count: {
     views: number;
     reactions: number;

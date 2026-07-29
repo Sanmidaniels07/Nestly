@@ -6,11 +6,13 @@ import { Image as ImageIcon, Loader2, Video, X } from "lucide-react";
 import { useCreatePost } from "@/src/hooks/use-create-post";
 import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { useAuthStore } from "@/src/store/auth-store";
+import { useProfile } from "@/src/hooks/use-profile";
 import { PostMedia } from "@/src/types/post";
 import UserAvatar from "@/src/components/ui/user-avatar";
 
 export default function CreatePostCard() {
   const user = useAuthStore((state) => state.user);
+  const { data: profile } = useProfile();
   const [expanded, setExpanded] = useState(false);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -61,7 +63,7 @@ export default function CreatePostCard() {
     <div className="rounded-2xl border border-[#EDEBF5] bg-white p-5 transition-shadow duration-300 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)] sm:p-6">
       <div className="flex gap-4">
         <div className="mt-1">
-          <UserAvatar name={user?.name} size={44} />
+          <UserAvatar name={profile?.name ?? user?.name} src={profile?.avatar} size={44} />
         </div>
 
         <div className="flex-1">

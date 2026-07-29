@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useAuthStore } from "@/src/store/auth-store";
 import { useUserProfile } from "@/src/hooks/use-user-profile";
 import UserAvatar from "@/src/components/ui/user-avatar";
+import Skeleton from "@/src/components/ui/skeleton";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -15,7 +16,22 @@ function formatCount(n?: number) {
 
 export default function ProfileSummary() {
   const authUser = useAuthStore((state) => state.user);
-  const { data: profile } = useUserProfile(authUser?.id ?? "");
+  const { data: profile, isLoading } = useUserProfile(authUser?.id ?? "");
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
+          <div className="min-w-0 flex-1 space-y-2">
+            <Skeleton className="h-4 w-2/3" />
+            <Skeleton className="h-3 w-1/3" />
+          </div>
+        </div>
+        <Skeleton className="mt-6 h-12 w-full rounded-xl" />
+      </div>
+    );
+  }
 
   const stats = [
     { label: "Following", value: profile?.followingCount },

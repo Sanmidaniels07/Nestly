@@ -6,6 +6,7 @@ import { Users } from "lucide-react";
 import { useSellerCustomers } from "@/src/hooks/use-seller-customers";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { TableSkeleton } from "@/src/components/skeletons/table-skeleton";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -21,11 +22,7 @@ export default function CustomersView() {
   const customers = data?.customers ?? [];
 
   if (isLoading) {
-    return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
-        Loading customers...
-      </div>
-    );
+    return <TableSkeleton rows={6} cols={4} />;
   }
 
   if (customers.length === 0) {

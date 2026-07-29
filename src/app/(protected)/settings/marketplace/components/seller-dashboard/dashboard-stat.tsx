@@ -29,7 +29,7 @@ export default function DashboardStats() {
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <StatCard
         title="Products"
-        value={stats.productCount.toString()}
+        value={(stats.productCount ?? 0).toString()}
         icon={Package}
         color="bg-violet-50"
         iconColor="text-violet-600"
@@ -37,7 +37,7 @@ export default function DashboardStats() {
 
       <StatCard
         title="Orders"
-        value={stats.orderCount.toString()}
+        value={(stats.orderCount ?? 0).toString()}
         icon={ShoppingBag}
         color="bg-amber-50"
         iconColor="text-amber-600"
@@ -45,7 +45,7 @@ export default function DashboardStats() {
 
       <StatCard
         title="Revenue"
-        value={formatNaira(stats.revenue)}
+        value={formatNaira(stats.revenue ?? 0)}
         icon={Wallet}
         color="bg-emerald-50"
         iconColor="text-emerald-600"

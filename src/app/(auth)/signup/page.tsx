@@ -6,6 +6,7 @@ import Link from "next/link";
 import { signupSchema, SignupValues } from "@/src/lib/validations/auth";
 import { useSignup } from "@/src/hooks/use-signup";
 import Input from "@/src/components/ui/input";
+import PasswordInput from "@/src/components/ui/password-input";
 import Button from "@/src/components/ui/button";
 import { motion } from "framer-motion";
 import { Users, Sparkles, User, Mail, Lock, LockKeyhole } from "lucide-react";
@@ -101,18 +102,16 @@ export default function SignupPage() {
                 icon={<Mail className="w-5 h-5" />}
               />
 
-              <Input
+              <PasswordInput
                 label="Password"
-                type="password"
                 placeholder="Create a strong password"
                 {...register("password")}
                 error={errors.password?.message}
                 icon={<Lock className="w-5 h-5" />}
               />
 
-              <Input
+              <PasswordInput
                 label="Confirm Password"
-                type="password"
                 placeholder="Confirm your password"
                 {...register("confirmPassword")}
                 error={errors.confirmPassword?.message}

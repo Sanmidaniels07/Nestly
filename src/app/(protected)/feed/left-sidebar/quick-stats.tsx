@@ -5,17 +5,33 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { useProfile } from "@/src/hooks/use-profile";
 import { useUserProfile } from "@/src/hooks/use-user-profile";
 import { usePosts } from "@/src/hooks/use-posts";
+import Skeleton from "@/src/components/ui/skeleton";
 
 const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 export default function QuickStats() {
   const authUser = useAuthStore((state) => state.user);
-  const { data: profile } = useProfile();
-  const { data: userProfile } = useUserProfile(authUser?.id ?? "");
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const { data: userProfile, isLoading: isUserProfileLoading } = useUserProfile(
+    authUser?.id ?? ""
+  );
   const { data: postsData } = usePosts(
     { authorId: authUser?.id, sort: "desc" },
     { enabled: !!authUser?.id }
   );
+
+  if (isProfileLoading || isUserProfileLoading) {
+    return (
+      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+        <Skeleton className="h-4 w-24" />
+        <Skeleton className="mt-6 h-1.5 w-full rounded-full" />
+        <div className="mt-6 space-y-4 border-t border-[#F2F1F8] pt-5">
+          <Skeleton className="h-3.5 w-full" />
+          <Skeleton className="h-3.5 w-full" />
+        </div>
+      </div>
+    );
+  }
 
   const postsThisWeek =
     postsData?.pages

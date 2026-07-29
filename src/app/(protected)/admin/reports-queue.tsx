@@ -8,6 +8,7 @@ import { useUpdateReportStatus } from "@/src/hooks/use-update-report-status";
 import { Report, ReportStatus } from "@/src/types/report";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const statusTone: Record<string, string> = {
   PENDING: "bg-amber-50 text-amber-700",
@@ -53,7 +54,7 @@ export default function ReportsQueue() {
       </div>
 
       {isLoading ? (
-        <p className="text-[13px] text-[#94A3B8]">Loading reports...</p>
+        <ListSkeleton count={5} withAvatar={false} />
       ) : reports.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
           <ShieldAlert className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />

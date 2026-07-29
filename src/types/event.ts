@@ -40,3 +40,21 @@ export interface EventAttendee {
   createdAt: string;
   user: PublicUser;
 }
+
+export interface UpdateEventPayload {
+  title?: string;
+  description?: string;
+  coverImage?: string;
+  location?: string;
+  startAt?: string;
+  endAt?: string;
+}
+
+export interface EventComment {
+  id: string;
+  eventId: string;
+  userId: string;
+  content: string;
+  createdAt: string;
+  user: PublicUser;
+}

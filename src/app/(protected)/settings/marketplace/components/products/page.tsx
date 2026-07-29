@@ -4,8 +4,10 @@ import { useState } from "react";
 import ProductsHeader from "./components/products-header";
 import ProductsToolbar from "./components/products-toolbar";
 import ProductsTable from "./components/products-table";
+import BulkActionsBar from "./components/bulk-actions-bar";
 import { useMyProducts } from "@/src/hooks/use-my-products";
 import { ProductStatus } from "@/src/types/product";
+import { TableSkeleton } from "@/src/components/skeletons/table-skeleton";
 
 const statusMap: Record<string, ProductStatus | undefined> = {
   "All status": undefined,
@@ -25,6 +27,7 @@ export default function SellerProductsPage() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All status");
   const [sort, setSort] = useState("Newest");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
   const { data, isLoading, isError } = useMyProducts({
     status: statusMap[status],
@@ -46,6 +49,25 @@ export default function SellerProductsPage() {
       return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
     });
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) {
+        next.delete(id);
+      } else {
+        next.add(id);
+      }
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    setSelectedIds((prev) => {
+      const allSelected = products.length > 0 && products.every((p) => prev.has(p.id));
+      return allSelected ? new Set() : new Set(products.map((p) => p.id));
+    });
+  };
+
   return (
     <div className="space-y-6">
       <ProductsHeader />
@@ -59,9 +81,14 @@ export default function SellerProductsPage() {
         onSortChange={setSort}
       />
 
-      {isLoading && (
-        <p className="text-[13px] text-[#94A3B8]">Loading products...</p>
+      {selectedIds.size > 0 && (
+        <BulkActionsBar
+          selectedIds={Array.from(selectedIds)}
+          onClear={() => setSelectedIds(new Set())}
+        />
       )}
+
+      {isLoading && <TableSkeleton rows={6} cols={5} />}
 
       {isError && (
         <p className="text-[13px] text-red-500">
@@ -77,7 +104,12 @@ export default function SellerProductsPage() {
             </p>
           )}
 
-          <ProductsTable products={products} />
+          <ProductsTable
+            products={products}
+            selectedIds={selectedIds}
+            onToggleSelect={toggleSelect}
+            onToggleAll={toggleAll}
+          />
         </>
       )}
     </div>

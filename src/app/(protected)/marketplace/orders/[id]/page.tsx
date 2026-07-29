@@ -11,6 +11,7 @@ import OrderSummary from "./components/order-summary";
 import OrderActions from "./components/order-actions";
 import OrderTimeline from "./components/order-timeline";
 import OrderedProducts from "./components/ordered-products";
+import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
   params: Promise<{
@@ -24,8 +25,22 @@ export default function OrderDetailsPage({ params }: Props) {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-7xl px-5 py-16 text-center text-[14px] text-[#94A3B8]">
-        Loading order...
+      <div className="mx-auto max-w-7xl space-y-6 px-5 py-8">
+        <Skeleton className="h-8 w-56" />
+
+        <div className="grid gap-6 xl:grid-cols-[1.7fr_420px]">
+          <section className="space-y-5">
+            <Skeleton className="h-48 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-40 w-full rounded-2xl" />
+          </section>
+
+          <aside className="space-y-5">
+            <Skeleton className="h-40 w-full rounded-2xl" />
+            <Skeleton className="h-32 w-full rounded-2xl" />
+            <Skeleton className="h-24 w-full rounded-2xl" />
+          </aside>
+        </div>
       </div>
     );
   }

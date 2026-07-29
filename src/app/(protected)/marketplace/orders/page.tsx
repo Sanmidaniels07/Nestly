@@ -7,6 +7,7 @@ import OrdersList from "./components/orders-list";
 import Pagination from "@/src/components/ui/pagination";
 import { useOrders } from "@/src/hooks/use-orders";
 import OrdersHeader from "./components/order-header";
+import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 export default function OrdersPage() {
   const [search, setSearch] = useState("");
@@ -59,9 +60,7 @@ export default function OrdersPage() {
         statusOptions={statusOptions}
       />
 
-      {isLoading && (
-        <p className="text-[13px] text-[#94A3B8]">Loading orders...</p>
-      )}
+      {isLoading && <ListSkeleton count={4} withAvatar={false} />}
 
       {isError && (
         <p className="text-[13px] text-red-500">Couldn&apos;t load orders. Please try again.</p>

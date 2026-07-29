@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Star, Trash2 } from "lucide-react";
+import { Pencil, Star, Store, Trash2 } from "lucide-react";
 import { Review } from "@/src/types/review";
-import UserAvatar from "@/src/components/ui/user-avatar";
+import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import StarRatingInput from "@/src/components/ui/star-rating-input";
 import { formatRelativeTime } from "@/src/lib/date";
 import { useAuthStore } from "@/src/store/auth-store";
@@ -35,13 +35,13 @@ export default function ReviewCard({ review }: Props) {
   return (
     <div className="rounded-2xl border border-[#ECE9F6] p-5">
       <div className="flex gap-3.5">
-        <UserAvatar name={review.user?.name} size={44} />
+        <AuthorAvatarLink author={review.user} size={44} />
 
         <div className="flex-1">
           <div className="flex flex-wrap items-start justify-between gap-2">
             <div>
               <h4 className="text-[14.5px] font-semibold text-[#13131A]">
-                {review.user?.name ?? "Unknown buyer"}
+                <AuthorNameLink author={review.user} />
               </h4>
               <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
                 {formatRelativeTime(review.createdAt)}
@@ -107,6 +107,20 @@ export default function ReviewCard({ review }: Props) {
             review.comment && (
               <p className="mt-3 text-[14px] leading-relaxed text-[#334155]">{review.comment}</p>
             )
+          )}
+
+          {!editing && review.reply && (
+            <div className="mt-3 flex gap-2.5 rounded-xl bg-[#F8F8FC] p-3.5">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600">
+                <Store size={13} />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[12px] font-semibold text-[#13131A]">Seller response</p>
+                <p className="mt-0.5 text-[13px] leading-relaxed text-[#475569]">
+                  {review.reply}
+                </p>
+              </div>
+            </div>
           )}
         </div>
       </div>

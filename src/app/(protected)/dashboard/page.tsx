@@ -9,6 +9,7 @@ import QuickActions from "./quick-actions";
 import MarketplacePicks from "./marketplace-widget";
 import RecentActivity from "./recent-activity";
 import SuggestedUsers from "./suggested-users";
+import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -36,9 +37,7 @@ export default function DashboardPage() {
                 </Link>
               </div>
 
-              {isLoading && (
-                <p className="text-gray-500 text-center py-12">Loading posts...</p>
-              )}
+              {isLoading && <PostListSkeleton count={2} />}
 
               {isError && (
                 <p className="text-red-500 text-center py-12">

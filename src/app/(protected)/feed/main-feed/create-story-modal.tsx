@@ -74,7 +74,7 @@ export default function CreateStoryModal({ open, onClose }: Props) {
     <>
       <div
         onClick={handleClose}
-        className="fixed inset-0 z-[90] bg-black/60 backdrop-blur-sm"
+        className="fixed inset-0 z-[90] bg-opacity-25 backdrop-brightness-50"
       />
 
       <div className="fixed left-1/2 top-1/2 z-[100] w-[92%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-[0_30px_90px_rgba(0,0,0,0.25)]">

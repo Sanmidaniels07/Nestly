@@ -17,6 +17,7 @@ import ConditionFilter from "./components/filters/condition-filters";
 import BrandFilter from "./components/filters/brand-filter";
 import FilterFooter from "./components/filters/draw-footer";
 import Pagination from "@/src/components/ui/pagination";
+import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 
 type Filters = {
   priceMin: string;
@@ -110,11 +111,7 @@ function ProductsPageContent() {
           onResetSort={() => updateSort("newest")}
         />
 
-        {isLoading && (
-          <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-[#94A3B8]">
-            Loading products...
-          </div>
-        )}
+        {isLoading && <CardGridSkeleton count={12} />}
 
         {isError && (
           <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
@@ -175,8 +172,8 @@ export default function ProductsPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-[1600px] px-5 py-16 text-center text-[13.5px] text-[#94A3B8] lg:px-8">
-          Loading products...
+        <div className="mx-auto max-w-[1600px] px-5 py-8 lg:px-8">
+          <CardGridSkeleton count={12} />
         </div>
       }
     >

@@ -68,16 +68,11 @@ function Nav() {
               <LogOut size={18} />
             </button>
           ) : (
-            <>
-              <Link href="/login">
-                <Button variant="outline" size="sm" className="hidden sm:flex">
-                  Log In
-                </Button>
-              </Link>
-              <Link href="/signup">
-                <Button variant="tribely" size="sm">Get Started</Button>
-              </Link>
-            </>
+            // Login is only surfaced on the signup page itself (as a
+            // cross-link); the landing page keeps the CTA focused on signup.
+            <Link href="/signup">
+              <Button variant="tribely" size="sm">Get Started</Button>
+            </Link>
           )}
         </div>
       </div>

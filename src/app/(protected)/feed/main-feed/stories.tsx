@@ -5,14 +5,17 @@ import { Plus } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import { useStoriesFeed } from "@/src/hooks/use-stories-feed";
+import { AvatarRailSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 import CreateStoryModal from "./create-story-modal";
 import StoryViewer from "./story-viewer";
 
 export default function Stories() {
   const authUser = useAuthStore((state) => state.user);
-  const { data: feedGroups } = useStoriesFeed();
+  const { data: feedGroups, isLoading } = useStoriesFeed();
   const [createOpen, setCreateOpen] = useState(false);
   const [viewerGroupIndex, setViewerGroupIndex] = useState<number | null>(null);
+
+  if (isLoading) return <AvatarRailSkeleton />;
 
   if (!feedGroups || !authUser) return null;
 

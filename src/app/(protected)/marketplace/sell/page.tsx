@@ -10,6 +10,7 @@ import { useCreateStore } from "@/src/hooks/use-create-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
+import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 
 export default function SellPage() {
   const router = useRouter();
@@ -17,9 +18,9 @@ export default function SellPage() {
 
   if (isLoading) {
     return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center text-[13.5px] text-[#64748B]">
-        Loading...
-      </section>
+      <div className="mx-auto max-w-xl">
+        <FormCardSkeleton fields={2} />
+      </div>
     );
   }
 

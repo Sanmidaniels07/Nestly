@@ -8,6 +8,7 @@ import { useUpdateReturnRequestStatus } from "@/src/hooks/use-update-return-requ
 import { ReturnRequest } from "@/src/types/return-request";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const statusTone: Record<string, string> = {
   REQUESTED: "bg-amber-50 text-amber-700",
@@ -22,11 +23,7 @@ export default function ReturnsView() {
   const returns = data?.returns ?? [];
 
   if (isLoading) {
-    return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
-        Loading returns...
-      </div>
-    );
+    return <ListSkeleton count={4} withAvatar={false} />;
   }
 
   if (returns.length === 0) {

@@ -1,17 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { ShieldAlert, Ticket } from "lucide-react";
+import { ShieldAlert, Ticket, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
 import CouponsManager from "./coupons-manager";
+import PayoutsManager from "./payouts-manager";
 
-type Tab = "reports" | "coupons";
+type Tab = "reports" | "coupons" | "payouts";
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "reports", label: "Reports", icon: ShieldAlert },
   { id: "coupons", label: "Coupons", icon: Ticket },
+  { id: "payouts", label: "Payouts", icon: Wallet },
 ];
 
 export default function AdminPage() {
@@ -58,7 +60,13 @@ export default function AdminPage() {
         })}
       </div>
 
-      {tab === "reports" ? <ReportsQueue /> : <CouponsManager />}
+      {tab === "reports" ? (
+        <ReportsQueue />
+      ) : tab === "coupons" ? (
+        <CouponsManager />
+      ) : (
+        <PayoutsManager />
+      )}
     </div>
   );
 }

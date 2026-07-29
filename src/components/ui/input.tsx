@@ -1,15 +1,16 @@
 import { cn } from "@/src/lib/utils";
 import { InputHTMLAttributes, ReactNode, forwardRef } from "react";
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   icon?: ReactNode;
+  rightElement?: ReactNode;
   fullWidth?: boolean;
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ className, label, error, icon, fullWidth = true, ...props }, ref) => {
+  ({ className, label, error, icon, rightElement, fullWidth = true, ...props }, ref) => {
     return (
       <div className={cn("group", fullWidth && "w-full")}>
         {label && (
@@ -65,6 +66,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             )}
             {...props}
           />
+
+          {rightElement && (
+            <div className="ml-3 flex shrink-0 items-center text-gray-400">
+              {rightElement}
+            </div>
+          )}
         </div>
 
         {error && (

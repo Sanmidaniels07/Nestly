@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CreditCard, Loader2 } from "lucide-react";
 import SummaryRow from "./summary-row";
 import { useCart } from "@/src/hooks/use-cart";
 import { useCheckoutStore } from "@/src/store/checkout-store";
 import { useInitiateCheckout } from "@/src/hooks/use-initiate-checkout";
 import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
+import { useSavedCards } from "@/src/hooks/use-saved-cards";
+import { useChargeSavedCard } from "@/src/hooks/use-charge-saved-card";
 import { payWithPaystack } from "@/src/lib/paystack";
 
 function money(value: number) {
@@ -28,9 +30,17 @@ export default function PaymentSummary() {
 
   const { mutateAsync: initiateCheckout } = useInitiateCheckout();
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();
+  const { mutateAsync: chargeSavedCard } = useChargeSavedCard();
+  const { data: savedCards } = useSavedCards();
 
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
+  const [selectedCardId, setSelectedCardId] = useState<string>("new");
+
+  useEffect(() => {
+    const defaultCard = savedCards?.find((card) => card.isDefault) ?? savedCards?.[0];
+    if (defaultCard) setSelectedCardId(defaultCard.id);
+  }, [savedCards]);
 
   const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
   const subtotal = items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
@@ -41,6 +51,10 @@ export default function PaymentSummary() {
   const discountAmount = appliedCoupon?.discountAmount ?? 0;
   const estimatedTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
 
+  const shippingSelectionsArray = Object.entries(shippingSelections).map(
+    ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
+  );
+
   const handlePay = async () => {
     if (!addressId) {
       setError("Select a delivery address on the checkout page first.");
@@ -50,12 +64,27 @@ export default function PaymentSummary() {
     setError("");
     setProcessing(true);
 
+    if (selectedCardId !== "new") {
+      try {
+        const response = await chargeSavedCard({
+          addressId,
+          savedCardId: selectedCardId,
+          shippingSelections: shippingSelectionsArray,
+          couponCode: appliedCoupon?.code,
+        });
+        const order = (response as { data: { id: string } }).data;
+        resetCheckout();
+        router.push(`/marketplace/order-success?orderId=${order.id}`);
+      } catch {
+        setProcessing(false);
+      }
+      return;
+    }
+
     try {
       const response = await initiateCheckout({
         addressId,
-        shippingSelections: Object.entries(shippingSelections).map(
-          ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
-        ),
+        shippingSelections: shippingSelectionsArray,
         couponCode: appliedCoupon?.code,
       });
       const { accessCode, reference } = (response as { data: { accessCode: string; reference: string } }).data;
@@ -90,6 +119,42 @@ export default function PaymentSummary() {
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
         Payment summary
       </h2>
+
+      {!!savedCards?.length && (
+        <div className="space-y-2">
+          <p className="text-[12.5px] font-medium text-[#334155]">Pay with</p>
+          <div className="space-y-2">
+            {savedCards.map((card) => (
+              <button
+                key={card.id}
+                onClick={() => setSelectedCardId(card.id)}
+                className={`flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
+                  selectedCardId === card.id
+                    ? "border-violet-400 bg-violet-50"
+                    : "border-[#ECE9F6] hover:border-violet-200"
+                }`}
+              >
+                <CreditCard size={16} className="shrink-0 text-[#64748B]" />
+                <span className="text-[13px] font-medium text-[#13131A]">
+                  {card.cardType ?? "Card"} •••• {card.last4}
+                </span>
+              </button>
+            ))}
+
+            <button
+              onClick={() => setSelectedCardId("new")}
+              className={`flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
+                selectedCardId === "new"
+                  ? "border-violet-400 bg-violet-50"
+                  : "border-[#ECE9F6] hover:border-violet-200"
+              }`}
+            >
+              <CreditCard size={16} className="shrink-0 text-[#94A3B8]" />
+              <span className="text-[13px] font-medium text-[#13131A]">Pay with a new card</span>
+            </button>
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         <SummaryRow label="Items" value={totalItems.toString()} />

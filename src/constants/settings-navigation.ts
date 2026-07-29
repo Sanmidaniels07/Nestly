@@ -1,6 +1,7 @@
 import {
   User,
   Shield,
+  Lock,
   Bell,
   Palette,
   Store,
@@ -16,6 +17,11 @@ export const settingsNavigation = [
     title: "Account",
     href: "/settings/account",
     icon: Shield,
+  },
+  {
+    title: "Security",
+    href: "/settings/security",
+    icon: Lock,
   },
   {
     title: "Notifications",
