@@ -30,6 +30,7 @@ const EMPTY_DRAFT: ProductEditDraft = {
   stock: "",
   highlights: [],
   specifications: [],
+  variants: [],
   images: [],
 };
 
@@ -65,6 +66,13 @@ export default function EditProductPage({ params }: Props) {
         id: spec.id ?? crypto.randomUUID(),
         key: spec.name,
         value: spec.value,
+      })),
+      variants: product.variants.map((variant) => ({
+        id: variant.id ?? crypto.randomUUID(),
+        name: variant.name,
+        value: variant.value,
+        price: variant.price != null ? String(variant.price) : "",
+        stock: variant.stock != null ? String(variant.stock) : "",
       })),
       images: product.images.map((image) => ({
         id: image.id ?? crypto.randomUUID(),
@@ -108,6 +116,14 @@ export default function EditProductPage({ params }: Props) {
             .filter((spec) => spec.key.trim())
             .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
           highlights: draft.highlights,
+          variants: draft.variants
+            .filter((variant) => variant.name.trim() && variant.value.trim())
+            .map((variant) => ({
+              name: variant.name.trim(),
+              value: variant.value.trim(),
+              price: variant.price ? Number(variant.price) : undefined,
+              stock: variant.stock ? Number(variant.stock) : undefined,
+            })),
         },
       },
       {

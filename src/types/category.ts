@@ -6,3 +6,11 @@ export interface Category {
   isFeatured?: boolean;
   productCount?: number;
 }
+
+export interface CreateCategoryPayload {
+  name: string;
+  icon?: string;
+  isFeatured?: boolean;
+}
+
+export type UpdateCategoryPayload = Partial<CreateCategoryPayload>;

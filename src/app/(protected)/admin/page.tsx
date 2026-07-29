@@ -1,19 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { ShieldAlert, Ticket, Wallet } from "lucide-react";
+import { LayoutGrid, ShieldAlert, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
 import CouponsManager from "./coupons-manager";
 import PayoutsManager from "./payouts-manager";
+import CategoriesManager from "./categories-manager";
+import UsersManager from "./users-manager";
 
-type Tab = "reports" | "coupons" | "payouts";
+type Tab = "reports" | "users" | "coupons" | "payouts" | "categories";
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "reports", label: "Reports", icon: ShieldAlert },
+  { id: "users", label: "Users", icon: Users },
   { id: "coupons", label: "Coupons", icon: Ticket },
   { id: "payouts", label: "Payouts", icon: Wallet },
+  { id: "categories", label: "Categories", icon: LayoutGrid },
 ];
 
 export default function AdminPage() {
@@ -31,6 +35,14 @@ export default function AdminPage() {
     );
   }
 
+  const tabViews: Record<Tab, React.ReactNode> = {
+    reports: <ReportsQueue />,
+    users: <UsersManager />,
+    coupons: <CouponsManager />,
+    payouts: <PayoutsManager />,
+    categories: <CategoriesManager />,
+  };
+
   return (
     <div className="mx-auto max-w-5xl space-y-8 pb-20 pt-6">
       <div>
@@ -42,31 +54,27 @@ export default function AdminPage() {
         </h1>
       </div>
 
-      <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
-        {tabs.map((t) => {
-          const isActive = tab === t.id;
-          return (
-            <button
-              key={t.id}
-              onClick={() => setTab(t.id)}
-              className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
-                isActive ? "bg-white text-violet-700 shadow-sm" : "text-[#64748B] hover:text-[#13131A]"
-              }`}
-            >
-              <t.icon size={15} className={isActive ? "text-violet-600" : "text-[#94A3B8]"} />
-              {t.label}
-            </button>
-          );
-        })}
+      <div className="overflow-x-auto scrollbar-hide">
+        <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
+          {tabs.map((t) => {
+            const isActive = tab === t.id;
+            return (
+              <button
+                key={t.id}
+                onClick={() => setTab(t.id)}
+                className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
+                  isActive ? "bg-white text-violet-700 shadow-sm" : "text-[#64748B] hover:text-[#13131A]"
+                }`}
+              >
+                <t.icon size={15} className={isActive ? "text-violet-600" : "text-[#94A3B8]"} />
+                {t.label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {tab === "reports" ? (
-        <ReportsQueue />
-      ) : tab === "coupons" ? (
-        <CouponsManager />
-      ) : (
-        <PayoutsManager />
-      )}
+      {tabViews[tab]}
     </div>
   );
 }

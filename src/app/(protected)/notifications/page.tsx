@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Bell,
   CheckCheck,
@@ -14,6 +13,7 @@ import {
 
 import { useNotifications } from "@/src/hooks/use-notifications";
 import { useMarkNotificationRead } from "@/src/hooks/use-mark-notification-read";
+import { useMarkAllNotificationsRead } from "@/src/hooks/use-mark-all-notifications-read";
 import { formatRelativeTime } from "@/src/lib/date";
 import { Notification } from "@/src/types/notification";
 
@@ -38,20 +38,11 @@ function iconKeyFor(type?: string): keyof typeof ICON_MAP | undefined {
 
 export default function NotificationsPage() {
   const { data: notifications, isLoading } = useNotifications();
-  const { mutate: markRead, mutateAsync: markReadAsync } = useMarkNotificationRead();
-  const [markingAll, setMarkingAll] = useState(false);
+  const { mutate: markRead } = useMarkNotificationRead();
+  const { mutate: markAllRead, isPending: markingAll } = useMarkAllNotificationsRead();
 
   const items = notifications ?? [];
   const unread = items.filter((n) => !n.isRead);
-
-  const handleMarkAll = async () => {
-    setMarkingAll(true);
-    try {
-      await Promise.allSettled(unread.map((n) => markReadAsync(n.id)));
-    } finally {
-      setMarkingAll(false);
-    }
-  };
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
@@ -67,7 +58,7 @@ export default function NotificationsPage() {
 
         {unread.length > 0 && (
           <button
-            onClick={handleMarkAll}
+            onClick={() => markAllRead()}
             disabled={markingAll}
             className="flex items-center gap-1.5 rounded-xl border border-violet-200 px-3.5 py-2.5 text-[13px] font-medium text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
           >

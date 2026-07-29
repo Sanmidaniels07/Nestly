@@ -1,10 +1,12 @@
 "use client";
 
-import { use } from "react";
-import { CalendarDays, Users2 } from "lucide-react";
+import { use, useState } from "react";
+import { CalendarDays, ShieldAlert, Trash2, Users2 } from "lucide-react";
 
 import { useCommunity } from "@/src/hooks/use-community";
 import { useToggleCommunityMembership } from "@/src/hooks/use-toggle-community-membership";
+import { useDeleteCommunity } from "@/src/hooks/use-delete-community";
+import { useAuthStore } from "@/src/store/auth-store";
 import Skeleton from "@/src/components/ui/skeleton";
 
 function formatCount(n?: number) {
@@ -26,6 +28,7 @@ export default function CommunityDetailPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = use(params);
+  const authUser = useAuthStore((state) => state.user);
   const { data: community, isLoading } = useCommunity(slug);
 
   if (isLoading) {
@@ -101,7 +104,66 @@ export default function CommunityDetailPage({
           </div>
         </div>
       </div>
+
+      {authUser?.id === community.creatorId && (
+        <DeleteCommunitySection slug={community.slug} />
+      )}
     </div>
+  );
+}
+
+function DeleteCommunitySection({ slug }: { slug: string }) {
+  const { mutate: deleteCommunity, isPending } = useDeleteCommunity();
+  const [confirming, setConfirming] = useState(false);
+
+  const handleDelete = () => {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
+    deleteCommunity(slug);
+  };
+
+  return (
+    <section className="rounded-2xl border border-red-100 bg-red-50/40 p-6">
+      <div className="flex items-start gap-3.5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
+          <ShieldAlert size={17} className="text-red-600" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-[15px] font-semibold text-[#13131A]">Delete community</h3>
+          <p className="mt-1 text-[13px] text-[#64748B]">
+            Permanently delete this community for everyone. This cannot be undone.
+          </p>
+        </div>
+      </div>
+
+      {confirming ? (
+        <div className="mt-4 flex gap-2.5">
+          <button
+            onClick={() => setConfirming(false)}
+            className="h-11 rounded-xl border border-[#E5E7EB] px-6 text-[13.5px] font-semibold text-[#334155] transition-colors hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleDelete}
+            disabled={isPending}
+            className="flex h-11 items-center gap-1.5 rounded-xl bg-red-600 px-6 text-[13.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Trash2 size={14} />
+            {isPending ? "Deleting..." : "Yes, permanently delete"}
+          </button>
+        </div>
+      ) : (
+        <button
+          onClick={handleDelete}
+          className="mt-4 h-11 rounded-xl border border-red-200 px-6 text-[13.5px] font-semibold text-red-600 transition-colors hover:bg-red-50"
+        >
+          Delete community
+        </button>
+      )}
+    </section>
   );
 }
 

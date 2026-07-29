@@ -1,5 +1,5 @@
 import { DraftImage } from "@/src/types/product-image";
-import { ProductCondition, ProductStatus } from "@/src/types/product";
+import { EditableVariant, ProductCondition, ProductStatus } from "@/src/types/product";
 
 export interface EditableSpecification {
   id: string;
@@ -22,5 +22,6 @@ export interface ProductEditDraft {
 
   highlights: string[];
   specifications: EditableSpecification[];
+  variants: EditableVariant[];
   images: DraftImage[];
 }

@@ -20,6 +20,16 @@ export interface ProductVariant {
   stock?: number;
 }
 
+// Local editable shape used by the create/edit forms — price/stock stay as
+// strings while being typed, same convention as EditableSpecification.
+export interface EditableVariant {
+  id: string;
+  name: string;
+  value: string;
+  price: string;
+  stock: string;
+}
+
 export type ProductCondition = "NEW" | "USED" | "REFURBISHED";
 export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED";
 

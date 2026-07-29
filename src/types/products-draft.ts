@@ -1,5 +1,5 @@
 import { DraftImage } from "./product-image";
-import { ProductCondition } from "./product";
+import { EditableVariant, ProductCondition } from "./product";
 
 export interface ProductDraft {
   // Step 1
@@ -22,6 +22,7 @@ export interface ProductDraft {
     value: string;
   }[];
   highlights: string[];
+  variants: EditableVariant[];
 
   // Step 4
   images: DraftImage[];

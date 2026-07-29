@@ -32,6 +32,7 @@ export default function AddProductPage() {
 
     specifications: [],
     highlights: [],
+    variants: [],
 
     images: [],
 
@@ -69,6 +70,14 @@ export default function AddProductPage() {
         .filter((spec) => spec.key.trim())
         .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
       highlights: draft.highlights,
+      variants: draft.variants
+        .filter((variant) => variant.name.trim() && variant.value.trim())
+        .map((variant) => ({
+          name: variant.name.trim(),
+          value: variant.value.trim(),
+          price: variant.price ? Number(variant.price) : undefined,
+          stock: variant.stock ? Number(variant.stock) : undefined,
+        })),
     });
 
     const created = (response as { data: { id: string } }).data;

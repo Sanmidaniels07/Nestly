@@ -39,6 +39,7 @@ export interface Store {
   rating?: number;
   totalSales?: number;
   isVerified?: boolean;
+  isSuspended?: boolean;
   returnPolicy?: string | null;
   shippingPolicy?: string | null;
   warrantyPolicy?: string | null;

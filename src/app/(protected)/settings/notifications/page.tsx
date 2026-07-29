@@ -1,20 +1,47 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
+import { useNotificationPreferences } from "@/src/hooks/use-notification-preferences";
+import { useUpdateNotificationPreference } from "@/src/hooks/use-update-notification-preference";
+import { NotificationPreferenceType } from "@/src/types/notification";
 import CheckboxRow from "@/src/components/ui/checkbox-row";
 
-const PREFERENCES = [
-  { label: "Likes & reactions", description: "When someone reacts to your posts or comments." },
-  { label: "Comments & replies", description: "When someone comments on your post or replies to you." },
-  { label: "New followers", description: "When someone starts following you." },
-  { label: "Direct messages", description: "When you receive a new message." },
-  { label: "Marketplace orders", description: "Order status updates, shipping, and returns." },
-  { label: "Community activity", description: "Posts and announcements in communities you've joined." },
-];
+const PREFERENCE_META: Record<
+  NotificationPreferenceType,
+  { label: string; description: string }
+> = {
+  LIKE: {
+    label: "Likes & reactions",
+    description: "When someone reacts to your posts or comments.",
+  },
+  COMMENT: {
+    label: "Comments & replies",
+    description: "When someone comments on your post or replies to you.",
+  },
+  FOLLOW: {
+    label: "New followers",
+    description: "When someone starts following you.",
+  },
+  MESSAGE: {
+    label: "Direct messages",
+    description: "When you receive a new message.",
+  },
+  ORDER: {
+    label: "Marketplace orders",
+    description: "Order status updates, shipping, and returns.",
+  },
+  SYSTEM: {
+    label: "System announcements",
+    description: "Important updates about your account and Nestly.",
+  },
+};
 
 export default function SettingsNotificationsPage() {
+  const { data: preferences, isLoading } = useNotificationPreferences();
+  const { mutate: updatePreference, isPending } = useUpdateNotificationPreference();
+
   return (
     <div className="space-y-6">
       <div>
@@ -38,37 +65,33 @@ export default function SettingsNotificationsPage() {
       </Link>
 
       <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h3 className="text-[15px] font-semibold text-[#13131A]">Notify me about</h3>
-            <p className="mt-1 text-[13px] text-[#64748B]">
-              Choose which activity sends you a notification.
-            </p>
-          </div>
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-[#F1F0F5] px-2.5 py-1 text-[11px] font-medium text-[#64748B]">
-            <Clock size={11} />
-            Coming soon
-          </span>
+        <div>
+          <h3 className="text-[15px] font-semibold text-[#13131A]">Notify me about</h3>
+          <p className="mt-1 text-[13px] text-[#64748B]">
+            Choose which activity sends you a notification.
+          </p>
         </div>
 
         <div className="mt-5 space-y-3">
-          {PREFERENCES.map((pref) => (
-            <CheckboxRow
-              key={pref.label}
-              label={pref.label}
-              description={pref.description}
-              checked
-              disabled
-              onChange={() => {}}
-            />
-          ))}
+          {isLoading ? (
+            <>
+              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            </>
+          ) : (
+            preferences?.map((pref) => (
+              <CheckboxRow
+                key={pref.type}
+                label={PREFERENCE_META[pref.type].label}
+                description={PREFERENCE_META[pref.type].description}
+                checked={pref.enabled}
+                disabled={isPending}
+                onChange={(enabled) => updatePreference({ type: pref.type, enabled })}
+              />
+            ))
+          )}
         </div>
-
-        <p className="mt-4 text-[12px] text-[#94A3B8]">
-          Preference controls aren&apos;t saved to the server yet — everything is currently
-          on by default. This will become editable once notification preferences are
-          supported on the backend.
-        </p>
       </section>
     </div>
   );

@@ -6,3 +6,16 @@ export interface Notification {
   isRead: boolean;
   createdAt: string;
 }
+
+export type NotificationPreferenceType =
+  | "LIKE"
+  | "COMMENT"
+  | "FOLLOW"
+  | "MESSAGE"
+  | "ORDER"
+  | "SYSTEM";
+
+export interface NotificationPreference {
+  type: NotificationPreferenceType;
+  enabled: boolean;
+}

@@ -5,6 +5,7 @@ import Button from "@/src/components/ui/button";
 
 import { ProductDraft } from "@/src/types/products-draft";
 import SpecificationRow from "./specification-row";
+import VariantsSection from "./variants-section";
 import EditProfileTags from "@/src/app/(protected)/profile/components/edit-profile-tags";
 interface Props {
   draft: ProductDraft;
@@ -38,11 +39,12 @@ export default function Specifications({ draft, setDraft, onBack, onNext }: Prop
   };
 
   const handleContinue = () => {
-    // Specs are optional for a listing, so no hard validation blocks progress —
-    // just silently drop any fully-empty rows before moving on.
+    // Specs/variants are optional for a listing, so no hard validation blocks
+    // progress — just silently drop any fully-empty rows before moving on.
     setDraft((prev) => ({
       ...prev,
       specifications: prev.specifications.filter((s) => s.key.trim() || s.value.trim()),
+      variants: prev.variants.filter((v) => v.name.trim() && v.value.trim()),
     }));
     onNext();
   };
@@ -94,6 +96,13 @@ export default function Specifications({ draft, setDraft, onBack, onNext }: Prop
           onChange={(highlights) => setDraft((prev) => ({ ...prev, highlights }))}
           placeholder="e.g. Free returns, press Enter"
           maxTags={10}
+        />
+      </div>
+
+      <div className="mt-8 border-t border-[#F2F1F8] pt-6">
+        <VariantsSection
+          variants={draft.variants}
+          onChange={(variants) => setDraft((prev) => ({ ...prev, variants }))}
         />
       </div>
 

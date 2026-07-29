@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
+import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
@@ -74,6 +75,8 @@ function MarketplaceSettingsContent() {
   return (
     <div className="space-y-8">
       <SellerDashboardHeader />
+
+      {seller?.store?.isSuspended && <SuspendedStoreBanner />}
 
       <MarketplaceTabs active={tab} onChange={handleTabChange} />
 

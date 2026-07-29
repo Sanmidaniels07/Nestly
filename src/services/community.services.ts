@@ -55,3 +55,8 @@ export const leaveCommunity = async (slug: string) => {
   );
   return response.data;
 };
+
+export const deleteCommunity = async (slug: string) => {
+  const response = await api.delete<ApiResponse<null>>(`/communities/${slug}`);
+  return response.data;
+};
