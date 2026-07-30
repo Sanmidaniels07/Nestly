@@ -1,6 +1,6 @@
 import { api } from "../lib/axios";
 import { ApiResponse, Paginated } from "../types/api";
-import { Order } from "../types/order";
+import { OrderItem } from "../types/order";
 import { Product } from "../types/product";
 import { Payout, SellerEarnings, StoreTraffic } from "../types/payout";
 
@@ -12,22 +12,23 @@ export interface SellerCustomer {
 }
 
 export interface SellerDashboardStats {
-  productCount?: number;
-  orderCount?: number;
-  customerCount?: number;
-  revenue?: number;
-  rating?: number;
-  reviewCount?: number;
+  totalProducts: number;
+  totalOrders: number;
+  totalRevenue: number;
+  pendingOrders: number;
+  totalCustomers: number;
+  storeRating?: number;
 }
 
 export interface SellerSalesPoint {
   date: string;
-  sales: number;
+  revenue: number;
+  orders: number;
 }
 
 export interface SellerTopProduct {
   product: Product;
-  sold: number;
+  unitsSold: number;
   revenue: number;
 }
 
@@ -42,6 +43,34 @@ export interface SellerAnalytics {
   revenueByCategory: SellerRevenueByCategory[];
 }
 
+export interface SellerRecentOrder {
+  id: string;
+  status: string;
+  createdAt: string;
+  customer: { id: string; name: string; email: string };
+  items: OrderItem[];
+  sellerSubtotal: number;
+}
+
+export interface LowStockProduct {
+  id: string;
+  title: string;
+  sku: string;
+  stock: number;
+  price: number;
+  brand?: string | null;
+  images: { url: string; isPrimary?: boolean }[];
+}
+
+export interface InventorySnapshot {
+  totalProducts: number;
+  publishedCount: number;
+  draftCount: number;
+  outOfStockCount: number;
+  lowStockThreshold: number;
+  lowStockProducts: LowStockProduct[];
+}
+
 export const getSellerDashboardStats = async () => {
   const response = await api.get<ApiResponse<SellerDashboardStats>>(
     "/seller/dashboard/stats"
@@ -50,7 +79,7 @@ export const getSellerDashboardStats = async () => {
 };
 
 export const getSellerInventory = async (threshold?: number) => {
-  const response = await api.get<ApiResponse<Product[]>>(
+  const response = await api.get<ApiResponse<InventorySnapshot>>(
     "/seller/dashboard/inventory",
     { params: { threshold } }
   );
@@ -66,7 +95,7 @@ export const getSellerSalesOverview = async (days?: number) => {
 };
 
 export const getSellerRecentOrders = async (limit?: number) => {
-  const response = await api.get<ApiResponse<Order[]>>(
+  const response = await api.get<ApiResponse<SellerRecentOrder[]>>(
     "/seller/dashboard/recent-orders",
     { params: { limit } }
   );

@@ -80,7 +80,7 @@ export default function SellPage() {
           {seller.store.name} is live on Nestly.
         </p>
         <Button
-          className="mt-7"
+          className="mx-auto mt-7 w-fit"
           variant="tribely"
           onClick={() => router.push("/settings/marketplace")}
         >

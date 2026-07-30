@@ -18,9 +18,9 @@ export default function SalesOverview() {
   const points = sales ?? [];
 
   const { total, change, isUp } = useMemo(() => {
-    const last = points[points.length - 1]?.sales ?? 0;
-    const prev = points[points.length - 2]?.sales ?? 0;
-    const total = points.reduce((sum, m) => sum + m.sales, 0);
+    const last = points[points.length - 1]?.revenue ?? 0;
+    const prev = points[points.length - 2]?.revenue ?? 0;
+    const total = points.reduce((sum, m) => sum + m.revenue, 0);
     const change = prev === 0 ? 0 : ((last - prev) / prev) * 100;
 
     return { total, change: Math.abs(change).toFixed(1), isUp: last >= prev };

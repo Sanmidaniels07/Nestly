@@ -8,6 +8,6 @@ export const useSellerInventory = (threshold?: number) => {
   return useQuery({
     queryKey: ["seller-dashboard", "inventory", threshold],
     queryFn: () => getSellerInventory(threshold),
-    select: (response) => response.data,
+    select: (response) => response.data.lowStockProducts,
   });
 };

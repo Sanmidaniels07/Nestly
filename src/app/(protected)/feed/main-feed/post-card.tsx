@@ -16,6 +16,7 @@ import CommentSection from "./comment-section";
 
 interface Props {
   post: Post;
+  autoOpenComments?: boolean;
 }
 
 function formatCount(n: number | undefined | null) {
@@ -25,7 +26,7 @@ function formatCount(n: number | undefined | null) {
   return value.toString();
 }
 
-export default function PostCard({ post }: Props) {
+export default function PostCard({ post, autoOpenComments }: Props) {
   const currentUserId = useAuthStore((state) => state.user?.id);
   const isAuthor = post.authorId === currentUserId;
 
@@ -39,7 +40,7 @@ export default function PostCard({ post }: Props) {
   const { mutate: deletePost } = useDeletePost();
 
   const [menuOpen, setMenuOpen] = useState(false);
-  const [commentsOpen, setCommentsOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(!!autoOpenComments);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content);
 

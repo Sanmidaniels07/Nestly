@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
-import { Order } from "@/src/types/order";
+import { SellerRecentOrder } from "@/src/services/seller-dashboard.services";
 import { formatRelativeTime } from "@/src/lib/date";
 
 interface Props {
-  order: Order;
+  order: SellerRecentOrder;
 }
 
 const statusStyles: Record<string, string> = {
@@ -28,11 +28,11 @@ export default function RecentOrderRow({ order }: Props) {
       </td>
 
       <td className="max-w-[160px] truncate px-5 py-4 text-[13px] text-[#334155]">
-        {order.address?.fullName ?? "—"}
+        {order.customer.name}
       </td>
 
       <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-medium text-[#13131A]">
-        ₦{order.total.toLocaleString()}
+        ₦{order.sellerSubtotal.toLocaleString()}
       </td>
 
       <td className="whitespace-nowrap px-5 py-4">

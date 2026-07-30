@@ -3,10 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye } from "lucide-react";
-import { Product } from "@/src/types/product";
+import { LowStockProduct } from "@/src/services/seller-dashboard.services";
 
 interface Props {
-  product: Product;
+  product: LowStockProduct;
 }
 
 export default function InventoryProductRow({ product }: Props) {

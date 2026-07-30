@@ -28,7 +28,7 @@ export default function TopSellingProducts() {
               <TopProductCard
                 key={entry.product.id}
                 product={entry.product}
-                sold={entry.sold}
+                sold={entry.unitsSold}
                 revenue={entry.revenue}
                 position={index + 1}
               />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import {
   Bell,
   CheckCheck,
@@ -16,6 +17,25 @@ import { useMarkNotificationRead } from "@/src/hooks/use-mark-notification-read"
 import { useMarkAllNotificationsRead } from "@/src/hooks/use-mark-all-notifications-read";
 import { formatRelativeTime } from "@/src/lib/date";
 import { Notification } from "@/src/types/notification";
+
+function targetHref(notification: Notification): string | null {
+  switch (notification.targetType) {
+    case "POST":
+      return notification.targetId ? `/post/${notification.targetId}` : null;
+    case "USER":
+      return notification.targetId ? `/users/${notification.targetId}` : null;
+    case "CONVERSATION":
+      return notification.targetId ? `/messages/${notification.targetId}` : null;
+    case "PRODUCT":
+      return notification.targetId
+        ? `/settings/marketplace/components/products/${notification.targetId}/edit`
+        : null;
+    case "SELLER_APPLICATION":
+      return "/marketplace/sell";
+    default:
+      return null;
+  }
+}
 
 const ICON_MAP = {
   like: Heart,
@@ -37,6 +57,7 @@ function iconKeyFor(type?: string): keyof typeof ICON_MAP | undefined {
 }
 
 export default function NotificationsPage() {
+  const router = useRouter();
   const { data: notifications, isLoading } = useNotifications();
   const { mutate: markRead } = useMarkNotificationRead();
   const { mutate: markAllRead, isPending: markingAll } = useMarkAllNotificationsRead();
@@ -88,7 +109,11 @@ export default function NotificationsPage() {
             <NotificationRow
               key={notification.id}
               notification={notification}
-              onRead={() => markRead(notification.id)}
+              onOpen={() => {
+                if (!notification.isRead) markRead(notification.id);
+                const href = targetHref(notification);
+                if (href) router.push(href);
+              }}
             />
           ))}
         </div>
@@ -99,17 +124,17 @@ export default function NotificationsPage() {
 
 function NotificationRow({
   notification,
-  onRead,
+  onOpen,
 }: {
   notification: Notification;
-  onRead: () => void;
+  onOpen: () => void;
 }) {
   const iconKey = iconKeyFor(notification.type);
   const Icon = iconKey ? ICON_MAP[iconKey] : Bell;
 
   return (
     <button
-      onClick={() => !notification.isRead && onRead()}
+      onClick={onOpen}
       className={`
         relative flex w-full items-start gap-3.5 rounded-2xl border p-4 text-left transition-colors
         ${

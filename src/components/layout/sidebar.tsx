@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { navigation } from "@/src/constants/navigation";
 import { cn } from "@/src/lib/utils";
 import { useAuthStore } from "@/src/store/auth-store";
+import { useUnreadNotificationsCount } from "@/src/hooks/use-unread-notifications-count";
 import SettingsPopover from "./settings-popover";
 import LogoutConfirmDialog from "@/src/components/ui/logout-confirm-dialog";
 
@@ -15,6 +16,7 @@ export default function Sidebar() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const { count: unreadNotifications } = useUnreadNotificationsCount();
 
   const isActive = (href: string) => {
     if (href === "/dashboard") return pathname === href;
@@ -91,7 +93,12 @@ export default function Sidebar() {
                 size={19}
                 className={active ? "text-violet-600" : "text-[#94A3B8] group-hover:text-violet-600"}
               />
-              <span>{item.title}</span>
+              <span className="flex-1">{item.title}</span>
+              {item.href === "/notifications" && unreadNotifications > 0 && (
+                <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-1 text-[10px] font-bold text-white">
+                  {unreadNotifications > 99 ? "99+" : unreadNotifications}
+                </span>
+              )}
             </Link>
           );
         })}

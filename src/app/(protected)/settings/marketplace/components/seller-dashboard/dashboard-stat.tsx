@@ -29,7 +29,7 @@ export default function DashboardStats() {
     <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       <StatCard
         title="Products"
-        value={(stats.productCount ?? 0).toString()}
+        value={stats.totalProducts.toString()}
         icon={Package}
         color="bg-violet-50"
         iconColor="text-violet-600"
@@ -37,7 +37,8 @@ export default function DashboardStats() {
 
       <StatCard
         title="Orders"
-        value={(stats.orderCount ?? 0).toString()}
+        value={stats.totalOrders.toString()}
+        subtitle={stats.pendingOrders > 0 ? `${stats.pendingOrders} pending` : undefined}
         icon={ShoppingBag}
         color="bg-amber-50"
         iconColor="text-amber-600"
@@ -45,17 +46,16 @@ export default function DashboardStats() {
 
       <StatCard
         title="Revenue"
-        value={formatNaira(stats.revenue ?? 0)}
+        value={formatNaira(stats.totalRevenue)}
         icon={Wallet}
         color="bg-emerald-50"
         iconColor="text-emerald-600"
       />
 
-      {stats.rating !== undefined && (
+      {stats.storeRating !== undefined && (
         <StatCard
           title="Store rating"
-          value={stats.rating.toString()}
-          subtitle={stats.reviewCount !== undefined ? `${stats.reviewCount} reviews` : undefined}
+          value={stats.storeRating.toString()}
           icon={Star}
           color="bg-rose-50"
           iconColor="text-rose-600"

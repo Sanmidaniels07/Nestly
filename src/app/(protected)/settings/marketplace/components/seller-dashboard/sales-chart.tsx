@@ -90,7 +90,7 @@ export default function SalesChart({ data, isLoading }: Props) {
 
             <Area
               type="monotone"
-              dataKey="sales"
+              dataKey="revenue"
               stroke="#7C3AED"
               strokeWidth={2.5}
               fill="url(#salesFill)"

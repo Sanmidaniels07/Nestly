@@ -9,6 +9,7 @@ import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
 import Tooltip from "./tooltip";
 import SavedButton from "./saved-button";
+import NotificationBell from "./notification-bell";
 import LogoutConfirmDialog from "./logout-confirm-dialog";
 import GlobalSearch from "./global-search";
 import { useAuth } from "@/src/hooks/use-auth";
@@ -64,6 +65,12 @@ export default function Navbar() {
               <CartButton />
             </Tooltip>
           </div>
+
+          {isAuthenticated && (
+            <Tooltip label="Notifications">
+              <NotificationBell />
+            </Tooltip>
+          )}
 
           {isAuthenticated ? (
             <Tooltip label="Log out">
