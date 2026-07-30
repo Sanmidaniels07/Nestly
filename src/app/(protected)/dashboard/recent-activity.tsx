@@ -12,13 +12,20 @@ export default function RecentActivity() {
   const { mutate: markRead } = useMarkNotificationRead();
 
   return (
-    <div className="bg-white rounded-2xl p-8 border border-[#EDEBF5]">
-      <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
+    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
+      <div className="flex items-center gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
+          <Bell size={16} className="text-violet-600" />
+        </div>
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+          Recent activity
+        </h3>
+      </div>
 
       {isLoading && (
-        <div className="space-y-6">
+        <div className="mt-6 space-y-5">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="flex gap-4">
+            <div key={i} className="flex gap-3.5">
               <Skeleton className="mt-0.5 h-5 w-5 shrink-0 rounded-full" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-3.5 w-4/5" />
@@ -30,36 +37,38 @@ export default function RecentActivity() {
       )}
 
       {!isLoading && notifications?.length === 0 && (
-        <p className="text-center text-sm text-gray-400 py-6">
+        <p className="py-8 text-center text-[13px] text-[#94A3B8]">
           No notifications yet
         </p>
       )}
 
-      <div className="space-y-6">
-        {notifications?.map((notification) => (
-          <button
-            key={notification.id}
-            onClick={() => !notification.isRead && markRead(notification.id)}
-            className="flex w-full gap-4 text-left"
-          >
-            <div className="mt-0.5 text-violet-500">
-              <Bell size={20} fill={notification.isRead ? "none" : "currentColor"} />
-            </div>
-            <div className="flex-1">
-              <p
-                className={`leading-snug ${
-                  notification.isRead ? "text-gray-500" : "text-gray-900 font-medium"
-                }`}
-              >
-                {notification.message}
-              </p>
-              <p className="text-xs text-gray-500 mt-1.5">
-                {formatRelativeTime(notification.createdAt)}
-              </p>
-            </div>
-          </button>
-        ))}
-      </div>
+      {!isLoading && !!notifications?.length && (
+        <div className="mt-6 space-y-5">
+          {notifications.map((notification) => (
+            <button
+              key={notification.id}
+              onClick={() => !notification.isRead && markRead(notification.id)}
+              className="flex w-full gap-3.5 text-left"
+            >
+              <div className="mt-0.5 shrink-0 text-violet-500">
+                <Bell size={17} fill={notification.isRead ? "none" : "currentColor"} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p
+                  className={`text-[13.5px] leading-snug ${
+                    notification.isRead ? "text-[#64748B]" : "font-medium text-[#13131A]"
+                  }`}
+                >
+                  {notification.message}
+                </p>
+                <p className="mt-1.5 text-[12px] text-[#94A3B8]">
+                  {formatRelativeTime(notification.createdAt)}
+                </p>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

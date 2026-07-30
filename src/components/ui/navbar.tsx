@@ -9,6 +9,7 @@ import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
 import Tooltip from "./tooltip";
 import SavedButton from "./saved-button";
+import OrdersButton from "./orders-button";
 import NotificationBell from "./notification-bell";
 import LogoutConfirmDialog from "./logout-confirm-dialog";
 import GlobalSearch from "./global-search";
@@ -60,6 +61,9 @@ export default function Navbar() {
           <div className={isAuthenticated ? "flex items-center gap-2 sm:gap-3" : "hidden items-center gap-2 sm:flex sm:gap-3"}>
             <Tooltip label="Saved products">
               <SavedButton />
+            </Tooltip>
+            <Tooltip label="My orders">
+              <OrdersButton />
             </Tooltip>
             <Tooltip label="Cart">
               <CartButton />

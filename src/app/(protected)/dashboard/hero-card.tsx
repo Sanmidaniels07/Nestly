@@ -108,14 +108,17 @@ export default function HeroCard({ name }: HeroCardProps) {
         <div className="mt-9 flex flex-wrap gap-3">
           <Button
             onClick={() => router.push("/feed")}
-            className="bg-white px-7 py-5 text-[14px] font-semibold text-[#2A1B4D] shadow-lg hover:bg-white/90 sm:px-8 sm:py-6 sm:text-base"
+            leftIcon={<PenSquare size={18} />}
+            className="rounded-2xl bg-white px-7 py-5 text-[14px] font-semibold text-[#2A1B4D] shadow-lg hover:bg-white/90 sm:px-8 sm:py-6 sm:text-base"
           >
-            <PenSquare size={18} className="mr-2.5" />
             Create post
           </Button>
 
-          <Button className="border border-white/20 bg-white/10 px-7 py-5 text-[14px] font-semibold backdrop-blur-xl hover:bg-white/[0.15] sm:px-8 sm:py-6 sm:text-base">
-            <Compass size={18} className="mr-2.5" />
+          <Button
+            onClick={() => router.push("/communities")}
+            leftIcon={<Compass size={18} />}
+            className="rounded-2xl border border-white/20 bg-white/10 px-7 py-5 text-[14px] font-semibold backdrop-blur-xl hover:bg-white/[0.15] sm:px-8 sm:py-6 sm:text-base"
+          >
             Explore communities
           </Button>
         </div>

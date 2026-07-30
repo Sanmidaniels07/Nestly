@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowRight, Newspaper } from "lucide-react";
 import { useAuthStore } from "@/src/store/auth-store";
 import { usePosts } from "@/src/hooks/use-posts";
 import PostCard from "@/src/app/(protected)/feed/main-feed/post-card";
@@ -18,37 +19,49 @@ export default function DashboardPage() {
   const posts = data?.pages[0]?.data.posts ?? [];
 
   return (
-    <div className="min-h-screen bg-[#F5F7FA] pb-12">
-      <div className="max-w-7xl mx-auto px-6 pt-8 space-y-10">
-        <HeroCard name={user?.name || "Daniel"} />
+    <div className="mx-auto max-w-7xl space-y-10 pb-20 pt-6">
+      <HeroCard name={user?.name || "there"} />
 
-        <QuickActions />
+      <QuickActions />
 
-        <div className="grid lg:grid-cols-12 gap-8">
-          <div className="lg:col-span-8 space-y-8">
-            <div className="bg-white rounded-2xl p-8 border border-[#EDEBF5]">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold">Your Feed</h3>
-                <Link
-                  href="/feed"
-                  className="text-sm font-medium text-violet-600 hover:underline"
-                >
-                  View full feed →
-                </Link>
+      <div className="grid gap-8 lg:grid-cols-12">
+        <div className="space-y-6 lg:col-span-8">
+          <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7 sm:p-8">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.3em] text-violet-600">
+                  For you
+                </p>
+                <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-[#13131A]">
+                  Your feed
+                </h2>
               </div>
 
+              <Link
+                href="/feed"
+                className="group flex shrink-0 items-center gap-1.5 text-[13.5px] font-semibold text-violet-600 hover:underline"
+              >
+                View full feed
+                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+              </Link>
+            </div>
+
+            <div className="mt-7">
               {isLoading && <PostListSkeleton count={2} />}
 
               {isError && (
-                <p className="text-red-500 text-center py-12">
+                <p className="py-16 text-center text-[13.5px] text-red-500">
                   Couldn&apos;t load the feed. Please try again.
                 </p>
               )}
 
               {!isLoading && !isError && posts.length === 0 && (
-                <p className="text-gray-500 text-center py-12">
-                  No posts yet. Be the first to share something.
-                </p>
+                <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
+                  <Newspaper className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
+                  <p className="mt-4 text-[13.5px] text-[#94A3B8]">
+                    No posts yet. Be the first to share something.
+                  </p>
+                </div>
               )}
 
               {!isLoading && !isError && posts.length > 0 && (
@@ -60,12 +73,12 @@ export default function DashboardPage() {
               )}
             </div>
           </div>
+        </div>
 
-         <div className="lg:col-span-4 space-y-8">
-        <SuggestedUsers />
-        <RecentActivity />
-        <MarketplacePicks />
-      </div>
+        <div className="space-y-6 lg:col-span-4">
+          <SuggestedUsers />
+          <RecentActivity />
+          <MarketplacePicks />
         </div>
       </div>
     </div>
