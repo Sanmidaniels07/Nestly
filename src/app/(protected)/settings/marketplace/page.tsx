@@ -2,6 +2,8 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { Clock, XCircle } from "lucide-react";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
@@ -57,6 +59,44 @@ function MarketplaceSettingsContent() {
         <Skeleton className="h-11 w-full max-w-md rounded-xl" />
         <StatTilesSkeleton count={4} />
         <Skeleton className="h-72 w-full rounded-2xl" />
+      </div>
+    );
+  }
+
+  if (seller && seller.status !== "APPROVED") {
+    const isPending = seller.status === "PENDING";
+    return (
+      <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
+        <SellerDashboardHeader />
+        <section className="rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+          <div
+            className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full ${
+              isPending ? "bg-amber-50" : "bg-red-50"
+            }`}
+          >
+            {isPending ? (
+              <Clock size={26} className="text-amber-600" />
+            ) : (
+              <XCircle size={26} className="text-red-600" />
+            )}
+          </div>
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+            {isPending ? "Application pending" : "Application rejected"}
+          </h1>
+          <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+            {isPending
+              ? "Your seller application is awaiting admin review. Your dashboard will unlock once it's approved."
+              : seller.statusReason
+                ? `Reason: ${seller.statusReason}`
+                : "Your seller application was not approved, so your store is no longer manageable."}
+          </p>
+          <Link
+            href="/marketplace/sell"
+            className="mt-7 inline-block text-[13px] font-medium text-violet-700 hover:underline"
+          >
+            View application status
+          </Link>
+        </section>
       </div>
     );
   }

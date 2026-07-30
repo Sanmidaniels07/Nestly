@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { LayoutGrid, ShieldAlert, Ticket, Users, Wallet } from "lucide-react";
+import { LayoutGrid, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
@@ -9,12 +9,14 @@ import CouponsManager from "./coupons-manager";
 import PayoutsManager from "./payouts-manager";
 import CategoriesManager from "./categories-manager";
 import UsersManager from "./users-manager";
+import SellersManager from "./sellers-manager";
 
-type Tab = "reports" | "users" | "coupons" | "payouts" | "categories";
+type Tab = "reports" | "users" | "sellers" | "coupons" | "payouts" | "categories";
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "reports", label: "Reports", icon: ShieldAlert },
   { id: "users", label: "Users", icon: Users },
+  { id: "sellers", label: "Sellers", icon: Store },
   { id: "coupons", label: "Coupons", icon: Ticket },
   { id: "payouts", label: "Payouts", icon: Wallet },
   { id: "categories", label: "Categories", icon: LayoutGrid },
@@ -38,6 +40,7 @@ export default function AdminPage() {
   const tabViews: Record<Tab, React.ReactNode> = {
     reports: <ReportsQueue />,
     users: <UsersManager />,
+    sellers: <SellersManager />,
     coupons: <CouponsManager />,
     payouts: <PayoutsManager />,
     categories: <CategoriesManager />,

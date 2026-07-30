@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, ImagePlus, Store as StoreIcon } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, Store as StoreIcon, XCircle } from "lucide-react";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import { useBecomeSeller } from "@/src/hooks/use-become-seller";
@@ -25,6 +25,47 @@ export default function SellPage() {
   }
 
   const isSeller = !isError && !!seller;
+
+  if (isSeller && seller.status === "REJECTED") {
+    return (
+      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+          <XCircle size={26} className="text-red-600" />
+        </div>
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          Application rejected
+        </h1>
+        <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+          {seller.statusReason
+            ? `Reason: ${seller.statusReason}`
+            : "Your seller application was not approved."}
+        </p>
+        {seller.store && (
+          <p className="mt-2.5 text-[13px] text-[#94A3B8]">
+            {seller.store.name} is no longer manageable while your application is
+            rejected.
+          </p>
+        )}
+      </section>
+    );
+  }
+
+  if (isSeller && seller.status === "PENDING") {
+    return (
+      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50">
+          <Clock size={26} className="text-amber-600" />
+        </div>
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          Application pending
+        </h1>
+        <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+          Your seller application is awaiting admin review. We&apos;ll notify you as
+          soon as it&apos;s approved.
+        </p>
+      </section>
+    );
+  }
 
   if (isSeller && seller.store) {
     return (
