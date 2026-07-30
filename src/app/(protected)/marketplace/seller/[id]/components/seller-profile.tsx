@@ -2,15 +2,26 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { BadgeCheck, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
 import { Store } from "@/src/types/store";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import ReportButton from "@/src/components/ui/report-button";
+import Tooltip from "@/src/components/ui/tooltip";
 import { useAuthStore } from "@/src/store/auth-store";
 import { useStoreFollowStatus } from "@/src/hooks/use-store-follow-status";
 import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useVerifyStore } from "@/src/hooks/use-verify-store";
+
+async function copyToClipboard(value: string, message: string) {
+  try {
+    await navigator.clipboard.writeText(value);
+    toast.success(message);
+  } catch {
+    toast.error("Couldn't copy to clipboard");
+  }
+}
 
 interface Props {
   store: Store;
@@ -85,23 +96,29 @@ export default function SellerProfile({ store }: Props) {
             )}
 
             {store.email && (
-              <a
-                href={`mailto:${store.email}`}
-                className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50"
-              >
-                <Mail size={14} />
-                Email
-              </a>
+              <Tooltip label={store.email}>
+                <a
+                  href={`mailto:${store.email}`}
+                  onClick={() => copyToClipboard(store.email!, "Email copied to clipboard")}
+                  className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50"
+                >
+                  <Mail size={14} />
+                  Email
+                </a>
+              </Tooltip>
             )}
 
             {store.phone && (
-              <a
-                href={`tel:${store.phone}`}
-                className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110"
-              >
-                <Phone size={15} />
-                Call
-              </a>
+              <Tooltip label={store.phone}>
+                <a
+                  href={`tel:${store.phone}`}
+                  onClick={() => copyToClipboard(store.phone!, "Phone number copied to clipboard")}
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110"
+                >
+                  <Phone size={15} />
+                  Call
+                </a>
+              </Tooltip>
             )}
           </div>
         </div>
