@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Store as StoreIcon, Wallet } from "lucide-react";
+import { Landmark, Plus, Store as StoreIcon, Wallet, Zap } from "lucide-react";
 
 import { usePayouts } from "@/src/hooks/use-payouts";
 import { useCreatePayout } from "@/src/hooks/use-create-payout";
 import { useStores } from "@/src/hooks/use-stores";
+import { useStorePayoutInfo } from "@/src/hooks/use-store-payout-info";
 import { Store } from "@/src/types/store";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
@@ -107,10 +108,20 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
   const [note, setNote] = useState("");
 
   const { data: storesData } = useStores({ search: storeSearch, limit: 6 });
+  const { data: payoutInfo, isLoading: isLoadingPayoutInfo } = useStorePayoutInfo(
+    selectedStore?.id
+  );
   const { mutate: createPayout, isPending } = useCreatePayout();
 
   const stores = storesData?.stores ?? [];
-  const canSubmit = !!selectedStore && Number(amount) > 0;
+  const availableBalance = payoutInfo?.availableBalance ?? 0;
+  const exceedsBalance = !!selectedStore && Number(amount) > availableBalance;
+  const canSubmit = !!selectedStore && Number(amount) > 0 && !exceedsBalance;
+
+  const selectStore = (store: Store | null) => {
+    setSelectedStore(store);
+    setAmount("");
+  };
 
   const handleSubmit = () => {
     if (!canSubmit || !selectedStore) return;
@@ -135,19 +146,77 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
         <label className="mb-2 block text-[13px] font-medium text-[#334155]">Store</label>
 
         {selectedStore ? (
-          <div className="flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
-            <div className="flex items-center gap-2.5">
-              <StoreIcon size={15} className="text-violet-600" />
-              <span className="text-[13.5px] font-medium text-[#13131A]">
-                {selectedStore.name}
-              </span>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
+              <div className="flex items-center gap-2.5">
+                <StoreIcon size={15} className="text-violet-600" />
+                <span className="text-[13.5px] font-medium text-[#13131A]">
+                  {selectedStore.name}
+                </span>
+              </div>
+              <button
+                onClick={() => selectStore(null)}
+                className="text-[12.5px] font-medium text-violet-600 hover:underline"
+              >
+                Change
+              </button>
             </div>
-            <button
-              onClick={() => setSelectedStore(null)}
-              className="text-[12.5px] font-medium text-violet-600 hover:underline"
-            >
-              Change
-            </button>
+
+            {isLoadingPayoutInfo ? (
+              <div className="h-20 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            ) : payoutInfo ? (
+              <div className="rounded-2xl border border-[#ECE9F6] bg-white p-4">
+                {payoutInfo.store.paystackSubaccountCode && (
+                  <div className="mb-3 flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11.5px] font-medium text-emerald-700 w-fit">
+                    <Zap size={11} className="fill-emerald-700" />
+                    Auto-pay active
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between">
+                  <p className="text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                    {payoutInfo.store.paystackSubaccountCode
+                      ? "Available balance (not auto-paid)"
+                      : "Available balance"}
+                  </p>
+                  {availableBalance > 0 && (
+                    <button
+                      onClick={() => setAmount(String(availableBalance))}
+                      className="text-[12px] font-medium text-violet-600 hover:underline"
+                    >
+                      Use full balance
+                    </button>
+                  )}
+                </div>
+                <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-[#13131A]">
+                  {money(availableBalance)}
+                </p>
+                {payoutInfo.store.paystackSubaccountCode && (
+                  <p className="mt-1 text-[12px] text-[#94A3B8]">
+                    Most of this seller&apos;s earnings are paid straight to their bank
+                    automatically. This is only revenue from before auto-pay was set up,
+                    if any.
+                  </p>
+                )}
+
+                <div className="mt-3 flex items-start gap-2.5 border-t border-[#F2F1F8] pt-3">
+                  <Landmark size={15} className="mt-0.5 shrink-0 text-[#94A3B8]" />
+                  {payoutInfo.store.payoutAccountNumber ? (
+                    <div className="text-[12.5px] text-[#334155]">
+                      <p className="font-medium">{payoutInfo.store.payoutBankName}</p>
+                      <p className="text-[#64748B]">
+                        {payoutInfo.store.payoutAccountNumber} ·{" "}
+                        {payoutInfo.store.payoutAccountName}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-[12.5px] text-amber-600">
+                      This seller hasn&apos;t added payout bank details yet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : null}
           </div>
         ) : (
           <div>
@@ -161,7 +230,7 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
                 {stores.map((store) => (
                   <button
                     key={store.id}
-                    onClick={() => setSelectedStore(store)}
+                    onClick={() => selectStore(store)}
                     className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-left text-[13.5px] text-[#13131A] hover:bg-[#F7F7FB]"
                   >
                     <StoreIcon size={14} className="text-[#94A3B8]" />
@@ -175,13 +244,20 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">
-        <Input
-          label="Amount (₦)"
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="50000"
-        />
+        <div>
+          <Input
+            label="Amount (₦)"
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="50000"
+          />
+          {exceedsBalance && (
+            <p className="mt-1.5 text-[12px] text-red-600">
+              Exceeds the available balance ({money(availableBalance)}).
+            </p>
+          )}
+        </div>
         <Input
           label="Note (optional)"
           value={note}

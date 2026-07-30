@@ -47,7 +47,7 @@ function orderItemToItem(
     id: `${order.id}-${item.id}`,
     title: item.product.title,
     image: primaryImage(item.product),
-    price: item.price,
+    price: item.unitPrice,
     status,
     meta: `Qty ${item.quantity} · ${formatRelativeTime(order.createdAt)}`,
     href:

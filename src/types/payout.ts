@@ -30,6 +30,17 @@ export interface SellerEarnings {
   availableBalance: number;
 }
 
+export interface StorePayoutInfo extends SellerEarnings {
+  store: {
+    id: string;
+    name: string;
+    payoutBankName: string | null;
+    payoutAccountNumber: string | null;
+    payoutAccountName: string | null;
+    paystackSubaccountCode: string | null;
+  };
+}
+
 export interface StoreTraffic {
   totalViews: number;
   uniqueVisitors: number;

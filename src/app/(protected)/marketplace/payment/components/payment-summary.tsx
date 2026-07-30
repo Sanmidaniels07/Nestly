@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { AlertCircle, CreditCard, Loader2 } from "lucide-react";
 import SummaryRow from "./summary-row";
@@ -11,6 +11,7 @@ import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useSavedCards } from "@/src/hooks/use-saved-cards";
 import { useChargeSavedCard } from "@/src/hooks/use-charge-saved-card";
 import { payWithPaystack } from "@/src/lib/paystack";
+import { Order } from "@/src/types/order";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -36,20 +37,32 @@ export default function PaymentSummary() {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const [selectedCardId, setSelectedCardId] = useState<string>("new");
+  const [confirmedOrder, setConfirmedOrder] = useState<Order | null>(null);
+  const attemptRef = useRef(0);
 
   useEffect(() => {
     const defaultCard = savedCards?.find((card) => card.isDefault) ?? savedCards?.[0];
     if (defaultCard) setSelectedCardId(defaultCard.id);
   }, [savedCards]);
 
-  const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-  const subtotal = items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
-  const deliveryFee = Object.values(shippingSelections).reduce(
-    (sum, selection) => sum + selection.fee,
-    0
-  );
-  const discountAmount = appliedCoupon?.discountAmount ?? 0;
-  const estimatedTotal = Math.max(0, subtotal - discountAmount + deliveryFee);
+  // Once payment is confirmed the backend has already cleared the cart, so
+  // from that point on the confirmed order is the source of truth — not
+  // whatever `useCart()` returns (which would now read as empty/₦0).
+  const totalItems = confirmedOrder
+    ? confirmedOrder.items.length
+    : items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
+  const subtotal = confirmedOrder
+    ? confirmedOrder.subtotal ?? confirmedOrder.total
+    : items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
+  const deliveryFee = confirmedOrder
+    ? confirmedOrder.deliveryFee ?? 0
+    : Object.values(shippingSelections).reduce((sum, selection) => sum + selection.fee, 0);
+  const discountAmount = confirmedOrder
+    ? confirmedOrder.discountAmount ?? 0
+    : appliedCoupon?.discountAmount ?? 0;
+  const estimatedTotal = confirmedOrder
+    ? confirmedOrder.total
+    : Math.max(0, subtotal - discountAmount + deliveryFee);
 
   const shippingSelectionsArray = Object.entries(shippingSelections).map(
     ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
@@ -61,7 +74,11 @@ export default function PaymentSummary() {
       return;
     }
 
+    const attempt = ++attemptRef.current;
+    const isStale = () => attempt !== attemptRef.current;
+
     setError("");
+    setConfirmedOrder(null);
     setProcessing(true);
 
     if (selectedCardId !== "new") {
@@ -72,11 +89,13 @@ export default function PaymentSummary() {
           shippingSelections: shippingSelectionsArray,
           couponCode: appliedCoupon?.code,
         });
-        const order = (response as { data: { id: string } }).data;
+        const order = (response as { data: Order }).data;
+        if (isStale()) return;
+        setConfirmedOrder(order);
         resetCheckout();
         router.push(`/marketplace/order-success?orderId=${order.id}`);
       } catch {
-        setProcessing(false);
+        if (!isStale()) setProcessing(false);
       }
       return;
     }
@@ -93,24 +112,30 @@ export default function PaymentSummary() {
         onSuccess: async () => {
           try {
             const verifyResponse = await verifyCheckout(reference);
-            const order = (verifyResponse as { data: { order: { id: string } } }).data.order;
+            const order = (verifyResponse as { data: { order: Order } }).data.order;
+            if (isStale()) return;
+            setConfirmedOrder(order);
             resetCheckout();
             router.push(`/marketplace/order-success?orderId=${order.id}`);
           } catch {
-            setError("Payment was received but we couldn't confirm it. Check your orders page.");
-            setProcessing(false);
+            if (!isStale()) {
+              setError("Payment was received but we couldn't confirm it. Check your orders page.");
+              setProcessing(false);
+            }
           }
         },
         onCancel: () => {
-          setProcessing(false);
+          if (!isStale()) setProcessing(false);
         },
         onError: (message) => {
-          setError(message || "Payment failed. Please try again.");
-          setProcessing(false);
+          if (!isStale()) {
+            setError(message || "Payment failed. Please try again.");
+            setProcessing(false);
+          }
         },
       });
     } catch {
-      setProcessing(false);
+      if (!isStale()) setProcessing(false);
     }
   };
 
@@ -165,12 +190,18 @@ export default function PaymentSummary() {
         )}
 
         <div className="border-t border-dashed border-[#ECE9F6] pt-3">
-          <SummaryRow label="Amount to pay" value={money(estimatedTotal)} bold />
+          <SummaryRow
+            label={confirmedOrder ? "Amount paid" : "Amount to pay"}
+            value={money(estimatedTotal)}
+            bold
+          />
         </div>
 
-        <p className="text-[11.5px] text-[#94A3B8]">
-          The exact amount is confirmed by the server before payment.
-        </p>
+        {!confirmedOrder && (
+          <p className="text-[11.5px] text-[#94A3B8]">
+            The exact amount is confirmed by the server before payment.
+          </p>
+        )}
       </div>
 
       {error && (

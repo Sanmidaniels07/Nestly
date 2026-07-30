@@ -85,13 +85,13 @@ function OrderedProductItem({
               <div>
                 <p className="text-[11px] text-[#94A3B8]">Unit price</p>
                 <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-[#13131A]">
-                  {money(item.price)}
+                  {money(item.unitPrice)}
                 </p>
               </div>
               <div>
                 <p className="text-[11px] text-[#94A3B8]">Total</p>
                 <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700">
-                  {money(item.price * item.quantity)}
+                  {money(item.totalPrice)}
                 </p>
               </div>
             </div>

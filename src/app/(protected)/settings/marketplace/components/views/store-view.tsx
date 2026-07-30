@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ImagePlus, Plus, Trash2 } from "lucide-react";
+import { CheckCircle2, ImagePlus, Plus, Trash2, Wallet } from "lucide-react";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useUpdateStore } from "@/src/hooks/use-update-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useCreateShippingOption } from "@/src/hooks/use-create-shipping-option";
 import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option";
+import { useBanks } from "@/src/hooks/use-banks";
+import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
@@ -35,6 +37,7 @@ export default function StoreView() {
   return (
     <div className="space-y-6">
       <StoreDetailsForm storeId={store.id} />
+      <PayoutDetailsForm slug={store.slug} />
       <StorePoliciesForm storeId={store.id} />
       <ShippingOptionsManager slug={store.slug} />
     </div>
@@ -163,6 +166,130 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
           Save store details
         </Button>
       </div>
+    </section>
+  );
+}
+
+function PayoutDetailsForm({ slug }: { slug: string }) {
+  const { data: store } = useMyStore();
+  const { data: banks } = useBanks();
+  const { mutate: setupPayoutAccount, isPending } = useSetupPayoutAccount();
+
+  const [editing, setEditing] = useState(false);
+  const [bankCode, setBankCode] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+
+  const isActive = !!store?.paystackSubaccountCode;
+
+  useEffect(() => {
+    setBankCode(store?.payoutBankCode ?? "");
+  }, [store?.payoutBankCode]);
+
+  const canSubmit = !!bankCode && accountNumber.trim().length === 10;
+
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+
+    setupPayoutAccount(
+      { slug, data: { bankCode, accountNumber: accountNumber.trim() } },
+      { onSuccess: () => setEditing(false) }
+    );
+  };
+
+  return (
+    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+      <div className="flex items-start gap-3.5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50">
+          <Wallet size={17} className="text-violet-600" />
+        </div>
+        <div>
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+            Payout details
+          </h2>
+          <p className="mt-1 text-[13px] text-[#64748B]">
+            {isActive
+              ? "Your share of every sale is paid straight to this account automatically."
+              : "Add your bank account to get paid automatically after every sale."}
+          </p>
+        </div>
+      </div>
+
+      {isActive && !editing ? (
+        <div className="mt-5 flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3.5">
+          <div className="flex items-center gap-2.5">
+            <CheckCircle2 size={17} className="shrink-0 text-emerald-600" />
+            <div>
+              <p className="text-[13.5px] font-medium text-[#13131A]">
+                {store?.payoutBankName} · {store?.payoutAccountNumber}
+              </p>
+              <p className="text-[12px] text-[#64748B]">{store?.payoutAccountName}</p>
+            </div>
+          </div>
+          <button
+            onClick={() => setEditing(true)}
+            className="shrink-0 text-[12.5px] font-medium text-violet-600 hover:underline"
+          >
+            Change
+          </button>
+        </div>
+      ) : (
+        <div className="mt-6 space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+                Bank
+              </label>
+              <select
+                value={bankCode}
+                onChange={(e) => setBankCode(e.target.value)}
+                className="h-14 w-full rounded-3xl border border-gray-200 bg-white px-5 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
+              >
+                <option value="">Select your bank</option>
+                {banks?.map((bank) => (
+                  <option key={bank.code} value={bank.code}>
+                    {bank.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <Input
+              label="Account number"
+              value={accountNumber}
+              onChange={(e) =>
+                setAccountNumber(e.target.value.replace(/\D/g, "").slice(0, 10))
+              }
+              inputMode="numeric"
+              placeholder="0123456789"
+            />
+          </div>
+
+          <p className="text-[12px] text-[#94A3B8]">
+            We&apos;ll verify this account with your bank before activating automatic
+            payouts.
+          </p>
+
+          <div className="flex gap-3">
+            {isActive && (
+              <Button
+                variant="outline"
+                className="h-11 rounded-xl px-6"
+                onClick={() => setEditing(false)}
+              >
+                Cancel
+              </Button>
+            )}
+            <Button
+              variant="tribely"
+              className="h-11 rounded-xl px-6"
+              loading={isPending}
+              disabled={!canSubmit}
+              onClick={handleSubmit}
+            >
+              Verify &amp; activate
+            </Button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

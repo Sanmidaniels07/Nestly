@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Ban, CalendarDays, Globe, MapPin, MessageCircle, ShieldOff, Users } from "lucide-react";
@@ -28,6 +28,7 @@ import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton"
 import { useBlockedUsers } from "@/src/hooks/use-blocked-users";
 import { useBlockUser } from "@/src/hooks/use-block-user";
 import { useUnblockUser } from "@/src/hooks/use-unblock-user";
+import ImageLightbox from "@/src/components/ui/image-lightbox";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -51,6 +52,7 @@ export default function UserProfilePage({
   const { identifier } = use(params);
   const router = useRouter();
   const authUser = useAuthStore((state) => state.user);
+  const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
 
   const { data: user, isLoading } = useUserProfile(identifier);
   const isSelf = !!user && user.id === authUser?.id;
@@ -111,6 +113,16 @@ export default function UserProfilePage({
         Back
       </button>
 
+      {user.cover && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={user.cover}
+          alt={user.name}
+          onClick={() => setLightbox("cover")}
+          className="h-[160px] w-full cursor-pointer rounded-2xl object-cover md:h-[220px]"
+        />
+      )}
+
       <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
           {user.avatar ? (
@@ -118,7 +130,8 @@ export default function UserProfilePage({
             <img
               src={user.avatar}
               alt={user.name}
-              className="h-24 w-24 shrink-0 rounded-full object-cover"
+              onClick={() => setLightbox("avatar")}
+              className="h-24 w-24 shrink-0 cursor-pointer rounded-full object-cover"
             />
           ) : (
             <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-[32px] font-semibold text-white">
@@ -255,6 +268,23 @@ export default function UserProfilePage({
           posts.map((post) => <PostCard key={post.id} post={post} />)
         )}
       </div>
+
+      {lightbox === "cover" && user.cover && (
+        <ImageLightbox
+          src={user.cover}
+          alt={user.name}
+          open
+          onClose={() => setLightbox(null)}
+        />
+      )}
+      {lightbox === "avatar" && user.avatar && (
+        <ImageLightbox
+          src={user.avatar}
+          alt={user.name}
+          open
+          onClose={() => setLightbox(null)}
+        />
+      )}
     </div>
   );
 }

@@ -2,11 +2,12 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { login } from "../services/auth.services";
 import { useAuthStore } from "../store/auth-store";
+import { getSafeReturnTo } from "../lib/return-to";
 import {
   ApiErrorResponse,
   AuthResponse,
@@ -15,6 +16,8 @@ import {
 
 export const useLogin = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnTo = getSafeReturnTo(searchParams.get("returnTo"));
 
   const setAuth =
     useAuthStore(
@@ -56,7 +59,7 @@ export const useLogin = () => {
         return;
       }
 
-      router.push("/dashboard");
+      router.push(returnTo ?? "/dashboard");
     },
 
     onError: (error) => {

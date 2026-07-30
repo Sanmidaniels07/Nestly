@@ -1,9 +1,11 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Camera, BadgeCheck } from "lucide-react";
 import { motion } from "framer-motion";
 import { Profile } from "@/src/types/profile";
+import ImageLightbox from "@/src/components/ui/image-lightbox";
 
 interface Props {
   profile: Profile;
@@ -12,6 +14,7 @@ interface Props {
 
 export default function ProfileCover({ profile, onEditCover }: Props) {
   const router = useRouter();
+  const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
 
   return (
     <motion.section
@@ -26,7 +29,8 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
           <img
             src={profile.cover}
             alt={profile.name}
-            className="h-full w-full object-cover"
+            onClick={() => setLightbox("cover")}
+            className="h-full w-full cursor-pointer object-cover"
           />
         )}
 
@@ -73,7 +77,8 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
                 <img
                   src={profile.avatar}
                   alt={profile.name}
-                  className="h-28 w-28 rounded-full object-cover md:h-36 md:w-36"
+                  onClick={() => setLightbox("avatar")}
+                  className="h-28 w-28 cursor-pointer rounded-full object-cover md:h-36 md:w-36"
                 />
               ) : (
                 <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-[36px] font-semibold text-white md:h-36 md:w-36 md:text-[46px]">
@@ -92,6 +97,23 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
           <div className="absolute bottom-4 left-1.5 h-4 w-4 rounded-full border-[3px] border-white bg-emerald-500" />
         </div>
       </div>
+
+      {lightbox === "cover" && profile.cover && (
+        <ImageLightbox
+          src={profile.cover}
+          alt={profile.name}
+          open
+          onClose={() => setLightbox(null)}
+        />
+      )}
+      {lightbox === "avatar" && profile.avatar && (
+        <ImageLightbox
+          src={profile.avatar}
+          alt={profile.name}
+          open
+          onClose={() => setLightbox(null)}
+        />
+      )}
     </motion.section>
   );
 }

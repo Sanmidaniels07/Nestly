@@ -7,7 +7,8 @@ export interface OrderItem {
   product: Product;
   storeId?: string;
   quantity: number;
-  price: number;
+  unitPrice: number;
+  totalPrice: number;
   status?: string;
 }
 

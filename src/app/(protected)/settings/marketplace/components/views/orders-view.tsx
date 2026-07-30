@@ -81,7 +81,7 @@ export default function OrdersView() {
                       {item.product.title}
                     </p>
                     <p className="mt-0.5 text-[12px] text-[#94A3B8]">
-                      Qty {item.quantity} · {money(item.price)}
+                      Qty {item.quantity} · {money(item.unitPrice)}
                     </p>
                   </div>
 

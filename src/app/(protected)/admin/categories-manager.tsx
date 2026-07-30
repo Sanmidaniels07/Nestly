@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ImagePlus, LayoutGrid, Plus, Star, Trash2 } from "lucide-react";
 
 import { useCategories } from "@/src/hooks/use-categories";
@@ -56,6 +56,9 @@ export default function CategoriesManager() {
                   Products
                 </th>
                 <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                  Commission
+                </th>
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
                   Featured
                 </th>
                 <th className="px-5 py-3" />
@@ -77,6 +80,11 @@ function CategoryRow({ category }: { category: Category }) {
   const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory();
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [commissionInput, setCommissionInput] = useState(category.commissionRate.toString());
+
+  useEffect(() => {
+    setCommissionInput(category.commissionRate.toString());
+  }, [category.commissionRate]);
 
   const handleDelete = () => {
     if (!confirmingDelete) {
@@ -85,6 +93,19 @@ function CategoryRow({ category }: { category: Category }) {
       return;
     }
     deleteCategory(category.id);
+  };
+
+  const handleCommissionBlur = () => {
+    const value = Number(commissionInput);
+
+    if (!Number.isFinite(value) || value < 0 || value > 100) {
+      setCommissionInput(category.commissionRate.toString());
+      return;
+    }
+
+    if (value !== category.commissionRate) {
+      updateCategory({ id: category.id, data: { commissionRate: value } });
+    }
   };
 
   return (
@@ -104,6 +125,22 @@ function CategoryRow({ category }: { category: Category }) {
       </td>
       <td className="px-5 py-3.5 font-[family-name:var(--font-mono)] text-[13px] text-[#64748B]">
         {category.productCount ?? 0}
+      </td>
+      <td className="px-5 py-3.5">
+        <div className="flex items-center gap-1.5">
+          <input
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={commissionInput}
+            onChange={(e) => setCommissionInput(e.target.value)}
+            onBlur={handleCommissionBlur}
+            disabled={isUpdating}
+            className="h-8 w-16 rounded-lg border border-[#E5E7EB] px-2 text-[13px] font-medium text-[#13131A] outline-none transition-colors focus:border-violet-400 disabled:opacity-50"
+          />
+          <span className="text-[12px] text-[#94A3B8]">%</span>
+        </div>
       </td>
       <td className="px-5 py-3.5">
         <button
@@ -146,6 +183,7 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
   const [name, setName] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
   const [icon, setIcon] = useState<string>();
+  const [commissionRate, setCommissionRate] = useState("10");
   const iconInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: uploadImage, isPending: isUploading } = useImageUpload();
@@ -162,12 +200,13 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
     if (!canSubmit) return;
 
     createCategory(
-      { name: name.trim(), icon, isFeatured },
+      { name: name.trim(), icon, isFeatured, commissionRate: Number(commissionRate) || 0 },
       {
         onSuccess: () => {
           setName("");
           setIcon(undefined);
           setIsFeatured(false);
+          setCommissionRate("10");
           onDone();
         },
       }
@@ -207,6 +246,17 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Electronics"
+          />
+
+          <Input
+            label="Commission rate (%)"
+            type="number"
+            min={0}
+            max={100}
+            step={0.5}
+            value={commissionRate}
+            onChange={(e) => setCommissionRate(e.target.value)}
+            placeholder="10"
           />
 
           <label className="flex items-center gap-2.5 text-[13.5px] text-[#334155]">

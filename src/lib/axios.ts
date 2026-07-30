@@ -84,8 +84,19 @@ api.interceptors.response.use(
       // any unauthenticated request made from the login page itself (e.g. a
       // component that queries a protected endpoint unconditionally) would
       // reject, fail to refresh, and reload the same page forever.
-      if (typeof window !== "undefined" && window.location.pathname !== "/login") {
-        window.location.href = "/login";
+      const currentPath =
+        typeof window !== "undefined" ? window.location.pathname : "";
+
+      if (currentPath !== "/login" && currentPath !== "/session-expired") {
+        // Carry the page the user was on through session-expired -> login,
+        // so logging back in drops them back where they left off instead
+        // of always landing on the dashboard.
+        const returnTo =
+          typeof window !== "undefined"
+            ? window.location.pathname + window.location.search
+            : "";
+
+        window.location.href = `/session-expired?returnTo=${encodeURIComponent(returnTo)}`;
       }
 
       return Promise.reject(refreshError);

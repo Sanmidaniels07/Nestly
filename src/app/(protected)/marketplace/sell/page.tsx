@@ -2,12 +2,13 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, Clock, ImagePlus, Store as StoreIcon, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, Percent, Store as StoreIcon, XCircle } from "lucide-react";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import { useBecomeSeller } from "@/src/hooks/use-become-seller";
 import { useCreateStore } from "@/src/hooks/use-create-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
+import { useCategories } from "@/src/hooks/use-categories";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
@@ -100,6 +101,7 @@ export default function SellPage() {
 function BecomeSellerForm() {
   const [cacNumber, setCacNumber] = useState("");
   const { mutate: becomeSeller, isPending } = useBecomeSeller();
+  const { data: categories } = useCategories();
 
   return (
     <section className="mx-auto max-w-xl rounded-2xl border border-[#ECE9F6] bg-white p-8 sm:p-10">
@@ -114,7 +116,36 @@ function BecomeSellerForm() {
         Activate your seller account to start setting up your store.
       </p>
 
-      <div className="mt-8 space-y-4">
+      {!!categories?.length && (
+        <div className="mt-6 rounded-2xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] p-5">
+          <div className="flex items-center gap-2">
+            <Percent size={15} className="text-violet-600" />
+            <p className="text-[13px] font-semibold text-[#13131A]">
+              Nestly takes a commission on each sale
+            </p>
+          </div>
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#64748B]">
+            The rate varies by category — you keep the rest of what buyers pay,
+            paid out to your registered bank account.
+          </p>
+
+          <div className="mt-3.5 space-y-1.5">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="flex items-center justify-between text-[12.5px]"
+              >
+                <span className="text-[#334155]">{category.name}</span>
+                <span className="font-[family-name:var(--font-mono)] font-medium text-violet-700">
+                  {category.commissionRate}%
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="mt-6 space-y-4">
         <Input
           label="CAC registration number (optional)"
           value={cacNumber}

@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Users, Sparkles } from "lucide-react";
@@ -61,7 +62,9 @@ export default function LoginPage() {
               <p className="text-gray-600 mt-2">Sign in to continue your journey</p>
             </div>
 
-            <LoginForm />
+            <Suspense fallback={null}>
+              <LoginForm />
+            </Suspense>
 
             <p className="text-center text-sm text-gray-600 mt-8">
               Don&apos;t have an account?{" "}

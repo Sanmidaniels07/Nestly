@@ -43,6 +43,11 @@ export interface Store {
   returnPolicy?: string | null;
   shippingPolicy?: string | null;
   warrantyPolicy?: string | null;
+  payoutBankName?: string | null;
+  payoutBankCode?: string | null;
+  payoutAccountNumber?: string | null;
+  payoutAccountName?: string | null;
+  paystackSubaccountCode?: string | null;
   reviewCount?: number;
   productCount?: number;
   seller?: StoreSeller;
@@ -76,4 +81,14 @@ export interface StoreListParams {
   limit?: number;
   search?: string;
   city?: string;
+}
+
+export interface Bank {
+  name: string;
+  code: string;
+}
+
+export interface SetupPayoutAccountPayload {
+  bankCode: string;
+  accountNumber: string;
 }

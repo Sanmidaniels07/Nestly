@@ -3,8 +3,10 @@ import { ApiResponse, Paginated } from "../types/api";
 import { Product } from "../types/product";
 import { Review } from "../types/review";
 import {
+  Bank,
   CreateShippingOptionPayload,
   CreateStorePayload,
+  SetupPayoutAccountPayload,
   ShippingOption,
   Store,
   StoreListParams,
@@ -120,6 +122,24 @@ export const verifyStore = async (id: string, isVerified: boolean) => {
   const response = await api.patch<ApiResponse<Store>>(
     `/stores/${id}/verify`,
     { isVerified }
+  );
+  return response.data;
+};
+
+export const setupPayoutAccount = async (
+  slug: string,
+  data: SetupPayoutAccountPayload
+) => {
+  const response = await api.post<ApiResponse<Store>>(
+    `/stores/${slug}/payout-account`,
+    data
+  );
+  return response.data;
+};
+
+export const getBanks = async () => {
+  const response = await api.get<ApiResponse<Bank[]>>(
+    "/payment-methods/banks"
   );
   return response.data;
 };
