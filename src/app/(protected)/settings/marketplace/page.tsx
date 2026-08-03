@@ -120,11 +120,13 @@ function MarketplaceSettingsContent() {
 
       <MarketplaceTabs active={tab} onChange={handleTabChange} />
 
-      {tabViews[tab] ?? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">This section is coming soon.</p>
-        </div>
-      )}
+      <div className="overflow-x-auto">
+        {tabViews[tab] ?? (
+          <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
+            <p className="text-[13.5px] text-[#94A3B8]">This section is coming soon.</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

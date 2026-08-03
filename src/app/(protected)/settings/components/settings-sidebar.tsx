@@ -11,7 +11,7 @@ export default function SettingsSidebar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <aside className="lg:h-fit lg:rounded-2xl lg:border lg:border-[#ECE9F6] lg:bg-white lg:p-3">
+    <aside className="min-w-0 lg:h-fit lg:rounded-2xl lg:border lg:border-[#ECE9F6] lg:bg-white lg:p-3">
       {/* Mobile: horizontal scroll strip */}
       <nav className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide lg:hidden">
         {settingsNavigation.map((item) => {

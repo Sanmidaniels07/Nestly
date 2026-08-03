@@ -34,6 +34,14 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  /* Safety net: without this, any element anywhere that ends up wider than
+     the viewport (a scroll strip, a fixed-width table, an oversized image)
+     makes the ENTIRE page scroll sideways — navbar included — instead of
+     that one element being contained on its own. This never clips content
+     that's meant to scroll internally (overflow-x-auto elements still
+     establish their own scroll context); it only stops accidental overflow
+     from escaping to the page level. */
+  overflow-x: hidden;
 }
 
 /* Hover-reveal scrollbar — invisible by default, visible only while hovering the scroll container */
