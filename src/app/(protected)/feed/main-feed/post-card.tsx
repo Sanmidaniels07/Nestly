@@ -42,10 +42,15 @@ export default function PostCard({ post, autoOpenComments }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(!!autoOpenComments);
   const [isEditing, setIsEditing] = useState(false);
-  const [editContent, setEditContent] = useState(post.content);
+  const [editContent, setEditContent] = useState(post.content ?? "");
+
+  const hasMedia = !!post.media && post.media.length > 0;
 
   const handleSave = () => {
-    if (!editContent.trim()) return;
+    // A post only needs text content, media, or both — same rule as
+    // creating one, so clearing the caption is fine as long as the post
+    // still has media attached.
+    if (!editContent.trim() && !hasMedia) return;
 
     updatePost(
       { id: post.id, data: { content: editContent.trim() } },
@@ -122,9 +127,11 @@ export default function PostCard({ post, autoOpenComments }: Props) {
 
       {/* Content */}
       <div className="px-5 pb-4 sm:px-6">
-        <h4 className="mb-1 text-[15px] font-semibold text-[#13131A]">
-          {post.title}
-        </h4>
+        {post.title && (
+          <h4 className="mb-1 text-[15px] font-semibold text-[#13131A]">
+            {post.title}
+          </h4>
+        )}
 
         {isEditing ? (
           <div className="space-y-2">
@@ -138,7 +145,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
               <button
                 onClick={() => {
                   setIsEditing(false);
-                  setEditContent(post.content);
+                  setEditContent(post.content ?? "");
                 }}
                 className="rounded-full px-4 py-1.5 text-[13px] font-medium text-[#64748B] hover:bg-gray-100"
               >
@@ -154,9 +161,11 @@ export default function PostCard({ post, autoOpenComments }: Props) {
             </div>
           </div>
         ) : (
-          <p className="text-[15.5px] leading-relaxed text-[#1E1B2E]">
-            {post.content}
-          </p>
+          post.content && (
+            <p className="text-[15.5px] leading-relaxed text-[#1E1B2E]">
+              {post.content}
+            </p>
+          )
         )}
 
         {!isEditing && post.hashtags && post.hashtags.length > 0 && (

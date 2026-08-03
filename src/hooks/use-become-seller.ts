@@ -27,6 +27,13 @@ export const useBecomeSeller = () => {
       toast.error(
         error.response?.data.message ?? "Failed to activate seller account"
       );
+
+      // A 403 here means the reapply cooldown wasn't actually over (stale
+      // countdown, clock skew, or a page left open past the window) —
+      // re-fetch so the countdown/button reflects the server's truth.
+      if (error.response?.status === 403) {
+        queryClient.invalidateQueries({ queryKey: ["seller", "me"] });
+      }
     },
   });
 };

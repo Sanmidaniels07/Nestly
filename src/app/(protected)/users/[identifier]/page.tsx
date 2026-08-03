@@ -22,6 +22,7 @@ import { usePosts } from "@/src/hooks/use-posts";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import FollowButton from "@/src/components/social/follow-button";
 import ReportButton from "@/src/components/ui/report-button";
+import Tooltip from "@/src/components/ui/tooltip";
 import PostCard from "../../feed/main-feed/post-card";
 import { UserProfileHeaderSkeleton } from "@/src/components/skeletons/profile-header-skeleton";
 import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
@@ -163,22 +164,26 @@ export default function UserProfilePage({
                     <MessageCircle size={14} />
                     Message
                   </button>
-                  <ReportButton
-                    targetType="USER"
-                    targetId={user.id}
-                    label=""
-                    className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
-                  />
-                  <button
-                    onClick={() =>
-                      isBlocked ? unblockUser(user.id) : blockUser(user.id)
-                    }
-                    disabled={isBlocking || isUnblocking}
-                    aria-label={isBlocked ? "Unblock user" : "Block user"}
-                    className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
-                  >
-                    {isBlocked ? <ShieldOff size={15} /> : <Ban size={15} />}
-                  </button>
+                  <Tooltip label="Report user">
+                    <ReportButton
+                      targetType="USER"
+                      targetId={user.id}
+                      label=""
+                      className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
+                    />
+                  </Tooltip>
+                  <Tooltip label={isBlocked ? "Unblock user" : "Block user"}>
+                    <button
+                      onClick={() =>
+                        isBlocked ? unblockUser(user.id) : blockUser(user.id)
+                      }
+                      disabled={isBlocking || isUnblocking}
+                      aria-label={isBlocked ? "Unblock user" : "Block user"}
+                      className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+                    >
+                      {isBlocked ? <ShieldOff size={15} /> : <Ban size={15} />}
+                    </button>
+                  </Tooltip>
                 </div>
               )}
             </div>

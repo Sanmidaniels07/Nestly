@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { Edit3, Settings, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 import Button from "@/src/components/ui/button";
@@ -11,6 +12,7 @@ interface Props {
 }
 
 export default function ProfileActions({ onEdit }: Props) {
+  const router = useRouter();
   const { data: profile } = useProfile();
 
   const handleShare = async () => {
@@ -21,14 +23,23 @@ export default function ProfileActions({ onEdit }: Props) {
     if (navigator.share) {
       try {
         await navigator.share({ title: `${profile.name} on Nestly`, url });
-      } catch {
-        // Share sheet dismissed by the user — nothing to do.
+        return;
+      } catch (error) {
+        // User dismissed the share sheet — leave it at that, don't fall
+        // back to a clipboard toast they didn't ask for.
+        if (error instanceof Error && error.name === "AbortError") return;
+        // Any other failure (e.g. Web Share feature-detected but blocked
+        // in this context, like an embedded webview) falls through to
+        // the clipboard copy below instead of silently doing nothing.
       }
-      return;
     }
 
-    await navigator.clipboard.writeText(url);
-    toast.success("Profile link copied");
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("Profile link copied");
+    } catch {
+      toast.error("Couldn't copy the profile link");
+    }
   };
 
   return (
@@ -53,6 +64,7 @@ export default function ProfileActions({ onEdit }: Props) {
       </Button>
 
       <button
+        onClick={() => router.push("/settings")}
         className="
           flex h-11 w-11 items-center justify-center rounded-xl
           border border-[#E6E4F0] bg-white

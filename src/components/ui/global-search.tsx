@@ -165,7 +165,7 @@ export default function GlobalSearch() {
                     >
                       <div className="min-w-0">
                         <p className="truncate text-[13.5px] font-medium text-[#13131A]">
-                          {post.title}
+                          {post.title || post.content || "Post"}
                         </p>
                         <p className="truncate text-[11.5px] text-[#94A3B8]">
                           by {post.author?.name ?? "Unknown"}

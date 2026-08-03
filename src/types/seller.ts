@@ -7,6 +7,10 @@ export interface SellerProfile {
   userId: string;
   status: SellerApplicationStatus;
   statusReason?: string | null;
+  statusUpdatedAt?: string | null;
+  // Only populated (non-null) when status is REJECTED.
+  reapplyEligibleAt?: string | null;
+  canReapply?: boolean;
   cacNumber?: string | null;
   createdAt: string;
   updatedAt: string;

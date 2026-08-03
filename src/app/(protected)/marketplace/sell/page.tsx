@@ -9,9 +9,11 @@ import { useBecomeSeller } from "@/src/hooks/use-become-seller";
 import { useCreateStore } from "@/src/hooks/use-create-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useCategories } from "@/src/hooks/use-categories";
+import { useCountdown } from "@/src/hooks/use-countdown";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
+import { SellerProfile } from "@/src/types/seller";
 
 export default function SellPage() {
   const router = useRouter();
@@ -28,27 +30,7 @@ export default function SellPage() {
   const isSeller = !isError && !!seller;
 
   if (isSeller && seller.status === "REJECTED") {
-    return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-          <XCircle size={26} className="text-red-600" />
-        </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
-          Application rejected
-        </h1>
-        <p className="mt-2.5 text-[13.5px] text-[#64748B]">
-          {seller.statusReason
-            ? `Reason: ${seller.statusReason}`
-            : "Your seller application was not approved."}
-        </p>
-        {seller.store && (
-          <p className="mt-2.5 text-[13px] text-[#94A3B8]">
-            {seller.store.name} is no longer manageable while your application is
-            rejected.
-          </p>
-        )}
-      </section>
-    );
+    return <RejectedApplication seller={seller} />;
   }
 
   if (isSeller && seller.status === "PENDING") {
@@ -96,6 +78,53 @@ export default function SellPage() {
   }
 
   return <BecomeSellerForm />;
+}
+
+function RejectedApplication({ seller }: { seller: SellerProfile }) {
+  const { mutate: becomeSeller, isPending } = useBecomeSeller();
+  const { label: countdownLabel, isDone } = useCountdown(seller.reapplyEligibleAt);
+
+  const canReapply = seller.canReapply || isDone;
+
+  return (
+    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
+        <XCircle size={26} className="text-red-600" />
+      </div>
+      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        Application rejected
+      </h1>
+      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+        {seller.statusReason
+          ? `Reason: ${seller.statusReason}`
+          : "Your seller application was not approved."}
+      </p>
+      {seller.store && (
+        <p className="mt-2.5 text-[13px] text-[#94A3B8]">
+          {seller.store.name} is no longer manageable while your application is
+          rejected.
+        </p>
+      )}
+
+      {!canReapply && countdownLabel && (
+        <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-[#FAFAFD] px-4 py-2 text-[13px] font-medium text-[#334155]">
+          <Clock size={14} className="text-[#94A3B8]" />
+          You can reapply in {countdownLabel}
+        </div>
+      )}
+
+      {canReapply && (
+        <Button
+          className="mx-auto mt-7 w-fit"
+          variant="tribely"
+          loading={isPending}
+          onClick={() => becomeSeller({})}
+        >
+          Apply again
+        </Button>
+      )}
+    </section>
+  );
 }
 
 function BecomeSellerForm() {

@@ -15,8 +15,10 @@ export interface PostMedia {
 
 export interface Post {
   id: string;
-  title: string;
-  content: string;
+  // A post only needs text content, at least one image/video, or both —
+  // either can be null for a media-only or (rarer) title-only post.
+  title: string | null;
+  content: string | null;
   authorId: string;
   author?: PostAuthor;
   isDeleted?: boolean;
@@ -32,8 +34,8 @@ export interface Post {
 }
 
 export interface CreatePostPayload {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
   media?: PostMedia[];
 }
 

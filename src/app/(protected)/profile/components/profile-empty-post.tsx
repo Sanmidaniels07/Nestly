@@ -12,13 +12,15 @@ export default function ProfileEmptyPost() {
 
   const { mutate: createPost, isPending } = useCreatePost();
 
-  const canPost = title.trim().length > 0 && content.trim().length > 0;
+  // This composer doesn't offer media attachment, so content is the only
+  // way to satisfy "text, media, or both" here — title stays optional.
+  const canPost = content.trim().length > 0;
 
   const handleSubmit = () => {
     if (!canPost) return;
 
     createPost(
-      { title: title.trim(), content: content.trim() },
+      { title: title.trim() || undefined, content: content.trim() || undefined },
       {
         onSuccess: () => {
           setTitle("");

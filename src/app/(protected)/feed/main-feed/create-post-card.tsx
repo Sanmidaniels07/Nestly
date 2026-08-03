@@ -22,8 +22,10 @@ export default function CreatePostCard() {
   const { mutate: createPost, isPending } = useCreatePost();
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles();
 
+  // A post needs text content, at least one image/video, or both — title
+  // is always optional and never part of this gate.
   const canPost =
-    title.trim().length > 0 && content.trim().length > 0 && !isUploading;
+    (content.trim().length > 0 || media.length > 0) && !isUploading;
 
   const reset = () => {
     setTitle("");
@@ -51,8 +53,8 @@ export default function CreatePostCard() {
 
     createPost(
       {
-        title: title.trim(),
-        content: content.trim(),
+        title: title.trim() || undefined,
+        content: content.trim() || undefined,
         ...(media.length > 0 && { media }),
       },
       { onSuccess: reset }
