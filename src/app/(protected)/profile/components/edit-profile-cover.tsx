@@ -44,6 +44,31 @@ export default function EditProfileCover({ cover, onChange, onRemove }: EditProf
         )}
       </div>
 
+      {/* The overlay above only reveals on hover, which touch devices can't
+          rely on — mirror the avatar's always-visible badge so mobile users
+          have a persistent way to change/remove the cover too. */}
+      <div className="absolute bottom-3 right-3 flex gap-2 sm:hidden">
+        <button
+          type="button"
+          onClick={() => inputRef.current?.click()}
+          aria-label="Change cover"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#13131A] shadow-lg backdrop-blur-sm"
+        >
+          <Camera size={15} />
+        </button>
+
+        {cover && (
+          <button
+            type="button"
+            onClick={onRemove}
+            aria-label="Remove cover"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-red-500 shadow-lg backdrop-blur-sm"
+          >
+            <Trash2 size={15} />
+          </button>
+        )}
+      </div>
+
       <input
         ref={inputRef}
         hidden

@@ -38,8 +38,8 @@ export default function CustomersView() {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
-        <table className="w-full text-left">
+      <div className="overflow-x-auto rounded-2xl border border-[#ECE9F6] bg-white">
+        <table className="w-full min-w-[560px] text-left">
           <thead className="border-b border-[#F2F1F8] bg-[#FAFAFD]">
             <tr>
               <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">

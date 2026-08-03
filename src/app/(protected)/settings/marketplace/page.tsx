@@ -68,7 +68,7 @@ function MarketplaceSettingsContent() {
     return (
       <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
         <SellerDashboardHeader />
-        <section className="rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+        <section className="rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
           <div
             className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full ${
               isPending ? "bg-amber-50" : "bg-red-50"

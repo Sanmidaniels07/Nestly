@@ -425,21 +425,21 @@ function DeleteAccountSection() {
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password to confirm"
           />
-          <div className="flex gap-2.5">
+          <div className="flex flex-col gap-2.5 sm:flex-row">
             <Button
               variant="outline"
               onClick={() => {
                 setConfirming(false);
                 setPassword("");
               }}
-              className="h-11 rounded-xl px-6"
+              className="h-11 w-full rounded-xl px-6 sm:w-auto"
             >
               Cancel
             </Button>
             <button
               onClick={handleDelete}
               disabled={!password.trim() || isPending}
-              className="h-11 rounded-xl bg-red-600 px-6 text-[13.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-11 w-full whitespace-nowrap rounded-xl bg-red-600 px-6 text-[13.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
             >
               {isPending ? "Deleting..." : "Permanently delete my account"}
             </button>
