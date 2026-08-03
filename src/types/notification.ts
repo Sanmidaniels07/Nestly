@@ -3,7 +3,8 @@ export type NotificationTargetType =
   | "USER"
   | "CONVERSATION"
   | "PRODUCT"
-  | "SELLER_APPLICATION";
+  | "SELLER_APPLICATION"
+  | "ADMIN_SELLER_APPLICATION";
 
 export interface Notification {
   id: string;

@@ -32,6 +32,8 @@ function targetHref(notification: Notification): string | null {
         : null;
     case "SELLER_APPLICATION":
       return "/marketplace/sell";
+    case "ADMIN_SELLER_APPLICATION":
+      return "/admin?tab=sellers";
     default:
       return null;
   }

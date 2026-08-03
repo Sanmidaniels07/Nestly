@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { LayoutGrid, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
@@ -13,6 +14,8 @@ import SellersManager from "./sellers-manager";
 
 type Tab = "reports" | "users" | "sellers" | "coupons" | "payouts" | "categories";
 
+const VALID_TABS: Tab[] = ["reports", "users", "sellers", "coupons", "payouts", "categories"];
+
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "reports", label: "Reports", icon: ShieldAlert },
   { id: "users", label: "Users", icon: Users },
@@ -22,9 +25,15 @@ const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "categories", label: "Categories", icon: LayoutGrid },
 ];
 
-export default function AdminPage() {
-  const [tab, setTab] = useState<Tab>("reports");
+function AdminPageContent() {
+  const searchParams = useSearchParams();
+  const urlTab = searchParams.get("tab") as Tab | null;
+  const [tab, setTab] = useState<Tab>(urlTab && VALID_TABS.includes(urlTab) ? urlTab : "reports");
   const role = useAuthStore((state) => state.user?.role);
+
+  useEffect(() => {
+    if (urlTab && VALID_TABS.includes(urlTab)) setTab(urlTab);
+  }, [urlTab]);
 
   if (role !== "ADMIN") {
     return (
@@ -79,5 +88,13 @@ export default function AdminPage() {
 
       {tabViews[tab]}
     </div>
+  );
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminPageContent />
+    </Suspense>
   );
 }

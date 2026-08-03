@@ -18,12 +18,16 @@ export default function GuestGuard({
 
   const {
     isAuthenticated,
+    isHydrated,
     isVerified,
     user,
   } = useAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    // Wait for the initial session check (see AuthInitializer) — deciding
+    // "guest" before it resolves is what caused this guard to flash a
+    // signed-in-looking page for a split second on every hard refresh.
+    if (!isHydrated || !isAuthenticated) {
       return;
     }
 
@@ -44,13 +48,14 @@ export default function GuestGuard({
       "/dashboard"
     );
   }, [
+    isHydrated,
     isAuthenticated,
     isVerified,
     user,
     router,
   ]);
 
-  if (isAuthenticated) {
+  if (!isHydrated || isAuthenticated) {
     return null;
   }
 

@@ -22,6 +22,14 @@ export default function RootLayout({
           position="top-right"
           toastOptions={{
             duration: 4000,
+            style: {
+              borderRadius: "12px",
+              border: "1px solid #ECE9F6",
+              color: "#13131A",
+            },
+            success: {
+              iconTheme: { primary: "#7C3AED", secondary: "#fff" },
+            },
           }}
         />
       </body>

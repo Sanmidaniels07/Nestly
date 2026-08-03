@@ -1,19 +1,13 @@
 "use client";
-import { useState } from "react";
 import Link from "next/link";
-import ThemeToggle from "@/src/components/ui/theme-toggle";
 import { motion } from "framer-motion";
-import { LogOut, Users, Gift, ShoppingBag, Heart, Calendar, Star } from "lucide-react";
+import { Users, Gift, ShoppingBag, Star } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
-import LogoutConfirmDialog from "../components/ui/logout-confirm-dialog";
-import { useAuth } from "../hooks/use-auth";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-[#F5F7FA] text-[#1A1A2E] overflow-x-hidden">
-      <Nav />
-
       <Hero />
 
       <Features />
@@ -22,66 +16,6 @@ export default function Home() {
 
       <Footer />
     </main>
-  );
-}
-
-function Nav() {
-  const { isAuthenticated } = useAuth();
-  const [logoutConfirmOpen, setLogoutConfirmOpen] = useState(false);
-
-  return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-xl border-b border-[#E5E7EB] h-16 flex items-center px-6 md:px-8">
-      <div className="max-w-7xl mx-auto w-full flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
-            N
-          </div>
-          <div className="font-bold text-2xl tracking-tight">Nestly</div>
-        </div>
-
-        {!isAuthenticated && (
-          <div className="hidden md:flex items-center gap-10 font-medium text-sm">
-            <a
-              href="#features"
-              className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
-            >
-              Features
-            </a>
-            <a
-              href="#preview"
-              className="text-[#6B7280] hover:text-[#2B7FFF] transition-colors"
-            >
-              Preview
-            </a>
-          </div>
-        )}
-
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-
-          {isAuthenticated ? (
-            <button
-              onClick={() => setLogoutConfirmOpen(true)}
-              aria-label="Log out"
-              className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#E5E7EB] bg-white text-[#6B7280] transition-colors hover:border-red-200 hover:text-red-500"
-            >
-              <LogOut size={18} />
-            </button>
-          ) : (
-            // Login is only surfaced on the signup page itself (as a
-            // cross-link); the landing page keeps the CTA focused on signup.
-            <Link href="/signup">
-              <Button variant="tribely" size="sm">Get Started</Button>
-            </Link>
-          )}
-        </div>
-      </div>
-
-      <LogoutConfirmDialog
-        open={logoutConfirmOpen}
-        onClose={() => setLogoutConfirmOpen(false)}
-      />
-    </nav>
   );
 }
 
