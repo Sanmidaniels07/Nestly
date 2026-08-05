@@ -48,6 +48,12 @@ export interface Store {
   payoutAccountNumber?: string | null;
   payoutAccountName?: string | null;
   paystackSubaccountCode?: string | null;
+  payoutAccountUpdatedAt?: string | null;
+  // Present on the seller's own GET /stores/me response (not the public
+  // store view). True while a recently-changed payout account is still
+  // inside its fraud-prevention hold window.
+  isOnHold?: boolean;
+  holdHours?: number;
   reviewCount?: number;
   productCount?: number;
   seller?: StoreSeller;

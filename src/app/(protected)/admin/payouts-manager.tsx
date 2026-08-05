@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Landmark, Plus, Store as StoreIcon, Wallet, Zap } from "lucide-react";
+import { Clock, Landmark, Plus, ShieldAlert, Store as StoreIcon, Wallet, Zap } from "lucide-react";
 
 import { usePayouts } from "@/src/hooks/use-payouts";
 import { useCreatePayout } from "@/src/hooks/use-create-payout";
@@ -166,14 +166,22 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
               <div className="h-20 animate-pulse rounded-2xl bg-[#F7F7FB]" />
             ) : payoutInfo ? (
               <div className="rounded-2xl border border-[#ECE9F6] bg-white p-4">
-                {payoutInfo.store.paystackSubaccountCode && (
-                  <div className="mb-3 flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11.5px] font-medium text-emerald-700 w-fit">
-                    <Zap size={11} className="fill-emerald-700" />
-                    Auto-pay active
-                  </div>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {payoutInfo.store.paystackSubaccountCode && !payoutInfo.isOnHold && (
+                    <div className="flex items-center gap-1.5 rounded-full bg-emerald-50 px-2.5 py-1 text-[11.5px] font-medium text-emerald-700 w-fit">
+                      <Zap size={11} className="fill-emerald-700" />
+                      Auto-pay active
+                    </div>
+                  )}
+                  {payoutInfo.isOnHold && (
+                    <div className="flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11.5px] font-medium text-amber-700 w-fit">
+                      <Clock size={11} />
+                      On hold — account changed recently
+                    </div>
+                  )}
+                </div>
 
-                <div className="flex items-center justify-between">
+                <div className="mt-3 flex items-center justify-between">
                   <p className="text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
                     {payoutInfo.store.paystackSubaccountCode
                       ? "Available balance (not auto-paid)"
@@ -191,11 +199,18 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
                 <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-[#13131A]">
                   {money(availableBalance)}
                 </p>
-                {payoutInfo.store.paystackSubaccountCode && (
+                {payoutInfo.store.paystackSubaccountCode && !payoutInfo.isOnHold && (
                   <p className="mt-1 text-[12px] text-[#94A3B8]">
                     Most of this seller&apos;s earnings are paid straight to their bank
                     automatically. This is only revenue from before auto-pay was set up,
                     if any.
+                  </p>
+                )}
+                {payoutInfo.isOnHold && (
+                  <p className="mt-1 text-[12px] text-amber-700">
+                    The bank account was changed within the last {payoutInfo.holdHours}{" "}
+                    hours, so automatic payouts are paused as a security measure.
+                    Revenue is accruing here in the meantime.
                   </p>
                 )}
 
@@ -215,6 +230,35 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
                     </p>
                   )}
                 </div>
+
+                {payoutInfo.recentChanges.length > 0 && (
+                  <div className="mt-3 border-t border-[#F2F1F8] pt-3">
+                    <div className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                      <ShieldAlert size={12} />
+                      Recent account changes
+                    </div>
+                    <div className="mt-2 space-y-2">
+                      {payoutInfo.recentChanges.map((change) => (
+                        <div key={change.id} className="text-[12px] text-[#64748B]">
+                          <span className="font-medium text-[#334155]">
+                            {change.newBankName} ····{change.newAccountNumber.slice(-4)}
+                          </span>
+                          {change.previousBankName && (
+                            <span>
+                              {" "}
+                              (was {change.previousBankName} ····
+                              {change.previousAccountNumber?.slice(-4)})
+                            </span>
+                          )}
+                          <span className="text-[#94A3B8]">
+                            {" "}
+                            · {formatRelativeTime(change.changedAt)}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ) : null}
           </div>

@@ -34,6 +34,8 @@ function targetHref(notification: Notification): string | null {
       return "/marketplace/sell";
     case "ADMIN_SELLER_APPLICATION":
       return "/admin?tab=sellers";
+    case "ADMIN_PAYOUT_ACCOUNT_CHANGED":
+      return "/admin?tab=payouts";
     default:
       return null;
   }

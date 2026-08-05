@@ -30,6 +30,16 @@ export interface SellerEarnings {
   availableBalance: number;
 }
 
+export interface PayoutAccountChange {
+  id: string;
+  storeId: string;
+  previousBankName: string | null;
+  previousAccountNumber: string | null;
+  newBankName: string;
+  newAccountNumber: string;
+  changedAt: string;
+}
+
 export interface StorePayoutInfo extends SellerEarnings {
   store: {
     id: string;
@@ -38,7 +48,14 @@ export interface StorePayoutInfo extends SellerEarnings {
     payoutAccountNumber: string | null;
     payoutAccountName: string | null;
     paystackSubaccountCode: string | null;
+    payoutAccountUpdatedAt: string | null;
   };
+  // True while a recently-changed payout account is still inside its
+  // fraud-prevention hold window (see holdHours) and hasn't been eligible
+  // for automatic checkout splits yet.
+  isOnHold: boolean;
+  holdHours: number;
+  recentChanges: PayoutAccountChange[];
 }
 
 export interface StoreTraffic {

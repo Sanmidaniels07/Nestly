@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, ImagePlus, Plus, Trash2, Wallet } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, Plus, Trash2, Wallet } from "lucide-react";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useUpdateStore } from "@/src/hooks/use-update-store";
@@ -215,22 +215,43 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
       </div>
 
       {isActive && !editing ? (
-        <div className="mt-5 flex items-center justify-between rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3.5">
-          <div className="flex items-center gap-2.5">
-            <CheckCircle2 size={17} className="shrink-0 text-emerald-600" />
-            <div>
-              <p className="text-[13.5px] font-medium text-[#13131A]">
-                {store?.payoutBankName} · {store?.payoutAccountNumber}
-              </p>
-              <p className="text-[12px] text-[#64748B]">{store?.payoutAccountName}</p>
-            </div>
-          </div>
-          <button
-            onClick={() => setEditing(true)}
-            className="shrink-0 text-[12.5px] font-medium text-violet-600 hover:underline"
+        <div className="mt-5 space-y-2.5">
+          <div
+            className={`flex items-center justify-between rounded-2xl border px-4 py-3.5 ${
+              store?.isOnHold
+                ? "border-amber-200 bg-amber-50"
+                : "border-emerald-200 bg-emerald-50"
+            }`}
           >
-            Change
-          </button>
+            <div className="flex items-center gap-2.5">
+              {store?.isOnHold ? (
+                <Clock size={17} className="shrink-0 text-amber-600" />
+              ) : (
+                <CheckCircle2 size={17} className="shrink-0 text-emerald-600" />
+              )}
+              <div>
+                <p className="text-[13.5px] font-medium text-[#13131A]">
+                  {store?.payoutBankName} · {store?.payoutAccountNumber}
+                </p>
+                <p className="text-[12px] text-[#64748B]">{store?.payoutAccountName}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setEditing(true)}
+              className="shrink-0 text-[12.5px] font-medium text-violet-600 hover:underline"
+            >
+              Change
+            </button>
+          </div>
+
+          {store?.isOnHold && (
+            <p className="text-[12px] text-amber-700">
+              This account was changed recently, so automatic payouts are paused for
+              up to {store.holdHours ?? 48} hours as a security measure. Your
+              earnings are still accruing and will be paid out manually in the
+              meantime.
+            </p>
+          )}
         </div>
       ) : (
         <div className="mt-6 space-y-4">
@@ -265,7 +286,9 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
 
           <p className="text-[12px] text-[#94A3B8]">
             We&apos;ll verify this account with your bank before activating automatic
-            payouts.
+            payouts. For your security, a changed account is paused from automatic
+            payouts for up to 48 hours, and we&apos;ll email you to confirm every
+            change.
           </p>
 
           <div className="flex gap-3">

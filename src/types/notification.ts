@@ -4,7 +4,8 @@ export type NotificationTargetType =
   | "CONVERSATION"
   | "PRODUCT"
   | "SELLER_APPLICATION"
-  | "ADMIN_SELLER_APPLICATION";
+  | "ADMIN_SELLER_APPLICATION"
+  | "ADMIN_PAYOUT_ACCOUNT_CHANGED";
 
 export interface Notification {
   id: string;
