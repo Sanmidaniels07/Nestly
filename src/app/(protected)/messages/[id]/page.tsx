@@ -210,11 +210,11 @@ function ConversationThread({ id }: { id: string }) {
     : null;
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col pt-6">
+    <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col rounded-[28px] border border-[#ECE9F6] bg-gradient-to-b from-violet-50 to-indigo-50/70 px-5 pb-5 pt-5 sm:px-7">
       <div className="flex items-center gap-3 border-b border-[#ECE9F6] pb-4">
         <button
           onClick={handleBack}
-          className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-gray-100"
+          className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-white/70"
           aria-label="Go back"
         >
           <ArrowLeft size={18} />
