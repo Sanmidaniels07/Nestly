@@ -16,8 +16,9 @@ export default function MessageSocketListener() {
     if (!userId) return;
 
     const socket = getSocket();
+    // The server derives the room from the verified access token during the
+    // handshake now, so there's nothing left to tell it client-side.
     socket.connect();
-    socket.emit("join", userId);
 
     const handleNewMessage = (message: Message) => {
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
@@ -32,10 +33,16 @@ export default function MessageSocketListener() {
       }
     };
 
+    const handleMessageRead = ({ conversationId }: { conversationId: string }) => {
+      queryClient.invalidateQueries({ queryKey: ["messages", conversationId] });
+    };
+
     socket.on("message:new", handleNewMessage);
+    socket.on("message:read", handleMessageRead);
 
     return () => {
       socket.off("message:new", handleNewMessage);
+      socket.off("message:read", handleMessageRead);
       socket.disconnect();
     };
   }, [userId, queryClient]);

@@ -172,9 +172,12 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
 
   function sendMessage(content: string, conversationId: string) {
     setActiveConversationId(conversationId);
-    sendMessageMutate(content, {
-      onSuccess: () => setReply(""),
-    });
+    sendMessageMutate(
+      { content },
+      {
+        onSuccess: () => setReply(""),
+      }
+    );
   }
 
   if (!mounted || !group || !story) return null;

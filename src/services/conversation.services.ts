@@ -5,6 +5,7 @@ import {
   ConversationListParams,
   Message,
   MessageListParams,
+  MessageMedia,
 } from "../types/conversation";
 
 export const createConversation = async (userId: string) => {
@@ -32,10 +33,13 @@ export const getMessages = async (
   return response.data;
 };
 
-export const sendMessage = async (conversationId: string, content: string) => {
+export const sendMessage = async (
+  conversationId: string,
+  payload: { content?: string; media?: MessageMedia[] }
+) => {
   const response = await api.post<ApiResponse<Message>>(
     `/conversations/${conversationId}/messages`,
-    { content }
+    payload
   );
   return response.data;
 };
