@@ -2,6 +2,7 @@
 
 import { use, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowLeft, Check, CheckCheck, ChevronRight, Image as ImageIcon, Loader2, Send, X } from "lucide-react";
 
 import { useConversations } from "@/src/hooks/use-conversations";
@@ -82,6 +83,7 @@ export default function ConversationThreadPage({
 }
 
 function ConversationThread({ id }: { id: string }) {
+  const router = useRouter();
   const currentUserId = useAuthStore((state) => state.user?.id);
 
   const { data: conversationsData } = useConversations({ limit: 50 });
@@ -191,6 +193,18 @@ function ConversationThread({ id }: { id: string }) {
     );
   };
 
+  const handleBack = () => {
+    // Landed here with somewhere to return to (a seller profile, a user's
+    // profile, a notification, etc.) - go back there instead of always
+    // dropping the user on the conversation list. Falls back to the list
+    // when there's no in-app history to unwind (a fresh tab, a direct link).
+    if (typeof window !== "undefined" && window.history.length > 1) {
+      router.back();
+    } else {
+      router.push("/messages");
+    }
+  };
+
   const profileHref = otherParticipant
     ? `/users/${otherParticipant.username ?? otherParticipant.id}`
     : null;
@@ -198,13 +212,13 @@ function ConversationThread({ id }: { id: string }) {
   return (
     <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col pt-6">
       <div className="flex items-center gap-3 border-b border-[#ECE9F6] pb-4">
-        <Link
-          href="/messages"
+        <button
+          onClick={handleBack}
           className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-gray-100"
-          aria-label="Back to messages"
+          aria-label="Go back"
         >
           <ArrowLeft size={18} />
-        </Link>
+        </button>
 
         {profileHref ? (
           <Link href={profileHref} className="group flex flex-1 items-center gap-3 min-w-0">
