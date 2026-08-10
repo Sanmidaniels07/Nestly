@@ -14,6 +14,7 @@ import { useReactToStory } from "@/src/hooks/use-react-to-story";
 import { useRemoveStoryReaction } from "@/src/hooks/use-remove-story-reaction";
 import { useStoryViewers } from "@/src/hooks/use-story-viewers";
 import { useStory } from "@/src/hooks/use-story";
+import { useClickOutside } from "@/src/hooks/use-click-outside";
 import { StoryAuthorGroup } from "@/src/types/story";
 
 const STORY_DURATION_MS = 5000;
@@ -40,6 +41,13 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
   const router = useRouter();
 
   const videoRef = useRef<HTMLVideoElement>(null);
+  const viewersTriggerRef = useRef<HTMLButtonElement>(null);
+  const viewersPanelRef = useRef<HTMLDivElement>(null);
+  useClickOutside(
+    [viewersTriggerRef, viewersPanelRef],
+    () => setViewersOpen(false),
+    viewersOpen
+  );
 
   useEffect(() => setMounted(true), []);
 
@@ -286,6 +294,7 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
         <div className="z-20 bg-gradient-to-t from-black/80 to-transparent px-4 pb-5 pt-3">
           {isOwn ? (
             <button
+              ref={viewersTriggerRef}
               onClick={() => setViewersOpen((prev) => !prev)}
               className="flex items-center gap-1.5 text-[13px] font-medium text-white/90"
             >
@@ -327,7 +336,10 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
         </div>
 
         {isOwn && viewersOpen && (
-          <div className="absolute bottom-0 left-0 right-0 z-30 max-h-[50%] overflow-y-auto rounded-t-2xl bg-white p-4">
+          <div
+            ref={viewersPanelRef}
+            className="absolute bottom-0 left-0 right-0 z-30 max-h-[50%] overflow-y-auto rounded-t-2xl bg-white p-4"
+          >
             <div className="mb-3 flex items-center justify-between">
               <h3 className="text-[14px] font-semibold text-[#13131A]">Viewers</h3>
               <button

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Heart, MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
 import { Post } from "@/src/types/post";
@@ -8,6 +8,7 @@ import { usePostLikes } from "@/src/hooks/use-post-likes";
 import { useComments } from "@/src/hooks/use-comments";
 import { useUpdatePost } from "@/src/hooks/use-update-post";
 import { useDeletePost } from "@/src/hooks/use-delete-post";
+import { useClickOutside } from "@/src/hooks/use-click-outside";
 import { useAuthStore } from "@/src/store/auth-store";
 import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import ReportButton from "@/src/components/ui/report-button";
@@ -43,6 +44,9 @@ export default function PostCard({ post, autoOpenComments }: Props) {
   const [commentsOpen, setCommentsOpen] = useState(!!autoOpenComments);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content ?? "");
+
+  const menuRef = useRef<HTMLDivElement>(null);
+  useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
 
   const hasMedia = !!post.media && post.media.length > 0;
 
@@ -81,7 +85,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
           </div>
         </div>
 
-        <div className="relative">
+        <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
             className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-gray-100 hover:text-[#334155]"
