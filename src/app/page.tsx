@@ -56,6 +56,7 @@ function Hero() {
             <Link href="/signup">
               <Button
                 size="lg"
+                variant="tribely"
                 className="w-full sm:w-auto text-base px-10 py-7 rounded-2xl"
               >
                 Join Free
@@ -93,7 +94,7 @@ function Hero() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="relative flex justify-center"
+          className="relative w-fit mx-auto"
         >
           <div className="relative w-[280px] h-[560px] bg-white border-8 border-[#1A1A2E] rounded-[42px] shadow-2xl overflow-hidden">
             {/* Phone Screen Mock */}
@@ -148,15 +149,15 @@ function Hero() {
           <motion.div
             animate={{ y: [0, -12, 0] }}
             transition={{ duration: 5, repeat: Infinity }}
-            className="absolute -top-6 -right-6 bg-white rounded-2xl p-4 shadow-xl w-52"
+            className="absolute -top-4 right-2 sm:-top-6 sm:-right-6 bg-white rounded-2xl p-3 sm:p-4 shadow-xl w-40 sm:w-52"
           >
-            <div className="flex gap-3">
-              <div className="w-10 h-10 rounded-full bg-[#8B5CF6] flex items-center justify-center text-white text-sm">
+            <div className="flex gap-2 sm:gap-3">
+              <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#8B5CF6] flex items-center justify-center text-white text-xs sm:text-sm shrink-0">
                 SJ
               </div>
               <div>
-                <div className="font-semibold text-sm">Sarah J.</div>
-                <div className="text-xs text-[#9CA3AF]">
+                <div className="font-semibold text-xs sm:text-sm">Sarah J.</div>
+                <div className="text-[10px] sm:text-xs text-[#9CA3AF]">
                   Birthday in 3 days!
                 </div>
               </div>
@@ -166,11 +167,13 @@ function Hero() {
           <motion.div
             animate={{ y: [0, -15, 0] }}
             transition={{ duration: 6, repeat: Infinity, delay: 1.5 }}
-            className="absolute bottom-20 -left-8 bg-white rounded-2xl p-5 shadow-xl w-48 text-center"
+            className="absolute bottom-16 left-2 sm:bottom-20 sm:-left-8 bg-white rounded-2xl p-3 sm:p-5 shadow-xl w-36 sm:w-48 text-center"
           >
-            <div className="text-4xl mb-2">🎉</div>
-            <div className="font-bold text-sm text-[#8B5CF6]">New Match!</div>
-            <div className="text-xs text-[#6B7280]">
+            <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎉</div>
+            <div className="font-bold text-xs sm:text-sm text-[#8B5CF6]">
+              New Match!
+            </div>
+            <div className="text-[10px] sm:text-xs text-[#6B7280]">
               You and Alex share a birthday
             </div>
           </motion.div>
@@ -178,12 +181,14 @@ function Hero() {
           <motion.div
             animate={{ y: [0, -10, 0] }}
             transition={{ duration: 4, repeat: Infinity, delay: 3 }}
-            className="absolute top-1/2 -right-16 bg-white rounded-2xl p-4 shadow-xl flex items-center gap-3"
+            className="absolute top-1/2 right-1 sm:-right-16 bg-white rounded-2xl p-3 sm:p-4 shadow-xl flex items-center gap-2 sm:gap-3"
           >
-            <div className="text-3xl">📦</div>
+            <div className="text-2xl sm:text-3xl">📦</div>
             <div>
-              <div className="font-semibold text-sm">Order Delivered</div>
-              <div className="text-emerald-600 text-xs font-medium">
+              <div className="font-semibold text-xs sm:text-sm">
+                Order Delivered
+              </div>
+              <div className="text-emerald-600 text-[10px] sm:text-xs font-medium">
                 Arrived today
               </div>
             </div>

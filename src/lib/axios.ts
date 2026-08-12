@@ -32,17 +32,23 @@ const resolveWaiters = (token: string | null) => {
   refreshWaiters = [];
 };
 
+// Routes whose own 401s are a final answer (bad credentials, etc.), not an
+// expired session — so they should never trigger a refresh-and-retry.
+const NO_REFRESH_RETRY_PATTERNS = ["/session/", "/login", "/register"];
+
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as RetryableConfig | undefined;
-    const isSessionRoute = originalRequest?.url?.includes("/session/");
+    const skipRefreshRetry = NO_REFRESH_RETRY_PATTERNS.some((pattern) =>
+      originalRequest?.url?.includes(pattern)
+    );
 
     if (
       error.response?.status !== 401 ||
       !originalRequest ||
       originalRequest._retry ||
-      isSessionRoute
+      skipRefreshRetry
     ) {
       return Promise.reject(error);
     }
@@ -99,7 +105,10 @@ api.interceptors.response.use(
         window.location.href = `/session-expired?returnTo=${encodeURIComponent(returnTo)}`;
       }
 
-      return Promise.reject(refreshError);
+      // Reject with the original error (e.g. the 403/401 the caller's own
+      // request produced), not the refresh endpoint's error — so any
+      // caller-side error handling reflects what it actually asked for.
+      return Promise.reject(error);
     } finally {
       isRefreshing = false;
     }
