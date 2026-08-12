@@ -20,25 +20,21 @@ export default function ProfileActions({ onEdit }: Props) {
 
     const url = `${window.location.origin}/users/${profile.username ?? profile.id}`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: `${profile.name} on Nestly`, url });
-        return;
-      } catch (error) {
-        // User dismissed the share sheet — leave it at that, don't fall
-        // back to a clipboard toast they didn't ask for.
-        if (error instanceof Error && error.name === "AbortError") return;
-        // Any other failure (e.g. Web Share feature-detected but blocked
-        // in this context, like an embedded webview) falls through to
-        // the clipboard copy below instead of silently doing nothing.
-      }
-    }
-
+    
     try {
       await navigator.clipboard.writeText(url);
       toast.success("Profile link copied");
     } catch {
       toast.error("Couldn't copy the profile link");
+    }
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `${profile.name} on Nestly`, url });
+      } catch (error) {
+    
+        if (error instanceof Error && error.name === "AbortError") return;
+      }
     }
   };
 

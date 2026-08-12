@@ -1,13 +1,24 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { Heart, MessageCircle, MoreHorizontal, Pencil, Trash2 } from "lucide-react";
+import {
+  Heart,
+  Image as ImageIcon,
+  Loader2,
+  MessageCircle,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+  Video,
+  X,
+} from "lucide-react";
 
-import { Post } from "@/src/types/post";
+import { Post, PostMedia } from "@/src/types/post";
 import { usePostLikes } from "@/src/hooks/use-post-likes";
 import { useComments } from "@/src/hooks/use-comments";
 import { useUpdatePost } from "@/src/hooks/use-update-post";
 import { useDeletePost } from "@/src/hooks/use-delete-post";
+import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { useClickOutside } from "@/src/hooks/use-click-outside";
 import { useAuthStore } from "@/src/store/auth-store";
 import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
@@ -39,25 +50,61 @@ export default function PostCard({ post, autoOpenComments }: Props) {
 
   const { mutate: updatePost, isPending: isSaving } = useUpdatePost();
   const { mutate: deletePost } = useDeletePost();
+  const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles();
 
   const [menuOpen, setMenuOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(!!autoOpenComments);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content ?? "");
+  const [editMedia, setEditMedia] = useState<PostMedia[]>(post.media ?? []);
 
   const menuRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   useClickOutside(menuRef, () => setMenuOpen(false), menuOpen);
 
   const hasMedia = !!post.media && post.media.length > 0;
 
+  const startEditing = () => {
+    setEditContent(post.content ?? "");
+    setEditMedia(post.media ?? []);
+    setIsEditing(true);
+    setMenuOpen(false);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+    setEditContent(post.content ?? "");
+    setEditMedia(post.media ?? []);
+  };
+
+  const handleFilesSelected = (files: FileList | null) => {
+    if (!files?.length) return;
+
+    uploadFiles(Array.from(files), {
+      onSuccess: (response) => setEditMedia((prev) => [...prev, ...response.data]),
+    });
+
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeEditMedia = (url: string) => {
+    setEditMedia((prev) => prev.filter((item) => item.url !== url));
+  };
+
   const handleSave = () => {
-    // A post only needs text content, media, or both — same rule as
-    // creating one, so clearing the caption is fine as long as the post
-    // still has media attached.
-    if (!editContent.trim() && !hasMedia) return;
+    
+    if (!editContent.trim() && editMedia.length === 0) return;
+    if (isUploading) return;
 
     updatePost(
-      { id: post.id, data: { content: editContent.trim() } },
+      {
+        id: post.id,
+        data: {
+          content: editContent.trim(),
+       
+          media: editMedia,
+        },
+      },
       { onSuccess: () => setIsEditing(false) }
     );
   };
@@ -99,10 +146,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
               {isAuthor ? (
                 <>
                   <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      setMenuOpen(false);
-                    }}
+                    onClick={startEditing}
                     className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-[#334155] hover:bg-[#F7F7FB]"
                   >
                     <Pencil size={14} /> Edit
@@ -145,23 +189,84 @@ export default function PostCard({ post, autoOpenComments }: Props) {
               rows={3}
               className="w-full resize-none rounded-2xl bg-[#F7F7FB] px-4 py-3 text-[15px] text-[#13131A] outline-none focus:bg-[#F0EFF9]"
             />
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => {
-                  setIsEditing(false);
-                  setEditContent(post.content ?? "");
-                }}
-                className="rounded-full px-4 py-1.5 text-[13px] font-medium text-[#64748B] hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSave}
-                disabled={isSaving}
-                className="rounded-full bg-violet-600 px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-violet-700 disabled:opacity-50"
-              >
-                {isSaving ? "Saving..." : "Save"}
-              </button>
+
+            {editMedia.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {editMedia.map((item) => (
+                  <div
+                    key={item.url}
+                    className="group relative h-20 w-20 overflow-hidden rounded-xl bg-[#F7F7FB]"
+                  >
+                    {item.type === "VIDEO" ? (
+                      <video src={item.url} className="h-full w-full object-cover" />
+                    ) : (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={item.url}
+                        alt="Attachment"
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                    <button
+                      onClick={() => removeEditMedia(item.url)}
+                      className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white opacity-0 transition-opacity group-hover:opacity-100"
+                      aria-label="Remove attachment"
+                    >
+                      <X size={12} />
+                    </button>
+                  </div>
+                ))}
+                {isUploading && (
+                  <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[#F7F7FB]">
+                    <Loader2 size={18} className="animate-spin text-violet-600" />
+                  </div>
+                )}
+              </div>
+            )}
+
+            <div className="flex items-center justify-between gap-3 pt-1">
+              <div className="flex items-center gap-1">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*,video/*"
+                  multiple
+                  hidden
+                  onChange={(e) => handleFilesSelected(e.target.files)}
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  aria-label="Attach photo"
+                >
+                  <ImageIcon size={18} />
+                </button>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={isUploading}
+                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  aria-label="Attach video"
+                >
+                  <Video size={18} />
+                </button>
+              </div>
+
+              <div className="flex justify-end gap-2">
+                <button
+                  onClick={cancelEditing}
+                  className="rounded-full px-4 py-1.5 text-[13px] font-medium text-[#64748B] hover:bg-gray-100"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  disabled={isSaving || isUploading}
+                  className="rounded-full bg-violet-600 px-4 py-1.5 text-[13px] font-semibold text-white hover:bg-violet-700 disabled:opacity-50"
+                >
+                  {isSaving ? "Saving..." : "Save"}
+                </button>
+              </div>
             </div>
           </div>
         ) : (
