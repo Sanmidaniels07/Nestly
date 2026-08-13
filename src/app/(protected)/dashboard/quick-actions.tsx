@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Image, PenSquare, Store, ArrowRight } from "lucide-react";
+import { ShoppingBag, PenSquare, Store, ArrowRight } from "lucide-react";
 
 const actions = [
   {
@@ -12,11 +12,11 @@ const actions = [
     href: "/feed",
   },
   {
-    title: "Upload Photo",
-    description: "Capture moments and share memories instantly.",
-    icon: Image,
+    title: "Buy Item",
+    description: "Browse products and find something you'll love.",
+    icon: ShoppingBag,
     color: "from-pink-500 to-rose-500",
-    href: undefined,
+    href: "/marketplace/products",
   },
   {
     title: "Sell Item",
