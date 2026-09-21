@@ -474,8 +474,8 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
         <Input
           value={etaDays}
           onChange={(e) => setEtaDays(e.target.value)}
-          type="number"
-          placeholder="ETA (days)"
+          type="text"
+          placeholder="ETA (days, hours optional)"
         />
         <Button
           variant="tribely"
