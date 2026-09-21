@@ -20,7 +20,7 @@ export const useBecomeSeller = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller", "me"] });
-      toast.success("You're now a seller");
+      toast.success("Seller request submitted successfully. Please wait for approval.");
     },
 
     onError: (error) => {
