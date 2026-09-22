@@ -99,11 +99,9 @@ function StoreShippingGroup({
             >
               <div>
                 <p className="text-[13px] font-medium text-[#13131A]">{option.name}</p>
-                {typeof option.etaDays === "number" && (
-                  <p className="mt-0.5 text-[12px] text-[#94A3B8]">
-                    {option.etaDays} day{option.etaDays === 1 ? "" : "s"}
-                  </p>
-                )}
+                {option.eta && (
+                <p className="mt-0.5 text-[12px] text-[#94A3B8]">{option.eta}</p>
+               )}
               </div>
               <div className="flex shrink-0 items-center gap-2">
                 <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700">
