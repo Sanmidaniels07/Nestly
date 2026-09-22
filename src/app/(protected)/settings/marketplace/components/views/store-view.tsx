@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, Clock, ImagePlus, Plus, Trash2, Wallet } from "lucide-react";
+import {
+  CheckCircle2,
+  Clock,
+  ImagePlus,
+  Plus,
+  Trash2,
+  Wallet,
+} from "lucide-react";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useUpdateStore } from "@/src/hooks/use-update-store";
@@ -81,11 +88,15 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
     setBanner(store.banner ?? undefined);
   }, [store]);
 
-  const update = (field: keyof typeof form) => (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const update =
+    (field: keyof typeof form) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
-  const handleFile = (file: File | undefined, onDone: (url: string) => void) => {
+  const handleFile = (
+    file: File | undefined,
+    onDone: (url: string) => void,
+  ) => {
     if (!file) return;
     uploadImage(file, { onSuccess: onDone });
   };
@@ -145,16 +156,29 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Input label="Email" type="email" value={form.email} onChange={update("email")} />
+          <Input
+            label="Email"
+            type="email"
+            value={form.email}
+            onChange={update("email")}
+          />
           <Input label="Phone" value={form.phone} onChange={update("phone")} />
         </div>
 
-        <Input label="Address" value={form.address} onChange={update("address")} />
+        <Input
+          label="Address"
+          value={form.address}
+          onChange={update("address")}
+        />
 
         <div className="grid gap-4 sm:grid-cols-3">
           <Input label="City" value={form.city} onChange={update("city")} />
           <Input label="State" value={form.state} onChange={update("state")} />
-          <Input label="Country" value={form.country} onChange={update("country")} />
+          <Input
+            label="Country"
+            value={form.country}
+            onChange={update("country")}
+          />
         </div>
 
         <Button
@@ -192,7 +216,7 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
 
     setupPayoutAccount(
       { slug, data: { bankCode, accountNumber: accountNumber.trim() } },
-      { onSuccess: () => setEditing(false) }
+      { onSuccess: () => setEditing(false) },
     );
   };
 
@@ -233,7 +257,9 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
                 <p className="text-[13.5px] font-medium text-[#13131A]">
                   {store?.payoutBankName} · {store?.payoutAccountNumber}
                 </p>
-                <p className="text-[12px] text-[#64748B]">{store?.payoutAccountName}</p>
+                <p className="text-[12px] text-[#64748B]">
+                  {store?.payoutAccountName}
+                </p>
               </div>
             </div>
             <button
@@ -246,10 +272,10 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
 
           {store?.isOnHold && (
             <p className="text-[12px] text-amber-700">
-              This account was changed recently, so automatic payouts are paused for
-              up to {store.holdHours ?? 48} hours as a security measure. Your
-              earnings are still accruing and will be paid out manually in the
-              meantime.
+              This account was changed recently, so automatic payouts are paused
+              for up to {store.holdHours ?? 48} hours as a security measure.
+              Your earnings are still accruing and will be paid out manually in
+              the meantime.
             </p>
           )}
         </div>
@@ -285,10 +311,10 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
           </div>
 
           <p className="text-[12px] text-[#94A3B8]">
-            We&apos;ll verify this account with your bank before activating automatic
-            payouts. For your security, a changed account is paused from automatic
-            payouts for up to 48 hours, and we&apos;ll email you to confirm every
-            change.
+            We&apos;ll verify this account with your bank before activating
+            automatic payouts. For your security, a changed account is paused
+            from automatic payouts for up to 48 hours, and we&apos;ll email you
+            to confirm every change.
           </p>
 
           <div className="flex gap-3">
@@ -336,9 +362,9 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
     });
   }, [store]);
 
-  const update = (field: keyof typeof form) => (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  const update =
+    (field: keyof typeof form) => (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+      setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
   const handleSubmit = () => {
     updateStore({
@@ -382,7 +408,12 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
           </div>
         ))}
 
-        <Button variant="tribely" className="w-full sm:w-fit" loading={isPending} onClick={handleSubmit}>
+        <Button
+          variant="tribely"
+          className="w-full sm:w-fit"
+          loading={isPending}
+          onClick={handleSubmit}
+        >
           Save policies
         </Button>
       </div>
@@ -396,9 +427,9 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
 
   const [name, setName] = useState("");
   const [fee, setFee] = useState("");
-  const [etaDays, setEtaDays] = useState("");
-
-  const { mutate: createOption, isPending: isCreating } = useCreateShippingOption(slug);
+  const [eta, setEta] = useState("");
+  const { mutate: createOption, isPending: isCreating } =
+    useCreateShippingOption(slug);
   const { mutate: deleteOption } = useDeleteShippingOption(slug);
 
   const canSubmit = name.trim().length > 0 && fee.trim().length > 0;
@@ -410,15 +441,15 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
       {
         name: name.trim(),
         fee: Number(fee),
-        etaDays: etaDays ? Number(etaDays) : undefined,
+        eta: eta.trim() || undefined,
       },
       {
         onSuccess: () => {
           setName("");
           setFee("");
-          setEtaDays("");
+          setEta("");
         },
-      }
+      },
     );
   };
 
@@ -438,10 +469,12 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
             className="flex items-center justify-between rounded-xl border border-[#F2F1F8] px-4 py-3"
           >
             <div>
-              <p className="text-[13.5px] font-medium text-[#13131A]">{option.name}</p>
+              <p className="text-[13.5px] font-medium text-[#13131A]">
+                {option.name}
+              </p>
               <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
                 {money(option.fee)}
-                {option.etaDays ? ` · ${option.etaDays} day${option.etaDays === 1 ? "" : "s"}` : ""}
+                {option.eta ? ` · ${option.eta}` : ""}
               </p>
             </div>
             <button
@@ -472,10 +505,10 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
           placeholder="Fee (₦)"
         />
         <Input
-          value={etaDays}
-          onChange={(e) => setEtaDays(e.target.value)}
+          value={eta}
+          onChange={(e) => setEta(e.target.value)}
           type="text"
-          placeholder="ETA (days, hours optional)"
+          placeholder="e.g. 2 hours, 3–5 days"
         />
         <Button
           variant="tribely"
@@ -504,7 +537,9 @@ function ImagePicker({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">{label}</label>
+      <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+        {label}
+      </label>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
@@ -512,7 +547,11 @@ function ImagePicker({
       >
         {previewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={previewUrl} alt={label} className="h-full w-full object-cover" />
+          <img
+            src={previewUrl}
+            alt={label}
+            className="h-full w-full object-cover"
+          />
         ) : (
           <div className="flex flex-col items-center gap-1.5 text-[#94A3B8]">
             <ImagePlus size={20} />

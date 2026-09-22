@@ -110,6 +110,9 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
               { label: "New", value: "NEW" },
               { label: "Used", value: "USED" },
               { label: "Refurbished", value: "REFURBISHED" },
+              { label: "Freshly made", value: "FRESHLY_MADE" },
+              { label: "Made to order", value: "MADE_TO_ORDER" },
+              { label: "Pre-order", value: "PRE_ORDER" },
             ]}
           />
         </div>

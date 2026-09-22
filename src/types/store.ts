@@ -3,14 +3,14 @@ export interface ShippingOption {
   storeId: string;
   name: string;
   fee: number;
-  etaDays?: number | null;
+  eta?: string | null;
   createdAt: string;
 }
 
 export interface CreateShippingOptionPayload {
   name: string;
   fee: number;
-  etaDays?: number;
+  eta?: string;
 }
 
 export type UpdateShippingOptionPayload = Partial<CreateShippingOptionPayload>;
@@ -49,9 +49,7 @@ export interface Store {
   payoutAccountName?: string | null;
   paystackSubaccountCode?: string | null;
   payoutAccountUpdatedAt?: string | null;
-  // Present on the seller's own GET /stores/me response (not the public
-  // store view). True while a recently-changed payout account is still
-  // inside its fraud-prevention hold window.
+  
   isOnHold?: boolean;
   holdHours?: number;
   reviewCount?: number;
