@@ -15,6 +15,7 @@ import NotificationBell from "./notification-bell";
 import LogoutConfirmDialog from "./logout-confirm-dialog";
 import GlobalSearch from "./global-search";
 import { useAuth } from "@/src/hooks/use-auth";
+import NestlyMark from "./nestly-mark";
 
 export default function Navbar() {
   const { isAuthenticated, isHydrated } = useAuth();
@@ -26,18 +27,12 @@ export default function Navbar() {
     <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-[#ECE9F6] bg-white/85 px-3 backdrop-blur-xl sm:px-5 md:px-8">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 text-[17px] font-bold text-white">
-            N
-          </div>
+               <NestlyMark size={34} />
           <span className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
             Nestly
           </span>
         </Link>
 
-        {/* Nothing that depends on auth state renders until the initial
-            session check resolves — otherwise every hard refresh flashes
-            the signed-out nav (or the signed-in icons) for a moment, since
-            the store always starts out empty before that check finishes. */}
         {isHydrated && (
           <>
             {!isAuthenticated && (
