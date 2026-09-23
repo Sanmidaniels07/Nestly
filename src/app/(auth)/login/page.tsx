@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Users, Sparkles } from "lucide-react";
 import LoginForm from "@/src/components/auth/LoginForm";
 import GuestGuard from "@/src/components/guards/GuestGuard";
+import NestlyMark from "@/src/components/ui/nestly-mark";
 
 export default function LoginPage() {
   return (
@@ -20,9 +21,7 @@ export default function LoginPage() {
         >
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">
-                N
-              </div>
+             <NestlyMark size={44} />
               <div className="text-4xl font-bold tracking-tight text-gray-900">Nestly</div>
             </div>
             <h1 className="text-5xl font-bold leading-tight text-gray-900">
