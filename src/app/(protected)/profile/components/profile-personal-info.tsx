@@ -45,7 +45,7 @@ export default function ProfilePersonalInfo({
 
       <div className="mt-5 grid gap-x-8 gap-y-5 sm:grid-cols-2">
         {items.map((item) => (
-          <div key={item.label} className="flex items-start gap-3">
+          <div key={item.label} className="flex min-w-0 items-start gap-3">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
               <item.icon className="text-violet-600" size={16} />
             </div>

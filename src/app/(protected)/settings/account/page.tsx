@@ -61,20 +61,24 @@ export default function SettingsAccountPage() {
       </div>
 
       <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-        <h3 className="text-[15px] font-semibold text-[#13131A]">Account details</h3>
+        <h3 className="text-[15px] font-semibold text-[#13131A]">
+          Account details
+        </h3>
 
         <div className="mt-5 divide-y divide-[#F2F1F8]">
           <div className="flex items-center justify-between gap-4 py-3.5 first:pt-0">
             <span className="text-[13px] text-[#64748B]">Email</span>
-            <div className="flex items-center gap-1.5">
-              <span className="text-[13.5px] font-medium text-[#13131A]">{profile.email}</span>
+              <div className="flex min-w-0 items-center gap-1.5">
+             <span className="min-w-0 truncate text-[13.5px] font-medium text-[#13131A]">
+                {profile.email}
+              </span>
               {profile.isVerified ? (
                 <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
                   <BadgeCheck size={12} />
                   Verified
                 </span>
               ) : (
-                <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
+            <span className="shrink-0 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-medium text-amber-700">
                   Unverified
                 </span>
               )}
@@ -97,13 +101,18 @@ export default function SettingsAccountPage() {
 
           <div className="flex items-center justify-between gap-4 py-3.5 last:pb-0">
             <span className="text-[13px] text-[#64748B]">Member since</span>
-            <span className="text-[13.5px] font-medium text-[#13131A]">{memberSince}</span>
+            <span className="text-[13.5px] font-medium text-[#13131A]">
+              {memberSince}
+            </span>
           </div>
         </div>
 
         <p className="mt-4 text-[12px] text-[#94A3B8]">
           Want to update your name, bio, or other public details? Head to{" "}
-          <Link href="/settings/profile" className="font-medium text-violet-600 hover:underline">
+          <Link
+            href="/settings/profile"
+            className="font-medium text-violet-600 hover:underline"
+          >
             Profile settings
           </Link>
           .
@@ -122,7 +131,9 @@ export default function SettingsAccountPage() {
             <LogOut size={17} className="text-violet-600" />
           </div>
           <div className="flex-1">
-            <h3 className="text-[15px] font-semibold text-[#13131A]">Sign out</h3>
+            <h3 className="text-[15px] font-semibold text-[#13131A]">
+              Sign out
+            </h3>
             <p className="mt-1 text-[13px] text-[#64748B]">
               End your session on this device.
             </p>
@@ -168,7 +179,7 @@ function ChangePasswordSection() {
           setNewPassword("");
           setConfirmPassword("");
         },
-      }
+      },
     );
   };
 
@@ -179,7 +190,9 @@ function ChangePasswordSection() {
           <KeyRound size={17} className="text-violet-600" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Change password</h3>
+          <h3 className="text-[15px] font-semibold text-[#13131A]">
+            Change password
+          </h3>
           <p className="mt-1 text-[13px] text-[#64748B]">
             You&apos;ll be signed out everywhere after changing your password.
           </p>
@@ -228,7 +241,8 @@ function ChangePasswordSection() {
 function SessionsSection() {
   const { data: sessions, isLoading } = useAccountSessions();
   const { mutate: revokeSession, isPending: isRevoking } = useRevokeSession();
-  const { mutate: revokeOthers, isPending: isRevokingOthers } = useRevokeOtherSessions();
+  const { mutate: revokeOthers, isPending: isRevokingOthers } =
+    useRevokeOtherSessions();
 
   const hasOtherSessions = (sessions ?? []).some((s) => !s.isCurrent);
 
@@ -236,7 +250,9 @@ function SessionsSection() {
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Active sessions</h3>
+          <h3 className="text-[15px] font-semibold text-[#13131A]">
+            Active sessions
+          </h3>
           <p className="mt-1 text-[13px] text-[#64748B]">
             Devices currently signed in to your account.
           </p>
@@ -295,7 +311,9 @@ function SessionRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <p className="truncate text-[13.5px] font-medium text-[#13131A]">
-            {session.userAgent ? session.userAgent.slice(0, 60) : "Unknown device"}
+            {session.userAgent
+              ? session.userAgent.slice(0, 60)
+              : "Unknown device"}
           </p>
           {session.isCurrent && (
             <span className="shrink-0 rounded-full bg-emerald-50 px-2 py-0.5 text-[10.5px] font-medium text-emerald-700">
@@ -304,7 +322,8 @@ function SessionRow({
           )}
         </div>
         <p className="mt-0.5 text-[12px] text-[#94A3B8]">
-          {session.ipAddress ?? "Unknown IP"} · Active {formatRelativeTime(session.createdAt)}
+          {session.ipAddress ?? "Unknown IP"} · Active{" "}
+          {formatRelativeTime(session.createdAt)}
         </p>
       </div>
 
@@ -324,7 +343,8 @@ function SessionRow({
 function SavedCardsSection() {
   const { data: cards, isLoading } = useSavedCards();
   const { mutate: deleteCard, isPending: isDeleting } = useDeleteSavedCard();
-  const { mutate: setDefault, isPending: isSettingDefault } = useSetDefaultSavedCard();
+  const { mutate: setDefault, isPending: isSettingDefault } =
+    useSetDefaultSavedCard();
 
   return (
     <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
@@ -333,7 +353,9 @@ function SavedCardsSection() {
           <CreditCard size={17} className="text-violet-600" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Saved cards</h3>
+          <h3 className="text-[15px] font-semibold text-[#13131A]">
+            Saved cards
+          </h3>
           <p className="mt-1 text-[13px] text-[#64748B]">
             Cards you&apos;ve saved from a previous checkout.
           </p>
@@ -345,7 +367,8 @@ function SavedCardsSection() {
           <div className="h-14 animate-pulse rounded-2xl bg-[#F7F7FB]" />
         ) : !cards?.length ? (
           <p className="text-[13px] text-[#94A3B8]">
-            No saved cards yet. They&apos;ll appear here after your next checkout.
+            No saved cards yet. They&apos;ll appear here after your next
+            checkout.
           </p>
         ) : (
           cards.map((card) => (
@@ -409,7 +432,9 @@ function DeleteAccountSection() {
           <ShieldAlert size={17} className="text-red-600" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Delete account</h3>
+          <h3 className="text-[15px] font-semibold text-[#13131A]">
+            Delete account
+          </h3>
           <p className="mt-1 text-[13px] text-[#64748B]">
             Permanently delete your account. This cannot be undone.
           </p>

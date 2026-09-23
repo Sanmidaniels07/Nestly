@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Users, Gift, ShoppingBag, Star } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
+import NestlyMark from "../components/ui/nestly-mark";
 
 export default function Home() {
   return (
@@ -393,9 +394,7 @@ function Footer() {
     <footer className="bg-[#1A1A2E] text-white py-20">
       <div className="max-w-7xl mx-auto px-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold">
-            N
-          </div>{" "}
+          <NestlyMark size={44} />
           <div className="font-bold text-3xl">Nestly</div>
         </div>
         <p className="text-white/60 max-w-md mx-auto">

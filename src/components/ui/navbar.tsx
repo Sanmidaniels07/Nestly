@@ -16,6 +16,7 @@ import LogoutConfirmDialog from "./logout-confirm-dialog";
 import GlobalSearch from "./global-search";
 import { useAuth } from "@/src/hooks/use-auth";
 import NestlyMark from "./nestly-mark";
+import MobileMoreMenu, { MenuRow } from "./more-menu";
 
 export default function Navbar() {
   const { isAuthenticated, isHydrated } = useAuth();
@@ -27,7 +28,7 @@ export default function Navbar() {
     <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-[#ECE9F6] bg-white/85 px-3 backdrop-blur-xl sm:px-5 md:px-8">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
-               <NestlyMark size={34} />
+          <NestlyMark size={34} />
           <span className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
             Nestly
           </span>
@@ -69,28 +70,54 @@ export default function Navbar() {
             <div className="flex items-center gap-2 sm:gap-3">
               {isAuthenticated && (
                 <>
-                  <ThemeToggle />
-                  <Tooltip label="Saved products">
-                    <SavedButton />
-                  </Tooltip>
-                  <Tooltip label="My orders">
-                    <OrdersButton />
-                  </Tooltip>
+                  <div className="hidden sm:block">
+                    <ThemeToggle />
+                  </div>
+                  <div className="hidden sm:block">
+                    <Tooltip label="Saved products">
+                      <SavedButton />
+                    </Tooltip>
+                  </div>
+                  <div className="hidden sm:block">
+                    <Tooltip label="My orders">
+                      <OrdersButton />
+                    </Tooltip>
+                  </div>
+
                   <Tooltip label="Cart">
                     <CartButton />
                   </Tooltip>
                   <Tooltip label="Notifications">
                     <NotificationBell />
                   </Tooltip>
-                  <Tooltip label="Log out">
+
+                  <div className="hidden sm:block">
+                    <Tooltip label="Log out">
+                      <button
+                        onClick={() => setLogoutConfirmOpen(true)}
+                        aria-label="Log out"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500"
+                      >
+                        <LogOut size={18} />
+                      </button>
+                    </Tooltip>
+                  </div>
+
+                  <MobileMoreMenu>
+                    <MenuRow icon={<ThemeToggle />} label="Theme" showChevron={false} />
+                    <MenuRow icon={<SavedButton />} label="Saved products" />
+                    <MenuRow icon={<OrdersButton />} label="My orders" />
+                    <div className="my-1.5 h-px bg-[#F2F1F8]" />
                     <button
                       onClick={() => setLogoutConfirmOpen(true)}
-                      aria-label="Log out"
-                      className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500"
+                      className="flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition-colors hover:bg-red-50 active:scale-[0.98]"
                     >
-                      <LogOut size={18} />
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50">
+                        <LogOut size={15} className="text-red-500" />
+                      </div>
+                      <span className="text-[13.5px] font-medium text-red-600">Log out</span>
                     </button>
-                  </Tooltip>
+                  </MobileMoreMenu>
                 </>
               )}
 

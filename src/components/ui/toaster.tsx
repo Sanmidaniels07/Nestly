@@ -4,7 +4,7 @@ import toast, { Toaster as HotToaster, resolveValue } from "react-hot-toast";
 import { CheckCircle2, XCircle, AlertTriangle, Loader2, X } from "lucide-react";
 
 const VARIANTS = {
-  success: { Icon: CheckCircle2, color: "#059669", bg: "#ECFDF5" },
+ success: { Icon: CheckCircle2, color: "#7C3AED", bg: "#F5F3FF" },
   error: { Icon: XCircle, color: "#E11D48", bg: "#FFF1F2" },
   loading: { Icon: Loader2, color: "#7C3AED", bg: "#F5F3FF" },
   blank: { Icon: AlertTriangle, color: "#7C3AED", bg: "#F5F3FF" },
