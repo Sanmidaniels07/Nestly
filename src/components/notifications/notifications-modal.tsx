@@ -1,6 +1,12 @@
 "use client";
 
-import { RefObject, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  RefObject,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 
@@ -11,6 +17,8 @@ interface Props {
   onClose: () => void;
   anchorRef: RefObject<HTMLButtonElement | null>;
 }
+
+const EDGE_GAP = 16;
 
 export default function NotificationsModal({ open, onClose, anchorRef }: Props) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -27,12 +35,9 @@ export default function NotificationsModal({ open, onClose, anchorRef }: Props) 
     const updatePosition = () => {
       if (!anchorRef.current) return;
       const rect = anchorRef.current.getBoundingClientRect();
-      // Anchor to the bell's bottom-right corner and grow down-left — the
-      // trigger sits in the top navbar, so opening downward keeps it on
-      // screen regardless of scroll position.
       setPosition({
         top: rect.bottom + 8,
-        right: Math.max(16, window.innerWidth - rect.right),
+        right: Math.max(EDGE_GAP, window.innerWidth - rect.right),
       });
     };
 
@@ -49,12 +54,13 @@ export default function NotificationsModal({ open, onClose, anchorRef }: Props) 
   useEffect(() => {
     if (!open) return;
 
-    const handleClickOutside = (e: MouseEvent) => {
+    const handleClickOutside = (e: PointerEvent) => {
+      const target = e.target as Node;
       if (
         panelRef.current &&
-        !panelRef.current.contains(e.target as Node) &&
+        !panelRef.current.contains(target) &&
         anchorRef.current &&
-        !anchorRef.current.contains(e.target as Node)
+        !anchorRef.current.contains(target)
       ) {
         onClose();
       }
@@ -64,22 +70,36 @@ export default function NotificationsModal({ open, onClose, anchorRef }: Props) 
       if (e.key === "Escape") onClose();
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("pointerdown", handleClickOutside);
     window.addEventListener("keydown", handleKey);
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("pointerdown", handleClickOutside);
       window.removeEventListener("keydown", handleKey);
     };
   }, [open, onClose, anchorRef]);
 
   if (!mounted || !open || !position) return null;
 
+  const style = {
+    "--panel-top": `${position.top}px`,
+    "--panel-right": `${position.right}px`,
+  } as CSSProperties;
+
   return createPortal(
     <div
       ref={panelRef}
-      style={{ top: position.top, right: position.right }}
-      className="fixed z-[200] w-[min(24rem,calc(100vw-2rem))] max-h-[calc(100vh-6rem)] overflow-y-auto rounded-2xl border border-[#ECE9F6] bg-white shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]"
+      role="dialog"
+      aria-label="Notifications"
+      style={style}
+      className={[
+        "fixed z-[200] top-[var(--panel-top)]",
+        "inset-x-4",
+        "sm:inset-x-auto sm:right-[var(--panel-right)] sm:w-96",
+        "max-h-[calc(100dvh-6rem)] overflow-y-auto",
+        "rounded-2xl border border-[#ECE9F6] bg-white",
+        "shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]",
+      ].join(" ")}
     >
       <button
         onClick={onClose}
