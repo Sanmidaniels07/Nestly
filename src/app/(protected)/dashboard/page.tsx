@@ -11,12 +11,17 @@ import MarketplacePicks from "./marketplace-widget";
 import RecentActivity from "./recent-activity";
 import SuggestedUsers from "./suggested-users";
 import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
+import DashboardSkeleton from "./dashboard-skeleton";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
   const { data, isLoading, isError } = usePosts({ sort: "desc" });
 
   const posts = data?.pages[0]?.data.posts ?? [];
+
+  if (isLoading) {
+    return <DashboardSkeleton />;
+  }
 
   return (
     <div className="mx-auto max-w-7xl space-y-10 pb-20 pt-6">
@@ -42,7 +47,10 @@ export default function DashboardPage() {
                 className="group flex shrink-0 items-center gap-1.5 text-[13.5px] font-semibold text-violet-600 hover:underline"
               >
                 View full feed
-                <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />
+                <ArrowRight
+                  size={15}
+                  className="transition-transform group-hover:translate-x-0.5"
+                />
               </Link>
             </div>
 
@@ -57,7 +65,10 @@ export default function DashboardPage() {
 
               {!isLoading && !isError && posts.length === 0 && (
                 <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-                  <Newspaper className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
+                  <Newspaper
+                    className="mx-auto h-8 w-8 text-[#C4C0DC]"
+                    strokeWidth={1.5}
+                  />
                   <p className="mt-4 text-[13.5px] text-[#94A3B8]">
                     No posts yet. Be the first to share something.
                   </p>

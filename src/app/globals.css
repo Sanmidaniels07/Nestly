@@ -12,7 +12,7 @@
   /* BdayConnect Brand Colors */
   --primary: #2b7fff;
   --primary-foreground: #ffffff;
-  --accent: #8b5cf6;
+  --accent: #491b9f;
   --highlight: #ff7a45;
   --success: #10b981;
 }
@@ -27,7 +27,7 @@
   --muted-foreground: #94a3b8;
 
   --primary: #3b82f6;
-  --accent: #a855f7;
+  --accent: #6d2fc7;
   --highlight: #fb923c;
 }
 
@@ -118,7 +118,10 @@ body {
   border-radius: 8px;
   color: #94a3b8;
   opacity: 0;
-  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
 }
 .toast-card:hover .toast-close {
   opacity: 1;
@@ -199,5 +202,21 @@ body {
   .toast-progress,
   .toast-spin {
     animation: none !important;
+  }
+}
+
+
+.spinner-rotate {
+  animation: spinner-spin 0.9s linear infinite;
+}
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spinner-rotate {
+    animation-duration: 2.2s;
   }
 }
