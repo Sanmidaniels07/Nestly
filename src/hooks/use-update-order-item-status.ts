@@ -13,9 +13,10 @@ export const useUpdateOrderItemStatus = () => {
   return useMutation<
     unknown,
     AxiosError<ApiErrorResponse>,
-    { orderItemId: string; status: string }
+    { orderItemId: string; status: string; deliveryCode?: string }
   >({
-    mutationFn: ({ orderItemId, status }) => updateOrderItemStatus(orderItemId, status),
+    mutationFn: ({ orderItemId, status, deliveryCode }) =>
+      updateOrderItemStatus(orderItemId, status, deliveryCode),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["seller-orders"] });

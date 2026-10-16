@@ -19,32 +19,35 @@ export default function DashboardSkeleton() {
         </div>
       </div>
 
-      {/* Quick actions */}
-      <section>
-        <div className="mb-6 space-y-2">
-          <Skeleton className="h-3 w-24" />
-          <Skeleton className="h-8 w-44" />
-        </div>
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-2xl border border-line bg-surface p-7">
-              <div className="flex items-start justify-between">
-                <Skeleton className="h-14 w-14 rounded-2xl" />
-                <Skeleton className="h-4 w-4 rounded-full" />
-              </div>
-              <Skeleton className="mt-6 h-4 w-2/3" />
-              <div className="mt-3 space-y-2">
-                <Skeleton className="h-3 w-full" />
-                <Skeleton className="h-3 w-4/5" />
-              </div>
+      {/* Stat tiles */}
+      <section className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
+            <div className="flex items-center justify-between">
+              <Skeleton className="h-3.5 w-20" />
+              <Skeleton className="h-8 w-8 rounded-lg" />
             </div>
-          ))}
-        </div>
+            <Skeleton className="mt-3 h-7 w-16" />
+            <Skeleton className="mt-2 h-3 w-24" />
+          </div>
+        ))}
       </section>
 
       {/* Feed + sidebar */}
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-8">
+          {/* Activity chart */}
+          <div className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
+            <div className="flex items-end justify-between">
+              <div className="space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-7 w-36" />
+              </div>
+              <Skeleton className="h-8 w-32 rounded-xl" />
+            </div>
+            <Skeleton className="mt-6 h-[240px] w-full rounded-xl sm:h-[280px]" />
+          </div>
+
           <div className="rounded-2xl border border-line bg-surface p-7 sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div className="space-y-2">

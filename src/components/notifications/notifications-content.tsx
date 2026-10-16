@@ -36,6 +36,10 @@ function targetHref(notification: Notification): string | null {
       return "/admin?tab=sellers";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":
       return "/admin?tab=payouts";
+    case "ORDER":
+      return notification.targetId ? `/marketplace/orders/${notification.targetId}` : "/marketplace/orders";
+    case "SELLER_ORDER":
+      return "/settings/marketplace?tab=orders";
     default:
       return null;
   }

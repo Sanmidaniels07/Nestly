@@ -11,6 +11,7 @@ import OrderSummary from "./components/order-summary";
 import OrderActions from "./components/order-actions";
 import OrderTimeline from "./components/order-timeline";
 import OrderedProducts from "./components/ordered-products";
+import DeliveryCodes from "./components/delivery-codes";
 import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
@@ -55,6 +56,7 @@ export default function OrderDetailsPage({ params }: Props) {
 
       <div className="grid gap-6 xl:grid-cols-[1.7fr_420px]">
         <section className="space-y-5">
+          <DeliveryCodes order={order} />
           <OrderedProducts order={order} />
 
           {order.address && <ShippingAddress address={order.address} />}

@@ -1,6 +1,8 @@
 import { Address } from "./address";
 import { Product } from "./product";
 
+export type DeliveryConfirmation = "CODE" | "BUYER" | "AUTO";
+
 export interface OrderItem {
   id: string;
   productId: string;
@@ -10,6 +12,14 @@ export interface OrderItem {
   unitPrice: number;
   totalPrice: number;
   status?: string;
+  shippedAt?: string | null;
+  deliveredAt?: string | null;
+  deliveryConfirmedAt?: string | null;
+  deliveryConfirmedBy?: DeliveryConfirmation | null;
+  // Buyer-facing only: delivered by the seller but not yet confirmed.
+  awaitingConfirmation?: boolean;
+  returnWindowEndsAt?: string | null;
+  returnWindowOpen?: boolean;
 }
 
 export interface OrderShipping {
@@ -18,15 +28,36 @@ export interface OrderShipping {
   storeId: string;
   optionName: string;
   fee: number;
-  etaDays?: number | null;
+  eta?: string | null;
+  // Only ever present on the buyer's own order.
+  deliveryCode?: string | null;
+  createdAt: string;
+}
+
+export type OrderEventType =
+  | "PLACED"
+  | "PAID"
+  | "PROCESSING"
+  | "SHIPPED"
+  | "DELIVERED"
+  | "CONFIRMED"
+  | "CANCELLED"
+  | "PROBLEM_REPORTED";
+
+export interface OrderEvent {
+  id: string;
+  orderItemId: string | null;
+  type: OrderEventType;
+  actor: "BUYER" | "SELLER" | "SYSTEM";
+  note: string | null;
   createdAt: string;
 }
 
 export interface OrderTimelineEntry {
-  title: string;
-  description?: string;
-  date: string;
+  step: string;
   completed: boolean;
+  current: boolean;
+  at: string | null;
 }
 
 export interface Order {
@@ -45,6 +76,7 @@ export interface Order {
   paymentReference?: string;
   paymentMethod?: string;
   timeline?: OrderTimelineEntry[];
+  events?: OrderEvent[];
   createdAt: string;
   updatedAt: string;
 }

@@ -1,6 +1,6 @@
 import { api } from "../lib/axios";
 import { ApiResponse, Paginated } from "../types/api";
-import { Order, OrderListParams } from "../types/order";
+import { Order, OrderItem, OrderListParams } from "../types/order";
 
 export const getOrders = async (params: OrderListParams) => {
   const response = await api.get<ApiResponse<Paginated<"orders", Order>>>("/orders", {
@@ -32,10 +32,17 @@ export const getSellerOrder = async (id: string) => {
   return response.data;
 };
 
-export const updateOrderItemStatus = async (orderItemId: string, status: string) => {
+export const updateOrderItemStatus = async (orderItemId: string, status: string, deliveryCode?: string) => {
   const response = await api.patch<ApiResponse<Order>>(
     `/orders/seller/items/${orderItemId}/status`,
-    { status }
+    { status, ...(deliveryCode && { deliveryCode }) }
+  );
+  return response.data;
+};
+
+export const confirmDelivery = async (orderItemId: string) => {
+  const response = await api.post<ApiResponse<OrderItem>>(
+    `/orders/items/${orderItemId}/confirm-delivery`
   );
   return response.data;
 };
