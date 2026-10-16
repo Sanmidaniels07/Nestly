@@ -3,7 +3,13 @@ import "./globals.css";
 import Providers from "./providers";
 import { fraunces, jetbrainsMono } from "@/src/lib/fonts";
 import AppToaster from "../components/ui/toaster";
+import EnvironmentBadge from "../components/ui/environment-badge";
+import { isStaging } from "../lib/environment";
+import type { Metadata } from "next";
 
+// Staging pages carry noindex as well as robots.txt disallowing them, so a
+// shared staging link can't end up in search results.
+export const metadata: Metadata = isStaging ? { robots: { index: false, follow: false } } : {};
 
 export default function RootLayout({
   children,
@@ -19,6 +25,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <AppToaster />
+        <EnvironmentBadge />
       </body>
     </html>
   );
