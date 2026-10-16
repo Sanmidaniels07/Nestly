@@ -18,8 +18,8 @@ export default function DeliveryTimeline({ status }: Props) {
   const activeIndex = steps.findIndex((s) => s.key === status);
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
         Delivery progress
       </h2>
 
@@ -40,8 +40,8 @@ export default function DeliveryTimeline({ status }: Props) {
                       isDone
                         ? "bg-violet-600 text-white"
                         : isActive
-                        ? "bg-violet-600 text-white ring-4 ring-violet-100"
-                        : "bg-[#F1F0F5] text-[#94A3B8]"
+                        ? "bg-violet-600 text-white ring-4 ring-violet-100 dark:ring-violet-500/20"
+                        : "bg-surface-muted text-subtle"
                     }
                   `}
                 >
@@ -50,7 +50,7 @@ export default function DeliveryTimeline({ status }: Props) {
 
                 <p
                   className={`mt-2.5 text-[12.5px] font-medium ${
-                    isUpcoming ? "text-[#94A3B8]" : "text-[#13131A]"
+                    isUpcoming ? "text-subtle" : "text-ink"
                   }`}
                 >
                   {step.label}
@@ -60,7 +60,7 @@ export default function DeliveryTimeline({ status }: Props) {
               {index < steps.length - 1 && (
                 <div
                   className={`mx-2 h-[3px] flex-1 rounded-full transition-colors ${
-                    index < activeIndex ? "bg-violet-600" : "bg-[#ECE9F6]"
+                    index < activeIndex ? "bg-violet-600" : "bg-track"
                   }`}
                 />
               )}

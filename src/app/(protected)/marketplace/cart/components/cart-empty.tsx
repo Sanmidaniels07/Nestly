@@ -5,16 +5,16 @@ import { ShoppingBag } from "lucide-react";
 
 export default function CartEmpty() {
   return (
-    <section className="rounded-2xl border border-dashed border-[#D7D3F4] bg-white px-10 py-16 text-center">
-      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-violet-50">
-        <ShoppingBag size={28} className="text-violet-700" />
+    <section className="rounded-2xl border border-dashed border-line-strong bg-surface px-10 py-16 text-center">
+      <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+        <ShoppingBag size={28} className="text-violet-700 dark:text-violet-300" />
       </div>
 
-      <h2 className="mt-6 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+      <h2 className="mt-6 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
         Your cart is empty
       </h2>
 
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+      <p className="mt-2.5 text-[13.5px] text-muted">
         Looks like you haven&apos;t added anything yet.
       </p>
 

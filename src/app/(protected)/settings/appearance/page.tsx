@@ -28,17 +28,17 @@ export default function SettingsAppearancePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
           Appearance
         </h2>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Choose how Nestly looks on this device.
         </p>
       </div>
 
-      <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-        <h3 className="text-[15px] font-semibold text-[#13131A]">Theme</h3>
-        <p className="mt-1 text-[13px] text-[#64748B]">
+      <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+        <h3 className="text-[15px] font-semibold text-ink">Theme</h3>
+        <p className="mt-1 text-[13px] text-muted">
           This only affects your view — it&apos;s saved to this browser.
         </p>
 

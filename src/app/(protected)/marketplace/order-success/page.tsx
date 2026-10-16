@@ -29,7 +29,7 @@ function OrderSuccessContent() {
   if (!order) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-16 text-center">
-        <p className="text-[15px] font-medium text-[#13131A]">Order not found</p>
+        <p className="text-[15px] font-medium text-ink">Order not found</p>
       </div>
     );
   }

@@ -39,23 +39,23 @@ export default function CouponsManager() {
       {isLoading ? (
         <TableSkeleton rows={5} cols={4} />
       ) : coupons.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <Ticket className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] text-[#94A3B8]">No coupons yet.</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <Ticket className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[13.5px] text-subtle">No coupons yet.</p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+        <div className="overflow-hidden rounded-2xl border border-line bg-surface">
           <table className="w-full text-left">
-            <thead className="border-b border-[#F2F1F8] bg-[#FAFAFD]">
+            <thead className="border-b border-line-soft bg-surface-sunken">
               <tr>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">Code</th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">Value</th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">Usage</th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">Status</th>
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">Code</th>
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">Value</th>
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">Usage</th>
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">Status</th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F2F1F8]">
+            <tbody className="divide-y divide-line-soft">
               {coupons.map((coupon) => (
                 <CouponRow key={coupon.id} coupon={coupon} />
               ))}
@@ -76,18 +76,18 @@ function CouponRow({ coupon }: { coupon: Coupon }) {
 
   return (
     <tr>
-      <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-[#13131A]">
+      <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-ink">
         {coupon.code}
       </td>
-      <td className="px-5 py-4 text-[13px] text-[#334155]">{formatValue(coupon)}</td>
-      <td className="px-5 py-4 text-[12.5px] text-[#64748B]">
+      <td className="px-5 py-4 text-[13px] text-ink-2">{formatValue(coupon)}</td>
+      <td className="px-5 py-4 text-[12.5px] text-muted">
         {coupon.usedCount}
         {coupon.usageLimit ? ` / ${coupon.usageLimit}` : ""}
       </td>
       <td className="px-5 py-4">
         <span
           className={`rounded-full px-2.5 py-1 text-[11.5px] font-semibold ${
-            coupon.isActive ? "bg-emerald-50 text-emerald-700" : "bg-[#F1F0F5] text-[#64748B]"
+            coupon.isActive ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "bg-surface-muted text-muted"
           }`}
         >
           {coupon.isActive ? "Active" : "Inactive"}
@@ -97,7 +97,7 @@ function CouponRow({ coupon }: { coupon: Coupon }) {
         <button
           onClick={() => updateCoupon({ id: coupon.id, data: { isActive: !coupon.isActive } })}
           disabled={isPending}
-          className="rounded-lg border border-[#E5E7EB] px-3 py-1.5 text-[12px] font-semibold text-[#334155] transition-colors hover:bg-gray-50 disabled:opacity-50"
+          className="rounded-lg border border-line-strong px-3 py-1.5 text-[12px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken disabled:opacity-50"
         >
           {coupon.isActive ? "Deactivate" : "Activate"}
         </button>
@@ -141,8 +141,8 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
         Create coupon
       </h2>
 
@@ -155,11 +155,11 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
         />
 
         <div>
-          <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">Type</label>
+          <label className="mb-2 block text-[13.5px] font-medium text-ink-2">Type</label>
           <select
             value={type}
             onChange={(e) => setType(e.target.value as CouponType)}
-            className="h-12 w-full rounded-xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+            className="h-12 w-full rounded-xl border border-line-strong bg-surface-sunken px-4 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
           >
             <option value="PERCENTAGE">Percentage</option>
             <option value="FIXED">Fixed amount</option>

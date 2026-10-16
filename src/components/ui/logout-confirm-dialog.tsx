@@ -38,14 +38,14 @@ export default function LogoutConfirmDialog({ open, onClose }: Props) {
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-sm rounded-2xl border border-[#ECE9F6] bg-white p-6 shadow-2xl"
+        className="w-full max-w-sm rounded-2xl border border-line bg-surface p-6 shadow-2xl"
       >
-        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50">
+        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
           <AlertTriangle size={22} className="text-red-500" />
         </div>
 
-        <h2 className="mt-4 text-[17px] font-semibold text-[#13131A]">Log out?</h2>
-        <p className="mt-1.5 text-[13.5px] text-[#64748B]">
+        <h2 className="mt-4 text-[17px] font-semibold text-ink">Log out?</h2>
+        <p className="mt-1.5 text-[13.5px] text-muted">
           You&apos;ll need to sign in again to access your account.
         </p>
 
@@ -53,7 +53,7 @@ export default function LogoutConfirmDialog({ open, onClose }: Props) {
           <button
             onClick={onClose}
             disabled={isPending}
-            className="flex-1 rounded-xl border border-[#ECE9F6] py-2.5 text-[13.5px] font-semibold text-[#334155] transition-colors hover:bg-[#F7F7FB] disabled:opacity-50"
+            className="flex-1 rounded-xl border border-line py-2.5 text-[13.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-2 disabled:opacity-50"
           >
             Cancel
           </button>

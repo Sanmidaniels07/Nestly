@@ -69,7 +69,7 @@ export default function OrdersPage() {
       {!isLoading && !isError && (
         <>
           {filteredOrders.length > 0 && (
-            <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+            <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
               {filteredOrders.length} order{filteredOrders.length !== 1 ? "s" : ""}
             </p>
           )}

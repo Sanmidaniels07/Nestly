@@ -14,10 +14,10 @@ export default function ProfileMarketSection({ title, subtitle, items }: Props) 
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
           {title}
         </h2>
-        <p className="text-[13.5px] text-[#94A3B8]">{subtitle}</p>
+        <p className="text-[13.5px] text-subtle">{subtitle}</p>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">

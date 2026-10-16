@@ -45,11 +45,11 @@ export default function ProductGallery({ product }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="relative overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+      <div className="relative overflow-hidden rounded-2xl border border-line bg-surface">
         <button
           onClick={() => setZoomed(true)}
           aria-label="Expand image"
-          className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition-transform hover:scale-105"
+          className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-surface/90 shadow-md backdrop-blur transition-transform hover:scale-105"
         >
           <Expand size={16} />
         </button>
@@ -63,14 +63,14 @@ export default function ProductGallery({ product }: Props) {
             <button
               onClick={() => goTo(activeIndex - 1)}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition-transform hover:scale-105"
+              className="absolute left-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface/90 shadow-md backdrop-blur transition-transform hover:scale-105"
             >
               <ChevronLeft size={17} />
             </button>
             <button
               onClick={() => goTo(activeIndex + 1)}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur transition-transform hover:scale-105"
+              className="absolute right-3 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-surface/90 shadow-md backdrop-blur transition-transform hover:scale-105"
             >
               <ChevronRight size={17} />
             </button>
@@ -116,7 +116,7 @@ export default function ProductGallery({ product }: Props) {
                 onClick={() => setActiveIndex(index)}
                 className={`
                   relative h-20 w-20 shrink-0 overflow-hidden rounded-xl border-2 transition-colors
-                  ${active ? "border-violet-600" : "border-transparent hover:border-violet-200"}
+                  ${active ? "border-violet-600" : "border-transparent hover:border-violet-200 dark:hover:border-violet-500/30"}
                 `}
               >
                 <Image fill src={image.url} alt="" className="object-cover" />

@@ -15,7 +15,7 @@ export function ProfileHeaderSkeleton() {
         <Skeleton className="h-3.5 w-28" />
       </div>
 
-      <div className="grid grid-cols-3 gap-4 border-t border-[#F2F1F8] pt-5 md:px-10">
+      <div className="grid grid-cols-3 gap-4 border-t border-line-soft pt-5 md:px-10">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex flex-col items-center gap-2">
             <Skeleton className="h-4 w-10" />
@@ -29,7 +29,7 @@ export function ProfileHeaderSkeleton() {
 
 export function UserProfileHeaderSkeleton() {
   return (
-    <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+    <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
       <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
         <Skeleton className="h-24 w-24 shrink-0 rounded-full" />
 
@@ -40,7 +40,7 @@ export function UserProfileHeaderSkeleton() {
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-3 divide-x divide-[#F0EEF9] border-t border-[#F2F1F8] pt-6">
+      <div className="mt-6 grid grid-cols-3 divide-x divide-line-soft border-t border-line-soft pt-6">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex flex-col items-center gap-2">
             <Skeleton className="h-4 w-10" />

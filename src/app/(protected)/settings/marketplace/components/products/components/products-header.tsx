@@ -11,10 +11,10 @@ export default function ProductsHeader() {
   return (
     <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
-        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Catalog
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-[#13131A] sm:text-[40px]">
+        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-ink sm:text-[40px]">
           Products
         </h1>
       </div>
@@ -23,7 +23,7 @@ export default function ProductsHeader() {
         <button
           onClick={() => exportCsv()}
           disabled={isExporting}
-          className="flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E5E7EB] px-4 text-[13.5px] font-medium text-[#334155] transition-colors hover:border-violet-200 hover:text-violet-700 disabled:opacity-50"
+          className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line-strong px-4 text-[13.5px] font-medium text-ink-2 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
         >
           <Download size={15} />
           {isExporting ? "Exporting..." : "Export CSV"}

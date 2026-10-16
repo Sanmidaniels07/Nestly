@@ -13,11 +13,11 @@ export default function EditProfileCover({ cover, onChange, onRemove }: EditProf
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="group relative h-52 w-full overflow-hidden rounded-t-2xl bg-[#F0EEF9] sm:h-64">
+    <div className="group relative h-52 w-full overflow-hidden rounded-t-2xl bg-surface-muted sm:h-64">
       {cover ? (
         <img src={cover} alt="Cover" className="h-full w-full object-cover" />
       ) : (
-        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-violet-100 to-indigo-100">
+        <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-violet-100 dark:from-violet-500/15 to-indigo-100 dark:to-indigo-500/15">
           <span className="text-[13px] font-medium text-violet-400">No cover photo</span>
         </div>
       )}
@@ -26,7 +26,7 @@ export default function EditProfileCover({ cover, onChange, onRemove }: EditProf
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-[13.5px] font-semibold text-[#13131A] shadow-lg transition-transform hover:scale-105"
+          className="flex items-center gap-2 rounded-full bg-surface px-4 py-2.5 text-[13.5px] font-semibold text-ink shadow-lg transition-transform hover:scale-105"
         >
           <Camera size={16} />
           Change cover
@@ -52,7 +52,7 @@ export default function EditProfileCover({ cover, onChange, onRemove }: EditProf
           type="button"
           onClick={() => inputRef.current?.click()}
           aria-label="Change cover"
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-[#13131A] shadow-lg backdrop-blur-sm"
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-ink shadow-lg backdrop-blur-sm"
         >
           <Camera size={15} />
         </button>
@@ -62,7 +62,7 @@ export default function EditProfileCover({ cover, onChange, onRemove }: EditProf
             type="button"
             onClick={onRemove}
             aria-label="Remove cover"
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 text-red-500 shadow-lg backdrop-blur-sm"
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 text-red-500 shadow-lg backdrop-blur-sm"
           >
             <Trash2 size={15} />
           </button>

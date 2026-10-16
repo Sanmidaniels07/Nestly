@@ -33,7 +33,7 @@ export default function SpecificationRow({ specification, onChange, onDelete, ca
         onClick={() => onDelete(specification.id)}
         disabled={!canDelete}
         aria-label="Remove specification"
-        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl border border-red-100 bg-red-50 text-red-600 transition-colors hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-red-50"
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl border border-red-100 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-500/15 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-red-50 dark:disabled:hover:bg-red-500/10"
       >
         <Trash2 size={17} />
       </button>

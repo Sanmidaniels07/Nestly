@@ -46,7 +46,7 @@ export default function ProfileMedia() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-subtle">
         Loading media...
       </div>
     );
@@ -63,12 +63,12 @@ export default function ProfileMedia() {
       />
 
       {media.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">
-          <ImageOff className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[15px] font-medium text-[#13131A]">
+        <div className="rounded-2xl border border-dashed border-line-strong bg-surface/60 px-8 py-16 text-center">
+          <ImageOff className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[15px] font-medium text-ink">
             No {filter.toLowerCase()} yet
           </p>
-          <p className="mt-1 text-[14px] text-[#64748B]">
+          <p className="mt-1 text-[14px] text-muted">
             Media you share will show up here.
           </p>
         </div>

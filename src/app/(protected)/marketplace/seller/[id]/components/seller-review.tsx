@@ -18,18 +18,18 @@ export default function SellerReviews({ rating, reviews, total, isOwner }: Props
   return (
     <section className="space-y-6">
       <div>
-        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Customer reviews
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
           What buyers say
         </h2>
       </div>
 
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+      <div className="rounded-2xl border border-line bg-surface p-6">
         <div className="flex flex-col gap-6 lg:flex-row">
           <div className="lg:w-56">
-            <p className="font-[family-name:var(--font-mono)] text-[44px] font-bold leading-none text-violet-700">
+            <p className="font-[family-name:var(--font-mono)] text-[44px] font-bold leading-none text-violet-700 dark:text-violet-300">
               {rating ?? "—"}
             </p>
 
@@ -41,20 +41,20 @@ export default function SellerReviews({ rating, reviews, total, isOwner }: Props
                   className={
                     rating && index < Math.round(rating)
                       ? "fill-yellow-400 text-yellow-400"
-                      : "text-[#E5E7EB]"
+                      : "text-faint"
                   }
                 />
               ))}
             </div>
 
-            <p className="mt-3 font-[family-name:var(--font-mono)] text-[12.5px] text-[#64748B]">
+            <p className="mt-3 font-[family-name:var(--font-mono)] text-[12.5px] text-muted">
               Based on {total} review{total !== 1 ? "s" : ""}
             </p>
           </div>
 
           <div className="flex-1 space-y-4">
             {reviews.length === 0 && (
-              <p className="text-[13.5px] text-[#94A3B8]">No reviews yet.</p>
+              <p className="text-[13.5px] text-subtle">No reviews yet.</p>
             )}
 
             {reviews.map((review) => (
@@ -78,12 +78,12 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
   };
 
   return (
-    <div className="rounded-xl border border-[#ECE9F6] p-4">
+    <div className="rounded-xl border border-line p-4">
       <div className="flex gap-3.5">
         <AuthorAvatarLink author={review.user} size={44} />
 
         <div className="min-w-0 flex-1">
-          <h4 className="text-[14px] font-semibold text-[#13131A]">
+          <h4 className="text-[14px] font-semibold text-ink">
             <AuthorNameLink author={review.user} />
           </h4>
 
@@ -93,31 +93,31 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
                 <Star key={index} size={12} className="fill-yellow-400 text-yellow-400" />
               ))}
             </div>
-            <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+            <span className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
               {formatRelativeTime(review.createdAt)}
             </span>
           </div>
 
           {review.productTitle && (
-            <p className="mt-2 text-[12.5px] font-medium text-violet-600">
+            <p className="mt-2 text-[12.5px] font-medium text-violet-600 dark:text-violet-400">
               Purchased: {review.productTitle}
             </p>
           )}
 
           {review.comment && (
-            <p className="mt-2.5 text-[13.5px] leading-relaxed text-[#475569]">
+            <p className="mt-2.5 text-[13.5px] leading-relaxed text-ink-3">
               {review.comment}
             </p>
           )}
 
           {review.reply && (
-            <div className="mt-3 flex gap-2.5 rounded-xl bg-[#F8F8FC] p-3.5">
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-600">
+            <div className="mt-3 flex gap-2.5 rounded-xl bg-surface-sunken p-3.5">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15 text-violet-600 dark:text-violet-400">
                 <Store size={13} />
               </div>
               <div className="min-w-0">
-                <p className="text-[12px] font-semibold text-[#13131A]">Seller response</p>
-                <p className="mt-0.5 text-[13px] leading-relaxed text-[#475569]">
+                <p className="text-[12px] font-semibold text-ink">Seller response</p>
+                <p className="mt-0.5 text-[13px] leading-relaxed text-ink-3">
                   {review.reply}
                 </p>
               </div>
@@ -133,12 +133,12 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
                     onChange={(e) => setText(e.target.value)}
                     rows={2}
                     placeholder="Write a public response..."
-                    className="w-full resize-none rounded-xl border border-[#E4E6EB] px-3.5 py-2.5 text-[13px] text-[#13131A] outline-none focus:border-violet-400"
+                    className="w-full resize-none rounded-xl border border-line-strong px-3.5 py-2.5 text-[13px] text-ink outline-none focus:border-violet-400"
                   />
                   <div className="flex gap-2">
                     <button
                       onClick={() => setReplying(false)}
-                      className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-[#64748B] hover:bg-gray-100"
+                      className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted"
                     >
                       Cancel
                     </button>
@@ -154,7 +154,7 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
               ) : (
                 <button
                   onClick={() => setReplying(true)}
-                  className="flex items-center gap-1.5 text-[12.5px] font-medium text-violet-600 hover:underline"
+                  className="flex items-center gap-1.5 text-[12.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
                 >
                   <MessageCircle size={13} />
                   Reply as seller

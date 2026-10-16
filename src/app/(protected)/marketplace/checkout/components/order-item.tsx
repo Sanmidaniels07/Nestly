@@ -9,16 +9,16 @@ export default function OrderItems() {
   const { data: items, isLoading } = useCart();
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <section className="rounded-2xl border border-line bg-surface p-6">
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <Package size={16} className="text-violet-600" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <Package size={16} className="text-violet-600 dark:text-violet-400" />
         </div>
         <div>
-          <h2 className="text-[15px] font-semibold text-[#13131A]">
+          <h2 className="text-[15px] font-semibold text-ink">
             Order items
           </h2>
-          <p className="text-[13px] text-[#64748B]">
+          <p className="text-[13px] text-muted">
             Review the products you&apos;re purchasing.
           </p>
         </div>
@@ -39,10 +39,10 @@ export default function OrderItems() {
       )}
 
       {!isLoading && (!items || items.length === 0) ? (
-        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-10 text-center">
-          <ShoppingBag size={28} className="text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">Your cart is empty</p>
-          <p className="mt-1 text-[12.5px] text-[#94A3B8]">Add items to your cart before checking out.</p>
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong py-10 text-center">
+          <ShoppingBag size={28} className="text-faint" strokeWidth={1.5} />
+          <p className="mt-3 text-[13.5px] font-medium text-ink">Your cart is empty</p>
+          <p className="mt-1 text-[12.5px] text-subtle">Add items to your cart before checking out.</p>
         </div>
       ) : (
         <div className="space-y-3">

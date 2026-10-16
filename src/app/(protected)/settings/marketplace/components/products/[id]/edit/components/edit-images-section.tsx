@@ -93,11 +93,11 @@ export default function EditImagesSection({ draft, setDraft }: Props) {
   }, []);
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Product images
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Clear, well-lit photos help buyers trust your listing.
       </p>
 
@@ -110,10 +110,10 @@ export default function EditImagesSection({ draft, setDraft }: Props) {
       </div>
 
       {draft.images.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-10 text-center">
-          <ImageOff size={26} className="text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No images yet</p>
-          <p className="mt-1 text-[12.5px] text-[#94A3B8]">Add at least one image.</p>
+        <div className="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong py-10 text-center">
+          <ImageOff size={26} className="text-faint" strokeWidth={1.5} />
+          <p className="mt-3 text-[13.5px] font-medium text-ink">No images yet</p>
+          <p className="mt-1 text-[12.5px] text-subtle">Add at least one image.</p>
         </div>
       ) : (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

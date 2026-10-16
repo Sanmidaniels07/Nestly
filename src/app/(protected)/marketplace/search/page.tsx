@@ -27,13 +27,13 @@ function SearchPageContent() {
       <div className="space-y-4">
         <Link
           href="/marketplace"
-          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 hover:underline"
+          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
         >
           <ArrowLeft size={15} />
           Back to marketplace
         </Link>
 
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[36px] italic text-[#13131A] sm:text-[42px]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
           Search products
         </h1>
       </div>
@@ -53,14 +53,14 @@ function SearchPageContent() {
       )}
 
       {isError && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
+        <div className="rounded-2xl border border-line bg-surface py-16 text-center text-[13.5px] text-red-500">
           Couldn&apos;t load results. Please try again.
         </div>
       )}
 
       {!isLoading && !isError && data?.products.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken py-16 text-center">
+          <p className="text-[13.5px] text-subtle">
             {search ? "No products match your search." : "Start typing to search products."}
           </p>
         </div>

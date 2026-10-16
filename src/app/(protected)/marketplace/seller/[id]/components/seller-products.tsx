@@ -19,14 +19,14 @@ function formatPrice(price: number) {
 export default function SellerProducts({ products }: Props) {
   return (
     <section className="space-y-6">
-      <div className="border-b border-dashed border-[#ECE9F6] pb-6">
-        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+      <div className="border-b border-dashed border-line pb-6">
+        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Store products
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
           Products
         </h2>
-        <p className="mt-1.5 text-[13px] text-[#64748B]">
+        <p className="mt-1.5 text-[13px] text-muted">
           {products.length} product{products.length !== 1 ? "s" : ""} available
         </p>
       </div>
@@ -42,9 +42,9 @@ export default function SellerProducts({ products }: Props) {
               <Link
                 key={product.id}
                 href={`/marketplace/product/${product.id}`}
-                className="overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white transition-all hover:-translate-y-1 hover:border-violet-200 hover:shadow-xl"
+                className="overflow-hidden rounded-2xl border border-line bg-surface transition-all hover:-translate-y-1 hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-xl"
               >
-                <div className="relative aspect-square bg-[#F8F8FC]">
+                <div className="relative aspect-square bg-surface-sunken">
                   {primaryImage && (
                     <Image
                       src={primaryImage}
@@ -55,10 +55,10 @@ export default function SellerProducts({ products }: Props) {
                   )}
                 </div>
                 <div className="space-y-1.5 p-4">
-                  <h3 className="line-clamp-1 text-[14px] font-medium text-[#13131A]">
+                  <h3 className="line-clamp-1 text-[14px] font-medium text-ink">
                     {product.title}
                   </h3>
-                  <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700">
+                  <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700 dark:text-violet-300">
                     {formatPrice(product.price)}
                   </p>
                 </div>
@@ -67,8 +67,8 @@ export default function SellerProducts({ products }: Props) {
           })}
         </div>
       ) : (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">This store has no products yet.</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken py-16 text-center">
+          <p className="text-[13.5px] text-subtle">This store has no products yet.</p>
         </div>
       )}
     </section>

@@ -28,7 +28,7 @@ export default function Sidebar() {
   );
 
   return (
-    <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px] flex-col border-r border-[#ECE9F6] bg-white/80 backdrop-blur-2xl lg:flex">
+    <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px] flex-col border-r border-line bg-surface/80 backdrop-blur-2xl lg:flex">
       <nav className="hover-scroll flex-1 space-y-1 overflow-y-auto px-4 py-6">
         {visibleNavigation.map((item) => {
           const active = isActive(item.href);
@@ -44,8 +44,8 @@ export default function Sidebar() {
                   className={cn(
                     "group relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
                     settingsOpen || pathname.startsWith("/settings")
-                      ? "bg-violet-50 text-violet-700"
-                      : "text-[#64748B] hover:bg-[#F7F7FB] hover:text-[#13131A]"
+                      ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300"
+                      : "text-muted hover:bg-surface-2 hover:text-ink"
                   )}
                 >
                   {(settingsOpen || pathname.startsWith("/settings")) && (
@@ -55,8 +55,8 @@ export default function Sidebar() {
                     size={19}
                     className={
                       settingsOpen || pathname.startsWith("/settings")
-                        ? "text-violet-600"
-                        : "text-[#94A3B8] group-hover:text-violet-600"
+                        ? "text-violet-600 dark:text-violet-400"
+                        : "text-subtle group-hover:text-violet-600 dark:group-hover:text-violet-400"
                     }
                   />
                   <span>{item.title}</span>
@@ -82,8 +82,8 @@ export default function Sidebar() {
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
                 active
-                  ? "bg-violet-50 text-violet-700"
-                  : "text-[#64748B] hover:bg-[#F7F7FB] hover:text-[#13131A]"
+                  ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300"
+                  : "text-muted hover:bg-surface-2 hover:text-ink"
               )}
             >
               {active && (
@@ -91,7 +91,7 @@ export default function Sidebar() {
               )}
               <item.icon
                 size={19}
-                className={active ? "text-violet-600" : "text-[#94A3B8] group-hover:text-violet-600"}
+                className={active ? "text-violet-600 dark:text-violet-400" : "text-subtle group-hover:text-violet-600 dark:group-hover:text-violet-400"}
               />
               <span className="flex-1">{item.title}</span>
               {item.href === "/notifications" && unreadNotifications > 0 && (
@@ -104,22 +104,22 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-[#F2F1F8] p-4">
+      <div className="border-t border-line-soft p-4">
         <Link
           href="/profile"
-          className="flex items-center gap-3 rounded-xl border border-[#ECE9F6] bg-white p-3 transition-colors hover:border-violet-200 hover:bg-[#FBFAFE]"
+          className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-surface-sunken"
         >
           <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[2px]">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[14px] font-semibold text-violet-700">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface text-[14px] font-semibold text-violet-700 dark:text-violet-300">
               {user?.name?.charAt(0).toUpperCase()}
             </div>
           </div>
 
           <div className="min-w-0 flex-1">
-            <h3 className="truncate text-[13.5px] font-semibold text-[#13131A]">
+            <h3 className="truncate text-[13.5px] font-semibold text-ink">
               {user?.name}
             </h3>
-            <p className="truncate font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+            <p className="truncate font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
               {user?.email}
             </p>
           </div>

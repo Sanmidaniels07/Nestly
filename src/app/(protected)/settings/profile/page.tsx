@@ -11,7 +11,7 @@ export default function SettingsProfilePage() {
 
   if (isLoading || !profile) {
     return (
-      <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         <Skeleton className="h-52 w-full rounded-none sm:h-64" />
         <div className="-mt-14 px-6 sm:-mt-16 sm:pl-8">
           <Skeleton className="h-28 w-28 rounded-full ring-4 ring-white sm:h-32 sm:w-32" />
@@ -31,15 +31,15 @@ export default function SettingsProfilePage() {
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
           Profile
         </h2>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           This is what other people see when they visit your profile.
         </p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+      <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         <EditProfileForm variant="page" onClose={() => router.push("/profile")} />
       </div>
     </div>

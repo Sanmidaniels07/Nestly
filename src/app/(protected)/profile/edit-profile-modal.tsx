@@ -46,18 +46,18 @@ export default function EditProfileModal({ opened, onClose }: EditProfileModalPr
             exit={{ opacity: 0, scale: 0.97, y: 16 }}
             transition={{ duration: 0.2 }}
             className="
-              fixed inset-0 z-[100] overflow-hidden bg-white
+              fixed inset-0 z-[100] overflow-hidden bg-surface
               sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:w-[95%] sm:max-w-2xl
               sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl
               sm:shadow-[0_30px_90px_rgba(0,0,0,0.18)]
             "
           >
-            <div className="flex items-center justify-between border-b border-[#ECE9F6] px-6 py-5 sm:px-8">
+            <div className="flex items-center justify-between border-b border-line px-6 py-5 sm:px-8">
               <div>
-                <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+                <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
                   Edit profile
                 </h2>
-                <p className="mt-0.5 text-[13.5px] text-[#64748B]">
+                <p className="mt-0.5 text-[13.5px] text-muted">
                   Update your public profile.
                 </p>
               </div>
@@ -65,7 +65,7 @@ export default function EditProfileModal({ opened, onClose }: EditProfileModalPr
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="rounded-full p-2.5 text-[#64748B] transition-colors hover:bg-violet-50 hover:text-violet-600"
+                className="rounded-full p-2.5 text-muted transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-400"
               >
                 <X size={20} />
               </button>

@@ -28,7 +28,7 @@ export default function StarRatingInput({ value, onChange, size = 22 }: Props) {
             className={
               star <= (hovered || value)
                 ? "fill-yellow-400 text-yellow-400"
-                : "text-[#E5E7EB]"
+                : "text-faint"
             }
           />
         </button>

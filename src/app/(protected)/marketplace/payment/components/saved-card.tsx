@@ -21,7 +21,7 @@ export default function SavedCardItem({ card, selected, onSelect }: Props) {
       onClick={onSelect}
       className={`
         w-full rounded-xl border p-4 text-left transition-colors
-        ${selected ? "border-violet-400 bg-violet-50" : "border-[#ECE9F6] hover:border-violet-200"}
+        ${selected ? "border-violet-400 bg-violet-50 dark:bg-violet-500/10" : "border-line hover:border-violet-200 dark:hover:border-violet-500/30"}
       `}
     >
       <div className="flex items-start justify-between gap-3">
@@ -36,23 +36,23 @@ export default function SavedCardItem({ card, selected, onSelect }: Props) {
 
           <div>
             <div className="flex items-center gap-1.5">
-              <h3 className="text-[14px] font-semibold text-[#13131A]">{card.brand}</h3>
-              <span className="font-[family-name:var(--font-mono)] text-[13px] text-[#64748B]">
+              <h3 className="text-[14px] font-semibold text-ink">{card.brand}</h3>
+              <span className="font-[family-name:var(--font-mono)] text-[13px] text-muted">
                 •••• {card.last4}
               </span>
             </div>
-            <p className="mt-0.5 text-[12.5px] text-[#64748B]">{card.holder}</p>
-            <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+            <p className="mt-0.5 text-[12.5px] text-muted">{card.holder}</p>
+            <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
               Expires {card.expiry}
             </p>
           </div>
         </div>
 
-        {selected && <CheckCircle2 size={19} className="shrink-0 text-violet-600" />}
+        {selected && <CheckCircle2 size={19} className="shrink-0 text-violet-600 dark:text-violet-400" />}
       </div>
 
       {card.default && (
-        <span className="mt-3 inline-block rounded-full bg-violet-100 px-2.5 py-1 text-[11px] font-medium text-violet-700">
+        <span className="mt-3 inline-block rounded-full bg-violet-100 dark:bg-violet-500/15 px-2.5 py-1 text-[11px] font-medium text-violet-700 dark:text-violet-300">
           Default card
         </span>
       )}

@@ -8,7 +8,7 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF]">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to">
       <MessageSocketListener />
       <Sidebar />
 

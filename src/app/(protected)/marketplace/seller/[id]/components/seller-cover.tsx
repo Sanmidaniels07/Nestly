@@ -11,7 +11,7 @@ interface Props {
 
 export default function SellerCover({ store }: Props) {
   return (
-    <section className="relative h-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-100 to-indigo-100 sm:h-[260px]">
+    <section className="relative h-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-100 dark:from-violet-500/15 to-indigo-100 dark:to-indigo-500/15 sm:h-[260px]">
       {store.banner && (
         <Image src={store.banner} alt={store.name} fill className="object-cover" priority />
       )}
@@ -19,7 +19,7 @@ export default function SellerCover({ store }: Props) {
 
       <Link
         href="/marketplace/seller"
-        className="absolute left-5 top-5 flex h-10 items-center gap-2 rounded-xl bg-white/90 px-4 text-[13px] font-semibold text-[#334155] backdrop-blur-sm transition-colors hover:bg-white"
+        className="absolute left-5 top-5 flex h-10 items-center gap-2 rounded-xl bg-surface/90 px-4 text-[13px] font-semibold text-ink-2 backdrop-blur-sm transition-colors hover:bg-surface"
       >
         <ArrowLeft size={15} />
         Back to sellers

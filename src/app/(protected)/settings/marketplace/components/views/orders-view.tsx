@@ -35,8 +35,8 @@ export default function OrdersView() {
 
   if (orders.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-        <p className="text-[13.5px] text-[#94A3B8]">No orders yet.</p>
+      <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+        <p className="text-[13.5px] text-subtle">No orders yet.</p>
       </div>
     );
   }
@@ -44,17 +44,17 @@ export default function OrdersView() {
   return (
     <div className="space-y-5">
       {orders.map((order) => (
-        <div key={order.id} className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#F2F1F8] pb-4">
+        <div key={order.id} className="rounded-2xl border border-line bg-surface p-6">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line-soft pb-4">
             <div>
-              <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+              <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
                 Order #{order.id.slice(-8).toUpperCase()}
               </p>
-              <p className="mt-0.5 text-[12.5px] text-[#64748B]">
+              <p className="mt-0.5 text-[12.5px] text-muted">
                 {formatRelativeTime(order.createdAt)}
               </p>
             </div>
-            <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700">
+            <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700 dark:text-violet-300">
               {money(order.total)}
             </p>
           </div>
@@ -68,19 +68,19 @@ export default function OrdersView() {
               return (
                 <div
                   key={item.id}
-                  className="flex flex-wrap items-center gap-4 rounded-xl border border-[#F2F1F8] p-4"
+                  className="flex flex-wrap items-center gap-4 rounded-xl border border-line-soft p-4"
                 >
-                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-[#F8F8FC]">
+                  <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-surface-sunken">
                     {primaryImage && (
                       <Image src={primaryImage} alt={item.product.title} fill className="object-cover" />
                     )}
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                    <p className="truncate text-[13.5px] font-medium text-ink">
                       {item.product.title}
                     </p>
-                    <p className="mt-0.5 text-[12px] text-[#94A3B8]">
+                    <p className="mt-0.5 text-[12px] text-subtle">
                       Qty {item.quantity} · {money(item.unitPrice)}
                     </p>
                   </div>
@@ -88,7 +88,7 @@ export default function OrdersView() {
                   <select
                     value={item.status ?? "PENDING"}
                     onChange={(e) => updateStatus({ orderItemId: item.id, status: e.target.value })}
-                    className="h-10 rounded-lg border border-[#ECE9F6] bg-white px-3 text-[12.5px] font-medium text-[#334155] outline-none transition-colors focus:border-violet-400"
+                    className="h-10 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-medium text-ink-2 outline-none transition-colors focus:border-violet-400"
                   >
                     {STATUS_OPTIONS.map((status) => (
                       <option key={status} value={status}>
@@ -123,13 +123,13 @@ function TrackingNumberInput({ order }: { order: Order }) {
   const canSave = value.trim().length > 0 && value.trim() !== (order.trackingNumber ?? "");
 
   return (
-    <div className="mt-4 flex items-center gap-2 border-t border-[#F2F1F8] pt-4">
-      <Truck size={15} className="shrink-0 text-[#94A3B8]" />
+    <div className="mt-4 flex items-center gap-2 border-t border-line-soft pt-4">
+      <Truck size={15} className="shrink-0 text-subtle" />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Add tracking number"
-        className="h-9 flex-1 rounded-lg border border-[#ECE9F6] bg-white px-3 text-[12.5px] text-[#334155] outline-none transition-colors focus:border-violet-400"
+        className="h-9 flex-1 rounded-lg border border-line bg-surface px-3 text-[12.5px] text-ink-2 outline-none transition-colors focus:border-violet-400"
       />
       <button
         onClick={() => updateTracking({ id: order.id, trackingNumber: value.trim() })}

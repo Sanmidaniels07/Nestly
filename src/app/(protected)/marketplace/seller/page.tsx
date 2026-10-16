@@ -30,14 +30,14 @@ export default function SellersPage() {
       {isLoading && <SellerGridSkeleton count={6} />}
 
       {isError && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
+        <div className="rounded-2xl border border-line bg-surface py-16 text-center text-[13.5px] text-red-500">
           Couldn&apos;t load stores. Please try again.
         </div>
       )}
 
       {!isLoading && !isError && data?.stores.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">No stores found.</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken py-16 text-center">
+          <p className="text-[13.5px] text-subtle">No stores found.</p>
         </div>
       )}
 

@@ -14,7 +14,7 @@ export default function SellerSummary({ store }: Props) {
   const location = [store.city, store.state].filter(Boolean).join(", ");
 
   return (
-    <section className="mt-8 rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <section className="mt-8 rounded-2xl border border-line bg-surface p-6">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           {store.logo ? (
@@ -26,12 +26,12 @@ export default function SellerSummary({ store }: Props) {
           )}
 
           <div className="space-y-1.5">
-            <h3 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+            <h3 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
               {store.name}
             </h3>
 
             {location && (
-              <div className="flex items-center gap-1 text-[12.5px] text-[#64748B]">
+              <div className="flex items-center gap-1 text-[12.5px] text-muted">
                 <MapPin size={13} />
                 {location}
               </div>

@@ -116,17 +116,17 @@ export default function PostCard({ post, autoOpenComments }: Props) {
   };
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white">
+    <article className="overflow-hidden rounded-2xl border border-line bg-surface">
       {/* Header */}
       <div className="flex items-center justify-between p-5 sm:p-6">
         <div className="flex items-center gap-3.5">
           <AuthorAvatarLink author={post.author} size={44} />
 
           <div>
-            <h3 className="text-[15px] font-semibold text-[#13131A]">
+            <h3 className="text-[15px] font-semibold text-ink">
               <AuthorNameLink author={post.author} />
             </h3>
-            <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+            <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
               {formatRelativeTime(post.createdAt)}
             </p>
           </div>
@@ -135,19 +135,19 @@ export default function PostCard({ post, autoOpenComments }: Props) {
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setMenuOpen((prev) => !prev)}
-            className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-gray-100 hover:text-[#334155]"
+            className="rounded-full p-2 text-subtle transition-colors hover:bg-surface-muted hover:text-ink-2"
             aria-label="Post options"
           >
             <MoreHorizontal size={19} />
           </button>
 
           {menuOpen && (
-            <div className="absolute right-0 top-10 z-10 w-40 overflow-hidden rounded-xl border border-[#ECE9F6] bg-white shadow-lg">
+            <div className="absolute right-0 top-10 z-10 w-40 overflow-hidden rounded-xl border border-line bg-surface shadow-lg">
               {isAuthor ? (
                 <>
                   <button
                     onClick={startEditing}
-                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-[#334155] hover:bg-[#F7F7FB]"
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-ink-2 hover:bg-surface-2"
                   >
                     <Pencil size={14} /> Edit
                   </button>
@@ -156,7 +156,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                       setMenuOpen(false);
                       handleDelete();
                     }}
-                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-red-600 hover:bg-red-50"
+                    className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
                   >
                     <Trash2 size={14} /> Delete
                   </button>
@@ -165,7 +165,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                 <ReportButton
                   targetType="POST"
                   targetId={post.id}
-                  className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-[#334155] hover:bg-[#F7F7FB]"
+                  className="flex w-full items-center gap-2 px-4 py-2.5 text-[13px] text-ink-2 hover:bg-surface-2"
                 />
               )}
             </div>
@@ -176,7 +176,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
       {/* Content */}
       <div className="px-5 pb-4 sm:px-6">
         {post.title && (
-          <h4 className="mb-1 text-[15px] font-semibold text-[#13131A]">
+          <h4 className="mb-1 text-[15px] font-semibold text-ink">
             {post.title}
           </h4>
         )}
@@ -187,7 +187,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
               value={editContent}
               onChange={(e) => setEditContent(e.target.value)}
               rows={3}
-              className="w-full resize-none rounded-2xl bg-[#F7F7FB] px-4 py-3 text-[15px] text-[#13131A] outline-none focus:bg-[#F0EFF9]"
+              className="w-full resize-none rounded-2xl bg-surface-2 px-4 py-3 text-[15px] text-ink outline-none focus:bg-surface-muted"
             />
 
             {editMedia.length > 0 && (
@@ -195,7 +195,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                 {editMedia.map((item) => (
                   <div
                     key={item.url}
-                    className="group relative h-20 w-20 overflow-hidden rounded-xl bg-[#F7F7FB]"
+                    className="group relative h-20 w-20 overflow-hidden rounded-xl bg-surface-2"
                   >
                     {item.type === "VIDEO" ? (
                       <video src={item.url} className="h-full w-full object-cover" />
@@ -217,8 +217,8 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                   </div>
                 ))}
                 {isUploading && (
-                  <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[#F7F7FB]">
-                    <Loader2 size={18} className="animate-spin text-violet-600" />
+                  <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-surface-2">
+                    <Loader2 size={18} className="animate-spin text-violet-600 dark:text-violet-400" />
                   </div>
                 )}
               </div>
@@ -237,7 +237,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  className="rounded-full p-2 text-subtle transition-colors hover:bg-tint hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
                   aria-label="Attach photo"
                 >
                   <ImageIcon size={18} />
@@ -245,7 +245,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  className="rounded-full p-2 text-subtle transition-colors hover:bg-tint hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
                   aria-label="Attach video"
                 >
                   <Video size={18} />
@@ -255,7 +255,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
               <div className="flex justify-end gap-2">
                 <button
                   onClick={cancelEditing}
-                  className="rounded-full px-4 py-1.5 text-[13px] font-medium text-[#64748B] hover:bg-gray-100"
+                  className="rounded-full px-4 py-1.5 text-[13px] font-medium text-muted hover:bg-surface-muted"
                 >
                   Cancel
                 </button>
@@ -271,7 +271,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
           </div>
         ) : (
           post.content && (
-            <p className="text-[15.5px] leading-relaxed text-[#1E1B2E]">
+            <p className="text-[15.5px] leading-relaxed text-ink">
               {post.content}
             </p>
           )
@@ -280,7 +280,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
         {!isEditing && post.hashtags && post.hashtags.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1">
             {post.hashtags.map((tag) => (
-              <span key={tag} className="text-[13.5px] font-medium text-violet-600">
+              <span key={tag} className="text-[13.5px] font-medium text-violet-600 dark:text-violet-400">
                 #{tag}
               </span>
             ))}
@@ -316,14 +316,14 @@ export default function PostCard({ post, autoOpenComments }: Props) {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center justify-between border-t border-[#F2F1F8] px-5 py-4 sm:px-6">
+      <div className="flex items-center justify-between border-t border-line-soft px-5 py-4 sm:px-6">
         <div className="flex items-center gap-6">
           <button
             onClick={toggleLike}
             disabled={isToggling}
             className={`
               flex items-center gap-2 transition-colors
-              ${isLiked ? "text-red-500" : "text-[#64748B] hover:text-red-500"}
+              ${isLiked ? "text-red-500" : "text-muted hover:text-red-500"}
             `}
           >
             <Heart
@@ -338,7 +338,7 @@ export default function PostCard({ post, autoOpenComments }: Props) {
 
           <button
             onClick={() => setCommentsOpen((prev) => !prev)}
-            className="flex items-center gap-2 text-[#64748B] transition-colors hover:text-violet-600"
+            className="flex items-center gap-2 text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
           >
             <MessageCircle size={21} />
             <span className="font-[family-name:var(--font-mono)] text-[13px] font-medium">

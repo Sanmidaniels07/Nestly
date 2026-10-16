@@ -13,7 +13,7 @@ const icons = {
 
 export default function ProfileSocialLinks() {
   return (
-    <div className="rounded-[30px] border border-[#ECEAF4] bg-white p-6 shadow-sm">
+    <div className="rounded-[30px] border border-line bg-surface p-6 shadow-sm">
       <h3 className="text-xl font-bold">Social Links</h3>
 
       <div className="mt-6 space-y-4">
@@ -33,10 +33,10 @@ export default function ProfileSocialLinks() {
                 rounded-2xl
                 p-3
                 transition
-                hover:bg-violet-50
+                hover:bg-violet-50 dark:hover:bg-violet-500/10
               "
             >
-              <Icon size={20} className="text-violet-600" />
+              <Icon size={20} className="text-violet-600 dark:text-violet-400" />
               <span>{item.name}</span>
             </a>
           );

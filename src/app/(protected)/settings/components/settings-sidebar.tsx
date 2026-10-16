@@ -11,7 +11,7 @@ export default function SettingsSidebar() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <aside className="min-w-0 lg:h-fit lg:rounded-2xl lg:border lg:border-[#ECE9F6] lg:bg-white lg:p-3">
+    <aside className="min-w-0 lg:h-fit lg:rounded-2xl lg:border lg:border-line lg:bg-surface lg:p-3">
       {/* Mobile: horizontal scroll strip */}
       <nav className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide lg:hidden">
         {settingsNavigation.map((item) => {
@@ -25,7 +25,7 @@ export default function SettingsSidebar() {
                 "flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2.5 text-[13px] font-medium transition-colors",
                 active
                   ? "bg-violet-600 text-white"
-                  : "border border-[#ECE9F6] bg-white text-[#64748B] hover:border-violet-200"
+                  : "border border-line bg-surface text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
               )}
             >
               <item.icon size={15} />
@@ -47,7 +47,7 @@ export default function SettingsSidebar() {
               aria-current={active ? "page" : undefined}
               className={cn(
                 "group relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-[13.5px] font-medium transition-colors",
-                active ? "bg-violet-50 text-violet-700" : "text-[#64748B] hover:bg-[#F7F7FB] hover:text-[#13131A]"
+                active ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300" : "text-muted hover:bg-surface-2 hover:text-ink"
               )}
             >
               {active && (
@@ -55,7 +55,7 @@ export default function SettingsSidebar() {
               )}
               <item.icon
                 size={17}
-                className={active ? "text-violet-600" : "text-[#94A3B8] group-hover:text-violet-600"}
+                className={active ? "text-violet-600 dark:text-violet-400" : "text-subtle group-hover:text-violet-600 dark:group-hover:text-violet-400"}
               />
               {item.title}
             </Link>

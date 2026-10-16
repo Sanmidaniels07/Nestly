@@ -140,14 +140,14 @@ export default function PaymentSummary() {
   };
 
   return (
-    <aside className="space-y-5 rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <aside className="space-y-5 rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Payment summary
       </h2>
 
       {!!savedCards?.length && (
         <div className="space-y-2">
-          <p className="text-[12.5px] font-medium text-[#334155]">Pay with</p>
+          <p className="text-[12.5px] font-medium text-ink-2">Pay with</p>
           <div className="space-y-2">
             {savedCards.map((card) => (
               <button
@@ -155,12 +155,12 @@ export default function PaymentSummary() {
                 onClick={() => setSelectedCardId(card.id)}
                 className={`flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
                   selectedCardId === card.id
-                    ? "border-violet-400 bg-violet-50"
-                    : "border-[#ECE9F6] hover:border-violet-200"
+                    ? "border-violet-400 bg-violet-50 dark:bg-violet-500/10"
+                    : "border-line hover:border-violet-200 dark:hover:border-violet-500/30"
                 }`}
               >
-                <CreditCard size={16} className="shrink-0 text-[#64748B]" />
-                <span className="text-[13px] font-medium text-[#13131A]">
+                <CreditCard size={16} className="shrink-0 text-muted" />
+                <span className="text-[13px] font-medium text-ink">
                   {card.cardType ?? "Card"} •••• {card.last4}
                 </span>
               </button>
@@ -170,12 +170,12 @@ export default function PaymentSummary() {
               onClick={() => setSelectedCardId("new")}
               className={`flex w-full items-center gap-2.5 rounded-xl border px-3.5 py-2.5 text-left transition-colors ${
                 selectedCardId === "new"
-                  ? "border-violet-400 bg-violet-50"
-                  : "border-[#ECE9F6] hover:border-violet-200"
+                  ? "border-violet-400 bg-violet-50 dark:bg-violet-500/10"
+                  : "border-line hover:border-violet-200 dark:hover:border-violet-500/30"
               }`}
             >
-              <CreditCard size={16} className="shrink-0 text-[#94A3B8]" />
-              <span className="text-[13px] font-medium text-[#13131A]">Pay with a new card</span>
+              <CreditCard size={16} className="shrink-0 text-subtle" />
+              <span className="text-[13px] font-medium text-ink">Pay with a new card</span>
             </button>
           </div>
         </div>
@@ -189,7 +189,7 @@ export default function PaymentSummary() {
           <SummaryRow label="Coupon discount" value={`-${money(discountAmount)}`} />
         )}
 
-        <div className="border-t border-dashed border-[#ECE9F6] pt-3">
+        <div className="border-t border-dashed border-line pt-3">
           <SummaryRow
             label={confirmedOrder ? "Amount paid" : "Amount to pay"}
             value={money(estimatedTotal)}
@@ -198,14 +198,14 @@ export default function PaymentSummary() {
         </div>
 
         {!confirmedOrder && (
-          <p className="text-[11.5px] text-[#94A3B8]">
+          <p className="text-[11.5px] text-subtle">
             The exact amount is confirmed by the server before payment.
           </p>
         )}
       </div>
 
       {error && (
-        <div className="flex items-start gap-2 rounded-xl bg-red-50 p-3 text-[12.5px] text-red-600">
+        <div className="flex items-start gap-2 rounded-xl bg-red-50 dark:bg-red-500/10 p-3 text-[12.5px] text-red-600 dark:text-red-400">
           <AlertCircle size={15} className="mt-0.5 shrink-0" />
           {error}
         </div>

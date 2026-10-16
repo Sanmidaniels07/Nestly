@@ -31,7 +31,7 @@ export default function MarketplacePreview() {
           return (
             <div
               key={product.id}
-              className="relative h-14 w-14 overflow-hidden rounded-xl border-2 border-violet-600 bg-white/95 shadow-lg"
+              className="relative h-14 w-14 overflow-hidden rounded-xl border-2 border-violet-600 bg-surface/95 shadow-lg"
             >
               {primaryImage && (
                 <Image src={primaryImage} alt={product.title} fill className="object-cover" />
@@ -45,8 +45,8 @@ export default function MarketplacePreview() {
         onClick={() => router.push("/marketplace/products")}
         className="
           group mt-6 flex w-full items-center justify-center gap-1.5
-          rounded-xl bg-white py-3 text-[14px] font-semibold text-violet-700
-          transition-colors hover:bg-violet-50
+          rounded-xl bg-surface py-3 text-[14px] font-semibold text-violet-700 dark:text-violet-300
+          transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10
         "
       >
         Explore marketplace

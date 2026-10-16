@@ -15,7 +15,7 @@ export default function NextActions() {
 
       <Link
         href="/marketplace"
-        className="flex items-center justify-center gap-2 rounded-xl border border-[#ECE9F6] py-3.5 text-[13.5px] font-semibold text-[#334155] transition-colors hover:bg-[#F8F7FC]"
+        className="flex items-center justify-center gap-2 rounded-xl border border-line py-3.5 text-[13.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
       >
         <ShoppingBag size={16} />
         Continue shopping

@@ -20,7 +20,7 @@ export default function EditProfileAvatar({ avatar, onChange }: Props) {
         aria-label="Change avatar"
       >
         <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[3.5px] shadow-xl">
-          <div className="rounded-full bg-white p-[3.5px]">
+          <div className="rounded-full bg-surface p-[3.5px]">
             {avatar ? (
               <img
                 src={avatar}
@@ -28,7 +28,7 @@ export default function EditProfileAvatar({ avatar, onChange }: Props) {
                 className="h-28 w-28 rounded-full object-cover sm:h-32 sm:w-32"
               />
             ) : (
-              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-violet-100 to-indigo-100 sm:h-32 sm:w-32">
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-violet-100 dark:from-violet-500/15 to-indigo-100 dark:to-indigo-500/15 sm:h-32 sm:w-32">
                 <User size={40} className="text-violet-300" />
               </div>
             )}

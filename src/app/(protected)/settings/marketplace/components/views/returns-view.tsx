@@ -11,10 +11,10 @@ import { formatRelativeTime } from "@/src/lib/date";
 import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const statusTone: Record<string, string> = {
-  REQUESTED: "bg-amber-50 text-amber-700",
-  APPROVED: "bg-blue-50 text-blue-700",
-  REJECTED: "bg-red-50 text-red-700",
-  REFUNDED: "bg-emerald-50 text-emerald-700",
+  REQUESTED: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  APPROVED: "bg-blue-50 dark:bg-blue-500/10 text-blue-700 dark:text-blue-300",
+  REJECTED: "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300",
+  REFUNDED: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
 };
 
 export default function ReturnsView() {
@@ -28,9 +28,9 @@ export default function ReturnsView() {
 
   if (returns.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-        <RotateCcw className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-        <p className="mt-4 text-[13.5px] text-[#94A3B8]">No return requests yet.</p>
+      <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+        <RotateCcw className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+        <p className="mt-4 text-[13.5px] text-subtle">No return requests yet.</p>
       </div>
     );
   }
@@ -52,24 +52,24 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
   const { mutate: updateStatus, isPending } = useUpdateReturnRequestStatus();
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <p className="text-[14.5px] font-semibold text-[#13131A]">
+          <p className="text-[14.5px] font-semibold text-ink">
             {request.orderItem?.product.title ?? "Order item"}
           </p>
-          <p className="mt-0.5 text-[12.5px] text-[#64748B]">
+          <p className="mt-0.5 text-[12.5px] text-muted">
             {request.user?.name} · {request.user?.email}
           </p>
-          <p className="mt-2 text-[13px] text-[#334155]">{request.reason}</p>
-          <p className="mt-1.5 text-[12px] text-[#94A3B8]">
+          <p className="mt-2 text-[13px] text-ink-2">{request.reason}</p>
+          <p className="mt-1.5 text-[12px] text-subtle">
             Requested {formatRelativeTime(request.createdAt)}
           </p>
         </div>
 
         <span
           className={`shrink-0 rounded-full px-2.5 py-1 text-[11.5px] font-semibold capitalize ${
-            statusTone[request.status] ?? "bg-[#F1F0F5] text-[#64748B]"
+            statusTone[request.status] ?? "bg-surface-muted text-muted"
           }`}
         >
           {request.status.toLowerCase()}
@@ -77,7 +77,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
       </div>
 
       {request.status === "REQUESTED" && (
-        <div className="mt-4 flex gap-2 border-t border-[#F2F1F8] pt-4">
+        <div className="mt-4 flex gap-2 border-t border-line-soft pt-4">
           <button
             onClick={() => updateStatus({ id: request.id, status: "APPROVED" })}
             disabled={isPending}
@@ -88,7 +88,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
           <button
             onClick={() => updateStatus({ id: request.id, status: "REJECTED" })}
             disabled={isPending}
-            className="rounded-lg border border-red-200 px-4 py-2 text-[12.5px] font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+            className="rounded-lg border border-red-200 dark:border-red-500/30 px-4 py-2 text-[12.5px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50"
           >
             Reject
           </button>
@@ -96,7 +96,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
       )}
 
       {request.status === "APPROVED" && (
-        <div className="mt-4 border-t border-[#F2F1F8] pt-4">
+        <div className="mt-4 border-t border-line-soft pt-4">
           <button
             onClick={() => updateStatus({ id: request.id, status: "REFUNDED" })}
             disabled={isPending}

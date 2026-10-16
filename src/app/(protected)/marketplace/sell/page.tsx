@@ -47,14 +47,14 @@ function SellPageContent() {
 
   if (isSeller && seller.status === "PENDING") {
     return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50">
-          <Clock size={26} className="text-amber-600" />
+      <section className="mx-auto max-w-3xl rounded-2xl border border-line bg-surface px-6 py-16 text-center sm:px-10">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-500/10">
+          <Clock size={26} className="text-amber-600 dark:text-amber-400" />
         </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
           Application pending
         </h1>
-        <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+        <p className="mt-2.5 text-[13.5px] text-muted">
           Your seller application is awaiting admin review. We&apos;ll notify you as
           soon as it&apos;s approved.
         </p>
@@ -64,14 +64,14 @@ function SellPageContent() {
 
   if (isSeller && seller.store) {
     return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
-          <CheckCircle2 size={26} className="text-emerald-600" />
+      <section className="mx-auto max-w-3xl rounded-2xl border border-line bg-surface px-6 py-16 text-center sm:px-10">
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10">
+          <CheckCircle2 size={26} className="text-emerald-600 dark:text-emerald-400" />
         </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
           You&apos;re all set up
         </h1>
-        <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+        <p className="mt-2.5 text-[13.5px] text-muted">
           {seller.store.name} is live on Nestly.
         </p>
         <Button
@@ -99,28 +99,28 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
   const canReapply = seller.canReapply || isDone;
 
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
-      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
-        <XCircle size={26} className="text-red-600" />
+    <section className="mx-auto max-w-3xl rounded-2xl border border-line bg-surface px-6 py-16 text-center sm:px-10">
+      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
+        <XCircle size={26} className="text-red-600 dark:text-red-400" />
       </div>
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
         Application rejected
       </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+      <p className="mt-2.5 text-[13.5px] text-muted">
         {seller.statusReason
           ? `Reason: ${seller.statusReason}`
           : "Your seller application was not approved."}
       </p>
       {seller.store && (
-        <p className="mt-2.5 text-[13px] text-[#94A3B8]">
+        <p className="mt-2.5 text-[13px] text-subtle">
           {seller.store.name} is no longer manageable while your application is
           rejected.
         </p>
       )}
 
       {!canReapply && countdownLabel && (
-        <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-[#FAFAFD] px-4 py-2 text-[13px] font-medium text-[#334155]">
-          <Clock size={14} className="text-[#94A3B8]" />
+        <div className="mx-auto mt-6 flex w-fit items-center gap-2 rounded-full bg-surface-sunken px-4 py-2 text-[13px] font-medium text-ink-2">
+          <Clock size={14} className="text-subtle" />
           You can reapply in {countdownLabel}
         </div>
       )}
@@ -145,27 +145,27 @@ function BecomeSellerForm() {
   const { data: categories } = useCategories();
 
   return (
-    <section className="mx-auto max-w-xl rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-10">
-      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-violet-50">
-        <StoreIcon size={26} className="text-violet-600" />
+    <section className="mx-auto max-w-xl rounded-2xl border border-line bg-surface p-6 sm:p-10">
+      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+        <StoreIcon size={26} className="text-violet-600 dark:text-violet-400" />
       </div>
 
-      <h1 className="text-center font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+      <h1 className="text-center font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
         Become a seller
       </h1>
-      <p className="mt-2.5 text-center text-[13.5px] text-[#64748B]">
+      <p className="mt-2.5 text-center text-[13.5px] text-muted">
         Activate your seller account to start setting up your store.
       </p>
 
       {!!categories?.length && (
-        <div className="mt-6 rounded-2xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] p-5">
+        <div className="mt-6 rounded-2xl border border-dashed border-line-strong bg-surface-sunken p-5">
           <div className="flex items-center gap-2">
-            <Percent size={15} className="text-violet-600" />
-            <p className="text-[13px] font-semibold text-[#13131A]">
+            <Percent size={15} className="text-violet-600 dark:text-violet-400" />
+            <p className="text-[13px] font-semibold text-ink">
               Nestly takes a commission on each sale
             </p>
           </div>
-          <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#64748B]">
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
             The rate varies by category — you keep the rest of what buyers pay,
             paid out to your registered bank account.
           </p>
@@ -176,8 +176,8 @@ function BecomeSellerForm() {
                 key={category.id}
                 className="flex items-center justify-between text-[12.5px]"
               >
-                <span className="text-[#334155]">{category.name}</span>
-                <span className="font-[family-name:var(--font-mono)] font-medium text-violet-700">
+                <span className="text-ink-2">{category.name}</span>
+                <span className="font-[family-name:var(--font-mono)] font-medium text-violet-700 dark:text-violet-300">
                   {category.commissionRate}%
                 </span>
               </div>
@@ -267,11 +267,11 @@ function CreateStoreForm() {
   };
 
   return (
-    <section className="mx-auto max-w-2xl rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-10">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+    <section className="mx-auto max-w-2xl rounded-2xl border border-line bg-surface p-6 sm:p-10">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
         Set up your store
       </h1>
-      <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+      <p className="mt-2.5 text-[13.5px] text-muted">
         Tell buyers who you are. You can update this later.
       </p>
 
@@ -299,7 +299,7 @@ function CreateStoreForm() {
         />
 
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
+          <label className="mb-2 block text-sm font-medium text-ink-2">
             Description
           </label>
           <textarea
@@ -307,7 +307,7 @@ function CreateStoreForm() {
             onChange={update("description")}
             rows={3}
             placeholder="What does your store sell?"
-            className="w-full rounded-2xl border border-gray-200 bg-white px-5 py-3.5 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+            className="w-full rounded-2xl border border-line bg-surface px-5 py-3.5 text-[14px] text-ink outline-none transition-colors focus:border-violet-500 focus:ring-4 focus:ring-violet-100 dark:focus:ring-violet-500/20"
           />
         </div>
 
@@ -371,13 +371,13 @@ function ImagePicker({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-medium text-gray-700">
+      <label className="mb-2 block text-sm font-medium text-ink-2">
         {label}
       </label>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex h-28 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-gray-300 bg-[#F7F7FB] transition-colors hover:border-violet-400"
+        className="flex h-28 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line-strong bg-surface-2 transition-colors hover:border-violet-400"
       >
         {previewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -387,7 +387,7 @@ function ImagePicker({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex flex-col items-center gap-1.5 text-[#94A3B8]">
+          <div className="flex flex-col items-center gap-1.5 text-subtle">
             <ImagePlus size={20} />
             <span className="text-[12px]">Upload</span>
           </div>

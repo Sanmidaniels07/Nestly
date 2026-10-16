@@ -32,11 +32,11 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
   if (!active || !payload || !payload.length) return null;
 
   return (
-    <div className="rounded-xl border border-[#ECE9F6] bg-white px-4 py-3 shadow-[0_12px_32px_-12px_rgba(15,15,20,0.2)]">
-      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wide text-[#94A3B8]">
+    <div className="rounded-xl border border-line bg-surface px-4 py-3 shadow-[0_12px_32px_-12px_rgba(15,15,20,0.2)]">
+      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wide text-subtle">
         {label}
       </p>
-      <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-violet-700">
+      <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-violet-700 dark:text-violet-300">
         ₦{payload[0].value.toLocaleString()}
       </p>
     </div>
@@ -45,19 +45,19 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
 
 export default function SalesChart({ data, isLoading }: Props) {
   if (isLoading) {
-    return <div className="h-[320px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />;
+    return <div className="h-[320px] animate-pulse rounded-2xl border border-line bg-surface-2" />;
   }
 
   if (data.length === 0) {
     return (
-      <div className="flex h-[200px] items-center justify-center rounded-2xl border border-[#ECE9F6] bg-white text-[13.5px] text-[#94A3B8]">
+      <div className="flex h-[200px] items-center justify-center rounded-2xl border border-line bg-surface text-[13.5px] text-subtle">
         No sales data yet.
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <div className="rounded-2xl border border-line bg-surface p-6">
       <div className="h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
@@ -68,25 +68,25 @@ export default function SalesChart({ data, isLoading }: Props) {
               </linearGradient>
             </defs>
 
-            <CartesianGrid strokeDasharray="3 3" stroke="#F2F1F8" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
 
             <XAxis
               dataKey="date"
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#94A3B8", fontSize: 12 }}
+              tick={{ fill: "var(--subtle)", fontSize: 12 }}
               dy={8}
             />
 
             <YAxis
               axisLine={false}
               tickLine={false}
-              tick={{ fill: "#94A3B8", fontSize: 11 }}
+              tick={{ fill: "var(--subtle)", fontSize: 11 }}
               tickFormatter={formatCompact}
               width={56}
             />
 
-            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#DDD6FE", strokeWidth: 1 }} />
+            <Tooltip content={<CustomTooltip />} cursor={{ stroke: "var(--track)", strokeWidth: 1 }} />
 
             <Area
               type="monotone"
@@ -94,7 +94,7 @@ export default function SalesChart({ data, isLoading }: Props) {
               stroke="#7C3AED"
               strokeWidth={2.5}
               fill="url(#salesFill)"
-              activeDot={{ r: 5, fill: "#7C3AED", stroke: "#fff", strokeWidth: 2 }}
+              activeDot={{ r: 5, fill: "#7C3AED", stroke: "var(--surface)", strokeWidth: 2 }}
             />
           </AreaChart>
         </ResponsiveContainer>

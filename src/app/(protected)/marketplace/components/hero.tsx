@@ -24,8 +24,8 @@ export default function MarketplaceHero() {
         overflow-hidden
         rounded-2xl
         border
-        border-[#EDEBF5]
-        bg-white
+        border-line
+        bg-surface
       "
     >
       <div className="grid gap-10 p-8 lg:grid-cols-2 lg:p-10">
@@ -38,7 +38,7 @@ export default function MarketplaceHero() {
               text-[12px]
               uppercase
               tracking-[0.25em]
-              text-violet-600
+              text-violet-600 dark:text-violet-400
             "
           >
             Marketplace
@@ -51,7 +51,7 @@ export default function MarketplaceHero() {
               text-5xl
               italic
               leading-tight
-              text-[#13131A]
+              text-ink
             "
           >
             Buy & Sell
@@ -67,7 +67,7 @@ export default function MarketplaceHero() {
               max-w-xl
               text-[16px]
               leading-relaxed
-              text-[#64748B]
+              text-muted
             "
           >
             Discover trusted sellers close to your location,
@@ -95,8 +95,8 @@ export default function MarketplaceHero() {
             <Button
               variant="secondary"
               className="
-                border-[#EDEBF5]
-                bg-white
+                border-line
+                bg-surface
               "
               onClick={() => router.push("/marketplace/sell")}
             >
@@ -115,17 +115,17 @@ export default function MarketplaceHero() {
               items-center
               gap-2
               text-sm
-              text-[#64748B]
+              text-muted
             "
           >
             <MapPin
               size={18}
-              className="text-violet-600"
+              className="text-violet-600 dark:text-violet-400"
             />
 
             Lagos, Nigeria
 
-            <button className="font-medium text-violet-600 hover:underline">
+            <button className="font-medium text-violet-600 dark:text-violet-400 hover:underline">
               Change Location
             </button>
           </div>
@@ -141,11 +141,11 @@ export default function MarketplaceHero() {
               rounded-2xl
               border
               border-dashed
-              border-violet-200
+              border-violet-200 dark:border-violet-500/30
               bg-gradient-to-br
-              from-violet-50
-              via-white
-              to-indigo-50
+              from-violet-50 dark:from-violet-500/10
+              via-surface
+              to-indigo-50 dark:to-indigo-500/10
               p-8
             "
           >
@@ -155,13 +155,13 @@ export default function MarketplaceHero() {
                   className="
                     text-lg
                     font-semibold
-                    text-[#13131A]
+                    text-ink
                   "
                 >
                   Products Near You
                 </h3>
 
-                <p className="mt-2 text-[#64748B]">
+                <p className="mt-2 text-muted">
                   Browse thousands of products from verified sellers across
                   Nestly.
                 </p>

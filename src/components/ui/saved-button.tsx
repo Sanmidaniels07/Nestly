@@ -14,7 +14,7 @@ export default function SavedButton() {
     <Link
       href="/marketplace/saved"
       aria-label="Saved products"
-      className="relative flex h-10 w-10 items-center justify-center rounded-full text-[#64748B] transition-colors hover:bg-[#F7F7FB] hover:text-red-500"
+      className="relative flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-2 hover:text-red-500"
     >
       <Heart size={19} className={count > 0 ? "fill-red-500 text-red-500" : ""} />
 

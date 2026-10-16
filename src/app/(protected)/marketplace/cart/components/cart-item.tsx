@@ -36,11 +36,11 @@ export default function CartItem({ item }: Props) {
     product.images.find((image) => image.isPrimary)?.url ?? product.images[0]?.url;
 
   return (
-    <article className="rounded-2xl border border-[#ECE9F6] bg-white p-4 sm:p-5">
+    <article className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
       <div className="flex gap-4">
         <Link
           href={`/marketplace/product/${product.id}`}
-          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-[#F8F8FC] sm:h-28 sm:w-28"
+          className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl bg-surface-sunken sm:h-28 sm:w-28"
         >
           {primaryImage && (
             <Image fill src={primaryImage} alt={product.title} className="object-cover" />
@@ -51,13 +51,13 @@ export default function CartItem({ item }: Props) {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <Link href={`/marketplace/product/${product.id}`}>
-                <h3 className="truncate font-[family-name:var(--font-fraunces)] text-[18px] italic text-[#13131A] hover:text-violet-700 sm:text-[20px]">
+                <h3 className="truncate font-[family-name:var(--font-fraunces)] text-[18px] italic text-ink hover:text-violet-700 dark:hover:text-violet-300 sm:text-[20px]">
                   {product.title}
                 </h3>
               </Link>
 
               {product.store && (
-                <p className="mt-1.5 truncate text-[12.5px] text-[#64748B]">
+                <p className="mt-1.5 truncate text-[12.5px] text-muted">
                   {product.store.name}
                 </p>
               )}
@@ -69,24 +69,24 @@ export default function CartItem({ item }: Props) {
                     {product.rating}
                   </span>
                   {product.reviewCount !== undefined && (
-                    <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                    <span className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
                       ({product.reviewCount})
                     </span>
                   )}
                 </div>
               )}
 
-              <span className="mt-2.5 inline-flex rounded-full bg-violet-50 px-2.5 py-1 text-[11px] font-medium text-violet-700">
+              <span className="mt-2.5 inline-flex rounded-full bg-violet-50 dark:bg-violet-500/10 px-2.5 py-1 text-[11px] font-medium text-violet-700 dark:text-violet-300">
                 {formatConditionLabel(product.condition)}
               </span>
             </div>
 
             <div className="shrink-0 text-right">
-              <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700 sm:text-[19px]">
+              <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700 dark:text-violet-300 sm:text-[19px]">
                 {formatPrice(product.price)}
               </p>
               {product.originalPrice && (
-                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8] line-through">
+                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-subtle line-through">
                   {formatPrice(product.originalPrice)}
                 </p>
               )}
@@ -94,14 +94,14 @@ export default function CartItem({ item }: Props) {
           </div>
 
           <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-4">
-            <div className="flex items-center rounded-xl border border-[#ECE9F6]">
+            <div className="flex items-center rounded-xl border border-line">
               <button
                 onClick={() =>
                   updateQuantity({ productId: product.id, quantity: item.quantity - 1 })
                 }
                 disabled={atMin}
                 aria-label="Decrease quantity"
-                className="p-2.5 text-[#64748B] transition-colors hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-[#64748B]"
+                className="p-2.5 text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-muted"
               >
                 <Minus size={15} />
               </button>
@@ -116,7 +116,7 @@ export default function CartItem({ item }: Props) {
                 }
                 disabled={atMax}
                 aria-label="Increase quantity"
-                className="p-2.5 text-[#64748B] transition-colors hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-[#64748B]"
+                className="p-2.5 text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-muted"
               >
                 <Plus size={15} />
               </button>
@@ -128,7 +128,7 @@ export default function CartItem({ item }: Props) {
                   saveForLater();
                   removeItem(product.id);
                 }}
-                className="flex items-center gap-1.5 text-[13px] text-[#64748B] transition-colors hover:text-violet-600"
+                className="flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
               >
                 <Heart size={15} />
                 Save for later
@@ -136,7 +136,7 @@ export default function CartItem({ item }: Props) {
 
               <button
                 onClick={() => removeItem(product.id)}
-                className="flex items-center gap-1.5 text-[13px] text-red-500 transition-colors hover:text-red-600"
+                className="flex items-center gap-1.5 text-[13px] text-red-500 transition-colors hover:text-red-600 dark:hover:text-red-400"
               >
                 <Trash2 size={15} />
                 Remove

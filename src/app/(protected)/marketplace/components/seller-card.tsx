@@ -16,11 +16,11 @@ export default function SellerCard({ seller }: Props) {
     <motion.article
       whileHover={{ y: -3 }}
       transition={{ duration: 0.2 }}
-      className="rounded-2xl border border-[#EDEBF5] bg-white p-6 transition-colors hover:border-violet-200 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]"
+      className="rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]"
     >
       <div className="flex items-center gap-4">
         <div className="rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 p-[2.5px]">
-          <div className="rounded-full bg-white p-[2.5px]">
+          <div className="rounded-full bg-surface p-[2.5px]">
             <Image
               src={seller.avatar}
               alt={seller.name}
@@ -33,7 +33,7 @@ export default function SellerCard({ seller }: Props) {
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5">
-            <h3 className="truncate text-[15px] font-semibold text-[#13131A]">
+            <h3 className="truncate text-[15px] font-semibold text-ink">
               {seller.name}
             </h3>
             {seller.verified && <BadgeCheck size={16} className="shrink-0 text-blue-500" />}
@@ -41,14 +41,14 @@ export default function SellerCard({ seller }: Props) {
 
           <div className="mt-1 flex items-center gap-1">
             <Star size={14} className="fill-yellow-400 text-yellow-400" />
-            <span className="font-[family-name:var(--font-mono)] text-[13px] font-medium text-[#13131A]">
+            <span className="font-[family-name:var(--font-mono)] text-[13px] font-medium text-ink">
               {seller.rating}
             </span>
           </div>
         </div>
       </div>
 
-      <div className="mt-5 flex items-center justify-between border-t border-[#F2F1F8] pt-4 text-[13px] text-[#64748B]">
+      <div className="mt-5 flex items-center justify-between border-t border-line-soft pt-4 text-[13px] text-muted">
         <span className="font-[family-name:var(--font-mono)]">
           {seller.productsCount} products
         </span>

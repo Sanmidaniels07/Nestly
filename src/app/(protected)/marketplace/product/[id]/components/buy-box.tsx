@@ -59,14 +59,14 @@ export default function BuyBox({ product }: Props) {
   };
 
   return (
-    <aside className="sticky top-24 max-h-[calc(100vh-6rem)] space-y-5 overflow-y-auto rounded-2xl border border-[#ECE9F6] bg-white p-6 shadow-[0_20px_60px_-24px_rgba(124,58,237,0.15)]">
+    <aside className="sticky top-24 max-h-[calc(100vh-6rem)] space-y-5 overflow-y-auto rounded-2xl border border-line bg-surface p-6 shadow-[0_20px_60px_-24px_rgba(124,58,237,0.15)]">
       <div>
         <div className="flex flex-wrap items-end gap-2">
-          <p className="font-[family-name:var(--font-mono)] text-[28px] font-bold text-violet-700">
+          <p className="font-[family-name:var(--font-mono)] text-[28px] font-bold text-violet-700 dark:text-violet-300">
             {money(product.price)}
           </p>
           {product.originalPrice && (
-            <p className="font-[family-name:var(--font-mono)] text-[14px] text-[#94A3B8] line-through">
+            <p className="font-[family-name:var(--font-mono)] text-[14px] text-subtle line-through">
               {money(product.originalPrice)}
             </p>
           )}
@@ -80,7 +80,7 @@ export default function BuyBox({ product }: Props) {
           />
           <span
             className={`text-[13px] font-medium ${
-              outOfStock ? "text-red-600" : lowStock ? "text-amber-600" : "text-emerald-600"
+              outOfStock ? "text-red-600 dark:text-red-400" : lowStock ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
             }`}
           >
             {outOfStock
@@ -121,7 +121,7 @@ export default function BuyBox({ product }: Props) {
         <button
           onClick={handleBuyNow}
           disabled={outOfStock || isAdding}
-          className="w-full rounded-xl border border-violet-600 py-3.5 text-[14px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:border-[#E5E7EB] disabled:text-[#94A3B8] disabled:hover:bg-transparent"
+          className="w-full rounded-xl border border-violet-600 py-3.5 text-[14px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 disabled:cursor-not-allowed disabled:border-line-strong disabled:text-subtle disabled:hover:bg-transparent"
         >
           Buy now
         </button>
@@ -131,31 +131,31 @@ export default function BuyBox({ product }: Props) {
         <button
           onClick={toggleSaved}
           className={`flex flex-1 items-center justify-center rounded-xl border py-2.5 transition-colors ${
-            saved ? "border-red-200 bg-red-50" : "border-[#ECE9F6] hover:bg-[#F8F7FC]"
+            saved ? "border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10" : "border-line hover:bg-surface-sunken"
           }`}
           aria-label={saved ? "Remove from saved" : "Save item"}
         >
-          <Heart size={17} className={saved ? "fill-red-500 text-red-500" : "text-[#64748B]"} />
+          <Heart size={17} className={saved ? "fill-red-500 text-red-500" : "text-muted"} />
         </button>
 
         <button
-          className="flex flex-1 items-center justify-center rounded-xl border border-[#ECE9F6] py-2.5 transition-colors hover:bg-[#F8F7FC]"
+          className="flex flex-1 items-center justify-center rounded-xl border border-line py-2.5 transition-colors hover:bg-surface-sunken"
           aria-label="Share product"
         >
-          <Share2 size={17} className="text-[#64748B]" />
+          <Share2 size={17} className="text-muted" />
         </button>
       </div>
 
       <PaymentMethods />
 
-      <div className="rounded-2xl bg-[#F7F8FD] p-4">
+      <div className="rounded-2xl bg-surface-2 p-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50">
-            <ShieldCheck size={16} className="text-emerald-600" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10">
+            <ShieldCheck size={16} className="text-emerald-600 dark:text-emerald-400" />
           </div>
           <div>
-            <p className="text-[13px] font-semibold text-[#13131A]">Buyer protection</p>
-            <p className="text-[11.5px] text-[#64748B]">
+            <p className="text-[13px] font-semibold text-ink">Buyer protection</p>
+            <p className="text-[11.5px] text-muted">
               Secure payment and refund support.
             </p>
           </div>

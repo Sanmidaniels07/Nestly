@@ -63,8 +63,8 @@ export default function ProfileActions({ onEdit }: Props) {
         onClick={() => router.push("/settings")}
         className="
           flex h-11 w-11 items-center justify-center rounded-xl
-          border border-[#E6E4F0] bg-white
-          transition-colors hover:bg-[#F7F5FD]
+          border border-line-strong bg-surface
+          transition-colors hover:bg-surface-2
         "
         aria-label="Settings"
       >

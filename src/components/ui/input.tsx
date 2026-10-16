@@ -14,7 +14,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className={cn("group", fullWidth && "w-full")}>
         {label && (
-          <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+          <label className="mb-2 block text-sm font-medium text-ink-2">
             {label}
           </label>
         )}
@@ -28,24 +28,22 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             items-center
             rounded-3xl
             border
-            border-gray-200
-            bg-white
+            border-line
+            bg-surface
             px-5
             transition-all
             duration-200
             focus-within:border-violet-500
             focus-within:ring-4
             focus-within:ring-violet-100
-            hover:border-gray-300
-            dark:bg-gray-900
-            dark:border-gray-700
-            dark:focus-within:ring-violet-900/30
+            dark:focus-within:ring-violet-500/20
+            hover:border-line-strong
             `,
-            error && "border-red-500 focus-within:border-red-500 focus-within:ring-red-100"
+            error && "border-red-500 focus-within:border-red-500 focus-within:ring-red-100 dark:focus-within:ring-red-500/20"
           )}
         >
           {icon && (
-            <div className="mr-3 text-gray-400 group-focus-within:text-violet-500 transition-colors">
+            <div className="mr-3 text-subtle group-focus-within:text-violet-500 transition-colors">
               {icon}
             </div>
           )}
@@ -58,9 +56,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               w-full
               bg-transparent
               text-base
-              placeholder:text-gray-400
+              text-ink
+              placeholder:text-subtle
               focus:outline-none
-              dark:text-white
               `,
               className
             )}
@@ -68,7 +66,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
 
           {rightElement && (
-            <div className="ml-3 flex shrink-0 items-center text-gray-400">
+            <div className="ml-3 flex shrink-0 items-center text-subtle">
               {rightElement}
             </div>
           )}

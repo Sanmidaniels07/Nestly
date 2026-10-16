@@ -13,15 +13,15 @@ export default function SuggestedPeople() {
   if (!isLoading && !users?.length) return null;
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h3 className="text-[15px] font-semibold text-[#13131A]">
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <h3 className="text-[15px] font-semibold text-ink">
         Suggested for you
       </h3>
 
       <div className="mt-4 space-y-4">
         {isLoading
           ? Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="h-11 animate-pulse rounded-xl bg-[#F7F7FB]" />
+              <div key={i} className="h-11 animate-pulse rounded-xl bg-surface-2" />
             ))
           : users?.map((user) => <SuggestionRow key={user.id} user={user} />)}
       </div>
@@ -41,11 +41,11 @@ function SuggestionRow({ user }: { user: SuggestedUser }) {
       <div className="min-w-0 flex-1">
         <Link
           href={`/users/${user.username ?? user.id}`}
-          className="truncate text-[13.5px] font-medium text-[#13131A] hover:text-violet-600"
+          className="truncate text-[13.5px] font-medium text-ink hover:text-violet-600 dark:hover:text-violet-400"
         >
           {user.name}
         </Link>
-        <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+        <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
           {user.followerCount} follower{user.followerCount !== 1 ? "s" : ""}
         </p>
       </div>
@@ -58,8 +58,8 @@ function SuggestionRow({ user }: { user: SuggestedUser }) {
           text-[12px] font-semibold transition-colors disabled:opacity-50
           ${
             isFollowing
-              ? "border border-[#E5E7EB] text-[#64748B]"
-              : "bg-[#F6F3FF] text-violet-600 hover:bg-violet-100"
+              ? "border border-line-strong text-muted"
+              : "bg-tint text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-500/15"
           }
         `}
       >

@@ -2,7 +2,7 @@ import Skeleton from "@/src/components/ui/skeleton";
 
 export function ConversationListSkeleton({ count = 6 }: { count?: number }) {
   return (
-    <div className="divide-y divide-[#F2F1F8]">
+    <div className="divide-y divide-line-soft">
       {Array.from({ length: count }).map((_, i) => (
         <div key={i} className="flex items-center gap-3 px-4 py-3.5">
           <Skeleton className="h-12 w-12 shrink-0 rounded-full" />

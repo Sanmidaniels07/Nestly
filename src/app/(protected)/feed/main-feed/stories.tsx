@@ -61,11 +61,11 @@ export default function Stories() {
                     ${
                       hasStories && group.hasUnseen
                         ? "bg-gradient-to-br from-violet-500 via-fuchsia-500 to-indigo-600"
-                        : "bg-[#E2E0EE]"
+                        : "bg-track"
                     }
                   `}
                 >
-                  <div className="h-full w-full rounded-full bg-white p-[3px]">
+                  <div className="h-full w-full rounded-full bg-surface p-[3px]">
                     {group.author.avatar ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
@@ -74,7 +74,7 @@ export default function Stories() {
                         className="h-full w-full rounded-full object-cover"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-violet-200 to-fuchsia-200 text-[20px] font-semibold text-violet-700">
+                      <div className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-violet-200 dark:from-violet-500/20 to-fuchsia-200 dark:to-fuchsia-500/20 text-[20px] font-semibold text-violet-700 dark:text-violet-300">
                         {group.author.name.charAt(0).toUpperCase()}
                       </div>
                     )}
@@ -94,7 +94,7 @@ export default function Stories() {
                 )}
               </button>
 
-              <p className="max-w-[68px] truncate text-[12.5px] font-medium text-[#334155]">
+              <p className="max-w-[68px] truncate text-[12.5px] font-medium text-ink-2">
                 {isYou ? "Your story" : group.author.name}
               </p>
             </div>

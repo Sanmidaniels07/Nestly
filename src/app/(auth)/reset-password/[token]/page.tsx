@@ -50,20 +50,20 @@ export default function ResetPasswordPage() {
   }, [mutation.isSuccess, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center p-6 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-10">
+        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10">
           <div className="text-center mb-10">
-            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-violet-100">
-              <Lock className="h-8 w-8 text-violet-600" />
+            <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15">
+              <Lock className="h-8 w-8 text-violet-600 dark:text-violet-400" />
             </div>
 
-            <h1 className="text-3xl font-bold text-gray-900">Reset your password</h1>
-            <p className="mt-3 text-gray-600">
+            <h1 className="text-3xl font-bold text-ink">Reset your password</h1>
+            <p className="mt-3 text-muted">
               Please enter your new password below.
             </p>
           </div>
@@ -99,7 +99,7 @@ export default function ResetPasswordPage() {
           <div className="mt-8 text-center">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 font-medium transition-colors"
+              className="inline-flex items-center gap-2 text-muted hover:text-ink font-medium transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back to Login

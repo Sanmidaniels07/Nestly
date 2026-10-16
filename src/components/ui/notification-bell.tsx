@@ -19,9 +19,9 @@ export default function NotificationBell() {
         ref={buttonRef}
         onClick={() => setOpen(true)}
         aria-label="Notifications"
-        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white transition-colors hover:border-violet-300 hover:bg-[#F8F7FC]"
+        className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-surface transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:bg-surface-sunken"
       >
-        <Bell size={19} className="text-[#475569]" />
+        <Bell size={19} className="text-ink-3" />
 
         {count > 0 && (
           <span className="absolute -right-1.5 -top-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-1 text-[10px] font-bold text-white">

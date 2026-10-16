@@ -62,7 +62,7 @@ export default function CreatePostCard() {
   };
 
   return (
-    <div className="rounded-2xl border border-[#EDEBF5] bg-white p-5 transition-shadow duration-300 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)] sm:p-6">
+    <div className="rounded-2xl border border-line bg-surface p-5 transition-shadow duration-300 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)] sm:p-6">
       <div className="flex gap-4">
         <div className="mt-1">
           <UserAvatar name={profile?.name ?? user?.name} src={profile?.avatar} size={44} />
@@ -72,7 +72,7 @@ export default function CreatePostCard() {
           {!expanded ? (
             <button
               onClick={() => setExpanded(true)}
-              className="w-full rounded-2xl bg-[#F7F7FB] px-5 py-3.5 text-left text-[15px] text-[#94A3B8] transition-colors hover:bg-[#F0EFF9]"
+              className="w-full rounded-2xl bg-surface-2 px-5 py-3.5 text-left text-[15px] text-subtle transition-colors hover:bg-surface-muted"
             >
               What&apos;s happening today?
             </button>
@@ -84,7 +84,7 @@ export default function CreatePostCard() {
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Give your post a title"
                 maxLength={120}
-                className="w-full rounded-xl bg-[#F7F7FB] px-5 py-2.5 text-[14px] font-medium text-[#13131A] outline-none placeholder:text-[#94A3B8] focus:bg-[#F0EFF9]"
+                className="w-full rounded-xl bg-surface-2 px-5 py-2.5 text-[14px] font-medium text-ink outline-none placeholder:text-subtle focus:bg-surface-muted"
               />
 
               <textarea
@@ -93,7 +93,7 @@ export default function CreatePostCard() {
                 placeholder="What's happening today?"
                 rows={3}
                 maxLength={2000}
-                className="w-full resize-none rounded-2xl bg-[#F7F7FB] px-5 py-3.5 text-[15px] text-[#13131A] outline-none placeholder:text-[#94A3B8] focus:bg-[#F0EFF9]"
+                className="w-full resize-none rounded-2xl bg-surface-2 px-5 py-3.5 text-[15px] text-ink outline-none placeholder:text-subtle focus:bg-surface-muted"
               />
 
               {media.length > 0 && (
@@ -101,7 +101,7 @@ export default function CreatePostCard() {
                   {media.map((item) => (
                     <div
                       key={item.url}
-                      className="group relative h-20 w-20 overflow-hidden rounded-xl bg-[#F7F7FB]"
+                      className="group relative h-20 w-20 overflow-hidden rounded-xl bg-surface-2"
                     >
                       {item.type === "VIDEO" ? (
                         <video src={item.url} className="h-full w-full object-cover" />
@@ -123,8 +123,8 @@ export default function CreatePostCard() {
                     </div>
                   ))}
                   {isUploading && (
-                    <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-[#F7F7FB]">
-                      <Loader2 size={18} className="animate-spin text-violet-600" />
+                    <div className="flex h-20 w-20 items-center justify-center rounded-xl bg-surface-2">
+                      <Loader2 size={18} className="animate-spin text-violet-600 dark:text-violet-400" />
                     </div>
                   )}
                 </div>
@@ -146,7 +146,7 @@ export default function CreatePostCard() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  className="rounded-full p-2 text-subtle transition-colors hover:bg-tint hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
                   aria-label="Attach photo"
                 >
                   <ImageIcon size={18} />
@@ -154,7 +154,7 @@ export default function CreatePostCard() {
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+                  className="rounded-full p-2 text-subtle transition-colors hover:bg-tint hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
                   aria-label="Attach video"
                 >
                   <Video size={18} />
@@ -162,12 +162,12 @@ export default function CreatePostCard() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                <span className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
                   {content.length}/2000
                 </span>
                 <button
                   onClick={reset}
-                  className="rounded-full p-1.5 text-[#94A3B8] transition-colors hover:bg-gray-100"
+                  className="rounded-full p-1.5 text-subtle transition-colors hover:bg-surface-muted"
                   aria-label="Cancel"
                 >
                   <X size={16} />

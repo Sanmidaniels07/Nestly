@@ -23,7 +23,7 @@ export default function AddProductStepper({ currentStep, onStepClick }: Props) {
             <div
               key={step}
               className={`h-1.5 rounded-full transition-colors ${
-                completed ? "bg-emerald-500" : active ? "bg-violet-600" : "bg-[#ECE9F6]"
+                completed ? "bg-emerald-500" : active ? "bg-violet-600" : "bg-track"
               }`}
             />
           );
@@ -51,7 +51,7 @@ export default function AddProductStepper({ currentStep, onStepClick }: Props) {
                     ? "bg-emerald-500 text-white"
                     : active
                     ? "bg-violet-600 text-white"
-                    : "bg-[#ECE9F6] text-[#94A3B8]"
+                    : "bg-track text-subtle"
                 }`}
               >
                 {completed ? <Check size={11} /> : stepNumber}
@@ -59,7 +59,7 @@ export default function AddProductStepper({ currentStep, onStepClick }: Props) {
 
               <span
                 className={`truncate text-[12.5px] ${
-                  active ? "font-semibold text-violet-700" : completed ? "text-[#334155]" : "text-[#94A3B8]"
+                  active ? "font-semibold text-violet-700 dark:text-violet-300" : completed ? "text-ink-2" : "text-subtle"
                 }`}
               >
                 {step}
@@ -71,10 +71,10 @@ export default function AddProductStepper({ currentStep, onStepClick }: Props) {
 
       {/* Mobile: current step only */}
       <div className="mt-3 flex items-center justify-between sm:hidden">
-        <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+        <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
           Step {currentStep} of {steps.length}
         </p>
-        <p className="text-[13px] font-semibold text-violet-700">{steps[currentStep - 1]}</p>
+        <p className="text-[13px] font-semibold text-violet-700 dark:text-violet-300">{steps[currentStep - 1]}</p>
       </div>
     </div>
   );

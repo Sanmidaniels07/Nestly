@@ -32,7 +32,7 @@ export default function MarketplaceTabs({ active, onChange }: Props) {
 
   return (
     <section className="overflow-x-auto scrollbar-hide">
-      <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
+      <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
         {tabs.map((tab) => {
           const isActive = active === tab.id;
 
@@ -44,11 +44,11 @@ export default function MarketplaceTabs({ active, onChange }: Props) {
               aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
                 isActive
-                  ? "bg-white text-violet-700 shadow-sm"
-                  : "text-[#64748B] hover:text-[#13131A]"
+                  ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300"
+                  : "text-muted hover:text-ink"
               }`}
             >
-              <tab.icon size={15} className={isActive ? "text-violet-600" : "text-[#94A3B8]"} />
+              <tab.icon size={15} className={isActive ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
               {tab.label}
             </button>
           );

@@ -20,16 +20,16 @@ export default function StatCard({
   value,
   subtitle,
   icon: Icon,
-  color = "bg-violet-50",
-  iconColor = "text-violet-600",
+  color = "bg-violet-50 dark:bg-violet-500/10",
+  iconColor = "text-violet-600 dark:text-violet-400",
   trend,
 }: Props) {
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
+    <div className="rounded-2xl border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className="text-[13px] text-[#64748B]">{title}</p>
-          <h3 className="mt-2 font-[family-name:var(--font-mono)] text-[28px] font-semibold leading-none text-[#13131A]">
+          <p className="text-[13px] text-muted">{title}</p>
+          <h3 className="mt-2 font-[family-name:var(--font-mono)] text-[28px] font-semibold leading-none text-ink">
             {value}
           </h3>
 
@@ -38,7 +38,7 @@ export default function StatCard({
               {trend && (
                 <span
                   className={`flex items-center gap-0.5 font-[family-name:var(--font-mono)] text-[12px] font-medium ${
-                    trend.direction === "up" ? "text-emerald-600" : "text-red-500"
+                    trend.direction === "up" ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"
                   }`}
                 >
                   {trend.direction === "up" ? (
@@ -50,7 +50,7 @@ export default function StatCard({
                 </span>
               )}
 
-              {subtitle && <p className="text-[12px] text-[#94A3B8]">{subtitle}</p>}
+              {subtitle && <p className="text-[12px] text-subtle">{subtitle}</p>}
             </div>
           )}
         </div>

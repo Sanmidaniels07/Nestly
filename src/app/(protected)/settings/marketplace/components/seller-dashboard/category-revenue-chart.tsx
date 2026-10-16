@@ -17,12 +17,12 @@ function formatNaira(value: number) {
 
 export default function CategoryRevenueChart({ categories, isLoading }: Props) {
   if (isLoading) {
-    return <div className="h-[280px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />;
+    return <div className="h-[280px] animate-pulse rounded-2xl border border-line bg-surface-2" />;
   }
 
   if (categories.length === 0) {
     return (
-      <div className="flex h-[280px] items-center justify-center rounded-2xl border border-[#ECE9F6] bg-white text-[13.5px] text-[#94A3B8]">
+      <div className="flex h-[280px] items-center justify-center rounded-2xl border border-line bg-surface text-[13.5px] text-subtle">
         No revenue yet.
       </div>
     );
@@ -31,8 +31,8 @@ export default function CategoryRevenueChart({ categories, isLoading }: Props) {
   const max = Math.max(...categories.map((c) => c.revenue));
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h3 className="text-[15px] font-semibold text-[#13131A]">Revenue by category</h3>
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <h3 className="text-[15px] font-semibold text-ink">Revenue by category</h3>
 
       <div className="mt-5 space-y-4">
         {categories.map((category) => {
@@ -41,14 +41,14 @@ export default function CategoryRevenueChart({ categories, isLoading }: Props) {
           return (
             <div key={category.categoryId}>
               <div className="mb-1.5 flex items-center justify-between text-[13px]">
-                <span className="truncate font-medium text-[#334155]">
+                <span className="truncate font-medium text-ink-2">
                   {category.categoryName}
                 </span>
-                <span className="shrink-0 font-[family-name:var(--font-mono)] text-[12.5px] font-semibold text-violet-700">
+                <span className="shrink-0 font-[family-name:var(--font-mono)] text-[12.5px] font-semibold text-violet-700 dark:text-violet-300">
                   {formatNaira(category.revenue)}
                 </span>
               </div>
-              <div className="h-2 overflow-hidden rounded-full bg-[#F0EEF9]">
+              <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
                 <div
                   className="h-full rounded-full bg-gradient-to-r from-violet-500 to-indigo-600"
                   style={{ width: `${pct}%` }}

@@ -102,13 +102,13 @@ function TwoFactorChallengeForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="text-center">
-        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-100">
-          <ShieldCheck className="h-7 w-7 text-violet-600" />
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15">
+          <ShieldCheck className="h-7 w-7 text-violet-600 dark:text-violet-400" />
         </div>
-        <h2 className="text-lg font-semibold text-gray-900">
+        <h2 className="text-lg font-semibold text-ink">
           Two-factor verification
         </h2>
-        <p className="mt-1.5 text-sm text-gray-500">
+        <p className="mt-1.5 text-sm text-muted">
           Enter the 6-digit code from your authenticator app.
         </p>
       </div>

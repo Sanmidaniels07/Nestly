@@ -12,7 +12,7 @@ interface Props {
 
 export default function VariantRow({ variant, onChange, onDelete }: Props) {
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] p-4">
+    <div className="rounded-2xl border border-line p-4">
       <div className="grid gap-3 sm:grid-cols-2">
         <Input
           label="Option"
@@ -47,7 +47,7 @@ export default function VariantRow({ variant, onChange, onDelete }: Props) {
         <button
           onClick={() => onDelete(variant.id)}
           aria-label="Remove variant"
-          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl border border-red-100 bg-red-50 text-red-600 transition-colors hover:bg-red-100"
+          className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl border border-red-100 dark:border-red-500/20 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 transition-colors hover:bg-red-100 dark:hover:bg-red-500/15"
         >
           <Trash2 size={17} />
         </button>

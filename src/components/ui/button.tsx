@@ -23,19 +23,12 @@ export default function Button({
     secondary: "bg-[var(--secondary)] text-white",
 
     outline: `
-  border border-[#E5E7EB]
+  border border-line-strong
   bg-transparent
-  !text-[#1A1A2E]
-  hover:bg-[#F8FAFC]
-  hover:!text-[#1A1A2E]
-  hover:border-[#D1D5DB]
-
-  dark:border-gray-700
-  dark:!text-gray-900
-  dark:bg-white
-  dark:hover:bg-gray-100
-  dark:hover:!text-gray-900
-  dark:hover:border-gray-300
+  !text-ink
+  hover:bg-surface-2
+  hover:!text-ink
+  hover:border-faint
 `,
 
     tribely:

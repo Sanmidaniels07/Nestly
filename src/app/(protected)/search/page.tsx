@@ -42,23 +42,23 @@ function SearchPageContent() {
   return (
     <div className="mx-auto max-w-3xl space-y-6 pb-20 pt-6">
       <div>
-        <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600">
+        <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
           Search
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-none text-[#13131A]">
+        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-none text-ink">
           {q ? `Results for "${q}"` : "Search"}
         </h1>
       </div>
 
-      <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
+      <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => handleTabChange(t.id)}
             className={`rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
               tab === t.id
-                ? "bg-white text-violet-700 shadow-sm"
-                : "text-[#64748B] hover:text-[#13131A]"
+                ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300"
+                : "text-muted hover:text-ink"
             }`}
           >
             {t.label}
@@ -67,21 +67,21 @@ function SearchPageContent() {
       </div>
 
       {!q ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <Search className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <Search className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[13.5px] text-subtle">
             Use the search bar above to find people, stores, posts, communities, and hashtags.
           </p>
         </div>
       ) : isLoading ? (
         <div className="space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-20 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-20 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">No {tab} match &quot;{q}&quot;.</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <p className="text-[13.5px] text-subtle">No {tab} match &quot;{q}&quot;.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -108,12 +108,12 @@ function SearchPageContent() {
               <Link
                 key={hashtag.id}
                 href={`/hashtags/${hashtag.tag}`}
-                className="flex items-center gap-3 rounded-2xl border border-[#ECE9F6] bg-white p-4 transition-colors hover:border-violet-200"
+                className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30"
               >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 text-violet-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400">
                   <Hash size={16} />
                 </div>
-                <p className="text-[14px] font-medium text-[#13131A]">#{hashtag.tag}</p>
+                <p className="text-[14px] font-medium text-ink">#{hashtag.tag}</p>
               </Link>
             ))}
         </div>
@@ -130,7 +130,7 @@ function UserResultRow({ user }: { user: SearchUser }) {
   const { data: isFollowingReal, isLoading } = useFollowStatus(user.id);
 
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-[#ECE9F6] bg-white p-4">
+    <div className="flex items-center gap-3.5 rounded-2xl border border-line bg-surface p-4">
       <Link href={`/users/${user.username ?? user.id}`} className="shrink-0">
         <UserAvatar name={user.name} src={user.avatar} size={44} />
       </Link>
@@ -138,15 +138,15 @@ function UserResultRow({ user }: { user: SearchUser }) {
       <div className="min-w-0 flex-1">
         <Link
           href={`/users/${user.username ?? user.id}`}
-          className="truncate text-[14px] font-semibold text-[#13131A] hover:text-violet-600"
+          className="truncate text-[14px] font-semibold text-ink hover:text-violet-600 dark:hover:text-violet-400"
         >
           {user.name}
         </Link>
         {user.username && (
-          <p className="text-[12.5px] text-violet-600">@{user.username}</p>
+          <p className="text-[12.5px] text-violet-600 dark:text-violet-400">@{user.username}</p>
         )}
         {user.bio && (
-          <p className="mt-0.5 truncate text-[12.5px] text-[#64748B]">{user.bio}</p>
+          <p className="mt-0.5 truncate text-[12.5px] text-muted">{user.bio}</p>
         )}
       </div>
 
@@ -163,7 +163,7 @@ function StoreResultRow({ store }: { store: SearchStore }) {
   return (
     <Link
       href={`/marketplace/seller/${store.slug}`}
-      className="flex items-center gap-3.5 rounded-2xl border border-[#ECE9F6] bg-white p-4 transition-colors hover:border-violet-200"
+      className="flex items-center gap-3.5 rounded-2xl border border-line bg-surface p-4 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30"
     >
       {store.logo ? (
         // eslint-disable-next-line @next/next/no-img-element
@@ -179,11 +179,11 @@ function StoreResultRow({ store }: { store: SearchStore }) {
       )}
 
       <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-1.5 text-[14px] font-semibold text-[#13131A]">
+        <p className="flex items-center gap-1.5 text-[14px] font-semibold text-ink">
           <span className="truncate">{store.name}</span>
-          {store.isVerified && <BadgeCheck size={15} className="shrink-0 text-violet-600" />}
+          {store.isVerified && <BadgeCheck size={15} className="shrink-0 text-violet-600 dark:text-violet-400" />}
         </p>
-        {location && <p className="mt-0.5 truncate text-[12.5px] text-[#64748B]">{location}</p>}
+        {location && <p className="mt-0.5 truncate text-[12.5px] text-muted">{location}</p>}
       </div>
     </Link>
   );
@@ -207,7 +207,7 @@ function CommunityResultRow({ community }: { community: Community }) {
   );
 
   return (
-    <div className="flex items-center gap-3.5 rounded-2xl border border-[#ECE9F6] bg-white p-4">
+    <div className="flex items-center gap-3.5 rounded-2xl border border-line bg-surface p-4">
       <Link href={`/communities/${community.slug}`} className="shrink-0">
         {community.icon ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -226,12 +226,12 @@ function CommunityResultRow({ community }: { community: Community }) {
       <div className="min-w-0 flex-1">
         <Link
           href={`/communities/${community.slug}`}
-          className="truncate text-[14px] font-semibold text-[#13131A] hover:text-violet-600"
+          className="truncate text-[14px] font-semibold text-ink hover:text-violet-600 dark:hover:text-violet-400"
         >
           {community.name}
         </Link>
         {community.description && (
-          <p className="mt-0.5 truncate text-[12.5px] text-[#64748B]">
+          <p className="mt-0.5 truncate text-[12.5px] text-muted">
             {community.description}
           </p>
         )}
@@ -242,7 +242,7 @@ function CommunityResultRow({ community }: { community: Community }) {
         disabled={isToggling}
         className={`shrink-0 rounded-full px-4 py-2 text-[12.5px] font-semibold transition-colors disabled:opacity-50 ${
           isMember
-            ? "border border-[#E5E7EB] text-[#64748B]"
+            ? "border border-line-strong text-muted"
             : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
         }`}
       >
@@ -256,7 +256,7 @@ export default function SearchPage() {
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-[13.5px] text-[#94A3B8]">
+        <div className="mx-auto max-w-3xl px-4 py-16 text-center text-[13.5px] text-subtle">
           Loading...
         </div>
       }

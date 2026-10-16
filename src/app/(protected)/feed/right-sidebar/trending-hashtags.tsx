@@ -15,29 +15,29 @@ export default function TrendingHashtags() {
   if (!isLoading && !trending?.length) return null;
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h3 className="text-[15px] font-semibold text-[#13131A]">Trending</h3>
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <h3 className="text-[15px] font-semibold text-ink">Trending</h3>
 
       <div className="mt-4 space-y-0.5">
         {isLoading
           ? Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="h-12 animate-pulse rounded-xl bg-[#F7F7FB]" />
+              <div key={i} className="h-12 animate-pulse rounded-xl bg-surface-2" />
             ))
           : trending?.map((item, index) => (
               <Link
                 key={item.hashtag.id}
                 href={`/hashtags/${item.hashtag.tag}`}
-                className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-[#F7F7FB]"
+                className="flex w-full items-center gap-3 rounded-xl px-2 py-2.5 text-left transition-colors hover:bg-surface-2"
               >
-                <span className="w-4 shrink-0 font-[family-name:var(--font-mono)] text-[12px] text-[#C4C0DC]">
+                <span className="w-4 shrink-0 font-[family-name:var(--font-mono)] text-[12px] text-faint">
                   {String(index + 1).padStart(2, "0")}
                 </span>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14px] font-semibold text-violet-600">
+                  <p className="truncate text-[14px] font-semibold text-violet-600 dark:text-violet-400">
                     #{item.hashtag.tag}
                   </p>
-                  <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+                  <p className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
                     {formatCount(item.postCount)} posts
                   </p>
                 </div>

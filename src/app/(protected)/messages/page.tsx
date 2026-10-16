@@ -37,12 +37,12 @@ export default function MessagesPage() {
 
   return (
     <div className="mx-auto max-w-2xl pb-20 pt-6">
-      <div className="space-y-6 rounded-[28px] border border-[#ECE9F6] bg-gradient-to-b from-violet-50 to-indigo-50/70 p-5 sm:p-7">
+      <div className="space-y-6 rounded-[28px] border border-line bg-gradient-to-b from-violet-50 dark:from-violet-500/10 to-indigo-50/70 p-5 sm:p-7">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {unreadTotal > 0 ? `${unreadTotal} unread` : "All caught up"}
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-[#13131A]">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink">
             Messages
           </h1>
         </div>
@@ -51,35 +51,35 @@ export default function MessagesPage() {
           <div className="relative">
             <Search
               size={16}
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]"
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-subtle"
             />
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search conversations..."
-              className="h-11 w-full rounded-full border border-[#ECE9F6] bg-white pl-11 pr-4 text-[13.5px] text-[#13131A] outline-none transition-colors focus:border-violet-300"
+              className="h-11 w-full rounded-full border border-line bg-surface pl-11 pr-4 text-[13.5px] text-ink outline-none transition-colors focus:border-violet-300 dark:focus:border-violet-500/40"
             />
           </div>
         )}
 
         {isLoading ? (
-          <div className="overflow-hidden rounded-3xl border border-[#ECE9F6] bg-white">
+          <div className="overflow-hidden rounded-3xl border border-line bg-surface">
             <ConversationListSkeleton count={5} />
           </div>
         ) : !conversations?.length ? (
-          <div className="rounded-3xl border border-dashed border-violet-200 bg-white/60 px-8 py-16 text-center">
-            <MessageCircle className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-            <p className="mt-4 text-[15px] font-medium text-[#13131A]">No conversations yet</p>
-            <p className="mt-1 text-[14px] text-[#64748B]">
+          <div className="rounded-3xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface/60 px-8 py-16 text-center">
+            <MessageCircle className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+            <p className="mt-4 text-[15px] font-medium text-ink">No conversations yet</p>
+            <p className="mt-1 text-[14px] text-muted">
               Message someone from their profile to start chatting.
             </p>
           </div>
         ) : filtered.length === 0 ? (
-          <p className="py-12 text-center text-[13.5px] text-[#94A3B8]">
+          <p className="py-12 text-center text-[13.5px] text-subtle">
             No conversations match &ldquo;{search}&rdquo;.
           </p>
         ) : (
-          <div className="overflow-hidden rounded-3xl border border-[#ECE9F6] bg-white">
+          <div className="overflow-hidden rounded-3xl border border-line bg-surface">
             {filtered.map((conversation) => {
               const preview = lastMessagePreview(conversation.lastMessage);
               const unread = !!conversation.unreadCount;
@@ -88,7 +88,7 @@ export default function MessagesPage() {
                 <Link
                   key={conversation.id}
                   href={`/messages/${conversation.id}`}
-                  className="flex items-center gap-3.5 border-b border-[#F2F1F8] px-5 py-4 transition-colors last:border-b-0 hover:bg-[#FAFAFD]"
+                  className="flex items-center gap-3.5 border-b border-line-soft px-5 py-4 transition-colors last:border-b-0 hover:bg-surface-sunken"
                 >
                   <UserAvatar
                     name={conversation.otherParticipant?.name}
@@ -100,18 +100,18 @@ export default function MessagesPage() {
                     <div className="flex items-center justify-between gap-2">
                       <p
                         className={`truncate text-[14.5px] ${
-                          unread ? "font-semibold text-[#13131A]" : "font-medium text-[#13131A]"
+                          unread ? "font-semibold text-ink" : "font-medium text-ink"
                         }`}
                       >
                         {conversation.otherParticipant?.name ?? "Unknown user"}
                       </p>
-                      <span className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] text-[#94A3B8]">
+                      <span className="shrink-0 font-[family-name:var(--font-mono)] text-[11px] text-subtle">
                         {formatRelativeTime(conversation.updatedAt)}
                       </span>
                     </div>
                     <p
                       className={`mt-0.5 flex items-center gap-1 truncate text-[13px] ${
-                        unread ? "font-medium text-[#334155]" : "text-[#94A3B8]"
+                        unread ? "font-medium text-ink-2" : "text-subtle"
                       }`}
                     >
                       {preview.icon && <preview.icon size={13} className="shrink-0" />}

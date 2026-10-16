@@ -33,22 +33,22 @@ export default function CardPaymentForm() {
   const brand = detectCardBrand(rawDigits);
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <section className="rounded-2xl border border-line bg-surface p-6">
       <SavedCards />
 
       <div className="my-8 flex items-center">
-        <div className="h-px flex-1 bg-[#ECE9F6]" />
-        <span className="px-4 text-[13px] text-[#94A3B8]">or pay with another card</span>
-        <div className="h-px flex-1 bg-[#ECE9F6]" />
+        <div className="h-px flex-1 bg-track" />
+        <span className="px-4 text-[13px] text-subtle">or pay with another card</span>
+        <div className="h-px flex-1 bg-track" />
       </div>
 
       <div className="mb-5 flex items-center gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <CreditCard size={18} className="text-violet-700" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <CreditCard size={18} className="text-violet-700 dark:text-violet-300" />
         </div>
         <div>
-          <h2 className="text-[16px] font-semibold text-[#13131A]">Card details</h2>
-          <p className="text-[13px] text-[#64748B]">Your payment is encrypted and secure.</p>
+          <h2 className="text-[16px] font-semibold text-ink">Card details</h2>
+          <p className="text-[13px] text-muted">Your payment is encrypted and secure.</p>
         </div>
       </div>
 
@@ -69,7 +69,7 @@ export default function CardPaymentForm() {
             inputMode="numeric"
           />
           {brand && (
-            <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[11.5px] text-violet-600">
+            <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[11.5px] text-violet-600 dark:text-violet-400">
               {brand}
             </p>
           )}
@@ -94,9 +94,9 @@ export default function CardPaymentForm() {
         </div>
       </div>
 
-      <div className="mt-5 flex items-start gap-2.5 rounded-xl bg-emerald-50 p-3.5">
-        <Lock size={16} className="mt-0.5 shrink-0 text-emerald-600" />
-        <p className="text-[12.5px] leading-relaxed text-[#475569]">
+      <div className="mt-5 flex items-start gap-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 p-3.5">
+        <Lock size={16} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
+        <p className="text-[12.5px] leading-relaxed text-ink-3">
           Your card information is encrypted using PCI-DSS compliant payment security.
         </p>
       </div>

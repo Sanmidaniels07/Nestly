@@ -22,20 +22,20 @@ export default function CartSummary({ items }: Props) {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <aside className="sticky top-24 rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+    <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
         Order summary
       </h2>
 
       <div className="mt-6 space-y-3.5">
         <div className="flex items-center justify-between">
-          <span className="text-[13.5px] text-[#64748B]">Subtotal ({totalItems} items)</span>
-          <span className="font-[family-name:var(--font-mono)] text-[13.5px] text-[#334155]">
+          <span className="text-[13.5px] text-muted">Subtotal ({totalItems} items)</span>
+          <span className="font-[family-name:var(--font-mono)] text-[13.5px] text-ink-2">
             {money(subtotal)}
           </span>
         </div>
 
-        <p className="text-[12px] text-[#94A3B8]">
+        <p className="text-[12px] text-subtle">
           Delivery and total are calculated at checkout.
         </p>
       </div>
@@ -47,9 +47,9 @@ export default function CartSummary({ items }: Props) {
         Proceed to checkout
       </Link>
 
-      <div className="mt-6 space-y-3 text-[12.5px] text-[#64748B]">
+      <div className="mt-6 space-y-3 text-[12.5px] text-muted">
         <div className="flex items-start gap-2.5">
-          <ShieldCheck size={15} className="mt-0.5 shrink-0 text-emerald-600" />
+          <ShieldCheck size={15} className="mt-0.5 shrink-0 text-emerald-600 dark:text-emerald-400" />
           Secure payment protected with SSL encryption.
         </div>
       </div>

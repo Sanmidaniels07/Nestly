@@ -15,12 +15,12 @@ export default function ProductInfo({ product }: Props) {
     <div className="space-y-6">
       <div>
         {product.brand && (
-          <p className="font-[family-name:var(--font-mono)] text-[12.5px] uppercase tracking-widest text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12.5px] uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {product.brand}
           </p>
         )}
 
-        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-[#13131A] sm:text-[36px]">
+        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-ink sm:text-[36px]">
           {product.title}
         </h1>
 
@@ -29,13 +29,13 @@ export default function ProductInfo({ product }: Props) {
         </div>
       </div>
 
-      <div className="border-t border-[#F2F1F8] pt-6">
+      <div className="border-t border-line-soft pt-6">
         <PriceSection product={product} />
       </div>
 
       <AvailabilityBadges product={product} />
 
-      <div className="border-t border-[#F2F1F8] pt-6">
+      <div className="border-t border-line-soft pt-6">
         <ProductHighlights product={product} />
       </div>
     </div>

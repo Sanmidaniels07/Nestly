@@ -63,30 +63,30 @@ export default function ImageUploadZone({ onFilesSelected, currentCount, maxImag
           flex flex-col items-center justify-center rounded-2xl border-2 border-dashed px-8 py-14 text-center transition-colors
           ${
             atLimit
-              ? "cursor-not-allowed border-[#E5E7EB] bg-[#FAFAFB]"
+              ? "cursor-not-allowed border-line-strong bg-surface-sunken"
               : dragging
-              ? "cursor-pointer border-violet-500 bg-violet-50"
-              : "cursor-pointer border-violet-200 bg-violet-50/40 hover:border-violet-400"
+              ? "cursor-pointer border-violet-500 bg-violet-50 dark:bg-violet-500/10"
+              : "cursor-pointer border-violet-200 dark:border-violet-500/30 bg-violet-50/40 hover:border-violet-400"
           }
         `}
       >
         {atLimit ? (
-          <ImagePlus size={32} className="text-[#C4C0DC]" strokeWidth={1.5} />
+          <ImagePlus size={32} className="text-faint" strokeWidth={1.5} />
         ) : (
-          <UploadCloud size={32} className={dragging ? "text-violet-700" : "text-violet-600"} />
+          <UploadCloud size={32} className={dragging ? "text-violet-700 dark:text-violet-300" : "text-violet-600 dark:text-violet-400"} />
         )}
 
-        <h3 className="mt-3.5 text-[15.5px] font-semibold text-[#13131A]">
+        <h3 className="mt-3.5 text-[15.5px] font-semibold text-ink">
           {atLimit ? "Maximum images reached" : dragging ? "Drop to upload" : "Upload product images"}
         </h3>
 
         {!atLimit && (
-          <p className="mt-1.5 text-[12.5px] text-[#64748B]">
+          <p className="mt-1.5 text-[12.5px] text-muted">
             Drag and drop, or click to browse — PNG, JPG, WEBP
           </p>
         )}
 
-        <p className="mt-1 font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+        <p className="mt-1 font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
           {currentCount}/{maxImages} images
         </p>
 

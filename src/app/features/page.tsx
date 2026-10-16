@@ -92,14 +92,14 @@ const features: Feature[] = [
 export default function FeaturesPage() {
   return (
     <GuestGuard>
-      <main className="min-h-screen overflow-x-hidden bg-[#F5F7FA] pb-24 pt-32 text-[#1A1A2E]">
+      <main className="min-h-screen overflow-x-hidden bg-canvas pb-24 pt-32 text-ink">
         <section className="mx-auto max-w-3xl px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full bg-violet-100 px-4 py-1.5 text-[13px] font-semibold text-violet-700">
+            <span className="inline-flex items-center gap-2 rounded-full bg-violet-100 dark:bg-violet-500/15 px-4 py-1.5 text-[13px] font-semibold text-violet-700 dark:text-violet-300">
               Everything, in one nest
             </span>
             <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tighter md:text-6xl">
@@ -107,7 +107,7 @@ export default function FeaturesPage() {
               <br />
               to open it.
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-[#6B7280] md:text-xl">
+            <p className="mx-auto mt-6 max-w-xl text-lg text-muted md:text-xl">
               Nestly brings your social life, your communities, and your marketplace
               together — no more switching apps to stay connected.
             </p>
@@ -192,13 +192,13 @@ function FeatureRow({ feature, reversed }: { feature: Feature; reversed: boolean
           {feature.eyebrow}
         </p>
         <h3 className="mt-2 text-3xl font-semibold tracking-tight">{feature.title}</h3>
-        <p className="mt-4 text-[16px] leading-relaxed text-[#6B7280]">
+        <p className="mt-4 text-[16px] leading-relaxed text-muted">
           {feature.description}
         </p>
 
         <ul className="mt-6 space-y-3">
           {feature.points.map((point) => (
-            <li key={point} className="flex items-center gap-2.5 text-[14.5px] text-[#374151]">
+            <li key={point} className="flex items-center gap-2.5 text-[14.5px] text-ink-2">
               <span
                 className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full"
                 style={{ backgroundColor: feature.bg, color: feature.color }}
@@ -229,7 +229,7 @@ function FeatureVisual({ feature }: { feature: Feature }) {
 
   return (
     <div
-      className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[32px] border border-[#E5E7EB] bg-white shadow-xl"
+      className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[32px] border border-line-strong bg-surface shadow-xl"
       style={{
         backgroundImage: `radial-gradient(circle at 30% 20%, ${feature.bg} 0%, transparent 60%)`,
       }}

@@ -12,14 +12,14 @@ export default function ProductHighlights({ product }: Props) {
 
   return (
     <div>
-      <h3 className="mb-3 font-[family-name:var(--font-fraunces)] text-[18px] italic text-[#13131A]">
+      <h3 className="mb-3 font-[family-name:var(--font-fraunces)] text-[18px] italic text-ink">
         Highlights
       </h3>
 
       <ul className="space-y-2.5">
         {product.highlights.map((item) => (
-          <li key={item} className="flex items-center gap-2.5 text-[14px] text-[#334155]">
-            <CheckCircle2 size={16} className="shrink-0 text-violet-600" />
+          <li key={item} className="flex items-center gap-2.5 text-[14px] text-ink-2">
+            <CheckCircle2 size={16} className="shrink-0 text-violet-600 dark:text-violet-400" />
             {item}
           </li>
         ))}

@@ -12,7 +12,7 @@ interface Props {
 
 export default function SavedToolbar({ search, onSearchChange, view, onViewChange }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
+    <section className="rounded-2xl border border-line bg-surface p-5">
       <div className="flex gap-3">
         <div className="flex-1">
           <Input
@@ -24,12 +24,12 @@ export default function SavedToolbar({ search, onSearchChange, view, onViewChang
         </div>
 
         {onViewChange && (
-          <div className="flex shrink-0 items-center gap-1 rounded-xl border border-[#ECE9F6] p-1">
+          <div className="flex shrink-0 items-center gap-1 rounded-xl border border-line p-1">
             <button
               onClick={() => onViewChange("grid")}
               aria-label="Grid view"
               className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                view === "grid" ? "bg-violet-50 text-violet-600" : "text-[#94A3B8] hover:bg-[#F7F7FB]"
+                view === "grid" ? "bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400" : "text-subtle hover:bg-surface-2"
               }`}
             >
               <LayoutGrid size={16} />
@@ -38,7 +38,7 @@ export default function SavedToolbar({ search, onSearchChange, view, onViewChang
               onClick={() => onViewChange("list")}
               aria-label="List view"
               className={`flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${
-                view === "list" ? "bg-violet-50 text-violet-600" : "text-[#94A3B8] hover:bg-[#F7F7FB]"
+                view === "list" ? "bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400" : "text-subtle hover:bg-surface-2"
               }`}
             >
               <List size={16} />

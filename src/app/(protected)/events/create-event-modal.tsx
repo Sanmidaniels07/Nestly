@@ -77,16 +77,16 @@ export default function CreateEventModal({ open, onClose }: Props) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.97, y: 16 }}
             transition={{ duration: 0.2 }}
-            className="fixed left-1/2 top-1/2 z-[100] max-h-[85vh] w-[92%] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-white shadow-[0_30px_90px_rgba(0,0,0,0.18)]"
+            className="fixed left-1/2 top-1/2 z-[100] max-h-[85vh] w-[92%] max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl bg-surface shadow-[0_30px_90px_rgba(0,0,0,0.18)]"
           >
-            <div className="flex items-center justify-between border-b border-[#ECE9F6] px-6 py-5">
-              <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+            <div className="flex items-center justify-between border-b border-line px-6 py-5">
+              <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
                 Create an event
               </h2>
               <button
                 onClick={onClose}
                 aria-label="Close"
-                className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-violet-50 hover:text-violet-600"
+                className="rounded-full p-2 text-muted transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-400"
               >
                 <X size={18} />
               </button>
@@ -102,7 +102,7 @@ export default function CreateEventModal({ open, onClose }: Props) {
               />
 
               <div>
-                <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+                <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
                   Description
                 </label>
                 <textarea
@@ -111,7 +111,7 @@ export default function CreateEventModal({ open, onClose }: Props) {
                   rows={3}
                   maxLength={500}
                   placeholder="What's this event about?"
-                  className="w-full resize-none rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-violet-400 focus:bg-white"
+                  className="w-full resize-none rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors placeholder:text-subtle focus:border-violet-400 focus:bg-surface"
                 />
               </div>
 
@@ -124,32 +124,32 @@ export default function CreateEventModal({ open, onClose }: Props) {
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+                  <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
                     Starts
                   </label>
                   <input
                     type="datetime-local"
                     value={startAt}
                     onChange={(e) => setStartAt(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
                   />
                 </div>
 
                 <div>
-                  <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+                  <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
                     Ends (optional)
                   </label>
                   <input
                     type="datetime-local"
                     value={endAt}
                     onChange={(e) => setEndAt(e.target.value)}
-                    className="w-full rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+                    className="w-full rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-[#ECE9F6] px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t border-line px-6 py-4">
               <Button type="button" variant="outline" onClick={onClose} className="h-10 rounded-xl px-5">
                 Cancel
               </Button>

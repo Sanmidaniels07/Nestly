@@ -142,7 +142,7 @@ export default function EditProductPage({ params }: Props) {
 
   if (!product) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white px-8 py-16 text-center text-[13.5px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-line bg-surface px-8 py-16 text-center text-[13.5px] text-subtle">
         Product not found.
       </div>
     );
@@ -153,13 +153,13 @@ export default function EditProductPage({ params }: Props) {
       <div>
         <BackButton fallbackHref={PRODUCTS_PATH} label="Back to products" />
 
-        <p className="mt-4 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+        <p className="mt-4 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Catalog
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-[#13131A] sm:text-[40px]">
+        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-ink sm:text-[40px]">
           Edit product
         </h1>
-        <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-[#64748B]">
+        <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
           Update {product.title} — changes apply as soon as you save.
         </p>
       </div>
@@ -169,7 +169,7 @@ export default function EditProductPage({ params }: Props) {
       <EditImagesSection draft={draft} setDraft={setDraft} />
       <EditSpecsSection draft={draft} setDraft={setDraft} />
 
-      <div className="flex flex-col-reverse gap-3 rounded-2xl border border-[#ECE9F6] bg-white p-5 sm:flex-row sm:items-center sm:justify-end">
+      <div className="flex flex-col-reverse gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-end">
         <Button variant="outline" onClick={() => goBack()} className="h-11 rounded-xl px-7">
           Cancel
         </Button>

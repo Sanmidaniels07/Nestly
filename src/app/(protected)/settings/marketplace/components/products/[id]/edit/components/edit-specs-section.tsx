@@ -36,20 +36,20 @@ export default function EditSpecsSection({ draft, setDraft }: Props) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Specifications
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Add technical details buyers care about — optional, but builds trust.
       </p>
 
       <div className="mt-6 space-y-3">
         {draft.specifications.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-10 text-center">
-            <ListChecks size={26} className="text-[#C4C0DC]" strokeWidth={1.5} />
-            <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No specifications added</p>
-            <p className="mt-1 text-[12.5px] text-[#94A3B8]">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong py-10 text-center">
+            <ListChecks size={26} className="text-faint" strokeWidth={1.5} />
+            <p className="mt-3 text-[13.5px] font-medium text-ink">No specifications added</p>
+            <p className="mt-1 text-[12.5px] text-subtle">
               Add specs like processor, storage, or dimensions.
             </p>
           </div>
@@ -68,13 +68,13 @@ export default function EditSpecsSection({ draft, setDraft }: Props) {
 
       <button
         onClick={addSpecification}
-        className="mt-4 flex items-center gap-2 rounded-xl border border-violet-200 px-4 py-2.5 text-[13.5px] font-medium text-violet-700 transition-colors hover:bg-violet-50"
+        className="mt-4 flex items-center gap-2 rounded-xl border border-violet-200 dark:border-violet-500/30 px-4 py-2.5 text-[13.5px] font-medium text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10"
       >
         <Plus size={15} />
         Add specification
       </button>
 
-      <div className="mt-8 border-t border-[#F2F1F8] pt-6">
+      <div className="mt-8 border-t border-line-soft pt-6">
         <EditProfileTags
           title="Highlights"
           description="Key selling points buyers see at a glance."
@@ -85,7 +85,7 @@ export default function EditSpecsSection({ draft, setDraft }: Props) {
         />
       </div>
 
-      <div className="mt-8 border-t border-[#F2F1F8] pt-6">
+      <div className="mt-8 border-t border-line-soft pt-6">
         <VariantsSection
           variants={draft.variants}
           onChange={(variants) => setDraft((prev) => ({ ...prev, variants }))}

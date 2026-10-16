@@ -61,10 +61,10 @@ export default function ProductDetailsPage({ params }: Props) {
   if (isError || !product) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-20 text-center">
-        <p className="text-[15px] font-medium text-[#13131A]">
+        <p className="text-[15px] font-medium text-ink">
           Product not found
         </p>
-        <p className="mt-1 text-[14px] text-[#64748B]">
+        <p className="mt-1 text-[14px] text-muted">
           This listing may have been removed or the link is incorrect.
         </p>
       </div>

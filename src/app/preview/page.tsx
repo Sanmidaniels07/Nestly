@@ -33,10 +33,10 @@ function MockCard({
   className?: string;
 }) {
   return (
-    <Card className={`overflow-hidden border-[#E5E7EB] ${className}`}>
-      <div className="flex items-center gap-2.5 border-b border-[#F1F0F5] bg-white px-5 py-4">
+    <Card className={`overflow-hidden border-line-strong ${className}`}>
+      <div className="flex items-center gap-2.5 border-b border-line-soft bg-surface px-5 py-4">
         <Icon size={17} style={{ color }} />
-        <span className="text-[13.5px] font-semibold text-[#1A1A2E]">{label}</span>
+        <span className="text-[13.5px] font-semibold text-ink">{label}</span>
       </div>
       <div className="p-6">{children}</div>
     </Card>
@@ -46,14 +46,14 @@ function MockCard({
 export default function PreviewPage() {
   return (
     <GuestGuard>
-      <main className="min-h-screen overflow-x-hidden bg-[#F5F7FA] pb-24 pt-32 text-[#1A1A2E]">
+      <main className="min-h-screen overflow-x-hidden bg-canvas pb-24 pt-32 text-ink">
         <section className="mx-auto max-w-3xl px-6 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <span className="inline-flex items-center gap-2 rounded-full bg-[#E8F1FF] px-4 py-1.5 text-[13px] font-semibold text-[#2B7FFF]">
+            <span className="inline-flex items-center gap-2 rounded-full bg-tint-blue px-4 py-1.5 text-[13px] font-semibold text-[#2B7FFF]">
               A closer look
             </span>
             <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tighter md:text-6xl">
@@ -61,7 +61,7 @@ export default function PreviewPage() {
               <br />
               in action
             </h1>
-            <p className="mx-auto mt-6 max-w-xl text-lg text-[#6B7280] md:text-xl">
+            <p className="mx-auto mt-6 max-w-xl text-lg text-muted md:text-xl">
               A quick look at what&apos;s waiting for you inside — feed, communities,
               messaging, and a full marketplace.
             </p>
@@ -81,12 +81,12 @@ export default function PreviewPage() {
                   <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600" />
                   <div className="min-w-0 flex-1">
                     <div className="text-[13.5px] font-semibold">
-                      John Doe <span className="font-normal text-[#9CA3AF]">· 2h</span>
+                      John Doe <span className="font-normal text-subtle">· 2h</span>
                     </div>
-                    <p className="mt-1 text-[13.5px] text-[#6B7280]">
+                    <p className="mt-1 text-[13.5px] text-muted">
                       Weekend vibes with the crew! 🎉
                     </p>
-                    <div className="mt-3 flex items-center gap-5 text-[#9CA3AF]">
+                    <div className="mt-3 flex items-center gap-5 text-subtle">
                       <span className="flex items-center gap-1.5 text-[12.5px]">
                         <Heart size={14} className="fill-red-500 text-red-500" /> 24
                       </span>
@@ -100,9 +100,9 @@ export default function PreviewPage() {
                   <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-violet-400 to-violet-600" />
                   <div className="min-w-0 flex-1">
                     <div className="text-[13.5px] font-semibold">
-                      Alice Smith <span className="font-normal text-[#9CA3AF]">· 4h</span>
+                      Alice Smith <span className="font-normal text-subtle">· 4h</span>
                     </div>
-                    <p className="mt-1 text-[13.5px] text-[#6B7280]">
+                    <p className="mt-1 text-[13.5px] text-muted">
                       New recipe turned out amazing 🍜
                     </p>
                   </div>
@@ -119,12 +119,12 @@ export default function PreviewPage() {
           >
             <MockCard icon={Users2} color="#8B5CF6" label="Communities">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-[#F3EEFD] text-[28px]">
+                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-tint text-[28px]">
                   🎨
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[14.5px] font-semibold">Indie Makers</p>
-                  <p className="mt-0.5 text-[12.5px] text-[#9CA3AF]">3.2K members · 48 posts today</p>
+                  <p className="mt-0.5 text-[12.5px] text-subtle">3.2K members · 48 posts today</p>
                   <div className="mt-2.5 flex -space-x-2">
                     {["#F87171", "#FBBF24", "#34D399", "#60A5FA"].map((c) => (
                       <div
@@ -135,7 +135,7 @@ export default function PreviewPage() {
                     ))}
                   </div>
                 </div>
-                <span className="shrink-0 rounded-full border border-violet-200 px-3.5 py-1.5 text-[12px] font-semibold text-violet-600">
+                <span className="shrink-0 rounded-full border border-violet-200 dark:border-violet-500/30 px-3.5 py-1.5 text-[12px] font-semibold text-violet-600 dark:text-violet-400">
                   Joined
                 </span>
               </div>
@@ -150,13 +150,13 @@ export default function PreviewPage() {
           >
             <MockCard icon={CalendarDays} color="#EC4899" label="Events">
               <div className="flex items-center gap-4">
-                <div className="flex h-16 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-[#FCE7F3]">
+                <div className="flex h-16 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-[#FCE7F3] dark:bg-pink-500/15">
                   <span className="text-[11px] font-bold uppercase text-[#EC4899]">Aug</span>
                   <span className="text-[20px] font-bold text-[#EC4899]">15</span>
                 </div>
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-[14.5px] font-semibold">Rooftop Sunset Mixer</p>
-                  <p className="mt-0.5 text-[12.5px] text-[#9CA3AF]">6:00 PM · 128 going</p>
+                  <p className="mt-0.5 text-[12.5px] text-subtle">6:00 PM · 128 going</p>
                 </div>
                 <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#EC4899] px-3.5 py-1.5 text-[12px] font-semibold text-white">
                   <Check size={12} strokeWidth={3} /> Going
@@ -174,7 +174,7 @@ export default function PreviewPage() {
             <MockCard icon={MessageCircle} color="#10B981" label="Real-time Messaging">
               <div className="space-y-3">
                 <div className="flex justify-start">
-                  <div className="max-w-[75%] rounded-2xl rounded-bl-sm bg-[#F3F4F6] px-4 py-2.5 text-[13.5px]">
+                  <div className="max-w-[75%] rounded-2xl rounded-bl-sm bg-surface-muted px-4 py-2.5 text-[13.5px]">
                     Hey! Are we still on for tomorrow?
                   </div>
                 </div>
@@ -183,7 +183,7 @@ export default function PreviewPage() {
                     Wouldn&apos;t miss it 🙌
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 pl-1 text-[#9CA3AF]">
+                <div className="flex items-center gap-1.5 pl-1 text-subtle">
                   <span className="text-[12px]">Alex is typing</span>
                   <div className="flex gap-1">
                     {[0, 150, 300].map((delay) => (
@@ -215,7 +215,7 @@ export default function PreviewPage() {
                   { emoji: "🧴", name: "Skincare Set", price: "₦18,500" },
                 ].map((product) => (
                   <div key={product.name}>
-                    <div className="flex h-20 items-center justify-center rounded-2xl bg-[#F5F7FA] text-4xl">
+                    <div className="flex h-20 items-center justify-center rounded-2xl bg-canvas text-4xl">
                       {product.emoji}
                     </div>
                     <p className="mt-2.5 truncate text-[13px] font-medium">{product.name}</p>
@@ -248,11 +248,11 @@ export default function PreviewPage() {
                       </div>
                       {i < 3 && <div className="h-0.5 flex-1 bg-emerald-400" />}
                     </div>
-                    <span className="mt-2 text-[11.5px] font-medium text-[#6B7280]">{step}</span>
+                    <span className="mt-2 text-[11.5px] font-medium text-muted">{step}</span>
                   </div>
                 ))}
               </div>
-              <p className="mt-5 text-center text-[13px] text-emerald-600">
+              <p className="mt-5 text-center text-[13px] text-emerald-600 dark:text-emerald-400">
                 Arrived today · Order #NESTLY_8F2A91
               </p>
             </MockCard>

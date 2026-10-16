@@ -30,10 +30,10 @@ export default function EventsPage() {
     <div className="mx-auto max-w-5xl space-y-8 pb-20 pt-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {data?.total ?? 0} events
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[40px] italic leading-none text-[#13131A]">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[40px] italic leading-none text-ink">
             Events
           </h1>
         </div>
@@ -57,7 +57,7 @@ export default function EventsPage() {
               ${
                 scope === tab.value
                   ? "bg-violet-600 text-white"
-                  : "border border-[#E5E7EB] text-[#64748B] hover:border-violet-200"
+                  : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
               }
             `}
           >
@@ -69,14 +69,14 @@ export default function EventsPage() {
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-28 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-28 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : events.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">
-          <CalendarDays className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[15px] font-medium text-[#13131A]">No events yet</p>
-          <p className="mt-1 text-[14px] text-[#64748B]">Be the first to create one.</p>
+        <div className="rounded-2xl border border-dashed border-line-strong bg-surface/60 px-8 py-16 text-center">
+          <CalendarDays className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[15px] font-medium text-ink">No events yet</p>
+          <p className="mt-1 text-[14px] text-muted">Be the first to create one.</p>
         </div>
       ) : (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -87,27 +87,27 @@ export default function EventsPage() {
               <Link
                 key={event.id}
                 href={`/events/${event.id}`}
-                className="flex items-center gap-4 rounded-2xl border border-[#EDEBF5] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.25)]"
+                className="flex items-center gap-4 rounded-2xl border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.25)]"
               >
-                <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-[#ECE9F6] bg-[#FBFAFE] py-2">
-                  <span className="font-[family-name:var(--font-mono)] text-[18px] font-semibold leading-none text-violet-600">
+                <div className="flex w-14 shrink-0 flex-col items-center rounded-xl border border-line bg-surface-sunken py-2">
+                  <span className="font-[family-name:var(--font-mono)] text-[18px] font-semibold leading-none text-violet-600 dark:text-violet-400">
                     {startDate.getDate()}
                   </span>
-                  <span className="mt-1 text-[10px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                  <span className="mt-1 text-[10px] font-medium uppercase tracking-wide text-subtle">
                     {MONTHS[startDate.getMonth()]}
                   </span>
                 </div>
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[15px] font-semibold text-[#13131A]">
+                  <p className="truncate text-[15px] font-semibold text-ink">
                     {event.title}
                   </p>
                   {event.location && (
-                    <p className="mt-0.5 truncate text-[13px] text-[#64748B]">
+                    <p className="mt-0.5 truncate text-[13px] text-muted">
                       {event.location}
                     </p>
                   )}
-                  <p className="mt-1 font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+                  <p className="mt-1 font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
                     {event.attendeeCount ?? 0} going
                   </p>
                 </div>

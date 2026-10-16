@@ -25,7 +25,7 @@ export default function CategoriesSection() {
           ? Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[164px] animate-pulse rounded-2xl border border-[#EDEBF5] bg-[#F7F7FB]"
+                className="h-[164px] animate-pulse rounded-2xl border border-line bg-surface-2"
               />
             ))
           : categories?.map((category) => (

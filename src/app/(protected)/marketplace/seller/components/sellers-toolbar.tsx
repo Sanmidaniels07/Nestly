@@ -10,7 +10,7 @@ interface Props {
 
 export default function SellersToolbar({ search, onSearchChange }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
+    <section className="rounded-2xl border border-line bg-surface p-5">
       <Input
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}

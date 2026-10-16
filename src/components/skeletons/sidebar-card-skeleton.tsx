@@ -2,7 +2,7 @@ import Skeleton from "@/src/components/ui/skeleton";
 
 export function SidebarCardSkeleton({ rows = 3 }: { rows?: number }) {
   return (
-    <div className="rounded-2xl border border-[#EDEBF5] bg-white p-5">
+    <div className="rounded-2xl border border-line bg-surface p-5">
       <Skeleton className="h-3.5 w-24" />
 
       <div className="mt-4 space-y-3.5">

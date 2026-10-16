@@ -197,7 +197,7 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
           </div>
         </div>
 
-        <div className="flex items-center justify-end gap-3 border-t border-[#ECE9F6] bg-white/95 px-6 py-4 backdrop-blur-sm sm:px-8">
+        <div className="flex items-center justify-end gap-3 border-t border-line bg-surface/95 px-6 py-4 backdrop-blur-sm sm:px-8">
           <Button
             type="button"
             variant="outline"

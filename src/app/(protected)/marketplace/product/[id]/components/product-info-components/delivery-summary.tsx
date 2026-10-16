@@ -9,15 +9,15 @@ interface Props {
 
 export default function DeliverySummary({ product }: Props) {
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-[#FAFAFD] p-4">
+    <div className="rounded-2xl border border-line bg-surface-sunken p-4">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <MapPin size={16} className="text-violet-600" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <MapPin size={16} className="text-violet-600 dark:text-violet-400" />
         </div>
 
         <div>
-          <p className="text-[13.5px] font-medium text-[#13131A]">Seller location</p>
-          <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#64748B]">
+          <p className="text-[13.5px] font-medium text-ink">Seller location</p>
+          <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-muted">
             {product.seller.distance} away
           </p>
         </div>

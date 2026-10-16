@@ -19,7 +19,7 @@ export default function CategoryFilter({ value, onChange }: Props) {
           ${
             value === "All"
               ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
-              : "border border-[#ECE9F6] bg-white text-[#475569] hover:border-violet-200"
+              : "border border-line bg-surface text-ink-3 hover:border-violet-200 dark:hover:border-violet-500/30"
           }
         `}
       >
@@ -38,7 +38,7 @@ export default function CategoryFilter({ value, onChange }: Props) {
               ${
                 active
                   ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
-                  : "border border-[#ECE9F6] bg-white text-[#475569] hover:border-violet-200"
+                  : "border border-line bg-surface text-ink-3 hover:border-violet-200 dark:hover:border-violet-500/30"
               }
             `}
           >

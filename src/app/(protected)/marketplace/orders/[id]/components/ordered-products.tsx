@@ -22,8 +22,8 @@ interface Props {
 
 export default function OrderedProducts({ order }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Ordered products
       </h2>
 
@@ -52,8 +52,8 @@ function OrderedProductItem({
   const isDelivered = (item.status ?? orderStatus).toLowerCase() === "delivered";
 
   return (
-    <article className="flex flex-col gap-5 rounded-2xl border border-[#ECE9F6] p-5 transition-colors hover:border-violet-200 sm:flex-row">
-      <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-xl bg-[#F8F8FC] sm:w-28">
+    <article className="flex flex-col gap-5 rounded-2xl border border-line p-5 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 sm:flex-row">
+      <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-xl bg-surface-sunken sm:w-28">
         {primaryImage && (
           <Image fill src={primaryImage} alt={item.product.title} className="object-cover" />
         )}
@@ -63,42 +63,42 @@ function OrderedProductItem({
         <div className="flex flex-1 flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="min-w-0">
             {item.product.brand && (
-              <p className="text-[12px] font-medium text-violet-600">{item.product.brand}</p>
+              <p className="text-[12px] font-medium text-violet-600 dark:text-violet-400">{item.product.brand}</p>
             )}
-            <h3 className="mt-0.5 truncate text-[15px] font-semibold text-[#13131A]">
+            <h3 className="mt-0.5 truncate text-[15px] font-semibold text-ink">
               {item.product.title}
             </h3>
             {item.product.store && (
-              <p className="mt-1.5 text-[12.5px] text-[#64748B]">
+              <p className="mt-1.5 text-[12.5px] text-muted">
                 Sold by{" "}
-                <span className="font-medium text-[#334155]">{item.product.store.name}</span>
+                <span className="font-medium text-ink-2">{item.product.store.name}</span>
               </p>
             )}
 
             <div className="mt-3 flex gap-6">
               <div>
-                <p className="text-[11px] text-[#94A3B8]">Quantity</p>
-                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-[#13131A]">
+                <p className="text-[11px] text-subtle">Quantity</p>
+                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-ink">
                   {item.quantity}
                 </p>
               </div>
               <div>
-                <p className="text-[11px] text-[#94A3B8]">Unit price</p>
-                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-[#13131A]">
+                <p className="text-[11px] text-subtle">Unit price</p>
+                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-ink">
                   {money(item.unitPrice)}
                 </p>
               </div>
               <div>
-                <p className="text-[11px] text-[#94A3B8]">Total</p>
-                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700">
+                <p className="text-[11px] text-subtle">Total</p>
+                <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700 dark:text-violet-300">
                   {money(item.totalPrice)}
                 </p>
               </div>
             </div>
 
             {item.status && (
-              <p className="mt-2 text-[11.5px] font-medium text-[#94A3B8]">
-                Item status: <span className="capitalize text-[#334155]">{item.status.toLowerCase()}</span>
+              <p className="mt-2 text-[11.5px] font-medium text-subtle">
+                Item status: <span className="capitalize text-ink-2">{item.status.toLowerCase()}</span>
               </p>
             )}
           </div>
@@ -106,7 +106,7 @@ function OrderedProductItem({
           <div className="flex shrink-0 gap-2.5 sm:flex-col">
             <Link
               href={`/marketplace/product/${item.productId}`}
-              className="flex h-10 items-center justify-center rounded-xl border border-[#ECE9F6] px-4 text-[12.5px] font-semibold text-[#334155] transition-colors hover:bg-[#F8F7FC]"
+              className="flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
             >
               View product
             </Link>
@@ -114,7 +114,7 @@ function OrderedProductItem({
             {isDelivered && !reviewing && (
               <button
                 onClick={() => setReviewing(true)}
-                className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-4 text-[12.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-100"
+                className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-violet-50 dark:bg-violet-500/10 px-4 text-[12.5px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-100 dark:hover:bg-violet-500/15"
               >
                 <MessageSquarePlus size={14} />
                 Write a review
@@ -124,7 +124,7 @@ function OrderedProductItem({
             {isDelivered && !returning && (
               <button
                 onClick={() => setReturning(true)}
-                className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50"
+                className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 dark:border-amber-500/30 px-4 text-[12.5px] font-semibold text-amber-700 dark:text-amber-300 transition-colors hover:bg-amber-50 dark:hover:bg-amber-500/10"
               >
                 <RotateCcw size={14} />
                 Request return

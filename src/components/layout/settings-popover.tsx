@@ -83,11 +83,11 @@ export default function SettingsPopover({
     <div
       ref={popoverRef}
       style={{ bottom: position.bottom, left: position.left }}
-      className="fixed z-[100] max-h-[calc(100vh-2rem)] w-64 overflow-y-auto rounded-2xl border border-[#ECE9F6] bg-white p-2 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]"
+      className="fixed z-[100] max-h-[calc(100vh-2rem)] w-64 overflow-y-auto rounded-2xl border border-line bg-surface p-2 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]"
     >
       {email && (
-        <div className="border-b border-[#F2F1F8] px-3 py-2.5">
-          <p className="truncate font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+        <div className="border-b border-line-soft px-3 py-2.5">
+          <p className="truncate font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
             {email}
           </p>
         </div>
@@ -105,27 +105,27 @@ export default function SettingsPopover({
               aria-current={active ? "page" : undefined}
               className={`
                 relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium transition-colors
-                ${active ? "bg-violet-50 text-violet-700" : "text-[#334155] hover:bg-[#F7F7FB] hover:text-violet-600"}
+                ${active ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300" : "text-ink-2 hover:bg-surface-2 hover:text-violet-600 dark:hover:text-violet-400"}
               `}
             >
               {active && (
                 <span className="absolute left-0 top-1/2 h-4 w-[3px] -translate-y-1/2 rounded-full bg-gradient-to-b from-violet-600 to-indigo-600" />
               )}
-              <item.icon size={16} className={active ? "text-violet-600" : "text-[#94A3B8]"} />
+              <item.icon size={16} className={active ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
               {item.title}
             </Link>
           );
         })}
       </div>
 
-      <div className="border-t border-[#F2F1F8] py-1.5">
+      <div className="border-t border-line-soft py-1.5">
         <button
           type="button"
           onClick={() => {
             onClose();
             onLogoutClick();
           }}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-red-600 transition-colors hover:bg-red-50"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
         >
           <LogOut size={16} />
           Log out

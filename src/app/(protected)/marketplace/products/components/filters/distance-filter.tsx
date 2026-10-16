@@ -19,7 +19,7 @@ export default function DistanceFilter({ value, onChange }: Props) {
             onClick={() => onChange(distance)}
             className={`
               rounded-full px-4 py-2 text-[13px] font-medium transition-colors
-              ${active ? "bg-violet-600 text-white" : "border border-[#ECE9F6] text-[#475569] hover:border-violet-200"}
+              ${active ? "bg-violet-600 text-white" : "border border-line text-ink-3 hover:border-violet-200 dark:hover:border-violet-500/30"}
             `}
           >
             {distance}

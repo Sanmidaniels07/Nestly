@@ -30,22 +30,22 @@ export default function SalesOverview() {
     <section className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Performance
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
             Sales overview
           </h2>
         </div>
 
         {!isLoading && points.length > 0 && (
           <div className="flex items-baseline gap-3">
-            <p className="font-[family-name:var(--font-mono)] text-[26px] font-semibold text-[#13131A]">
+            <p className="font-[family-name:var(--font-mono)] text-[26px] font-semibold text-ink">
               {formatNaira(total)}
             </p>
             <span
               className={`flex items-center gap-1 font-[family-name:var(--font-mono)] text-[13px] font-medium ${
-                isUp ? "text-emerald-600" : "text-red-500"
+                isUp ? "text-emerald-600 dark:text-emerald-400" : "text-red-500"
               }`}
             >
               {isUp ? <TrendingUp size={14} /> : <TrendingDown size={14} />}

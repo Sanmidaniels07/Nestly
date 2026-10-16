@@ -12,12 +12,12 @@ export default function RecentActivity() {
   const { mutate: markRead } = useMarkNotificationRead();
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
+    <div className="rounded-2xl border border-line bg-surface p-7">
       <div className="flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <Bell size={16} className="text-violet-600" />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <Bell size={16} className="text-violet-600 dark:text-violet-400" />
         </div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
           Recent activity
         </h3>
       </div>
@@ -37,7 +37,7 @@ export default function RecentActivity() {
       )}
 
       {!isLoading && notifications?.length === 0 && (
-        <p className="py-8 text-center text-[13px] text-[#94A3B8]">
+        <p className="py-8 text-center text-[13px] text-subtle">
           No notifications yet
         </p>
       )}
@@ -56,12 +56,12 @@ export default function RecentActivity() {
               <div className="min-w-0 flex-1">
                 <p
                   className={`text-[13.5px] leading-snug ${
-                    notification.isRead ? "text-[#64748B]" : "font-medium text-[#13131A]"
+                    notification.isRead ? "text-muted" : "font-medium text-ink"
                   }`}
                 >
                   {notification.message}
                 </p>
-                <p className="mt-1.5 text-[12px] text-[#94A3B8]">
+                <p className="mt-1.5 text-[12px] text-subtle">
                   {formatRelativeTime(notification.createdAt)}
                 </p>
               </div>

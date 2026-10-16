@@ -19,19 +19,19 @@ export default function RequestReturnForm({ orderItemId, onDone }: Props) {
   };
 
   return (
-    <div className="mt-3 space-y-3 rounded-xl border border-dashed border-amber-200 bg-amber-50/40 p-4">
+    <div className="mt-3 space-y-3 rounded-xl border border-dashed border-amber-200 dark:border-amber-500/30 bg-amber-50/40 p-4">
       <textarea
         value={reason}
         onChange={(e) => setReason(e.target.value)}
         placeholder="Why are you returning this item?"
         rows={3}
-        className="w-full resize-none rounded-xl border border-[#E4E6EB] bg-white px-3.5 py-2.5 text-[13.5px] text-[#13131A] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-amber-400"
+        className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3.5 py-2.5 text-[13.5px] text-ink outline-none transition-colors placeholder:text-subtle focus:border-amber-400"
       />
 
       <div className="flex justify-end gap-2">
         <button
           onClick={onDone}
-          className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-[#64748B] hover:bg-gray-100"
+          className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted"
         >
           Cancel
         </button>

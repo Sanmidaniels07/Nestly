@@ -34,7 +34,7 @@ export default function CommunityDetailPage({
   if (isLoading) {
     return (
       <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
-        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+        <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
           <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
             <Skeleton className="h-20 w-20 shrink-0 rounded-2xl" />
             <div className="min-w-0 flex-1 space-y-3 text-center sm:text-left">
@@ -51,14 +51,14 @@ export default function CommunityDetailPage({
   if (!community) {
     return (
       <div className="mx-auto max-w-3xl pb-20 pt-16 text-center">
-        <p className="text-[15px] font-medium text-[#13131A]">Community not found</p>
+        <p className="text-[15px] font-medium text-ink">Community not found</p>
       </div>
     );
   }
 
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
-      <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
           {community.icon ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -75,7 +75,7 @@ export default function CommunityDetailPage({
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-start">
-              <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-[#13131A]">
+              <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-ink">
                 {community.name}
               </h1>
 
@@ -83,12 +83,12 @@ export default function CommunityDetailPage({
             </div>
 
             {community.description && (
-              <p className="mt-4 text-[14.5px] leading-relaxed text-[#475569]">
+              <p className="mt-4 text-[14.5px] leading-relaxed text-ink-3">
                 {community.description}
               </p>
             )}
 
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-5 text-[13px] text-[#64748B] sm:justify-start">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-5 text-[13px] text-muted sm:justify-start">
               <div className="flex items-center gap-1.5">
                 <Users2 size={15} />
                 {formatCount(community.memberCount)} members
@@ -125,14 +125,14 @@ function DeleteCommunitySection({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-red-100 bg-red-50/40 p-6">
+    <section className="rounded-2xl border border-red-100 dark:border-red-500/20 bg-red-50/40 p-6">
       <div className="flex items-start gap-3.5">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100">
-          <ShieldAlert size={17} className="text-red-600" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-500/15">
+          <ShieldAlert size={17} className="text-red-600 dark:text-red-400" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Delete community</h3>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <h3 className="text-[15px] font-semibold text-ink">Delete community</h3>
+          <p className="mt-1 text-[13px] text-muted">
             Permanently delete this community for everyone. This cannot be undone.
           </p>
         </div>
@@ -142,7 +142,7 @@ function DeleteCommunitySection({ slug }: { slug: string }) {
         <div className="mt-4 flex gap-2.5">
           <button
             onClick={() => setConfirming(false)}
-            className="h-11 rounded-xl border border-[#E5E7EB] px-6 text-[13.5px] font-semibold text-[#334155] transition-colors hover:bg-gray-50"
+            className="h-11 rounded-xl border border-line-strong px-6 text-[13.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
           >
             Cancel
           </button>
@@ -158,7 +158,7 @@ function DeleteCommunitySection({ slug }: { slug: string }) {
       ) : (
         <button
           onClick={handleDelete}
-          className="mt-4 h-11 rounded-xl border border-red-200 px-6 text-[13.5px] font-semibold text-red-600 transition-colors hover:bg-red-50"
+          className="mt-4 h-11 rounded-xl border border-red-200 dark:border-red-500/30 px-6 text-[13.5px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
         >
           Delete community
         </button>
@@ -187,7 +187,7 @@ function MembershipButton({
         shrink-0 rounded-full px-5 py-2 text-[13px] font-semibold transition-colors disabled:opacity-50
         ${
           isMember
-            ? "border border-[#E5E7EB] text-[#64748B] hover:border-red-200 hover:text-red-500"
+            ? "border border-line-strong text-muted hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
             : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
         }
       `}

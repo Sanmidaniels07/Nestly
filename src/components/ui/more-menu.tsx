@@ -39,11 +39,11 @@ export function MenuRow({
       className="group flex cursor-pointer items-center gap-3 rounded-2xl px-2.5 py-2.5 transition-colors hover:bg-violet-50/70 active:scale-[0.98]"
     >
       <div className="flex h-9 w-9 shrink-0 items-center justify-center">{icon}</div>
-      <span className="flex-1 text-[13.5px] font-medium text-[#13131A]">{label}</span>
+      <span className="flex-1 text-[13.5px] font-medium text-ink">{label}</span>
       {showChevron && (
         <ChevronRight
           size={15}
-          className="shrink-0 text-[#CBD5E1] transition-colors group-hover:text-violet-400"
+          className="shrink-0 text-faint transition-colors group-hover:text-violet-400"
         />
       )}
     </div>
@@ -80,8 +80,8 @@ export default function MobileMoreMenu({ children }: { children: React.ReactNode
         aria-expanded={open}
         className={`flex h-11 w-11 items-center justify-center rounded-xl border transition-colors ${
           open
-            ? "border-violet-200 bg-violet-50 text-violet-600"
-            : "border-[#ECE9F6] bg-white text-[#64748B] hover:border-violet-200 hover:text-violet-600"
+            ? "border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400"
+            : "border-line bg-surface text-muted hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-600 dark:hover:text-violet-400"
         }`}
       >
         <MoreHorizontal size={18} />
@@ -105,9 +105,9 @@ export default function MobileMoreMenu({ children }: { children: React.ReactNode
               exit={{ opacity: 0, y: -8, scale: 0.94 }}
               transition={{ type: "spring", stiffness: 420, damping: 32 }}
               style={{ transformOrigin: "top right" }}
-              className="absolute right-0 top-[calc(100%+10px)] z-50 w-64 overflow-hidden rounded-3xl border border-[#ECE9F6] bg-white/95 p-2 shadow-[0_24px_60px_-16px_rgba(76,29,149,0.22)] backdrop-blur-xl"
+              className="absolute right-0 top-[calc(100%+10px)] z-50 w-64 overflow-hidden rounded-3xl border border-line bg-surface/95 p-2 shadow-[0_24px_60px_-16px_rgba(76,29,149,0.22)] backdrop-blur-xl"
             >
-              <p className="px-3 pb-1.5 pt-1 font-[family-name:var(--font-mono)] text-[10.5px] font-medium uppercase tracking-[0.2em] text-[#94A3B8]">
+              <p className="px-3 pb-1.5 pt-1 font-[family-name:var(--font-mono)] text-[10.5px] font-medium uppercase tracking-[0.2em] text-subtle">
                 Quick access
               </p>
 

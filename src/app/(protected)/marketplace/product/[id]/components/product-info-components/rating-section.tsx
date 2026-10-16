@@ -14,10 +14,10 @@ export default function RatingSection({ product }: Props) {
     <div className="flex flex-wrap items-center gap-3">
       <div className="flex items-center gap-1">
         <Star size={16} className="fill-yellow-400 text-yellow-400" />
-        <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-[#13131A]">
+        <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-ink">
           {product.rating}
         </span>
-        <span className="font-[family-name:var(--font-mono)] text-[13px] text-[#94A3B8]">
+        <span className="font-[family-name:var(--font-mono)] text-[13px] text-subtle">
           ({product.reviewCount ?? 0} reviews)
         </span>
       </div>

@@ -3,15 +3,15 @@
 export default function AddProductHeader() {
   return (
     <section>
-      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
         Catalog
       </p>
 
-      <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-[#13131A] sm:text-[40px]">
+      <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-ink sm:text-[40px]">
         Add product
       </h1>
 
-      <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-[#64748B]">
+      <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
         Complete the information below to publish a new product to your marketplace store.
       </p>
     </section>

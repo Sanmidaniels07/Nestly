@@ -26,10 +26,10 @@ export default function CommunitiesPage() {
     <div className="mx-auto max-w-5xl space-y-8 pb-20 pt-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {data?.total ?? 0} communities
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[40px] italic leading-none text-[#13131A]">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[40px] italic leading-none text-ink">
             Communities
           </h1>
         </div>
@@ -53,16 +53,16 @@ export default function CommunitiesPage() {
       {isLoading ? (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-40 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-40 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : communities.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">
-          <Users2 className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[15px] font-medium text-[#13131A]">
+        <div className="rounded-2xl border border-dashed border-line-strong bg-surface/60 px-8 py-16 text-center">
+          <Users2 className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[15px] font-medium text-ink">
             {search ? `No communities match "${search}"` : "No communities yet"}
           </p>
-          <p className="mt-1 text-[14px] text-[#64748B]">
+          <p className="mt-1 text-[14px] text-muted">
             {search ? "Try a different search." : "Be the first to create one."}
           </p>
         </div>
@@ -86,7 +86,7 @@ function CommunityCard({ community }: { community: Community }) {
   );
 
   return (
-    <div className="flex flex-col justify-between gap-4 rounded-2xl border border-[#EDEBF5] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-violet-200 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.25)]">
+    <div className="flex flex-col justify-between gap-4 rounded-2xl border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.25)]">
       <Link href={`/communities/${community.slug}`} className="flex items-start gap-3">
         {community.icon ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -102,17 +102,17 @@ function CommunityCard({ community }: { community: Community }) {
         )}
 
         <div className="min-w-0">
-          <h3 className="truncate text-[15px] font-semibold text-[#13131A]">
+          <h3 className="truncate text-[15px] font-semibold text-ink">
             {community.name}
           </h3>
-          <p className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
             {formatCount(community.memberCount)} members
           </p>
         </div>
       </Link>
 
       {community.description && (
-        <p className="line-clamp-2 text-[13.5px] leading-relaxed text-[#64748B]">
+        <p className="line-clamp-2 text-[13.5px] leading-relaxed text-muted">
           {community.description}
         </p>
       )}
@@ -124,8 +124,8 @@ function CommunityCard({ community }: { community: Community }) {
           w-full rounded-full py-2 text-[12.5px] font-semibold transition-colors disabled:opacity-50
           ${
             isMember
-              ? "border border-[#E5E7EB] text-[#64748B] hover:border-red-200 hover:text-red-500"
-              : "bg-violet-50 text-violet-600 hover:bg-violet-100"
+              ? "border border-line-strong text-muted hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
+              : "bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 hover:bg-violet-100 dark:hover:bg-violet-500/15"
           }
         `}
       >

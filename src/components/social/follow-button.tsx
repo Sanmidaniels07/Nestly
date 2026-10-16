@@ -25,8 +25,8 @@ export default function FollowButton({ isFollowing, onClick }: Props) {
         ${
           isFollowing
             ? showUnfollow
-              ? "border border-red-200 bg-red-50 text-red-600"
-              : "border border-[#E5E7EB] bg-white text-[#334155]"
+              ? "border border-red-200 dark:border-red-500/30 bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400"
+              : "border border-line-strong bg-surface text-ink-2"
             : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md shadow-violet-500/25 hover:brightness-110"
         }
       `}

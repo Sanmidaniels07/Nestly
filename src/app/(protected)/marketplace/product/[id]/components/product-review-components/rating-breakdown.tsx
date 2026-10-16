@@ -19,19 +19,19 @@ export default function RatingBreakdown({ breakdown, total, activeStars, onSelec
             key={item.stars}
             onClick={() => onSelectStars(active ? null : item.stars)}
             className={`flex w-full items-center gap-3 rounded-lg px-1.5 py-1 transition-colors ${
-              active ? "bg-violet-50" : "hover:bg-[#F7F7FB]"
+              active ? "bg-violet-50 dark:bg-violet-500/10" : "hover:bg-surface-2"
             }`}
           >
-            <span className="w-8 font-[family-name:var(--font-mono)] text-[12.5px] text-[#64748B]">
+            <span className="w-8 font-[family-name:var(--font-mono)] text-[12.5px] text-muted">
               {item.stars}★
             </span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-[#ECE9F6]">
+            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-track">
               <div
                 style={{ width: `${width}%` }}
                 className="h-full rounded-full bg-violet-600 transition-all duration-300"
               />
             </div>
-            <span className="w-8 text-right font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+            <span className="w-8 text-right font-[family-name:var(--font-mono)] text-[12px] text-subtle">
               {item.value}
             </span>
           </button>

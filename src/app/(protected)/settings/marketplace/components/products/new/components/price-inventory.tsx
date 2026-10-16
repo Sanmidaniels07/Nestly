@@ -45,14 +45,14 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <div className="space-y-8">
         {/* Pricing */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
             Pricing
           </h2>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <p className="mt-1 text-[13px] text-muted">
             Set what buyers will pay for this product.
           </p>
 
@@ -81,20 +81,20 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
             draft.price &&
             Number(draft.comparePrice) > 0 &&
             Number(draft.comparePrice) <= Number(draft.price) && (
-              <p className="mt-2 text-[12px] text-amber-600">
+              <p className="mt-2 text-[12px] text-amber-600 dark:text-amber-400">
                 Compare-at price should be higher than the selling price to show a discount.
               </p>
             )}
         </div>
 
-        <div className="border-t border-[#F2F1F8]" />
+        <div className="border-t border-line-soft" />
 
         {/* Inventory */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
             Inventory
           </h2>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <p className="mt-1 text-[13px] text-muted">
             Track how much stock you have.
           </p>
 
@@ -114,7 +114,7 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
         </div>
       </div>
 
-      <div className="mt-8 flex justify-between border-t border-[#F2F1F8] pt-6">
+      <div className="mt-8 flex justify-between border-t border-line-soft pt-6">
         <Button variant="outline" onClick={onBack} className="h-11 rounded-xl px-7">
           Back
         </Button>

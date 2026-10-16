@@ -77,15 +77,15 @@ export default function CreateStoryModal({ open, onClose }: Props) {
         className="fixed inset-0 z-[90] bg-opacity-25 backdrop-brightness-50"
       />
 
-      <div className="fixed left-1/2 top-1/2 z-[100] w-[92%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-white shadow-[0_30px_90px_rgba(0,0,0,0.25)]">
-        <div className="flex items-center justify-between border-b border-[#ECE9F6] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[18px] italic text-[#13131A]">
+      <div className="fixed left-1/2 top-1/2 z-[100] w-[92%] max-w-sm -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-surface shadow-[0_30px_90px_rgba(0,0,0,0.25)]">
+        <div className="flex items-center justify-between border-b border-line px-5 py-4">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[18px] italic text-ink">
             Add to your story
           </h2>
           <button
             onClick={handleClose}
             aria-label="Close"
-            className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-violet-50 hover:text-violet-600"
+            className="rounded-full p-2 text-muted transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-600 dark:hover:text-violet-400"
           >
             <X size={18} />
           </button>
@@ -102,7 +102,7 @@ export default function CreateStoryModal({ open, onClose }: Props) {
 
           <button
             onClick={() => fileInputRef.current?.click()}
-            className="flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] transition-colors hover:border-violet-300"
+            className="flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line-strong bg-surface-sunken transition-colors hover:border-violet-300 dark:hover:border-violet-500/40"
           >
             {previewUrl ? (
               file?.type.startsWith("video") ? (
@@ -112,7 +112,7 @@ export default function CreateStoryModal({ open, onClose }: Props) {
                 <img src={previewUrl} alt="Story preview" className="h-full w-full object-contain" />
               )
             ) : (
-              <div className="flex flex-col items-center gap-2 text-[#94A3B8]">
+              <div className="flex flex-col items-center gap-2 text-subtle">
                 <ImagePlus size={28} strokeWidth={1.5} />
                 <span className="text-[13px]">Choose a photo or video</span>
               </div>
@@ -125,12 +125,12 @@ export default function CreateStoryModal({ open, onClose }: Props) {
               onChange={(e) => setCaption(e.target.value)}
               placeholder="Add a caption (optional)"
               maxLength={280}
-              className="mt-4 w-full rounded-xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-violet-400 focus:bg-white"
+              className="mt-4 w-full rounded-xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors placeholder:text-subtle focus:border-violet-400 focus:bg-surface"
             />
           )}
         </div>
 
-        <div className="flex items-center justify-end gap-3 border-t border-[#ECE9F6] px-5 py-4">
+        <div className="flex items-center justify-end gap-3 border-t border-line px-5 py-4">
           <Button variant="outline" onClick={handleClose} className="h-10 rounded-xl px-5">
             Cancel
           </Button>

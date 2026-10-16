@@ -19,7 +19,7 @@ interface Props {
 }
 
 const socialLinkClass =
-  "flex items-center gap-2 rounded-full border border-[#E7E5F2] bg-white px-4 py-2 text-sm font-medium text-[#13131A] transition-all hover:border-violet-400 hover:text-violet-700 hover:shadow-sm";
+  "flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm font-medium text-ink transition-all hover:border-violet-400 hover:text-violet-700 dark:hover:text-violet-300 hover:shadow-sm";
 
 function formatJoinedDate(dateString: string) {
   return new Date(dateString).toLocaleDateString("en-US", {
@@ -46,7 +46,7 @@ export default function ProfileHeader({ profile }: Props) {
       className="mt-16 text-center md:mt-20 md:pl-44 md:text-left"
     >
       <div className="flex items-center justify-center gap-2 md:justify-start">
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-[#13131A] md:text-[38px]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink md:text-[38px]">
           {profile.name}
         </h1>
 
@@ -54,18 +54,18 @@ export default function ProfileHeader({ profile }: Props) {
       </div>
 
       {profile.username && (
-        <p className="mt-2 font-[family-name:var(--font-mono)] text-[14px] text-violet-600">
+        <p className="mt-2 font-[family-name:var(--font-mono)] text-[14px] text-violet-600 dark:text-violet-400">
           @{profile.username}
         </p>
       )}
 
       {profile.bio && (
-        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-[#475569]">
+        <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-3">
           {profile.bio}
         </p>
       )}
 
-      <div className="mt-6 flex flex-wrap justify-center gap-5 text-[13.5px] text-[#64748B] md:justify-start">
+      <div className="mt-6 flex flex-wrap justify-center gap-5 text-[13.5px] text-muted md:justify-start">
         {profile.location && (
           <div className="flex items-center gap-1.5">
             <MapPin size={16} />
@@ -78,7 +78,7 @@ export default function ProfileHeader({ profile }: Props) {
             href={profile.website}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 text-violet-600 hover:underline"
+            className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400 hover:underline"
           >
             <Globe size={16} />
             Website

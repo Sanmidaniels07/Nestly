@@ -14,19 +14,19 @@ export default function QuantitySelector({ quantity, stock, setQuantity }: Props
 
   return (
     <div>
-      <p className="mb-2.5 text-[13px] font-semibold text-[#13131A]">Quantity</p>
+      <p className="mb-2.5 text-[13px] font-semibold text-ink">Quantity</p>
 
-      <div className="flex items-center justify-between rounded-xl border border-[#ECE9F6] px-4 py-2.5">
+      <div className="flex items-center justify-between rounded-xl border border-line px-4 py-2.5">
         <button
           onClick={() => setQuantity(Math.max(1, quantity - 1))}
           disabled={atMin}
           aria-label="Decrease quantity"
-          className="text-[#64748B] transition-colors hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-[#64748B]"
+          className="text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-muted"
         >
           <Minus size={17} />
         </button>
 
-        <span className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-[#13131A]">
+        <span className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-ink">
           {quantity}
         </span>
 
@@ -34,14 +34,14 @@ export default function QuantitySelector({ quantity, stock, setQuantity }: Props
           onClick={() => setQuantity(Math.min(stock, quantity + 1))}
           disabled={atMax}
           aria-label="Increase quantity"
-          className="text-[#64748B] transition-colors hover:text-violet-600 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-[#64748B]"
+          className="text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400 disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:text-muted"
         >
           <Plus size={17} />
         </button>
       </div>
 
       {atMax && (
-        <p className="mt-1.5 text-[11.5px] text-amber-600">Max available stock reached</p>
+        <p className="mt-1.5 text-[11.5px] text-amber-600 dark:text-amber-400">Max available stock reached</p>
       )}
     </div>
   );

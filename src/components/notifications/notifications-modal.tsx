@@ -97,14 +97,14 @@ export default function NotificationsModal({ open, onClose, anchorRef }: Props) 
         "inset-x-4",
         "sm:inset-x-auto sm:right-[var(--panel-right)] sm:w-96",
         "max-h-[calc(100dvh-6rem)] overflow-y-auto",
-        "rounded-2xl border border-[#ECE9F6] bg-white",
+        "rounded-2xl border border-line bg-surface",
         "shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]",
       ].join(" ")}
     >
       <button
         onClick={onClose}
         aria-label="Close notifications"
-        className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-[#94A3B8] transition-colors hover:bg-[#F7F7FB] hover:text-[#13131A]"
+        className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-subtle transition-colors hover:bg-surface-2 hover:text-ink"
       >
         <X size={17} />
       </button>

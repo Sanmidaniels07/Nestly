@@ -99,7 +99,7 @@ export default function UserProfilePage({
   if (!user) {
     return (
       <div className="mx-auto max-w-3xl pb-20 pt-16 text-center">
-        <p className="text-[15px] font-medium text-[#13131A]">User not found</p>
+        <p className="text-[15px] font-medium text-ink">User not found</p>
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function UserProfilePage({
     <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-1.5 text-[13px] font-medium text-[#64748B] transition-colors hover:text-violet-700"
+        className="flex items-center gap-1.5 text-[13px] font-medium text-muted transition-colors hover:text-violet-700 dark:hover:text-violet-300"
       >
         <ArrowLeft size={14} />
         Back
@@ -124,7 +124,7 @@ export default function UserProfilePage({
         />
       )}
 
-      <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         <div className="flex flex-col items-center gap-5 text-center sm:flex-row sm:items-start sm:text-left">
           {user.avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -143,11 +143,11 @@ export default function UserProfilePage({
           <div className="min-w-0 flex-1">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-start">
               <div>
-                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-[#13131A]">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
                   {user.name}
                 </h1>
                 {user.username && (
-                  <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[13px] text-violet-600">
+                  <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[13px] text-violet-600 dark:text-violet-400">
                     @{user.username}
                   </p>
                 )}
@@ -159,7 +159,7 @@ export default function UserProfilePage({
                   <button
                     onClick={handleMessage}
                     disabled={isStartingChat}
-                    className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] px-4 py-2 text-[13px] font-semibold text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-600 disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-full border border-line-strong px-4 py-2 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
                   >
                     <MessageCircle size={14} />
                     Message
@@ -169,7 +169,7 @@ export default function UserProfilePage({
                       targetType="USER"
                       targetId={user.id}
                       label=""
-                      className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
+                      className="flex items-center justify-center rounded-full border border-line-strong p-2 text-subtle transition-colors hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
                     />
                   </Tooltip>
                   <Tooltip label={isBlocked ? "Unblock user" : "Block user"}>
@@ -179,7 +179,7 @@ export default function UserProfilePage({
                       }
                       disabled={isBlocking || isUnblocking}
                       aria-label={isBlocked ? "Unblock user" : "Block user"}
-                      className="flex items-center justify-center rounded-full border border-[#E5E7EB] p-2 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+                      className="flex items-center justify-center rounded-full border border-line-strong p-2 text-subtle transition-colors hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500 disabled:opacity-50"
                     >
                       {isBlocked ? <ShieldOff size={15} /> : <Ban size={15} />}
                     </button>
@@ -189,12 +189,12 @@ export default function UserProfilePage({
             </div>
 
             {user.bio && (
-              <p className="mt-4 text-[14.5px] leading-relaxed text-[#475569]">
+              <p className="mt-4 text-[14.5px] leading-relaxed text-ink-3">
                 {user.bio}
               </p>
             )}
 
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-5 text-[13px] text-[#64748B] sm:justify-start">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-5 text-[13px] text-muted sm:justify-start">
               {user.location && (
                 <div className="flex items-center gap-1.5">
                   <MapPin size={15} />
@@ -207,7 +207,7 @@ export default function UserProfilePage({
                   href={user.website}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-violet-600 hover:underline"
+                  className="flex items-center gap-1.5 text-violet-600 dark:text-violet-400 hover:underline"
                 >
                   <Globe size={15} />
                   Website
@@ -233,7 +233,7 @@ export default function UserProfilePage({
                         href={href}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-full border border-[#E7E5F2] bg-white px-3.5 py-1.5 text-[12.5px] font-medium text-[#13131A] transition-all hover:border-violet-400 hover:text-violet-700"
+                        className="flex items-center gap-2 rounded-full border border-line bg-surface px-3.5 py-1.5 text-[12.5px] font-medium text-ink transition-all hover:border-violet-400 hover:text-violet-700 dark:hover:text-violet-300"
                       >
                         <Icon size={13} />
                         {label}
@@ -245,17 +245,17 @@ export default function UserProfilePage({
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-3 divide-x divide-[#F0EEF9] border-t border-[#F2F1F8] pt-6">
+        <div className="mt-6 grid grid-cols-3 divide-x divide-line-soft border-t border-line-soft pt-6">
           {[
             { label: "Posts", value: user.postsCount },
             { label: "Followers", value: user.followersCount },
             { label: "Following", value: user.followingCount },
           ].map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="font-[family-name:var(--font-mono)] text-[18px] font-semibold text-[#13131A]">
+              <p className="font-[family-name:var(--font-mono)] text-[18px] font-semibold text-ink">
                 {formatCount(stat.value)}
               </p>
-              <p className="mt-0.5 text-[12px] text-[#94A3B8]">{stat.label}</p>
+              <p className="mt-0.5 text-[12px] text-subtle">{stat.label}</p>
             </div>
           ))}
         </div>
@@ -263,9 +263,9 @@ export default function UserProfilePage({
 
       <div className="space-y-6">
         {posts.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#E2E0EE] bg-white/60 px-8 py-16 text-center">
-            <Users className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-            <p className="mt-4 text-[15px] font-medium text-[#13131A]">
+          <div className="rounded-2xl border border-dashed border-line-strong bg-surface/60 px-8 py-16 text-center">
+            <Users className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+            <p className="mt-4 text-[15px] font-medium text-ink">
               No posts yet
             </p>
           </div>
@@ -298,7 +298,7 @@ function FollowStatusButton({ userId }: { userId: string }) {
   const { data: isFollowingReal, isLoading } = useFollowStatus(userId);
 
   if (isLoading) {
-    return <div className="h-9 w-28 animate-pulse rounded-full bg-[#F7F7FB]" />;
+    return <div className="h-9 w-28 animate-pulse rounded-full bg-surface-2" />;
   }
 
   return (

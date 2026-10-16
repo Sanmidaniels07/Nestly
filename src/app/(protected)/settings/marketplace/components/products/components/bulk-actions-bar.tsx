@@ -31,8 +31,8 @@ export default function BulkActionsBar({ selectedIds, onClear }: Props) {
   };
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-200 bg-violet-50/60 px-5 py-3.5">
-      <p className="text-[13px] font-medium text-violet-700">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-200 dark:border-violet-500/30 bg-violet-50/60 px-5 py-3.5">
+      <p className="text-[13px] font-medium text-violet-700 dark:text-violet-300">
         {selectedIds.length} product{selectedIds.length !== 1 ? "s" : ""} selected
       </p>
 
@@ -42,7 +42,7 @@ export default function BulkActionsBar({ selectedIds, onClear }: Props) {
             key={action.status}
             onClick={() => handleStatusChange(action.status)}
             disabled={isPending}
-            className="rounded-lg border border-[#E5E7EB] bg-white px-3.5 py-2 text-[12.5px] font-medium text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-700 disabled:opacity-50"
+            className="rounded-lg border border-line-strong bg-surface px-3.5 py-2 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
           >
             {action.label}
           </button>
@@ -51,7 +51,7 @@ export default function BulkActionsBar({ selectedIds, onClear }: Props) {
         <button
           onClick={handleArchive}
           disabled={isPending}
-          className="flex items-center gap-1.5 rounded-lg border border-red-200 bg-white px-3.5 py-2 text-[12.5px] font-medium text-red-600 transition-colors hover:bg-red-50 disabled:opacity-50"
+          className="flex items-center gap-1.5 rounded-lg border border-red-200 dark:border-red-500/30 bg-surface px-3.5 py-2 text-[12.5px] font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:opacity-50"
         >
           <Archive size={13} />
           Archive
@@ -60,7 +60,7 @@ export default function BulkActionsBar({ selectedIds, onClear }: Props) {
         <button
           onClick={onClear}
           aria-label="Clear selection"
-          className="flex h-8 w-8 items-center justify-center rounded-lg text-[#94A3B8] transition-colors hover:bg-white hover:text-[#334155]"
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface hover:text-ink-2"
         >
           <X size={15} />
         </button>

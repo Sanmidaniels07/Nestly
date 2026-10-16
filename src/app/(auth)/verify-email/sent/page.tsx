@@ -13,23 +13,23 @@ function VerifyEmailSentContent() {
   const email = searchParams.get("email");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center p-6 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6 pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-10 text-center">
-          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-violet-100">
-            <MailCheck className="h-10 w-10 text-violet-600" />
+        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10 text-center">
+          <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15">
+            <MailCheck className="h-10 w-10 text-violet-600 dark:text-violet-400" />
           </div>
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-3">Check your email</h1>
+          <h1 className="text-3xl font-bold text-ink mb-3">Check your email</h1>
 
-          <p className="text-gray-600">We've sent a verification link to</p>
-          <p className="mt-1 font-semibold text-violet-600 break-all">{email || "your email"}</p>
+          <p className="text-muted">We've sent a verification link to</p>
+          <p className="mt-1 font-semibold text-violet-600 dark:text-violet-400 break-all">{email || "your email"}</p>
 
-          <p className="mt-6 text-gray-500">
+          <p className="mt-6 text-muted">
             Please click the link inside to verify your account.
           </p>
 
@@ -62,14 +62,14 @@ function VerifyEmailSentContent() {
           <div className="mt-8">
             <Link
               href="/login"
-              className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+              className="inline-flex items-center gap-2 text-sm font-medium text-muted hover:text-ink transition-colors"
             >
               <ArrowLeft className="h-4 w-4" />
               Back to Login
             </Link>
           </div>
 
-          <div className="mt-10 rounded-2xl bg-violet-50 p-5 text-sm text-violet-700">
+          <div className="mt-10 rounded-2xl bg-violet-50 dark:bg-violet-500/10 p-5 text-sm text-violet-700 dark:text-violet-300">
             Didn't receive the email? Check your spam folder or try resending.
           </div>
         </div>

@@ -24,7 +24,7 @@ export default function NearbyProducts() {
           ? Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={i}
-                className="aspect-[4/3] animate-pulse rounded-2xl border border-[#EDEBF5] bg-[#F7F7FB]"
+                className="aspect-[4/3] animate-pulse rounded-2xl border border-line bg-surface-2"
               />
             ))
           : products?.map((product) => (

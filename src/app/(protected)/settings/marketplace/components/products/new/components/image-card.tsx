@@ -12,8 +12,8 @@ interface Props {
 
 export default function ImageCard({ image, onCover, onDelete }: Props) {
   return (
-    <div className="group relative overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white transition-shadow hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
-      <div className="relative aspect-square bg-[#F8F8FC]">
+    <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface transition-shadow hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
+      <div className="relative aspect-square bg-surface-sunken">
         <Image src={image.preview} alt="" fill className="object-cover" />
 
         {image.uploading && (
@@ -32,7 +32,7 @@ export default function ImageCard({ image, onCover, onDelete }: Props) {
         <button
           onClick={onDelete}
           aria-label="Remove image"
-          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-red-500 opacity-0 backdrop-blur transition-opacity hover:bg-white group-hover:opacity-100"
+          className="absolute right-2.5 top-2.5 flex h-8 w-8 items-center justify-center rounded-full bg-surface/90 text-red-500 opacity-0 backdrop-blur transition-opacity hover:bg-surface group-hover:opacity-100"
         >
           <Trash2 size={14} />
         </button>
@@ -40,13 +40,13 @@ export default function ImageCard({ image, onCover, onDelete }: Props) {
 
       <div className="p-3">
         {image.isCover ? (
-          <div className="flex h-9 items-center justify-center rounded-xl bg-violet-50 text-[12.5px] font-medium text-violet-700">
+          <div className="flex h-9 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-500/10 text-[12.5px] font-medium text-violet-700 dark:text-violet-300">
             Cover image
           </div>
         ) : (
           <button
             onClick={onCover}
-            className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-[#ECE9F6] text-[12.5px] font-medium text-[#64748B] transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+            className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-line text-[12.5px] font-medium text-muted transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-700 dark:hover:text-violet-300"
           >
             <Star size={12} />
             Set as cover

@@ -75,13 +75,13 @@ export default function ShippingAddress() {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <section className="rounded-2xl border border-line bg-surface p-6">
       <div className="mb-5 flex items-center justify-between">
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
             Shipping address
           </h2>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <p className="mt-1 text-[13px] text-muted">
             Select where your order should be delivered.
           </p>
         </div>
@@ -96,7 +96,7 @@ export default function ShippingAddress() {
       </div>
 
       {showForm && (
-        <div className="mb-5 space-y-4 rounded-2xl border border-dashed border-violet-200 bg-[#FAFAFD] p-5">
+        <div className="mb-5 space-y-4 rounded-2xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface-sunken p-5">
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Full name" value={form.fullName} onChange={update("fullName")} />
             <Input label="Phone" value={form.phone} onChange={update("phone")} />
@@ -136,7 +136,7 @@ export default function ShippingAddress() {
       )}
 
       {!isLoading && addresses?.length === 0 && !showForm && (
-        <p className="text-[13px] text-[#94A3B8]">
+        <p className="text-[13px] text-subtle">
           No saved addresses yet. Add one to continue.
         </p>
       )}

@@ -31,8 +31,8 @@ export default function CheckoutSummary() {
   const canProceed = !!addressId && totalItems > 0;
 
   return (
-    <aside className="sticky top-24 rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Order summary
       </h2>
 
@@ -43,12 +43,12 @@ export default function CheckoutSummary() {
         {discountAmount > 0 && (
           <Row title={`Coupon (${appliedCoupon?.code})`} value={`-${money(discountAmount)}`} />
         )}
-        <div className="border-t border-dashed border-[#ECE9F6] pt-3">
+        <div className="border-t border-dashed border-line pt-3">
           <Row title="Estimated total" value={money(total)} />
         </div>
       </div>
 
-      <p className="mt-3 text-[12px] text-[#94A3B8]">
+      <p className="mt-3 text-[12px] text-subtle">
         Final total is confirmed on the payment page.
       </p>
 
@@ -61,7 +61,7 @@ export default function CheckoutSummary() {
       </button>
 
       {!canProceed && (
-        <p className="mt-2.5 text-center text-[12px] text-[#94A3B8]">
+        <p className="mt-2.5 text-center text-[12px] text-subtle">
           {!addressId ? "Select a delivery address." : "Your cart is empty."}
         </p>
       )}
@@ -72,8 +72,8 @@ export default function CheckoutSummary() {
 function Row({ title, value }: { title: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[13.5px] text-[#64748B]">{title}</span>
-      <span className="font-[family-name:var(--font-mono)] text-[13.5px] text-[#334155]">
+      <span className="text-[13.5px] text-muted">{title}</span>
+      <span className="font-[family-name:var(--font-mono)] text-[13.5px] text-ink-2">
         {value}
       </span>
     </div>

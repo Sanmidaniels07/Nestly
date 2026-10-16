@@ -29,26 +29,26 @@ export default function NearbyPage() {
       <div className="space-y-4">
         <Link
           href="/marketplace"
-          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 hover:underline"
+          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
         >
           <ArrowLeft size={15} />
           Back to marketplace
         </Link>
 
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Marketplace
           </p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-[#13131A] sm:text-[42px]">
+          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
             Nearby products
           </h1>
-          <p className="mt-2 max-w-xl text-[14px] text-[#64748B]">
+          <p className="mt-2 max-w-xl text-[14px] text-muted">
             Tell us your city or state to find products from sellers near you.
           </p>
         </div>
       </div>
 
-      <div className="grid gap-3 rounded-2xl border border-[#ECE9F6] bg-white p-5 sm:grid-cols-2">
+      <div className="grid gap-3 rounded-2xl border border-line bg-surface p-5 sm:grid-cols-2">
         <Input
           value={city}
           onChange={(e) => {
@@ -70,8 +70,8 @@ export default function NearbyPage() {
       </div>
 
       {!hasQuery && (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken py-16 text-center">
+          <p className="text-[13.5px] text-subtle">
             Enter a city or state to see nearby products.
           </p>
         </div>
@@ -82,14 +82,14 @@ export default function NearbyPage() {
       )}
 
       {hasQuery && isError && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
+        <div className="rounded-2xl border border-line bg-surface py-16 text-center text-[13.5px] text-red-500">
           Couldn&apos;t load nearby products. Please try again.
         </div>
       )}
 
       {hasQuery && !isLoading && !isError && data?.products.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] py-16 text-center">
-          <p className="text-[13.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken py-16 text-center">
+          <p className="text-[13.5px] text-subtle">
             No products found near that location.
           </p>
         </div>

@@ -10,7 +10,7 @@ interface Props {
 
 export default function FilterFooter({ onReset, onApply, activeCount = 0 }: Props) {
   return (
-    <div className="sticky bottom-0 border-t border-[#ECE9F6] bg-white/95 p-5 backdrop-blur-sm">
+    <div className="sticky bottom-0 border-t border-line bg-surface/95 p-5 backdrop-blur-sm">
       <div className="flex gap-3">
         <Button variant="outline" onClick={onReset} className="h-11 flex-1 rounded-xl">
           Reset

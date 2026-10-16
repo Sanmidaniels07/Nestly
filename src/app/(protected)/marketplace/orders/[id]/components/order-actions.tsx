@@ -27,8 +27,8 @@ export default function OrderActions({ order }: Props) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Actions
       </h2>
 
@@ -37,7 +37,7 @@ export default function OrderActions({ order }: Props) {
           onClick={handleBuyAgain}
           className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[13px] font-semibold transition-all ${
             added
-              ? "bg-emerald-50 text-emerald-700"
+              ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
               : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
           }`}
         >
@@ -49,7 +49,7 @@ export default function OrderActions({ order }: Props) {
           <button
             onClick={() => cancelOrder(order.id)}
             disabled={isCancelling}
-            className="flex h-12 w-full items-center justify-center rounded-xl border border-red-200 text-[13px] font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex h-12 w-full items-center justify-center rounded-xl border border-red-200 dark:border-red-500/30 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isCancelling ? "Cancelling..." : "Cancel order"}
           </button>

@@ -58,7 +58,7 @@ export default function FormSelect<T extends string>({
   return (
     <div ref={containerRef} className={cn("group relative", fullWidth && "w-full")}>
       {label && (
-        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+        <label className="mb-2 block text-sm font-medium text-ink-2">
           {label}
         </label>
       )}
@@ -70,23 +70,22 @@ export default function FormSelect<T extends string>({
         className={cn(
           `
           relative flex h-14 w-full items-center justify-between rounded-3xl border
-          border-gray-200 bg-white px-5 text-left transition-all duration-200
-          hover:border-gray-300
-          dark:bg-gray-900 dark:border-gray-700
+          border-line bg-surface px-5 text-left transition-all duration-200
+          hover:border-line-strong
           disabled:cursor-not-allowed disabled:opacity-50
           `,
-          open && "border-violet-500 ring-4 ring-violet-100 dark:ring-violet-900/30",
-          error && "border-red-500 ring-4 ring-red-100"
+          open && "border-violet-500 ring-4 ring-violet-100 dark:ring-violet-500/20",
+          error && "border-red-500 ring-4 ring-red-100 dark:ring-red-500/20"
         )}
       >
-        <span className={cn("text-base", selected ? "text-gray-900 dark:text-white" : "text-gray-400")}>
+        <span className={cn("text-base", selected ? "text-ink" : "text-subtle")}>
           {selected ? selected.label : placeholder}
         </span>
 
         <ChevronDown
           size={18}
           className={cn(
-            "shrink-0 text-gray-400 transition-transform duration-200",
+            "shrink-0 text-subtle transition-transform duration-200",
             open && "rotate-180 text-violet-500"
           )}
         />
@@ -96,8 +95,7 @@ export default function FormSelect<T extends string>({
         <div
           className="
             absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-y-auto
-            rounded-2xl border border-gray-200 bg-white p-1.5 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]
-            dark:border-gray-700 dark:bg-gray-900
+            rounded-2xl border border-line bg-surface p-1.5 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]
           "
         >
           {options.map((option) => {
@@ -117,12 +115,12 @@ export default function FormSelect<T extends string>({
                   transition-colors
                   `,
                   isSelected
-                    ? "bg-violet-50 font-medium text-violet-700 dark:bg-violet-900/30 dark:text-violet-300"
-                    : "text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
+                    ? "bg-violet-50 font-medium text-violet-700 dark:bg-violet-500/10 dark:text-violet-300"
+                    : "text-ink-2 hover:bg-surface-2"
                 )}
               >
                 {option.label}
-                {isSelected && <Check size={16} className="text-violet-600 dark:text-violet-300" />}
+                {isSelected && <Check size={16} className="text-violet-600 dark:text-violet-400" />}
               </button>
             );
           })}

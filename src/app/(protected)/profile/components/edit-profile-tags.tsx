@@ -77,14 +77,14 @@ export default function EditProfileTags({
     <section className="space-y-4">
       <div className="flex items-baseline justify-between">
         <div>
-          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
             {title}
           </h3>
-          <p className="mt-1 text-[13.5px] text-[#64748B]">{description}</p>
+          <p className="mt-1 text-[13.5px] text-muted">{description}</p>
         </div>
 
         {maxTags && (
-          <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+          <span className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
             {values.length}/{maxTags}
           </span>
         )}
@@ -92,9 +92,9 @@ export default function EditProfileTags({
 
       <div
         className={`
-          rounded-2xl border bg-[#FAFBFC] p-3.5 transition-colors
-          focus-within:border-violet-400 focus-within:bg-white
-          ${shake ? "border-red-300" : "border-[#E4E6EB]"}
+          rounded-2xl border bg-surface-sunken p-3.5 transition-colors
+          focus-within:border-violet-400 focus-within:bg-surface
+          ${shake ? "border-red-300 dark:border-red-500/40" : "border-line-strong"}
         `}
       >
         {values.length > 0 && (
@@ -102,14 +102,14 @@ export default function EditProfileTags({
             {values.map((tag) => (
               <span
                 key={tag}
-                className="group flex items-center gap-1.5 rounded-full bg-violet-50 py-1.5 pl-3.5 pr-2 text-[13px] font-medium text-violet-700"
+                className="group flex items-center gap-1.5 rounded-full bg-violet-50 dark:bg-violet-500/10 py-1.5 pl-3.5 pr-2 text-[13px] font-medium text-violet-700 dark:text-violet-300"
               >
                 {tag}
                 <button
                   type="button"
                   onClick={() => removeTag(tag)}
                   aria-label={`Remove ${tag}`}
-                  className="rounded-full p-0.5 text-violet-400 transition-colors group-hover:text-violet-700 hover:!bg-violet-100"
+                  className="rounded-full p-0.5 text-violet-400 transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300 hover:!bg-violet-100"
                 >
                   <X size={13} />
                 </button>
@@ -126,7 +126,7 @@ export default function EditProfileTags({
           onBlur={() => addTag(value)}
           disabled={limitReached}
           placeholder={limitReached ? "Limit reached" : placeholder}
-          className="w-full bg-transparent px-1 py-1 text-[14px] text-[#13131A] outline-none placeholder:text-[#94A3B8] disabled:cursor-not-allowed"
+          className="w-full bg-transparent px-1 py-1 text-[14px] text-ink outline-none placeholder:text-subtle disabled:cursor-not-allowed"
         />
       </div>
     </section>

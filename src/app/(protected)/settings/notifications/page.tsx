@@ -45,29 +45,29 @@ export default function SettingsNotificationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
           Notifications
         </h2>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Control what you get notified about.
         </p>
       </div>
 
       <Link
         href="/notifications"
-        className="group flex items-center justify-between rounded-2xl border border-[#ECE9F6] bg-white p-5 transition-colors hover:border-violet-200 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]"
+        className="group flex items-center justify-between rounded-2xl border border-line bg-surface p-5 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]"
       >
         <div>
-          <h3 className="text-[14.5px] font-semibold text-[#13131A]">View all notifications</h3>
-          <p className="mt-0.5 text-[12.5px] text-[#64748B]">See what you&apos;ve missed.</p>
+          <h3 className="text-[14.5px] font-semibold text-ink">View all notifications</h3>
+          <p className="mt-0.5 text-[12.5px] text-muted">See what you&apos;ve missed.</p>
         </div>
-        <ArrowRight size={17} className="text-[#C4C0DC] transition-all group-hover:translate-x-0.5 group-hover:text-violet-600" />
+        <ArrowRight size={17} className="text-faint transition-all group-hover:translate-x-0.5 group-hover:text-violet-600 dark:group-hover:text-violet-400" />
       </Link>
 
-      <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+      <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
         <div>
-          <h3 className="text-[15px] font-semibold text-[#13131A]">Notify me about</h3>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <h3 className="text-[15px] font-semibold text-ink">Notify me about</h3>
+          <p className="mt-1 text-[13px] text-muted">
             Choose which activity sends you a notification.
           </p>
         </div>
@@ -75,9 +75,9 @@ export default function SettingsNotificationsPage() {
         <div className="mt-5 space-y-3">
           {isLoading ? (
             <>
-              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
-              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
-              <div className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+              <div className="h-16 animate-pulse rounded-2xl bg-surface-2" />
+              <div className="h-16 animate-pulse rounded-2xl bg-surface-2" />
+              <div className="h-16 animate-pulse rounded-2xl bg-surface-2" />
             </>
           ) : (
             preferences?.map((pref) => (

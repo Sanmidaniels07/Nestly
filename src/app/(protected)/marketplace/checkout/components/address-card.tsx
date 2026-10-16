@@ -15,15 +15,15 @@ export default function AddressCard({ address, selected, onSelect, onDelete }: P
     <div
       className={`w-full rounded-2xl border p-5 text-left transition-colors ${
         selected
-          ? "border-violet-600 bg-violet-50"
-          : "border-[#ECE9F6] bg-white hover:border-violet-300"
+          ? "border-violet-600 bg-violet-50 dark:bg-violet-500/10"
+          : "border-line bg-surface hover:border-violet-300 dark:hover:border-violet-500/40"
       }`}
     >
       <div className="flex justify-between gap-4">
         <button onClick={onSelect} className="min-w-0 flex-1 text-left">
           <div className="flex items-center gap-2">
-            <MapPin size={16} className="shrink-0 text-violet-600" />
-            <span className="text-[14px] font-semibold text-[#13131A]">
+            <MapPin size={16} className="shrink-0 text-violet-600 dark:text-violet-400" />
+            <span className="text-[14px] font-semibold text-ink">
               {address.fullName}
             </span>
             {address.isDefault && (
@@ -33,9 +33,9 @@ export default function AddressCard({ address, selected, onSelect, onDelete }: P
             )}
           </div>
 
-          <p className="mt-2 text-[13px] text-[#64748B]">{address.phone}</p>
+          <p className="mt-2 text-[13px] text-muted">{address.phone}</p>
 
-          <p className="mt-2 text-[13px] leading-6 text-[#475569]">
+          <p className="mt-2 text-[13px] leading-6 text-ink-3">
             {address.address}
             <br />
             {address.city}, {address.state}
@@ -45,11 +45,11 @@ export default function AddressCard({ address, selected, onSelect, onDelete }: P
         </button>
 
         <div className="flex shrink-0 flex-col items-end gap-3">
-          {selected && <CheckCircle2 size={20} className="text-violet-600" />}
+          {selected && <CheckCircle2 size={20} className="text-violet-600 dark:text-violet-400" />}
           <button
             onClick={onDelete}
             aria-label="Delete address"
-            className="text-[#94A3B8] transition-colors hover:text-red-500"
+            className="text-subtle transition-colors hover:text-red-500"
           >
             <Trash2 size={16} />
           </button>

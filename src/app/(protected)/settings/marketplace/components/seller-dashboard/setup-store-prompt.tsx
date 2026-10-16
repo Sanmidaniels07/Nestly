@@ -13,14 +13,14 @@ interface Props {
 
 export default function SetupStorePrompt({ section, isSeller }: Props) {
   return (
-    <section className="rounded-2xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] px-6 py-14 text-center sm:px-10">
-      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50">
-        <Store size={24} className="text-violet-600" />
+    <section className="rounded-2xl border border-dashed border-line-strong bg-surface-sunken px-6 py-14 text-center sm:px-10">
+      <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+        <Store size={24} className="text-violet-600 dark:text-violet-400" />
       </div>
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-[#13131A]">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">
         {isSeller ? "Set up your store first" : "Become a seller first"}
       </h2>
-      <p className="mx-auto mt-2.5 max-w-md text-[13.5px] leading-relaxed text-[#64748B]">
+      <p className="mx-auto mt-2.5 max-w-md text-[13.5px] leading-relaxed text-muted">
         Your {section} will show up here once your store is set up.
         {isSeller ? " It only takes a couple of minutes." : " Apply to sell on Nestly to get started."}
       </p>

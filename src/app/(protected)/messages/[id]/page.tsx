@@ -210,11 +210,11 @@ function ConversationThread({ id }: { id: string }) {
     : null;
 
   return (
-    <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col rounded-[28px] border border-[#ECE9F6] bg-gradient-to-b from-violet-50 to-indigo-50/70 px-5 pb-5 pt-5 sm:px-7">
-      <div className="flex items-center gap-3 border-b border-[#ECE9F6] pb-4">
+    <div className="mx-auto flex h-[calc(100vh-6rem)] max-w-2xl flex-col rounded-[28px] border border-line bg-gradient-to-b from-violet-50 dark:from-violet-500/10 to-indigo-50/70 px-5 pb-5 pt-5 sm:px-7">
+      <div className="flex items-center gap-3 border-b border-line pb-4">
         <button
           onClick={handleBack}
-          className="rounded-full p-2 text-[#64748B] transition-colors hover:bg-white/70"
+          className="rounded-full p-2 text-muted transition-colors hover:bg-surface/70"
           aria-label="Go back"
         >
           <ArrowLeft size={18} />
@@ -224,12 +224,12 @@ function ConversationThread({ id }: { id: string }) {
           <Link href={profileHref} className="group flex flex-1 items-center gap-3 min-w-0">
             <UserAvatar name={otherParticipant?.name} src={otherParticipant?.avatar} size={40} />
             <div className="min-w-0">
-              <p className="truncate text-[14.5px] font-semibold text-[#13131A] group-hover:text-violet-700">
+              <p className="truncate text-[14.5px] font-semibold text-ink group-hover:text-violet-700 dark:group-hover:text-violet-300">
                 {otherParticipant?.name ?? "Conversation"}
               </p>
               <p
                 className={`text-[12px] transition-opacity ${
-                  otherTyping ? "font-medium text-violet-600 animate-pulse" : "text-[#94A3B8] opacity-0"
+                  otherTyping ? "font-medium text-violet-600 dark:text-violet-400 animate-pulse" : "text-subtle opacity-0"
                 }`}
               >
                 typing...
@@ -237,11 +237,11 @@ function ConversationThread({ id }: { id: string }) {
             </div>
             <ChevronRight
               size={15}
-              className="ml-auto shrink-0 text-[#C4C0DC] opacity-0 transition-opacity group-hover:opacity-100"
+              className="ml-auto shrink-0 text-faint opacity-0 transition-opacity group-hover:opacity-100"
             />
           </Link>
         ) : (
-          <p className="text-[14.5px] font-semibold text-[#13131A]">Conversation</p>
+          <p className="text-[14.5px] font-semibold text-ink">Conversation</p>
         )}
       </div>
 
@@ -249,7 +249,7 @@ function ConversationThread({ id }: { id: string }) {
         {isLoading ? (
           <MessageThreadSkeleton />
         ) : messages.length === 0 ? (
-          <p className="text-center text-[13px] text-[#94A3B8]">
+          <p className="text-center text-[13px] text-subtle">
             Say hello to start the conversation.
           </p>
         ) : (
@@ -257,7 +257,7 @@ function ConversationThread({ id }: { id: string }) {
             if (item.kind === "separator") {
               return (
                 <div key={item.key} className="flex justify-center py-3">
-                  <span className="rounded-full bg-[#F7F7FB] px-3 py-1 font-[family-name:var(--font-mono)] text-[10.5px] uppercase tracking-wide text-[#94A3B8]">
+                  <span className="rounded-full bg-surface-2 px-3 py-1 font-[family-name:var(--font-mono)] text-[10.5px] uppercase tracking-wide text-subtle">
                     {item.label}
                   </span>
                 </div>
@@ -310,7 +310,7 @@ function ConversationThread({ id }: { id: string }) {
                       className={`rounded-2xl px-4 py-2.5 text-[14px] leading-relaxed ${
                         isMine
                           ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
-                          : "bg-[#F7F7FB] text-[#13131A]"
+                          : "bg-surface-2 text-ink"
                       }`}
                     >
                       {message.content}
@@ -319,7 +319,7 @@ function ConversationThread({ id }: { id: string }) {
 
                   {isGroupEnd && (
                     <div
-                      className={`flex items-center gap-1 font-[family-name:var(--font-mono)] text-[10.5px] text-[#94A3B8] ${
+                      className={`flex items-center gap-1 font-[family-name:var(--font-mono)] text-[10.5px] text-subtle ${
                         isMine ? "justify-end" : ""
                       }`}
                     >
@@ -362,13 +362,13 @@ function ConversationThread({ id }: { id: string }) {
         onClose={() => setLightboxSrc(null)}
       />
 
-      <div className="border-t border-[#ECE9F6] pt-4">
+      <div className="border-t border-line pt-4">
         {(media.length > 0 || isUploading) && (
           <div className="mb-3 flex flex-wrap gap-2">
             {media.map((item) => (
               <div
                 key={item.url}
-                className="group relative h-16 w-16 overflow-hidden rounded-xl bg-[#F7F7FB]"
+                className="group relative h-16 w-16 overflow-hidden rounded-xl bg-surface-2"
               >
                 {item.type === "VIDEO" ? (
                   <video src={item.url} className="h-full w-full object-cover" />
@@ -386,8 +386,8 @@ function ConversationThread({ id }: { id: string }) {
               </div>
             ))}
             {isUploading && (
-              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-[#F7F7FB]">
-                <Loader2 size={16} className="animate-spin text-violet-600" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-surface-2">
+                <Loader2 size={16} className="animate-spin text-violet-600 dark:text-violet-400" />
               </div>
             )}
           </div>
@@ -405,7 +405,7 @@ function ConversationThread({ id }: { id: string }) {
           <button
             onClick={() => fileInputRef.current?.click()}
             disabled={isUploading}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-[#94A3B8] transition-colors hover:bg-[#F6F3FF] hover:text-violet-600 disabled:opacity-50"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-subtle transition-colors hover:bg-tint hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
             aria-label="Attach photo or video"
           >
             <ImageIcon size={19} />
@@ -422,7 +422,7 @@ function ConversationThread({ id }: { id: string }) {
             }}
             placeholder="Type a message..."
             rows={1}
-            className="max-h-32 flex-1 resize-none rounded-3xl border border-[#ECE9F6] bg-[#F7F7FB] px-5 py-3 text-[14px] leading-relaxed text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+            className="max-h-32 flex-1 resize-none rounded-3xl border border-line bg-surface-2 px-5 py-3 text-[14px] leading-relaxed text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
           />
           <button
             onClick={handleSend}

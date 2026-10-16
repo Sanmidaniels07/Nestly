@@ -6,7 +6,7 @@ import { recentActivities } from "@/src/mocks/profile-sidebar";
 
 export default function ProfileRecentActivity() {
   return (
-    <div className="rounded-[30px] border border-[#ECEAF4] bg-white p-6 shadow-sm">
+    <div className="rounded-[30px] border border-line bg-surface p-6 shadow-sm">
       <h3 className="text-xl font-bold">
         Recent Activity
       </h3>
@@ -19,7 +19,7 @@ export default function ProfileRecentActivity() {
           >
             <Clock3
               size={18}
-              className="mt-1 text-violet-600"
+              className="mt-1 text-violet-600 dark:text-violet-400"
             />
 
             <div>
@@ -27,7 +27,7 @@ export default function ProfileRecentActivity() {
                 {activity.text}
               </p>
 
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-muted">
                 {activity.time}
               </p>
             </div>

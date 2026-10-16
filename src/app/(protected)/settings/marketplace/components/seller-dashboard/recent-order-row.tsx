@@ -10,28 +10,28 @@ interface Props {
 }
 
 const statusStyles: Record<string, string> = {
-  processing: "bg-amber-50 text-amber-700",
-  pending: "bg-amber-50 text-amber-700",
-  paid: "bg-sky-50 text-sky-700",
-  shipped: "bg-violet-50 text-violet-700",
-  delivered: "bg-emerald-50 text-emerald-700",
-  cancelled: "bg-red-50 text-red-700",
+  processing: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  pending: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  paid: "bg-sky-50 dark:bg-sky-500/10 text-sky-700 dark:text-sky-300",
+  shipped: "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300",
+  delivered: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  cancelled: "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
 export default function RecentOrderRow({ order }: Props) {
-  const tone = statusStyles[order.status.toLowerCase()] ?? "bg-[#F1F0F5] text-[#64748B]";
+  const tone = statusStyles[order.status.toLowerCase()] ?? "bg-surface-muted text-muted";
 
   return (
-    <tr className="border-t border-[#F2F1F8]">
-      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-medium text-[#13131A]">
+    <tr className="border-t border-line-soft">
+      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-medium text-ink">
         #{order.id.slice(-8).toUpperCase()}
       </td>
 
-      <td className="max-w-[160px] truncate px-5 py-4 text-[13px] text-[#334155]">
+      <td className="max-w-[160px] truncate px-5 py-4 text-[13px] text-ink-2">
         {order.customer.name}
       </td>
 
-      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-medium text-[#13131A]">
+      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-medium text-ink">
         ₦{order.sellerSubtotal.toLocaleString()}
       </td>
 
@@ -41,7 +41,7 @@ export default function RecentOrderRow({ order }: Props) {
         </span>
       </td>
 
-      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+      <td className="whitespace-nowrap px-5 py-4 font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
         {formatRelativeTime(order.createdAt)}
       </td>
 
@@ -49,7 +49,7 @@ export default function RecentOrderRow({ order }: Props) {
         <Link
           href={`/marketplace/orders/${order.id}`}
           aria-label="View order"
-          className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#F7F7FB] text-[#64748B] transition-colors hover:bg-[#EFEDF9] hover:text-violet-600"
+          className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 text-muted transition-colors hover:bg-surface-muted hover:text-violet-600 dark:hover:text-violet-400"
         >
           <ChevronRight size={15} />
         </Link>

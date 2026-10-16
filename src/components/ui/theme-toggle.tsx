@@ -5,7 +5,9 @@ import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  // resolvedTheme, not theme: with "system" selected, theme is "system" and
+  // the icon/toggle would ignore what's actually on screen.
+  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -18,11 +20,11 @@ export default function ThemeToggle() {
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       aria-label="Toggle theme"
-      className="flex h-10 w-10 items-center justify-center rounded-full text-[#64748B] transition-colors hover:bg-muted"
+      className="flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-2"
     >
-      {theme === "dark" ? (
+      {resolvedTheme === "dark" ? (
         <Sun size={19} className="text-yellow-500" />
       ) : (
         <Moon size={19} />

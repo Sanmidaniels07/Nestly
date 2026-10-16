@@ -35,13 +35,13 @@ export default function ProductCard({ product, compact = false }: Props) {
   return (
     <article
       className="
-        overflow-hidden rounded-2xl border border-[#EDEBF5] bg-white
-        transition-all hover:-translate-y-1 hover:border-violet-200 hover:shadow-xl
+        overflow-hidden rounded-2xl border border-line bg-surface
+        transition-all hover:-translate-y-1 hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-xl
       "
     >
       {/* Image */}
       <div
-        className={`relative overflow-hidden bg-[#F8F8FC] ${
+        className={`relative overflow-hidden bg-surface-sunken ${
           compact ? "aspect-square" : "aspect-[4/3]"
         }`}
       >
@@ -58,7 +58,7 @@ export default function ProductCard({ product, compact = false }: Props) {
           <span
             className={`
               w-fit rounded-full px-2.5 py-1 text-[11px] font-semibold
-              ${product.condition === "NEW" ? "bg-emerald-500 text-white" : "bg-amber-400 text-[#13131A]"}
+              ${product.condition === "NEW" ? "bg-emerald-500 text-white" : "bg-amber-400 text-ink"}
             `}
           >
             {formatConditionLabel(product.condition)}
@@ -68,11 +68,11 @@ export default function ProductCard({ product, compact = false }: Props) {
         <button
           onClick={toggleSaved}
           aria-label={saved ? "Remove from saved" : "Save item"}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 backdrop-blur transition-transform hover:scale-105"
+          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur transition-transform hover:scale-105"
         >
           <Heart
             size={16}
-            className={saved ? "fill-red-500 text-red-500" : "text-[#64748B]"}
+            className={saved ? "fill-red-500 text-red-500" : "text-muted"}
           />
         </button>
       </div>
@@ -80,14 +80,14 @@ export default function ProductCard({ product, compact = false }: Props) {
       {/* Content */}
       <div className={compact ? "space-y-2.5 p-4" : "space-y-3.5 p-5"}>
         {product.store && (
-          <span className="truncate text-[12px] text-[#64748B]">
+          <span className="truncate text-[12px] text-muted">
             {product.store.name}
           </span>
         )}
 
         <h3
           className={`
-            font-[family-name:var(--font-fraunces)] italic leading-tight text-[#13131A]
+            font-[family-name:var(--font-fraunces)] italic leading-tight text-ink
             ${compact ? "text-[17px]" : "text-[21px]"}
           `}
         >
@@ -95,7 +95,7 @@ export default function ProductCard({ product, compact = false }: Props) {
         </h3>
 
         <p
-          className={`font-[family-name:var(--font-mono)] font-semibold text-violet-700 ${
+          className={`font-[family-name:var(--font-mono)] font-semibold text-violet-700 dark:text-violet-300 ${
             compact ? "text-[17px]" : "text-[21px]"
           }`}
         >
@@ -111,7 +111,7 @@ export default function ProductCard({ product, compact = false }: Props) {
                   {product.rating}
                 </span>
                 {product.reviewCount !== undefined && (
-                  <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+                  <span className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
                     ({product.reviewCount})
                   </span>
                 )}
@@ -121,7 +121,7 @@ export default function ProductCard({ product, compact = false }: Props) {
             )}
 
             {location && (
-              <div className="flex items-center gap-1 text-[#64748B]">
+              <div className="flex items-center gap-1 text-muted">
                 <MapPin size={14} />
                 <span className="font-[family-name:var(--font-mono)] text-[12.5px]">
                   {location}

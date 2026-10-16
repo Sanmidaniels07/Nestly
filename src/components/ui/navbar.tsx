@@ -25,11 +25,11 @@ export default function Navbar() {
   const showLogin = pathname === "/signup";
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-[#ECE9F6] bg-white/85 px-3 backdrop-blur-xl sm:px-5 md:px-8">
+    <nav className="fixed left-0 right-0 top-0 z-50 flex h-16 items-center border-b border-line bg-surface/85 px-3 backdrop-blur-xl sm:px-5 md:px-8">
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <NestlyMark size={34} />
-          <span className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+          <span className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
             Nestly
           </span>
         </Link>
@@ -48,7 +48,7 @@ export default function Navbar() {
                       key={item.href}
                       href={item.href}
                       className={`relative py-1 transition-colors ${
-                        isActive ? "text-violet-600" : "text-[#64748B] hover:text-violet-600"
+                        isActive ? "text-violet-600 dark:text-violet-400" : "text-muted hover:text-violet-600 dark:hover:text-violet-400"
                       }`}
                     >
                       {item.label}
@@ -96,7 +96,7 @@ export default function Navbar() {
                       <button
                         onClick={() => setLogoutConfirmOpen(true)}
                         aria-label="Log out"
-                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-[#ECE9F6] bg-white text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500"
+                        className="flex h-11 w-11 items-center justify-center rounded-xl border border-line bg-surface text-muted transition-colors hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
                       >
                         <LogOut size={18} />
                       </button>
@@ -107,15 +107,15 @@ export default function Navbar() {
                     <MenuRow icon={<ThemeToggle />} label="Theme" showChevron={false} />
                     <MenuRow icon={<SavedButton />} label="Saved products" />
                     <MenuRow icon={<OrdersButton />} label="My orders" />
-                    <div className="my-1.5 h-px bg-[#F2F1F8]" />
+                    <div className="my-1.5 h-px bg-surface-muted" />
                     <button
                       onClick={() => setLogoutConfirmOpen(true)}
-                      className="flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition-colors hover:bg-red-50 active:scale-[0.98]"
+                      className="flex w-full items-center gap-3 rounded-2xl px-2.5 py-2.5 text-left transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 active:scale-[0.98]"
                     >
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
                         <LogOut size={15} className="text-red-500" />
                       </div>
-                      <span className="text-[13.5px] font-medium text-red-600">Log out</span>
+                      <span className="text-[13.5px] font-medium text-red-600 dark:text-red-400">Log out</span>
                     </button>
                   </MobileMoreMenu>
                 </>

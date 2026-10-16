@@ -133,12 +133,12 @@ export default function DateOfBirthPicker({
             </div>
 
             {open && (
-              <div className="absolute z-50 mt-2 w-[300px] rounded-3xl border border-gray-200 bg-white p-5 shadow-lg">
+              <div className="absolute z-50 mt-2 w-[300px] rounded-3xl border border-line bg-surface p-5 shadow-lg">
                 <div className="mb-4 flex items-center justify-between">
                   <button
                     type="button"
                     onClick={goPrevMonth}
-                    className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-500"
+                    className="rounded-full p-1.5 text-subtle transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-500"
                   >
                     <ChevronLeft size={16} />
                   </button>
@@ -147,10 +147,10 @@ export default function DateOfBirthPicker({
                     <select
                       value={viewMonth}
                       onChange={(e) => setViewMonth(Number(e.target.value))}
-                      className="rounded-lg border border-transparent bg-white px-1 text-sm font-medium text-gray-700 outline-none hover:border-gray-200"
+                      className="rounded-lg border border-transparent bg-surface px-1 text-sm font-medium text-ink-2 outline-none hover:border-line"
                     >
                       {MONTHS.map((m, i) => (
-                        <option key={m} value={i} className="bg-white text-gray-900">
+                        <option key={m} value={i} className="bg-surface text-ink">
                           {m}
                         </option>
                       ))}
@@ -159,10 +159,10 @@ export default function DateOfBirthPicker({
                     <select
                       value={viewYear}
                       onChange={(e) => setViewYear(Number(e.target.value))}
-                      className="rounded-lg border border-transparent bg-white px-1 text-sm font-medium text-gray-700 outline-none hover:border-gray-200"
+                      className="rounded-lg border border-transparent bg-surface px-1 text-sm font-medium text-ink-2 outline-none hover:border-line"
                     >
                       {years.map((y) => (
-                        <option key={y} value={y} className="bg-white text-gray-900">
+                        <option key={y} value={y} className="bg-surface text-ink">
                           {y}
                         </option>
                       ))}
@@ -172,7 +172,7 @@ export default function DateOfBirthPicker({
                   <button
                     type="button"
                     onClick={goNextMonth}
-                    className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-violet-50 hover:text-violet-500"
+                    className="rounded-full p-1.5 text-subtle transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-500"
                   >
                     <ChevronRight size={16} />
                   </button>
@@ -180,7 +180,7 @@ export default function DateOfBirthPicker({
 
                 <div className="grid grid-cols-7 gap-y-1.5 text-center">
                   {WEEKDAYS.map((wd) => (
-                    <span key={wd} className="text-xs font-medium text-gray-400">
+                    <span key={wd} className="text-xs font-medium text-subtle">
                       {wd}
                     </span>
                   ))}
@@ -197,7 +197,7 @@ export default function DateOfBirthPicker({
                           "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
                           isSelected(day)
                             ? "bg-violet-500 text-white"
-                            : "text-gray-700 hover:bg-violet-50"
+                            : "text-ink-2 hover:bg-violet-50 dark:hover:bg-violet-500/10"
                         )}
                       >
                         {day}

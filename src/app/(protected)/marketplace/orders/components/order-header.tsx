@@ -12,10 +12,10 @@ export default function OrdersHeader() {
         </div>
 
         <div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] italic text-[#13131A] sm:text-[34px]">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] italic text-ink sm:text-[34px]">
             My orders
           </h1>
-          <p className="mt-0.5 text-[13.5px] text-[#64748B]">
+          <p className="mt-0.5 text-[13.5px] text-muted">
             View and manage your purchases.
           </p>
         </div>
@@ -23,7 +23,7 @@ export default function OrdersHeader() {
 
       <Link
         href="/marketplace/returns"
-        className="flex items-center gap-1.5 rounded-xl border border-[#ECE9F6] px-4 py-2.5 text-[13px] font-semibold text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-600"
+        className="flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400"
       >
         <RotateCcw size={14} />
         My returns

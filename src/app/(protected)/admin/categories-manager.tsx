@@ -33,38 +33,38 @@ export default function CategoriesManager() {
       {isLoading ? (
         <div className="space-y-2.5">
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-16 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-16 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : !categories?.length ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <LayoutGrid className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <LayoutGrid className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[13.5px] text-subtle">
             No categories yet. Sellers can&apos;t assign products to a category until you
             create at least one.
           </p>
         </div>
       ) : (
-        <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+        <div className="overflow-hidden rounded-2xl border border-line bg-surface">
           <table className="w-full text-left">
-            <thead className="border-b border-[#F2F1F8] bg-[#FAFAFD]">
+            <thead className="border-b border-line-soft bg-surface-sunken">
               <tr>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                   Category
                 </th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                   Products
                 </th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                   Commission
                 </th>
-                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+                <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                   Featured
                 </th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#F2F1F8]">
+            <tbody className="divide-y divide-line-soft">
               {categories.map((category) => (
                 <CategoryRow key={category.id} category={category} />
               ))}
@@ -112,18 +112,18 @@ function CategoryRow({ category }: { category: Category }) {
     <tr>
       <td className="px-5 py-3.5">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-[#F4F4F7]">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-surface-muted">
             {category.icon ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={category.icon} alt={category.name} className="h-full w-full object-cover" />
             ) : (
-              <LayoutGrid size={15} className="text-[#94A3B8]" />
+              <LayoutGrid size={15} className="text-subtle" />
             )}
           </div>
-          <span className="text-[13.5px] font-medium text-[#13131A]">{category.name}</span>
+          <span className="text-[13.5px] font-medium text-ink">{category.name}</span>
         </div>
       </td>
-      <td className="px-5 py-3.5 font-[family-name:var(--font-mono)] text-[13px] text-[#64748B]">
+      <td className="px-5 py-3.5 font-[family-name:var(--font-mono)] text-[13px] text-muted">
         {category.productCount ?? 0}
       </td>
       <td className="px-5 py-3.5">
@@ -137,9 +137,9 @@ function CategoryRow({ category }: { category: Category }) {
             onChange={(e) => setCommissionInput(e.target.value)}
             onBlur={handleCommissionBlur}
             disabled={isUpdating}
-            className="h-8 w-16 rounded-lg border border-[#E5E7EB] px-2 text-[13px] font-medium text-[#13131A] outline-none transition-colors focus:border-violet-400 disabled:opacity-50"
+            className="h-8 w-16 rounded-lg border border-line-strong px-2 text-[13px] font-medium text-ink outline-none transition-colors focus:border-violet-400 disabled:opacity-50"
           />
-          <span className="text-[12px] text-[#94A3B8]">%</span>
+          <span className="text-[12px] text-subtle">%</span>
         </div>
       </td>
       <td className="px-5 py-3.5">
@@ -150,8 +150,8 @@ function CategoryRow({ category }: { category: Category }) {
           disabled={isUpdating}
           className={`flex h-7 w-7 items-center justify-center rounded-lg border transition-colors disabled:opacity-50 ${
             category.isFeatured
-              ? "border-violet-200 bg-violet-50 text-violet-600"
-              : "border-[#E5E7EB] text-[#C4C0DC] hover:text-violet-500"
+              ? "border-violet-200 dark:border-violet-500/30 bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400"
+              : "border-line-strong text-faint hover:text-violet-500"
           }`}
           aria-label={category.isFeatured ? "Unfeature category" : "Feature category"}
         >
@@ -167,7 +167,7 @@ function CategoryRow({ category }: { category: Category }) {
             ${
               confirmingDelete
                 ? "bg-red-600 text-white hover:bg-red-700"
-                : "text-[#94A3B8] hover:bg-red-50 hover:text-red-600"
+                : "text-subtle hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
             }
           `}
         >
@@ -214,8 +214,8 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+    <div className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
         Create category
       </h2>
 
@@ -223,13 +223,13 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
         <button
           type="button"
           onClick={() => iconInputRef.current?.click()}
-          className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-[#D8D5E8] bg-[#F7F7FB] transition-colors hover:border-violet-300"
+          className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line-strong bg-surface-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40"
         >
           {icon ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={icon} alt="Category icon" className="h-full w-full object-cover" />
           ) : (
-            <ImagePlus size={20} className="text-[#94A3B8]" />
+            <ImagePlus size={20} className="text-subtle" />
           )}
         </button>
         <input
@@ -259,12 +259,12 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
             placeholder="10"
           />
 
-          <label className="flex items-center gap-2.5 text-[13.5px] text-[#334155]">
+          <label className="flex items-center gap-2.5 text-[13.5px] text-ink-2">
             <input
               type="checkbox"
               checked={isFeatured}
               onChange={(e) => setIsFeatured(e.target.checked)}
-              className="h-4 w-4 rounded border-[#D4D2E3] text-violet-600 focus:ring-violet-400"
+              className="h-4 w-4 rounded border-line-strong text-violet-600 dark:text-violet-400 focus:ring-violet-400"
             />
             Feature on the marketplace homepage
           </label>

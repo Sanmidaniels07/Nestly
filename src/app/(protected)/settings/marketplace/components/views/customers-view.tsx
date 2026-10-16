@@ -27,9 +27,9 @@ export default function CustomersView() {
 
   if (customers.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-        <Users className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-        <p className="mt-4 text-[13.5px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+        <Users className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+        <p className="mt-4 text-[13.5px] text-subtle">
           Customers will show up here once you have paid orders.
         </p>
       </div>
@@ -38,40 +38,40 @@ export default function CustomersView() {
 
   return (
     <div className="space-y-4">
-      <div className="overflow-x-auto rounded-2xl border border-[#ECE9F6] bg-white">
+      <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
         <table className="w-full min-w-[560px] text-left">
-          <thead className="border-b border-[#F2F1F8] bg-[#FAFAFD]">
+          <thead className="border-b border-line-soft bg-surface-sunken">
             <tr>
-              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                 Customer
               </th>
-              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                 Orders
               </th>
-              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                 Total spent
               </th>
-              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-[#94A3B8]">
+              <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                 Last order
               </th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-[#F2F1F8]">
+          <tbody className="divide-y divide-line-soft">
             {customers.map((customer) => (
               <tr key={customer.user.id}>
                 <td className="px-5 py-4">
-                  <p className="text-[13.5px] font-medium text-[#13131A]">
+                  <p className="text-[13.5px] font-medium text-ink">
                     {customer.user.name}
                   </p>
-                  <p className="text-[12px] text-[#94A3B8]">{customer.user.email}</p>
+                  <p className="text-[12px] text-subtle">{customer.user.email}</p>
                 </td>
-                <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] text-[#334155]">
+                <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] text-ink-2">
                   {customer.totalOrders}
                 </td>
-                <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700">
+                <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700 dark:text-violet-300">
                   {money(customer.totalSpent)}
                 </td>
-                <td className="px-5 py-4 text-[12.5px] text-[#64748B]">
+                <td className="px-5 py-4 text-[12.5px] text-muted">
                   {formatRelativeTime(customer.lastOrderAt)}
                 </td>
               </tr>

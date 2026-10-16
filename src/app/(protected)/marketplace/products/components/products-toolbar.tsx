@@ -31,7 +31,7 @@ export default function ProductsToolbar({
   onOpenFilters,
 }: ProductsToolbarProps) {
   return (
-    <section className="space-y-5 rounded-2xl border border-[#ECE9F6] bg-white p-5">
+    <section className="space-y-5 rounded-2xl border border-line bg-surface p-5">
       <div className="flex flex-col gap-3 lg:flex-row">
         <div className="flex-1">
           <Input
@@ -45,7 +45,7 @@ export default function ProductsToolbar({
         <select
           value={sort}
           onChange={(e) => onSortChange(e.target.value)}
-          className="h-12 rounded-xl border border-[#ECE9F6] bg-white px-4 text-[13.5px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
+          className="h-12 rounded-xl border border-line bg-surface px-4 text-[13.5px] text-ink outline-none transition-colors focus:border-violet-400"
         >
           {sortOptions.map((option) => (
             <option key={option.value} value={option.value}>
@@ -56,7 +56,7 @@ export default function ProductsToolbar({
 
         <button
           onClick={onOpenFilters}
-          className="flex h-12 items-center justify-center gap-2 rounded-xl border border-[#ECE9F6] bg-white px-5 text-[13.5px] font-medium text-[#334155] transition-colors hover:bg-[#F8F7FC]"
+          className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 text-[13.5px] font-medium text-ink-2 transition-colors hover:bg-surface-sunken"
         >
           <SlidersHorizontal size={16} />
           Filters

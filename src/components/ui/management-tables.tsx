@@ -9,7 +9,7 @@ interface Props {
 
 export default function ManagementTable({ children, minWidth = 1100 }: Props) {
   return (
-    <section className="overflow-hidden rounded-xl border border-[#E9E9EE] bg-white">
+    <section className="overflow-hidden rounded-xl border border-line bg-surface">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse" style={{ minWidth }}>
           {children}

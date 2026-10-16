@@ -71,22 +71,22 @@ function MarketplaceSettingsContent() {
     return (
       <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
         <SellerDashboardHeader />
-        <section className="rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
+        <section className="rounded-2xl border border-line bg-surface px-6 py-16 text-center sm:px-10">
           <div
             className={`mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full ${
-              isPending ? "bg-amber-50" : "bg-red-50"
+              isPending ? "bg-amber-50 dark:bg-amber-500/10" : "bg-red-50 dark:bg-red-500/10"
             }`}
           >
             {isPending ? (
-              <Clock size={26} className="text-amber-600" />
+              <Clock size={26} className="text-amber-600 dark:text-amber-400" />
             ) : (
-              <XCircle size={26} className="text-red-600" />
+              <XCircle size={26} className="text-red-600 dark:text-red-400" />
             )}
           </div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
             {isPending ? "Application pending" : "Application rejected"}
           </h1>
-          <p className="mt-2.5 text-[13.5px] text-[#64748B]">
+          <p className="mt-2.5 text-[13.5px] text-muted">
             {isPending
               ? "Your seller application is awaiting admin review. Your dashboard will unlock once it's approved."
               : seller.statusReason
@@ -95,7 +95,7 @@ function MarketplaceSettingsContent() {
           </p>
           <Link
             href="/marketplace/sell"
-            className="mt-7 inline-block text-[13px] font-medium text-violet-700 hover:underline"
+            className="mt-7 inline-block text-[13px] font-medium text-violet-700 dark:text-violet-300 hover:underline"
           >
             View application status
           </Link>
@@ -138,8 +138,8 @@ function MarketplaceSettingsContent() {
         {tab !== "dashboard" && !hasStore ? (
           <SetupStorePrompt section={tabSections[tab]} isSeller={!!seller} />
         ) : tabViews[tab] ?? (
-          <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-            <p className="text-[13.5px] text-[#94A3B8]">This section is coming soon.</p>
+          <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+            <p className="text-[13.5px] text-subtle">This section is coming soon.</p>
           </div>
         )}
       </div>

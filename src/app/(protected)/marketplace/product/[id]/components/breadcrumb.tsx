@@ -33,19 +33,19 @@ export default function ProductBreadcrumb({ product }: Props) {
         return (
           <div key={item.label} className="flex items-center gap-1">
             {isLast ? (
-              <span className="text-[13px] font-medium text-[#13131A]">
+              <span className="text-[13px] font-medium text-ink">
                 {item.label}
               </span>
             ) : (
               <Link
                 href={item.href!}
-                className="text-[13px] text-[#64748B] transition-colors hover:text-violet-600"
+                className="text-[13px] text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
               >
                 {item.label}
               </Link>
             )}
 
-            {!isLast && <ChevronRight size={14} className="text-[#CBD5E1]" />}
+            {!isLast && <ChevronRight size={14} className="text-faint" />}
           </div>
         );
       })}

@@ -76,22 +76,22 @@ export default function SetupChecklist({ seller }: Props) {
   const nextStep = steps.find((step) => !step.done);
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5 sm:p-7">
+    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Finish setting up
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-tight text-[#13131A] sm:text-[28px]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-tight text-ink sm:text-[28px]">
             {hasStore ? "A few steps before you can start selling" : "Next: set up your store"}
           </h2>
         </div>
-        <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+        <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
           {completed} of {steps.length} done
         </p>
       </div>
 
-      <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-[#ECE9F6]">
+      <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-track">
         <div
           className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 transition-all"
           style={{ width: `${(completed / steps.length) * 100}%` }}
@@ -106,7 +106,7 @@ export default function SetupChecklist({ seller }: Props) {
             <li
               key={step.title}
               className={`flex flex-col gap-3 rounded-xl p-3.5 sm:flex-row sm:items-center ${
-                isNext ? "border border-violet-200 bg-violet-50/60" : ""
+                isNext ? "border border-violet-200 dark:border-violet-500/30 bg-violet-50/60" : ""
               }`}
             >
               <div className="flex min-w-0 flex-1 items-start gap-3">
@@ -116,7 +116,7 @@ export default function SetupChecklist({ seller }: Props) {
                       ? "bg-emerald-500 text-white"
                       : isNext
                         ? "bg-violet-600 text-white"
-                        : "bg-[#ECE9F6] text-[#94A3B8]"
+                        : "bg-track text-subtle"
                   }`}
                 >
                   {step.done ? <Check size={13} /> : index + 1}
@@ -125,13 +125,13 @@ export default function SetupChecklist({ seller }: Props) {
                 <div className="min-w-0">
                   <p
                     className={`text-[14px] font-semibold ${
-                      step.done ? "text-[#94A3B8] line-through" : "text-[#13131A]"
+                      step.done ? "text-subtle line-through" : "text-ink"
                     }`}
                   >
                     {step.title}
                   </p>
                   {!step.done && (
-                    <p className="mt-0.5 text-[12.5px] leading-relaxed text-[#64748B]">
+                    <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
                       {step.description}
                     </p>
                   )}
@@ -146,7 +146,7 @@ export default function SetupChecklist({ seller }: Props) {
                   className={`flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-[13px] font-semibold transition-all sm:ml-auto ${
                     isNext
                       ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
-                      : "border border-[#E5E7EB] text-[#334155] hover:border-violet-200 hover:text-violet-700"
+                      : "border border-line-strong text-ink-2 hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300"
                   }`}
                 >
                   {step.cta}

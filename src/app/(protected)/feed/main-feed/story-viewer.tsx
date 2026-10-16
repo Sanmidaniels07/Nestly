@@ -206,7 +206,7 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
           {progressSegments.map((id, index) => (
             <div key={id} className="h-[3px] flex-1 overflow-hidden rounded-full bg-white/30">
               <div
-                className="h-full bg-white transition-[width] duration-75 ease-linear"
+                className="h-full bg-surface transition-[width] duration-75 ease-linear"
                 style={{
                   width:
                     index < storyIndex ? "100%" : index === storyIndex ? `${progress}%` : "0%",
@@ -338,13 +338,13 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
         {isOwn && viewersOpen && (
           <div
             ref={viewersPanelRef}
-            className="absolute bottom-0 left-0 right-0 z-30 max-h-[50%] overflow-y-auto rounded-t-2xl bg-white p-4"
+            className="absolute bottom-0 left-0 right-0 z-30 max-h-[50%] overflow-y-auto rounded-t-2xl bg-surface p-4"
           >
             <div className="mb-3 flex items-center justify-between">
-              <h3 className="text-[14px] font-semibold text-[#13131A]">Viewers</h3>
+              <h3 className="text-[14px] font-semibold text-ink">Viewers</h3>
               <button
                 onClick={() => setViewersOpen(false)}
-                className="rounded-full p-1.5 text-[#94A3B8] hover:bg-gray-100"
+                className="rounded-full p-1.5 text-subtle hover:bg-surface-muted"
               >
                 <X size={16} />
               </button>
@@ -365,14 +365,14 @@ export default function StoryViewer({ groups, initialGroupIndex, onClose }: Prop
                       {view.viewer.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="text-[13px] font-medium text-[#13131A]">
+                  <span className="text-[13px] font-medium text-ink">
                     {view.viewer.name}
                   </span>
                 </div>
               ))}
 
               {viewersData?.views.length === 0 && (
-                <p className="text-[13px] text-[#94A3B8]">No views yet.</p>
+                <p className="text-[13px] text-subtle">No views yet.</p>
               )}
             </div>
           </div>

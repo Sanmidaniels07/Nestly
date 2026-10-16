@@ -22,7 +22,7 @@ export default function ProfileAbout() {
 
   if (isLoading || !profile) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-subtle">
         Loading about...
       </div>
     );
@@ -50,8 +50,8 @@ export default function ProfileAbout() {
       )}
 
       {communities.length > 0 && (
-        <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+        <section className="rounded-2xl border border-line bg-surface p-6">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
             Communities
           </h2>
 
@@ -60,7 +60,7 @@ export default function ProfileAbout() {
               <Link
                 key={community.id}
                 href={`/communities/${community.slug}`}
-                className="rounded-full bg-emerald-50 px-4 py-2 text-[13px] font-medium text-emerald-700 transition-colors hover:bg-emerald-100"
+                className="rounded-full bg-emerald-50 dark:bg-emerald-500/10 px-4 py-2 text-[13px] font-medium text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-100 dark:hover:bg-emerald-500/15"
               >
                 {community.name}
               </Link>

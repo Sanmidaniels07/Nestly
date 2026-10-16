@@ -34,14 +34,14 @@ export default function CommentSection({ postId }: Props) {
   };
 
   return (
-    <div className="border-t border-[#F2F1F8] px-5 py-4 sm:px-6">
+    <div className="border-t border-line-soft px-5 py-4 sm:px-6">
       <form onSubmit={handleSubmit} className="mb-4 flex items-center gap-3">
         <input
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Write a comment..."
           maxLength={500}
-          className="flex-1 rounded-full bg-[#F7F7FB] px-4 py-2 text-[13.5px] text-[#13131A] outline-none placeholder:text-[#94A3B8] focus:bg-[#F0EFF9]"
+          className="flex-1 rounded-full bg-surface-2 px-4 py-2 text-[13.5px] text-ink outline-none placeholder:text-subtle focus:bg-surface-muted"
         />
         <button
           type="submit"
@@ -64,7 +64,7 @@ export default function CommentSection({ postId }: Props) {
       )}
 
       {!isLoading && comments?.length === 0 && (
-        <p className="text-[13px] text-[#94A3B8]">
+        <p className="text-[13px] text-subtle">
           No comments yet. Be the first to comment.
         </p>
       )}
@@ -74,14 +74,14 @@ export default function CommentSection({ postId }: Props) {
           <div key={comment.id} className="flex items-start gap-3">
             <AuthorAvatarLink author={comment.user} size={32} />
 
-            <div className="flex-1 rounded-2xl bg-[#F7F7FB] px-4 py-2.5">
+            <div className="flex-1 rounded-2xl bg-surface-2 px-4 py-2.5">
               <div className="flex items-center justify-between gap-2">
-                <span className="text-[13px] font-semibold text-[#13131A]">
+                <span className="text-[13px] font-semibold text-ink">
                   <AuthorNameLink author={comment.user} />
                 </span>
 
                 <div className="flex items-center gap-2">
-                  <span className="font-[family-name:var(--font-mono)] text-[11px] text-[#94A3B8]">
+                  <span className="font-[family-name:var(--font-mono)] text-[11px] text-subtle">
                     {formatRelativeTime(comment.createdAt)}
                   </span>
 
@@ -89,7 +89,7 @@ export default function CommentSection({ postId }: Props) {
                     <button
                       onClick={() => deleteComment(comment.id)}
                       aria-label="Delete comment"
-                      className="text-[#94A3B8] transition-colors hover:text-red-500"
+                      className="text-subtle transition-colors hover:text-red-500"
                     >
                       <Trash2 size={13} />
                     </button>
@@ -97,7 +97,7 @@ export default function CommentSection({ postId }: Props) {
                 </div>
               </div>
 
-              <p className="mt-0.5 text-[13.5px] text-[#334155]">
+              <p className="mt-0.5 text-[13.5px] text-ink-2">
                 {comment.content}
               </p>
             </div>

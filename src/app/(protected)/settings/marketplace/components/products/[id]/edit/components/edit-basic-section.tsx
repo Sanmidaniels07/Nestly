@@ -18,11 +18,11 @@ export default function EditBasicSection({ draft, setDraft }: Props) {
   const descLength = draft.description.length;
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Basic information
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Keep this accurate — it&apos;s what buyers see first.
       </p>
 
@@ -71,7 +71,7 @@ export default function EditBasicSection({ draft, setDraft }: Props) {
         </div>
 
         <div>
-          <label className="mb-2 block text-[13px] font-medium text-[#334155]">
+          <label className="mb-2 block text-[13px] font-medium text-ink-2">
             Description
           </label>
 
@@ -80,11 +80,11 @@ export default function EditBasicSection({ draft, setDraft }: Props) {
             rows={6}
             maxLength={DESCRIPTION_MAX}
             onChange={(e) => setDraft((prev) => ({ ...prev, description: e.target.value }))}
-            className="w-full resize-none rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3.5 text-[14px] text-[#13131A] outline-none transition-colors placeholder:text-[#94A3B8] focus:border-violet-400 focus:bg-white"
+            className="w-full resize-none rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3.5 text-[14px] text-ink outline-none transition-colors placeholder:text-subtle focus:border-violet-400 focus:bg-surface"
           />
 
           <div className="mt-1.5 flex justify-end">
-            <span className="font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+            <span className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
               {descLength}/{DESCRIPTION_MAX}
             </span>
           </div>

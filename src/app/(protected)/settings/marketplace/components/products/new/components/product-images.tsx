@@ -97,11 +97,11 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
   const canContinue = draft.images.length > 0 && !isUploading;
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Product images
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Clear, well-lit photos help buyers trust your listing.
       </p>
 
@@ -114,10 +114,10 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
       </div>
 
       {draft.images.length === 0 ? (
-        <div className="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-10 text-center">
-          <ImageOff size={26} className="text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-3 text-[13.5px] font-medium text-[#13131A]">No images yet</p>
-          <p className="mt-1 text-[12.5px] text-[#94A3B8]">
+        <div className="mt-6 flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong py-10 text-center">
+          <ImageOff size={26} className="text-faint" strokeWidth={1.5} />
+          <p className="mt-3 text-[13.5px] font-medium text-ink">No images yet</p>
+          <p className="mt-1 text-[12.5px] text-subtle">
             Add at least one image to continue.
           </p>
         </div>
@@ -134,7 +134,7 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
         </div>
       )}
 
-      <div className="mt-8 flex justify-between border-t border-[#F2F1F8] pt-6">
+      <div className="mt-8 flex justify-between border-t border-line-soft pt-6">
         <Button variant="outline" onClick={onBack} className="h-11 rounded-xl px-7">
           Back
         </Button>

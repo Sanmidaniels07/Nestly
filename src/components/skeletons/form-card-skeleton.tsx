@@ -2,7 +2,7 @@ import Skeleton from "@/src/components/ui/skeleton";
 
 export function FormCardSkeleton({ fields = 4 }: { fields?: number }) {
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+    <div className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <Skeleton className="h-4 w-32" />
       <Skeleton className="mt-2 h-3 w-56" />
 

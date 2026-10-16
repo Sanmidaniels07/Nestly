@@ -1,13 +1,47 @@
 @import "tailwindcss";
 
+/* next-themes toggles a `dark` class on <html>. Tailwind v4's dark: variant
+   follows the OS setting by default, so without this the in-app switch
+   wouldn't drive any dark: styles. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Theme tokens. Components use these (text-ink, bg-surface, border-line...)
+   instead of hard-coded hex, so each colour has one light and one dark value.
+   Light values match the original design exactly. */
 :root {
-  --background: #f5f7fa;
+  color-scheme: light;
+
+  --canvas: #f5f7fa;
+  --canvas-via: #f0f4ff;
+  --canvas-to: #f5f0ff;
+
+  --surface: #ffffff;
+  --surface-2: #f7f7fb;
+  --surface-sunken: #fafafd;
+  --surface-muted: #f1f0f5;
+  --track: #ece9f6;
+  --tint: #f6f3ff;
+  --tint-blue: #e8f1ff;
+  --tint-orange: #fff0e8;
+
+  --ink: #13131a;
+  --ink-2: #334155;
+  --ink-3: #475569;
+  --muted: #64748b;
+  --subtle: #94a3b8;
+  --faint: #c4c0dc;
+
+  --line: #ece9f6;
+  --line-soft: #f2f1f8;
+  --line-strong: #e5e7eb;
+
+  /* Legacy names still used by the auth layout, card and typography. */
+  --background: var(--canvas);
   --foreground: #1a1a2e;
-  --card: #ffffff;
+  --card: var(--surface);
   --card-foreground: #1a1a2e;
-  --border: #e5e7eb;
-  --muted: #6b7280;
-  --muted-foreground: #9ca3af;
+  --border: var(--line-strong);
+  --muted-foreground: var(--subtle);
 
   /* BdayConnect Brand Colors */
   --primary: #2b7fff;
@@ -17,18 +51,65 @@
   --success: #10b981;
 }
 
+/* Dark palette: deep violet-tinted ink rather than neutral black/slate, so
+   the violet/indigo brand accents feel at home. Surfaces step up in
+   lightness (canvas < surface < surface-2) to keep cards distinct. */
 .dark {
-  --background: #020617;
-  --foreground: #f8fafc;
-  --card: #0f172a;
-  --card-foreground: #f8fafc;
-  --border: #334155;
-  --muted: #64748b;
-  --muted-foreground: #94a3b8;
+  color-scheme: dark;
+
+  --canvas: #0c0b12;
+  --canvas-via: #0e0d17;
+  --canvas-to: #120f1c;
+
+  --surface: #16151f;
+  --surface-2: #1e1d2a;
+  --surface-sunken: #121119;
+  --surface-muted: #232232;
+  --track: #2b2a3b;
+  --tint: rgb(139 92 246 / 0.14);
+  --tint-blue: rgb(59 130 246 / 0.14);
+  --tint-orange: rgb(255 122 69 / 0.14);
+
+  --ink: #f2f1f8;
+  --ink-2: #d6d4e3;
+  --ink-3: #bdbacd;
+  --muted: #a3a0b6;
+  --subtle: #807d96;
+  --faint: #4f4c65;
+
+  --line: #2a2839;
+  --line-soft: #211f2e;
+  --line-strong: #363449;
+
+  --foreground: var(--ink);
+  --card-foreground: var(--ink);
 
   --primary: #3b82f6;
   --accent: #6d2fc7;
   --highlight: #fb923c;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-canvas-via: var(--canvas-via);
+  --color-canvas-to: var(--canvas-to);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-sunken: var(--surface-sunken);
+  --color-surface-muted: var(--surface-muted);
+  --color-track: var(--track);
+  --color-tint: var(--tint);
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-orange: var(--tint-orange);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-soft: var(--line-soft);
+  --color-line-strong: var(--line-strong);
 }
 
 body {
@@ -80,8 +161,8 @@ body {
   max-width: 380px;
   padding: 14px 38px 14px 14px;
   border-radius: 16px;
-  background: #ffffff;
-  border: 1px solid color-mix(in srgb, var(--toast-accent) 35%, #ece9f6);
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--toast-accent) 35%, var(--line));
   box-shadow:
     0 1px 2px rgba(19, 19, 26, 0.04),
     0 10px 24px -10px rgba(124, 58, 237, 0.18);
@@ -103,7 +184,7 @@ body {
   font-size: 13.5px;
   font-weight: 500;
   line-height: 1.45;
-  color: #13131a;
+  color: var(--ink);
 }
 
 .toast-close {
@@ -116,7 +197,7 @@ body {
   width: 20px;
   height: 20px;
   border-radius: 8px;
-  color: #94a3b8;
+  color: var(--subtle);
   opacity: 0;
   transition:
     opacity 0.15s ease,
@@ -127,7 +208,7 @@ body {
   opacity: 1;
 }
 .toast-close:hover {
-  background: #f5f3ff;
+  background: var(--tint);
   color: #7c3aed;
 }
 

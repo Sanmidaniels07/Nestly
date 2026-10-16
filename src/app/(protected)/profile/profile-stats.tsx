@@ -17,10 +17,10 @@ function formatNumber(value: number) {
 }
 
 const stats = (data: Props) => [
-  { title: "Followers", value: data.followers, icon: Users, chip: "bg-violet-50 text-violet-600" },
-  { title: "Following", value: data.following, icon: UserPlus, chip: "bg-indigo-50 text-indigo-600" },
-  { title: "Posts", value: data.posts, icon: FileText, chip: "bg-emerald-50 text-emerald-600" },
-  { title: "Marketplace", value: data.listings, icon: Store, chip: "bg-amber-50 text-amber-600" },
+  { title: "Followers", value: data.followers, icon: Users, chip: "bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400" },
+  { title: "Following", value: data.following, icon: UserPlus, chip: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400" },
+  { title: "Posts", value: data.posts, icon: FileText, chip: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" },
+  { title: "Marketplace", value: data.listings, icon: Store, chip: "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400" },
 ];
 
 export default function ProfileStats(props: Props) {
@@ -38,7 +38,7 @@ export default function ProfileStats(props: Props) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18 + index * 0.05 }}
           className="
-            rounded-2xl border border-[#ECE9F6] bg-white p-5
+            rounded-2xl border border-line bg-surface p-5
             transition-all duration-300
             hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]
           "
@@ -47,11 +47,11 @@ export default function ProfileStats(props: Props) {
             <item.icon size={17} />
           </div>
 
-          <p className="mt-4 font-[family-name:var(--font-mono)] text-[26px] font-semibold text-[#13131A]">
+          <p className="mt-4 font-[family-name:var(--font-mono)] text-[26px] font-semibold text-ink">
             {formatNumber(item.value)}
           </p>
 
-          <p className="mt-0.5 text-[12.5px] font-medium text-[#94A3B8]">
+          <p className="mt-0.5 text-[12.5px] font-medium text-subtle">
             {item.title}
           </p>
         </motion.div>

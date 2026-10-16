@@ -120,8 +120,8 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Store details
       </h2>
 
@@ -144,14 +144,14 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
         <Input label="Store name" value={form.name} onChange={update("name")} />
 
         <div>
-          <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+          <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
             Description
           </label>
           <textarea
             value={form.description}
             onChange={update("description")}
             rows={3}
-            className="w-full rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+            className="w-full rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
           />
         </div>
 
@@ -221,16 +221,16 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <div className="flex items-start gap-3.5">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <Wallet size={17} className="text-violet-600" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <Wallet size={17} className="text-violet-600 dark:text-violet-400" />
         </div>
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
             Payout details
           </h2>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <p className="mt-1 text-[13px] text-muted">
             {isActive
               ? "Your share of every sale is paid straight to this account automatically."
               : "Add your bank account to get paid automatically after every sale."}
@@ -243,35 +243,35 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
           <div
             className={`flex items-center justify-between rounded-2xl border px-4 py-3.5 ${
               store?.isOnHold
-                ? "border-amber-200 bg-amber-50"
-                : "border-emerald-200 bg-emerald-50"
+                ? "border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10"
+                : "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10"
             }`}
           >
             <div className="flex items-center gap-2.5">
               {store?.isOnHold ? (
-                <Clock size={17} className="shrink-0 text-amber-600" />
+                <Clock size={17} className="shrink-0 text-amber-600 dark:text-amber-400" />
               ) : (
-                <CheckCircle2 size={17} className="shrink-0 text-emerald-600" />
+                <CheckCircle2 size={17} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
               )}
               <div>
-                <p className="text-[13.5px] font-medium text-[#13131A]">
+                <p className="text-[13.5px] font-medium text-ink">
                   {store?.payoutBankName} · {store?.payoutAccountNumber}
                 </p>
-                <p className="text-[12px] text-[#64748B]">
+                <p className="text-[12px] text-muted">
                   {store?.payoutAccountName}
                 </p>
               </div>
             </div>
             <button
               onClick={() => setEditing(true)}
-              className="shrink-0 text-[12.5px] font-medium text-violet-600 hover:underline"
+              className="shrink-0 text-[12.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
             >
               Change
             </button>
           </div>
 
           {store?.isOnHold && (
-            <p className="text-[12px] text-amber-700">
+            <p className="text-[12px] text-amber-700 dark:text-amber-300">
               This account was changed recently, so automatic payouts are paused
               for up to {store.holdHours ?? 48} hours as a security measure.
               Your earnings are still accruing and will be paid out manually in
@@ -283,13 +283,13 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
         <div className="mt-6 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+              <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
                 Bank
               </label>
               <select
                 value={bankCode}
                 onChange={(e) => setBankCode(e.target.value)}
-                className="h-14 w-full rounded-3xl border border-gray-200 bg-white px-5 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
+                className="h-14 w-full rounded-3xl border border-line bg-surface px-5 text-[14px] text-ink outline-none transition-colors focus:border-violet-400"
               >
                 <option value="">Select your bank</option>
                 {banks?.map((bank) => (
@@ -310,7 +310,7 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
             />
           </div>
 
-          <p className="text-[12px] text-[#94A3B8]">
+          <p className="text-[12px] text-subtle">
             We&apos;ll verify this account with your bank before activating
             automatic payouts. For your security, a changed account is paused
             from automatic payouts for up to 48 hours, and we&apos;ll email you
@@ -378,11 +378,11 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Store policies
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Shown on your public store page to help buyers shop with confidence.
       </p>
 
@@ -395,7 +395,7 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
           ] as const
         ).map(([field, label]) => (
           <div key={field}>
-            <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+            <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
               {label}
             </label>
             <textarea
@@ -403,7 +403,7 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
               onChange={update(field)}
               rows={2}
               placeholder={`Describe your ${label.toLowerCase()}...`}
-              className="w-full resize-none rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400 focus:bg-white"
+              className="w-full resize-none rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
             />
           </div>
         ))}
@@ -454,11 +454,11 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Shipping options
       </h2>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+      <p className="mt-1 text-[13px] text-muted">
         Buyers choose one of these at checkout.
       </p>
 
@@ -466,13 +466,13 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
         {options.map((option) => (
           <div
             key={option.id}
-            className="flex items-center justify-between rounded-xl border border-[#F2F1F8] px-4 py-3"
+            className="flex items-center justify-between rounded-xl border border-line-soft px-4 py-3"
           >
             <div>
-              <p className="text-[13.5px] font-medium text-[#13131A]">
+              <p className="text-[13.5px] font-medium text-ink">
                 {option.name}
               </p>
-              <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+              <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-subtle">
                 {money(option.fee)}
                 {option.eta ? ` · ${option.eta}` : ""}
               </p>
@@ -480,7 +480,7 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
             <button
               onClick={() => deleteOption(option.id)}
               aria-label="Remove shipping option"
-              className="rounded-full p-2 text-[#94A3B8] transition-colors hover:bg-red-50 hover:text-red-500"
+              className="rounded-full p-2 text-subtle transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-500"
             >
               <Trash2 size={15} />
             </button>
@@ -488,11 +488,11 @@ function ShippingOptionsManager({ slug }: { slug: string }) {
         ))}
 
         {options.length === 0 && (
-          <p className="text-[13px] text-[#94A3B8]">No shipping options yet.</p>
+          <p className="text-[13px] text-subtle">No shipping options yet.</p>
         )}
       </div>
 
-      <div className="mt-5 grid gap-3 border-t border-[#F2F1F8] pt-5 sm:grid-cols-[1.5fr_1fr_1fr_auto]">
+      <div className="mt-5 grid gap-3 border-t border-line-soft pt-5 sm:grid-cols-[1.5fr_1fr_1fr_auto]">
         <Input
           value={name}
           onChange={(e) => setName(e.target.value)}
@@ -537,13 +537,13 @@ function ImagePicker({
 }) {
   return (
     <div>
-      <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">
+      <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
         {label}
       </label>
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="flex h-28 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-gray-300 bg-[#F7F7FB] transition-colors hover:border-violet-400"
+        className="flex h-28 w-full items-center justify-center overflow-hidden rounded-2xl border border-dashed border-line-strong bg-surface-2 transition-colors hover:border-violet-400"
       >
         {previewUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -553,7 +553,7 @@ function ImagePicker({
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="flex flex-col items-center gap-1.5 text-[#94A3B8]">
+          <div className="flex flex-col items-center gap-1.5 text-subtle">
             <ImagePlus size={20} />
             <span className="text-[12px]">Upload</span>
           </div>

@@ -114,7 +114,7 @@ function ProductsPageContent() {
         {isLoading && <CardGridSkeleton count={12} />}
 
         {isError && (
-          <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
+          <div className="rounded-2xl border border-line bg-surface py-16 text-center text-[13.5px] text-red-500">
             Couldn&apos;t load products. Please try again.
           </div>
         )}

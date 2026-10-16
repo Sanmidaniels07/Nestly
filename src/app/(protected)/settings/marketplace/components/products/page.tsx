@@ -99,7 +99,7 @@ export default function SellerProductsPage() {
       {!isLoading && !isError && (
         <>
           {products.length > 0 && (
-            <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+            <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
               {products.length} product{products.length !== 1 ? "s" : ""}
             </p>
           )}

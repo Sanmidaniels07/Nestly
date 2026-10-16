@@ -23,13 +23,13 @@ export default function DeliveryFilter({ delivery, pickup, onDeliveryChange, onP
           onClick={option.onToggle}
           className={`
             flex w-full items-center justify-between rounded-xl border p-3.5 text-[13.5px] font-medium transition-colors
-            ${option.checked ? "border-violet-300 bg-violet-50 text-violet-700" : "border-[#ECE9F6] text-[#334155] hover:border-violet-200"}
+            ${option.checked ? "border-violet-300 dark:border-violet-500/40 bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300" : "border-line text-ink-2 hover:border-violet-200 dark:hover:border-violet-500/30"}
           `}
         >
           {option.label}
           <div
             className={`flex h-5 w-5 items-center justify-center rounded-md border transition-colors ${
-              option.checked ? "border-violet-600 bg-violet-600" : "border-[#D4D2E3] bg-white"
+              option.checked ? "border-violet-600 bg-violet-600" : "border-line-strong bg-surface"
             }`}
           >
             {option.checked && <Check size={13} className="text-white" strokeWidth={3} />}

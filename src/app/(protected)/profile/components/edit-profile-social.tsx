@@ -20,10 +20,10 @@ export default function EditProfileSocial() {
   return (
     <section className="space-y-6">
       <div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
           Social links
         </h3>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Help people connect with you across different platforms.
         </p>
       </div>

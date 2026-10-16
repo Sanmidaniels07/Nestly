@@ -4,7 +4,7 @@ import { achievements } from "@/src/mocks/profile-sidebar";
 
 export default function ProfileAchievements() {
   return (
-    <div className="rounded-[30px] border border-[#ECEAF4] bg-white p-6 shadow-sm">
+    <div className="rounded-[30px] border border-line bg-surface p-6 shadow-sm">
       <h3 className="text-xl font-bold">
         Achievements
       </h3>
@@ -24,7 +24,7 @@ export default function ProfileAchievements() {
                 {item.title}
               </h4>
 
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-muted">
                 {item.description}
               </p>
             </div>

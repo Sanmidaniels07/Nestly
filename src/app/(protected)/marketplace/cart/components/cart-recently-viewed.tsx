@@ -10,7 +10,7 @@ export default function CartRecentlyViewed() {
 
   return (
     <section className="space-y-5">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
         You might also like
       </h2>
 

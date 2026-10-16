@@ -9,8 +9,8 @@ export default function PaymentMethods() {
   const setPaymentMethod = useCheckoutStore((state) => state.setPaymentMethod);
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
         Payment method
       </h2>
 
@@ -19,21 +19,21 @@ export default function PaymentMethods() {
           title="Debit / credit card"
           subtitle="Visa, Mastercard, Verve"
           selected={paymentMethod === "card"}
-          icon={<CreditCard size={17} className="text-violet-700" />}
+          icon={<CreditCard size={17} className="text-violet-700 dark:text-violet-300" />}
           onClick={() => setPaymentMethod("card")}
         />
         <PaymentMethodCard
           title="Bank transfer"
           subtitle="Instant transfer"
           selected={paymentMethod === "bank"}
-          icon={<Landmark size={17} className="text-violet-700" />}
+          icon={<Landmark size={17} className="text-violet-700 dark:text-violet-300" />}
           onClick={() => setPaymentMethod("bank")}
         />
         <PaymentMethodCard
           title="Nestly wallet"
           subtitle="Coming soon"
           selected={paymentMethod === "wallet"}
-          icon={<Wallet size={17} className="text-violet-700" />}
+          icon={<Wallet size={17} className="text-violet-700 dark:text-violet-300" />}
           onClick={() => setPaymentMethod("wallet")}
           disabled
         />

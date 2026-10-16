@@ -22,10 +22,10 @@ export default function QuickStats() {
 
   if (isProfileLoading || isUserProfileLoading) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+      <div className="rounded-2xl border border-line bg-surface p-6">
         <Skeleton className="h-4 w-24" />
         <Skeleton className="mt-6 h-1.5 w-full rounded-full" />
-        <div className="mt-6 space-y-4 border-t border-[#F2F1F8] pt-5">
+        <div className="mt-6 space-y-4 border-t border-line-soft pt-5">
           <Skeleton className="h-3.5 w-full" />
           <Skeleton className="h-3.5 w-full" />
         </div>
@@ -47,25 +47,25 @@ export default function QuickStats() {
   ];
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <div className="rounded-2xl border border-line bg-surface p-6">
       <div className="flex items-center gap-2">
-        <TrendingUp size={16} className="text-violet-600" />
-        <h3 className="text-[15px] font-semibold text-[#13131A]">
+        <TrendingUp size={16} className="text-violet-600 dark:text-violet-400" />
+        <h3 className="text-[15px] font-semibold text-ink">
           Your activity
         </h3>
       </div>
 
       <div className="mt-5">
         <div className="flex items-baseline justify-between">
-          <span className="text-[13px] text-[#64748B]">
+          <span className="text-[13px] text-muted">
             Profile completion
           </span>
-          <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-600">
+          <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-600 dark:text-violet-400">
             {completion}%
           </span>
         </div>
 
-        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#F0EEF9]">
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-muted">
           <div
             className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600"
             style={{ width: `${completion}%` }}
@@ -73,14 +73,14 @@ export default function QuickStats() {
         </div>
       </div>
 
-      <div className="mt-5 space-y-3.5 border-t border-[#F2F1F8] pt-5">
+      <div className="mt-5 space-y-3.5 border-t border-line-soft pt-5">
         {metrics.map(({ icon: Icon, label, value }) => (
           <div key={label} className="flex items-center justify-between">
-            <div className="flex items-center gap-2.5 text-[#64748B]">
+            <div className="flex items-center gap-2.5 text-muted">
               <Icon size={15} />
               <span className="text-[13.5px]">{label}</span>
             </div>
-            <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-[#13131A]">
+            <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-ink">
               {value}
             </span>
           </div>

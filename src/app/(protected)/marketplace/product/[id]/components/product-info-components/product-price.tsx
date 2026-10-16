@@ -22,18 +22,18 @@ export default function PriceSection({ product }: Props) {
 
   return (
     <div className="flex flex-wrap items-end gap-2.5">
-      <h2 className="font-[family-name:var(--font-mono)] text-[30px] font-bold text-violet-700">
+      <h2 className="font-[family-name:var(--font-mono)] text-[30px] font-bold text-violet-700 dark:text-violet-300">
         {money(product.price)}
       </h2>
 
       {product.originalPrice && (
-        <span className="font-[family-name:var(--font-mono)] text-[16px] text-[#94A3B8] line-through">
+        <span className="font-[family-name:var(--font-mono)] text-[16px] text-subtle line-through">
           {money(product.originalPrice)}
         </span>
       )}
 
       {discount !== undefined && (
-        <span className="rounded-full bg-red-50 px-2.5 py-1 text-[11.5px] font-semibold text-red-600">
+        <span className="rounded-full bg-red-50 dark:bg-red-500/10 px-2.5 py-1 text-[11.5px] font-semibold text-red-600 dark:text-red-400">
           {discount}% OFF
         </span>
       )}

@@ -117,7 +117,7 @@ export default function EventDetailPage({
   if (isLoading) {
     return (
       <div className="mx-auto max-w-3xl space-y-6 pb-20 pt-6">
-        <div className="h-64 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+        <div className="h-64 animate-pulse rounded-2xl bg-surface-2" />
       </div>
     );
   }
@@ -125,7 +125,7 @@ export default function EventDetailPage({
   if (!event) {
     return (
       <div className="mx-auto max-w-3xl pb-20 pt-16 text-center">
-        <p className="text-[15px] font-medium text-[#13131A]">Event not found</p>
+        <p className="text-[15px] font-medium text-ink">Event not found</p>
       </div>
     );
   }
@@ -141,7 +141,7 @@ export default function EventDetailPage({
         />
       )}
 
-      <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6 sm:p-8">
+      <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         {isEditing ? (
           <div className="space-y-4">
             <Input
@@ -150,14 +150,14 @@ export default function EventDetailPage({
               onChange={(e) => setForm((prev) => ({ ...prev, title: e.target.value }))}
             />
             <div>
-              <label className="mb-2 block text-[13px] font-medium text-[#334155]">
+              <label className="mb-2 block text-[13px] font-medium text-ink-2">
                 Description
               </label>
               <textarea
                 value={form.description}
                 onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))}
                 rows={3}
-                className="w-full resize-none rounded-2xl border border-[#E4E6EB] bg-[#FAFBFC] px-4 py-3 text-[14px] text-[#13131A] outline-none focus:border-violet-400 focus:bg-white"
+                className="w-full resize-none rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none focus:border-violet-400 focus:bg-surface"
               />
             </div>
             <Input
@@ -179,7 +179,7 @@ export default function EventDetailPage({
                 onChange={(e) => setForm((prev) => ({ ...prev, endAt: e.target.value }))}
               />
             </div>
-            <div className="flex gap-2.5 border-t border-[#F2F1F8] pt-5">
+            <div className="flex gap-2.5 border-t border-line-soft pt-5">
               <Button variant="outline" onClick={() => setIsEditing(false)} className="h-11 rounded-xl px-6">
                 Cancel
               </Button>
@@ -197,7 +197,7 @@ export default function EventDetailPage({
         ) : (
           <>
             <div className="flex items-start justify-between gap-4">
-              <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-[#13131A]">
+              <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
                 {event.title}
               </h1>
 
@@ -206,7 +206,7 @@ export default function EventDetailPage({
                   <button
                     onClick={startEditing}
                     aria-label="Edit event"
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-[#94A3B8] transition-colors hover:bg-[#F7F7FB] hover:text-violet-600"
+                    className="flex h-9 w-9 items-center justify-center rounded-full text-subtle transition-colors hover:bg-surface-2 hover:text-violet-600 dark:hover:text-violet-400"
                   >
                     <Pencil size={15} />
                   </button>
@@ -219,7 +219,7 @@ export default function EventDetailPage({
                       ${
                         confirmingCancel
                           ? "bg-red-600 text-white hover:bg-red-700"
-                          : "w-9 text-[#94A3B8] hover:bg-red-50 hover:text-red-600"
+                          : "w-9 text-subtle hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400"
                       }
                     `}
                   >
@@ -230,7 +230,7 @@ export default function EventDetailPage({
               )}
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center gap-5 text-[13.5px] text-[#64748B]">
+            <div className="mt-4 flex flex-wrap items-center gap-5 text-[13.5px] text-muted">
               <div className="flex items-center gap-1.5">
                 <CalendarDays size={16} />
                 <span className="font-[family-name:var(--font-mono)]">
@@ -252,12 +252,12 @@ export default function EventDetailPage({
             </div>
 
             {event.description && (
-              <p className="mt-5 text-[14.5px] leading-relaxed text-[#475569]">
+              <p className="mt-5 text-[14.5px] leading-relaxed text-ink-3">
                 {event.description}
               </p>
             )}
 
-            <div className="mt-6 flex flex-wrap gap-3 border-t border-[#F2F1F8] pt-6">
+            <div className="mt-6 flex flex-wrap gap-3 border-t border-line-soft pt-6">
               <button
                 onClick={setGoing}
                 disabled={isUpdating}
@@ -266,7 +266,7 @@ export default function EventDetailPage({
                   ${
                     status === "GOING"
                       ? "bg-violet-600 text-white"
-                      : "border border-[#E5E7EB] text-[#64748B] hover:border-violet-200 hover:text-violet-600"
+                      : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-600 dark:hover:text-violet-400"
                   }
                 `}
               >
@@ -282,7 +282,7 @@ export default function EventDetailPage({
                   ${
                     status === "INTERESTED"
                       ? "bg-indigo-600 text-white"
-                      : "border border-[#E5E7EB] text-[#64748B] hover:border-indigo-200 hover:text-indigo-600"
+                      : "border border-line-strong text-muted hover:border-indigo-200 dark:hover:border-indigo-500/30 hover:text-indigo-600 dark:hover:text-indigo-400"
                   }
                 `}
               >
@@ -294,7 +294,7 @@ export default function EventDetailPage({
                 <button
                   onClick={cancelRsvp}
                   disabled={isUpdating}
-                  className="flex items-center gap-1.5 rounded-full border border-[#E5E7EB] px-5 py-2.5 text-[13.5px] font-semibold text-[#64748B] transition-colors hover:border-red-200 hover:text-red-500 disabled:opacity-50"
+                  className="flex items-center gap-1.5 rounded-full border border-line-strong px-5 py-2.5 text-[13.5px] font-semibold text-muted transition-colors hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500 disabled:opacity-50"
                 >
                   <X size={15} />
                   Cancel RSVP
@@ -306,14 +306,14 @@ export default function EventDetailPage({
       </div>
 
       {attendees.length > 0 && (
-        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6">
-          <h2 className="text-[15px] font-semibold text-[#13131A]">Attendees</h2>
+        <div className="rounded-2xl border border-line bg-surface p-6">
+          <h2 className="text-[15px] font-semibold text-ink">Attendees</h2>
 
           <div className="mt-4 flex flex-wrap gap-3">
             {attendees.map((attendee) => (
               <div
                 key={attendee.id}
-                className="flex items-center gap-2 rounded-full border border-[#ECE9F6] py-1.5 pl-1.5 pr-4"
+                className="flex items-center gap-2 rounded-full border border-line py-1.5 pl-1.5 pr-4"
               >
                 {attendee.user.avatar ? (
                   // eslint-disable-next-line @next/next/no-img-element
@@ -327,7 +327,7 @@ export default function EventDetailPage({
                     {attendee.user.name.charAt(0).toUpperCase()}
                   </div>
                 )}
-                <span className="text-[13px] font-medium text-[#13131A]">
+                <span className="text-[13px] font-medium text-ink">
                   {attendee.user.name}
                 </span>
               </div>
@@ -359,10 +359,10 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
   };
 
   return (
-    <div className="rounded-2xl border border-[#EDEBF5] bg-white p-6">
+    <div className="rounded-2xl border border-line bg-surface p-6">
       <div className="flex items-center gap-2">
-        <MessageCircle size={16} className="text-violet-600" />
-        <h2 className="text-[15px] font-semibold text-[#13131A]">Discussion</h2>
+        <MessageCircle size={16} className="text-violet-600 dark:text-violet-400" />
+        <h2 className="text-[15px] font-semibold text-ink">Discussion</h2>
       </div>
 
       <form onSubmit={handleSubmit} className="mt-4 flex items-center gap-3">
@@ -371,7 +371,7 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
           onChange={(e) => setContent(e.target.value)}
           placeholder="Ask a question or leave a comment..."
           maxLength={500}
-          className="flex-1 rounded-full bg-[#F7F7FB] px-4 py-2.5 text-[13.5px] text-[#13131A] outline-none placeholder:text-[#94A3B8] focus:bg-[#F0EFF9]"
+          className="flex-1 rounded-full bg-surface-2 px-4 py-2.5 text-[13.5px] text-ink outline-none placeholder:text-subtle focus:bg-surface-muted"
         />
         <button
           type="submit"
@@ -385,11 +385,11 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
       {isLoading ? (
         <div className="mt-5 space-y-3">
           {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="h-12 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-12 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : comments.length === 0 ? (
-        <p className="mt-5 text-[13px] text-[#94A3B8]">
+        <p className="mt-5 text-[13px] text-subtle">
           No comments yet. Be the first to say something.
         </p>
       ) : (
@@ -398,14 +398,14 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
             <div key={comment.id} className="flex items-start gap-3">
               <AuthorAvatarLink author={comment.user} size={32} />
 
-              <div className="flex-1 rounded-2xl bg-[#F7F7FB] px-4 py-2.5">
+              <div className="flex-1 rounded-2xl bg-surface-2 px-4 py-2.5">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-[13px] font-semibold text-[#13131A]">
+                  <span className="text-[13px] font-semibold text-ink">
                     <AuthorNameLink author={comment.user} />
                   </span>
 
                   <div className="flex items-center gap-2">
-                    <span className="font-[family-name:var(--font-mono)] text-[11px] text-[#94A3B8]">
+                    <span className="font-[family-name:var(--font-mono)] text-[11px] text-subtle">
                       {formatRelativeTime(comment.createdAt)}
                     </span>
 
@@ -413,7 +413,7 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
                       <button
                         onClick={() => deleteComment(comment.id)}
                         aria-label="Delete comment"
-                        className="text-[#94A3B8] transition-colors hover:text-red-500"
+                        className="text-subtle transition-colors hover:text-red-500"
                       >
                         <Trash2 size={13} />
                       </button>
@@ -421,7 +421,7 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
                   </div>
                 </div>
 
-                <p className="mt-0.5 text-[13.5px] text-[#334155]">{comment.content}</p>
+                <p className="mt-0.5 text-[13.5px] text-ink-2">{comment.content}</p>
               </div>
             </div>
           ))}

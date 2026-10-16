@@ -18,8 +18,8 @@ function money(value: number) {
 
 export default function OrderSummaryCard({ order }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Order summary
       </h2>
 
@@ -27,7 +27,7 @@ export default function OrderSummaryCard({ order }: Props) {
         <SummaryRow label="Order date" value={formatRelativeTime(order.createdAt)} />
         {order.paymentMethod && <SummaryRow label="Payment" value={order.paymentMethod} />}
 
-        <div className="border-t border-dashed border-[#ECE9F6] pt-3">
+        <div className="border-t border-dashed border-line pt-3">
           <SummaryRow label="Total paid" value={money(order.total)} bold />
         </div>
       </div>

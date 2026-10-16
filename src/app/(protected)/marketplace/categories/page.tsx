@@ -14,17 +14,17 @@ export default function CategoriesPage() {
       <div className="space-y-4">
         <Link
           href="/marketplace"
-          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 hover:underline"
+          className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
         >
           <ArrowLeft size={15} />
           Back to marketplace
         </Link>
 
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Marketplace
           </p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-[#13131A] sm:text-[42px]">
+          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
             All categories
           </h1>
         </div>
@@ -35,14 +35,14 @@ export default function CategoriesPage() {
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="h-[164px] animate-pulse rounded-2xl border border-[#EDEBF5] bg-[#F7F7FB]"
+              className="h-[164px] animate-pulse rounded-2xl border border-line bg-surface-2"
             />
           ))}
         </div>
       )}
 
       {isError && (
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white py-16 text-center text-[13.5px] text-red-500">
+        <div className="rounded-2xl border border-line bg-surface py-16 text-center text-[13.5px] text-red-500">
           Couldn&apos;t load categories. Please try again.
         </div>
       )}

@@ -27,13 +27,13 @@ export default function FeedCenter() {
       {isLoading && <PostListSkeleton />}
 
       {isError && (
-        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-10 text-center text-[14px] text-red-500">
+        <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-red-500">
           Couldn&apos;t load the feed. Please try again.
         </div>
       )}
 
       {!isLoading && !isError && posts.length === 0 && (
-        <div className="rounded-2xl border border-[#EDEBF5] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-subtle">
           No posts yet. Be the first to share something.
         </div>
       )}
@@ -48,7 +48,7 @@ export default function FeedCenter() {
         <button
           onClick={() => fetchNextPage()}
           disabled={isFetchingNextPage}
-          className="w-full rounded-2xl border border-[#EDEBF5] bg-white py-3 text-[13.5px] font-medium text-violet-600 transition-colors hover:bg-[#F7F7FB] disabled:opacity-50"
+          className="w-full rounded-2xl border border-line bg-surface py-3 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 transition-colors hover:bg-surface-2 disabled:opacity-50"
         >
           {isFetchingNextPage ? "Loading..." : "Load more"}
         </button>

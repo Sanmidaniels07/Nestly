@@ -23,7 +23,7 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
       className="relative"
     >
       {/* Cover */}
-      <div className="relative h-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-100 to-indigo-100 md:h-[300px] lg:h-[360px]">
+      <div className="relative h-[220px] overflow-hidden rounded-2xl bg-gradient-to-br from-violet-100 dark:from-violet-500/15 to-indigo-100 dark:to-indigo-500/15 md:h-[300px] lg:h-[360px]">
         {profile.cover && (
           // eslint-disable-next-line @next/next/no-img-element
           <img
@@ -41,8 +41,8 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
           aria-label="Go back"
           className="
             absolute left-5 top-5 flex h-10 w-10 items-center justify-center
-            rounded-full bg-white/85 backdrop-blur-xl
-            transition-colors hover:bg-white
+            rounded-full bg-surface/85 backdrop-blur-xl
+            transition-colors hover:bg-surface
           "
         >
           <ArrowLeft size={18} />
@@ -52,9 +52,9 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
           onClick={onEditCover}
           className="
             absolute right-5 top-5 flex items-center gap-2
-            rounded-full bg-white/85 px-4 py-2.5
+            rounded-full bg-surface/85 px-4 py-2.5
             text-[13.5px] font-medium backdrop-blur-xl
-            transition-colors hover:bg-white
+            transition-colors hover:bg-surface
           "
         >
           <Camera size={16} />
@@ -71,7 +71,7 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
       >
         <div className="relative">
           <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[3.5px] shadow-xl">
-            <div className="rounded-full bg-white p-[3.5px]">
+            <div className="rounded-full bg-surface p-[3.5px]">
               {profile.avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

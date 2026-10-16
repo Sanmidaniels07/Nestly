@@ -16,8 +16,8 @@ function money(value: number) {
 
 export default function OrderSummary({ order }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Order summary
       </h2>
 
@@ -54,18 +54,18 @@ export default function OrderSummary({ order }: Props) {
           />
         )}
 
-        <div className="flex items-center justify-between border-t border-dashed border-[#ECE9F6] pt-3">
-          <span className="text-[14px] font-semibold text-[#13131A]">Total</span>
-          <span className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700">
+        <div className="flex items-center justify-between border-t border-dashed border-line pt-3">
+          <span className="text-[14px] font-semibold text-ink">Total</span>
+          <span className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700 dark:text-violet-300">
             {money(order.total)}
           </span>
         </div>
       </div>
 
       {order.trackingNumber && (
-        <div className="mt-4 rounded-xl bg-[#F7F7FB] px-4 py-3">
-          <p className="text-[12px] text-[#94A3B8]">Tracking number</p>
-          <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13.5px] font-semibold text-[#13131A]">
+        <div className="mt-4 rounded-xl bg-surface-2 px-4 py-3">
+          <p className="text-[12px] text-subtle">Tracking number</p>
+          <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13.5px] font-semibold text-ink">
             {order.trackingNumber}
           </p>
         </div>
@@ -77,8 +77,8 @@ export default function OrderSummary({ order }: Props) {
 function SummaryRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between">
-      <span className="text-[13px] text-[#64748B]">{label}</span>
-      <span className="font-[family-name:var(--font-mono)] text-[13.5px] font-semibold text-[#334155]">
+      <span className="text-[13px] text-muted">{label}</span>
+      <span className="font-[family-name:var(--font-mono)] text-[13.5px] font-semibold text-ink-2">
         {value}
       </span>
     </div>

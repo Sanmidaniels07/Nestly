@@ -48,15 +48,15 @@ export default function GlobalSearch() {
 
   return (
     <div ref={containerRef} className="relative hidden md:block">
-      <div className="flex h-10 w-64 items-center gap-2 rounded-xl border border-[#ECE9F6] bg-[#F7F7FB] px-3.5 transition-colors focus-within:border-violet-300 focus-within:bg-white lg:w-80">
-        <Search size={16} className="shrink-0 text-[#94A3B8]" />
+      <div className="flex h-10 w-64 items-center gap-2 rounded-xl border border-line bg-surface-2 px-3.5 transition-colors focus-within:border-violet-300 dark:focus-within:border-violet-500/40 focus-within:bg-surface lg:w-80">
+        <Search size={16} className="shrink-0 text-subtle" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setOpen(true)}
           onKeyDown={(e) => e.key === "Enter" && goToResults()}
           placeholder="Search Nestly..."
-          className="w-full bg-transparent text-[13.5px] text-[#13131A] outline-none placeholder:text-[#94A3B8]"
+          className="w-full bg-transparent text-[13.5px] text-ink outline-none placeholder:text-subtle"
         />
         {query && (
           <button
@@ -65,7 +65,7 @@ export default function GlobalSearch() {
               setDebouncedQuery("");
             }}
             aria-label="Clear search"
-            className="shrink-0 text-[#94A3B8] hover:text-[#334155]"
+            className="shrink-0 text-subtle hover:text-ink-2"
           >
             <X size={14} />
           </button>
@@ -73,15 +73,15 @@ export default function GlobalSearch() {
       </div>
 
       {open && debouncedQuery && (
-        <div className="absolute left-0 top-12 z-50 w-full min-w-[320px] overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]">
+        <div className="absolute left-0 top-12 z-50 w-full min-w-[320px] overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]">
           {isLoading ? (
             <div className="space-y-2 p-4">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-9 animate-pulse rounded-lg bg-[#F7F7FB]" />
+                <div key={i} className="h-9 animate-pulse rounded-lg bg-surface-2" />
               ))}
             </div>
           ) : !hasResults ? (
-            <p className="px-4 py-6 text-center text-[13px] text-[#94A3B8]">
+            <p className="px-4 py-6 text-center text-[13px] text-subtle">
               No results for &quot;{debouncedQuery}&quot;
             </p>
           ) : (
@@ -98,11 +98,11 @@ export default function GlobalSearch() {
                     >
                       <UserAvatar name={user.name} src={user.avatar} size={28} />
                       <div className="min-w-0">
-                        <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                        <p className="truncate text-[13.5px] font-medium text-ink">
                           {user.name}
                         </p>
                         {user.username && (
-                          <p className="truncate text-[11.5px] text-[#94A3B8]">
+                          <p className="truncate text-[11.5px] text-subtle">
                             @{user.username}
                           </p>
                         )}
@@ -130,19 +130,19 @@ export default function GlobalSearch() {
                           className="h-7 w-7 shrink-0 rounded-lg object-cover"
                         />
                       ) : (
-                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400">
                           <Store size={13} />
                         </div>
                       )}
                       <div className="min-w-0">
-                        <p className="flex items-center gap-1 truncate text-[13.5px] font-medium text-[#13131A]">
+                        <p className="flex items-center gap-1 truncate text-[13.5px] font-medium text-ink">
                           <span className="truncate">{store.name}</span>
                           {store.isVerified && (
-                            <BadgeCheck size={13} className="shrink-0 text-violet-600" />
+                            <BadgeCheck size={13} className="shrink-0 text-violet-600 dark:text-violet-400" />
                           )}
                         </p>
                         {store.city && (
-                          <p className="truncate text-[11.5px] text-[#94A3B8]">{store.city}</p>
+                          <p className="truncate text-[11.5px] text-subtle">{store.city}</p>
                         )}
                       </div>
                     </ResultRow>
@@ -160,10 +160,10 @@ export default function GlobalSearch() {
                         setOpen(false);
                       }}
                     >
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400">
                         <Users2 size={13} />
                       </div>
-                      <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                      <p className="truncate text-[13.5px] font-medium text-ink">
                         {community.name}
                       </p>
                     </ResultRow>
@@ -181,10 +181,10 @@ export default function GlobalSearch() {
                         setOpen(false);
                       }}
                     >
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-[#F7F7FB] text-[#64748B]">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-surface-2 text-muted">
                         <Hash size={13} />
                       </div>
-                      <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                      <p className="truncate text-[13.5px] font-medium text-ink">
                         #{hashtag.tag}
                       </p>
                     </ResultRow>
@@ -203,10 +203,10 @@ export default function GlobalSearch() {
                       }}
                     >
                       <div className="min-w-0">
-                        <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                        <p className="truncate text-[13.5px] font-medium text-ink">
                           {post.title || post.content || "Post"}
                         </p>
-                        <p className="truncate text-[11.5px] text-[#94A3B8]">
+                        <p className="truncate text-[11.5px] text-subtle">
                           by {post.author?.name ?? "Unknown"}
                         </p>
                       </div>
@@ -217,7 +217,7 @@ export default function GlobalSearch() {
 
               <button
                 onClick={goToResults}
-                className="mt-1 w-full border-t border-[#F2F1F8] px-4 py-2.5 text-center text-[12.5px] font-medium text-violet-600 hover:bg-violet-50"
+                className="mt-1 w-full border-t border-line-soft px-4 py-2.5 text-center text-[12.5px] font-medium text-violet-600 dark:text-violet-400 hover:bg-violet-50 dark:hover:bg-violet-500/10"
               >
                 See all results for &quot;{debouncedQuery}&quot;
               </button>
@@ -232,7 +232,7 @@ export default function GlobalSearch() {
 function ResultGroup({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="px-2 py-1">
-      <p className="px-2.5 pb-1 pt-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-[#94A3B8]">
+      <p className="px-2.5 pb-1 pt-1.5 text-[10.5px] font-semibold uppercase tracking-wide text-subtle">
         {label}
       </p>
       <div className="space-y-0.5">{children}</div>
@@ -250,7 +250,7 @@ function ResultRow({
   return (
     <button
       onClick={onClick}
-      className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-[#F7F7FB]"
+      className="flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-surface-2"
     >
       {children}
     </button>

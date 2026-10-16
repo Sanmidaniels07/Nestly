@@ -29,14 +29,14 @@ export default function ReviewFilter({ active, onChange, counts }: Props) {
             onClick={() => onChange(filter.value)}
             className={`
               rounded-full px-3.5 py-1.5 text-[13px] font-medium transition-colors
-              ${isActive ? "bg-violet-600 text-white" : "bg-[#F7F7FB] text-[#64748B] hover:bg-[#EFEDF9]"}
+              ${isActive ? "bg-violet-600 text-white" : "bg-surface-2 text-muted hover:bg-surface-muted"}
             `}
           >
             {filter.label}
             {counts[filter.value] > 0 && (
               <span
                 className={`ml-1.5 font-[family-name:var(--font-mono)] text-[11.5px] ${
-                  isActive ? "text-white/70" : "text-[#94A3B8]"
+                  isActive ? "text-white/70" : "text-subtle"
                 }`}
               >
                 {counts[filter.value]}

@@ -32,27 +32,27 @@ export default function CouponSection() {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <section className="rounded-2xl border border-line bg-surface p-6">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <Tag className="text-violet-600" size={16} />
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <Tag className="text-violet-600 dark:text-violet-400" size={16} />
         </div>
         <div>
-          <h2 className="text-[15px] font-semibold text-[#13131A]">Coupon</h2>
-          <p className="text-[13px] text-[#64748B]">Apply a discount voucher.</p>
+          <h2 className="text-[15px] font-semibold text-ink">Coupon</h2>
+          <p className="text-[13px] text-muted">Apply a discount voucher.</p>
         </div>
       </div>
 
       {appliedCoupon ? (
-        <div className="flex items-center justify-between rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3">
-          <div className="flex items-center gap-2 text-[13.5px] font-medium text-emerald-700">
+        <div className="flex items-center justify-between rounded-xl border border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 px-4 py-3">
+          <div className="flex items-center gap-2 text-[13.5px] font-medium text-emerald-700 dark:text-emerald-300">
             <Check size={15} />
             <span className="font-[family-name:var(--font-mono)]">{appliedCoupon.code}</span> applied
           </div>
           <button
             onClick={clearAppliedCoupon}
             aria-label="Remove coupon"
-            className="text-emerald-600 hover:text-emerald-800"
+            className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-800 dark:hover:text-emerald-200"
           >
             <X size={15} />
           </button>

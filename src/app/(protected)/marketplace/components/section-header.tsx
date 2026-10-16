@@ -19,12 +19,12 @@ export default function SectionHeader({ title, subtitle, action }: Props) {
     <div className="flex items-end justify-between gap-4">
       <div>
         {subtitle && (
-          <p className="font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.22em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] uppercase tracking-[0.22em] text-violet-600 dark:text-violet-400">
             {subtitle}
           </p>
         )}
 
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-[#13131A] sm:text-[38px]">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink sm:text-[38px]">
           {title}
         </h2>
       </div>
@@ -32,7 +32,7 @@ export default function SectionHeader({ title, subtitle, action }: Props) {
       {action && (
         <Link
           href={action.href}
-          className="group flex shrink-0 items-center gap-1 text-[13.5px] font-semibold text-violet-600 hover:underline"
+          className="group flex shrink-0 items-center gap-1 text-[13.5px] font-semibold text-violet-600 dark:text-violet-400 hover:underline"
         >
           {action.label}
           <ArrowUpRight

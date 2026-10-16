@@ -7,14 +7,14 @@ interface Props {
 
 export function TableSkeleton({ rows = 6, cols = 5 }: Props) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
-      <div className="flex items-center gap-6 border-b border-[#F2F1F8] bg-[#FAFAFD] px-5 py-3.5">
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface">
+      <div className="flex items-center gap-6 border-b border-line-soft bg-surface-sunken px-5 py-3.5">
         {Array.from({ length: cols }).map((_, i) => (
           <Skeleton key={i} className="h-3 w-16" />
         ))}
       </div>
 
-      <div className="divide-y divide-[#F0EEF9]">
+      <div className="divide-y divide-line-soft">
         {Array.from({ length: rows }).map((_, r) => (
           <div key={r} className="flex items-center gap-6 px-5 py-4">
             <div className="flex items-center gap-3">

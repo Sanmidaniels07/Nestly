@@ -30,10 +30,10 @@ export default function SettingsSecurityPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
           Security
         </h2>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Two-factor authentication and blocked accounts.
         </p>
       </div>
@@ -57,16 +57,16 @@ function TwoFactorSection({ enabled }: { enabled: boolean }) {
 
   if (enabled) {
     return (
-      <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+      <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
         <div className="flex items-start gap-3.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50">
-            <ShieldCheck size={17} className="text-emerald-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10">
+            <ShieldCheck size={17} className="text-emerald-600 dark:text-emerald-400" />
           </div>
           <div className="flex-1">
-            <h3 className="text-[15px] font-semibold text-[#13131A]">
+            <h3 className="text-[15px] font-semibold text-ink">
               Two-factor authentication is on
             </h3>
-            <p className="mt-1 text-[13px] text-[#64748B]">
+            <p className="mt-1 text-[13px] text-muted">
               You&apos;ll be asked for a code from your authenticator app each time you log in.
             </p>
           </div>
@@ -101,7 +101,7 @@ function TwoFactorSection({ enabled }: { enabled: boolean }) {
         ) : (
           <button
             onClick={() => setDisabling(true)}
-            className="mt-4 h-11 rounded-xl border border-red-200 px-6 text-[13.5px] font-semibold text-red-600 transition-colors hover:bg-red-50"
+            className="mt-4 h-11 rounded-xl border border-red-200 dark:border-red-500/30 px-6 text-[13.5px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
           >
             Disable two-factor authentication
           </button>
@@ -111,16 +111,16 @@ function TwoFactorSection({ enabled }: { enabled: boolean }) {
   }
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <div className="flex items-start gap-3.5">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50">
-          <ShieldCheck size={17} className="text-violet-600" />
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <ShieldCheck size={17} className="text-violet-600 dark:text-violet-400" />
         </div>
         <div className="flex-1">
-          <h3 className="text-[15px] font-semibold text-[#13131A]">
+          <h3 className="text-[15px] font-semibold text-ink">
             Two-factor authentication
           </h3>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+          <p className="mt-1 text-[13px] text-muted">
             Add an extra layer of security using an authenticator app like Google
             Authenticator or Authy.
           </p>
@@ -138,20 +138,20 @@ function TwoFactorSection({ enabled }: { enabled: boolean }) {
         </Button>
       ) : (
         <div className="mt-5 space-y-4">
-          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] p-5 sm:flex-row sm:items-start">
+          <div className="flex flex-col items-center gap-3 rounded-2xl border border-dashed border-line-strong bg-surface-sunken p-5 sm:flex-row sm:items-start">
             <Image
               src={qr.qrCodeDataUrl}
               alt="Two-factor QR code"
               width={140}
               height={140}
-              className="shrink-0 rounded-xl border border-[#ECE9F6] bg-white p-2"
+              className="shrink-0 rounded-xl border border-line bg-surface p-2"
               unoptimized
             />
             <div className="min-w-0">
-              <p className="text-[13px] text-[#64748B]">
+              <p className="text-[13px] text-muted">
                 Scan this with your authenticator app, or enter the code manually:
               </p>
-              <p className="mt-2 break-all rounded-lg bg-white px-3 py-2 font-[family-name:var(--font-mono)] text-[12.5px] text-[#13131A]">
+              <p className="mt-2 break-all rounded-lg bg-surface px-3 py-2 font-[family-name:var(--font-mono)] text-[12.5px] text-ink">
                 {qr.secret}
               </p>
             </div>
@@ -189,37 +189,37 @@ function BlockedUsersSection() {
   const blockedUsers = data?.blockedUsers ?? [];
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h3 className="text-[15px] font-semibold text-[#13131A]">Blocked accounts</h3>
-      <p className="mt-1 text-[13px] text-[#64748B]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h3 className="text-[15px] font-semibold text-ink">Blocked accounts</h3>
+      <p className="mt-1 text-[13px] text-muted">
         People you&apos;ve blocked can&apos;t follow you, message you, or see your posts.
       </p>
 
       <div className="mt-4 space-y-2.5">
         {isLoading ? (
-          <div className="h-14 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+          <div className="h-14 animate-pulse rounded-2xl bg-surface-2" />
         ) : blockedUsers.length === 0 ? (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-[#E2E0EE] py-8 text-center">
-            <UserX size={22} className="text-[#C4C0DC]" strokeWidth={1.5} />
-            <p className="mt-2.5 text-[13px] text-[#94A3B8]">No blocked accounts.</p>
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-line-strong py-8 text-center">
+            <UserX size={22} className="text-faint" strokeWidth={1.5} />
+            <p className="mt-2.5 text-[13px] text-subtle">No blocked accounts.</p>
           </div>
         ) : (
           blockedUsers.map((user) => (
             <div
               key={user.id}
-              className="flex items-center gap-3 rounded-2xl border border-[#ECE9F6] p-3.5"
+              className="flex items-center gap-3 rounded-2xl border border-line p-3.5"
             >
               <UserAvatar name={user.name} src={user.avatar} size={36} />
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13.5px] font-medium text-[#13131A]">{user.name}</p>
+                <p className="truncate text-[13.5px] font-medium text-ink">{user.name}</p>
                 {user.username && (
-                  <p className="text-[12px] text-[#94A3B8]">@{user.username}</p>
+                  <p className="text-[12px] text-subtle">@{user.username}</p>
                 )}
               </div>
               <button
                 onClick={() => unblock(user.id)}
                 disabled={isPending}
-                className="shrink-0 rounded-lg border border-[#E5E7EB] px-3 py-1.5 text-[12px] font-medium text-[#64748B] transition-colors hover:border-violet-200 hover:text-violet-700 disabled:opacity-50"
+                className="shrink-0 rounded-lg border border-line-strong px-3 py-1.5 text-[12px] font-medium text-muted transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
               >
                 Unblock
               </button>

@@ -18,19 +18,19 @@ export default function MarketplacePicks() {
   const { data: products, isLoading } = useFeaturedProducts(2);
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
+    <div className="rounded-2xl border border-line bg-surface p-7">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-            <Store size={16} className="text-violet-600" />
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+            <Store size={16} className="text-violet-600 dark:text-violet-400" />
           </div>
-          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
             Marketplace picks
           </h3>
         </div>
         <Link
           href="/marketplace/products"
-          className="group flex shrink-0 items-center gap-1 text-[12.5px] font-semibold text-violet-600 hover:underline"
+          className="group flex shrink-0 items-center gap-1 text-[12.5px] font-semibold text-violet-600 dark:text-violet-400 hover:underline"
         >
           Browse
           <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
@@ -52,7 +52,7 @@ export default function MarketplacePicks() {
       )}
 
       {!isLoading && products?.length === 0 && (
-        <p className="py-8 text-center text-[13px] text-[#94A3B8]">
+        <p className="py-8 text-center text-[13px] text-subtle">
           No products available yet.
         </p>
       )}
@@ -70,7 +70,7 @@ export default function MarketplacePicks() {
                 href={`/marketplace/product/${product.id}`}
                 className="group flex items-center gap-3.5"
               >
-                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-[#F8F8FC]">
+                <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl bg-surface-sunken">
                   {primaryImage && (
                     <Image
                       src={primaryImage}
@@ -81,10 +81,10 @@ export default function MarketplacePicks() {
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13.5px] font-medium text-[#13131A]">
+                  <p className="truncate text-[13.5px] font-medium text-ink">
                     {product.title}
                   </p>
-                  <p className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700">
+                  <p className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700 dark:text-violet-300">
                     {money(product.price)}
                   </p>
                 </div>

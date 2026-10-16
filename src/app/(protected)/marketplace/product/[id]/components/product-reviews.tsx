@@ -45,8 +45,8 @@ export default function ProductReviews({ product, reviews, total }: Props) {
   if (total === 0) return null;
 
   return (
-    <section className="mt-8 rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+    <section className="mt-8 rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
         Customer reviews
       </h2>
 
@@ -68,7 +68,7 @@ export default function ProductReviews({ product, reviews, total }: Props) {
 
           <div className="mt-6 space-y-4">
             {filteredReviews.length === 0 ? (
-              <p className="py-8 text-center text-[13.5px] text-[#94A3B8]">
+              <p className="py-8 text-center text-[13.5px] text-subtle">
                 No reviews match this filter.
               </p>
             ) : (

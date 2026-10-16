@@ -32,35 +32,35 @@ export default function DeliveryOptionCard({ option, selected, onSelect }: Props
       onClick={onSelect}
       className={`w-full rounded-2xl border p-5 text-left transition-colors ${
         selected
-          ? "border-violet-600 bg-violet-50"
-          : "border-[#ECE9F6] bg-white hover:border-violet-300"
+          ? "border-violet-600 bg-violet-50 dark:bg-violet-500/10"
+          : "border-line bg-surface hover:border-violet-300 dark:hover:border-violet-500/40"
       }`}
     >
       <div className="flex justify-between gap-4">
         <div className="flex gap-3.5">
           <div
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl transition-colors ${
-              selected ? "bg-violet-600" : "bg-violet-50"
+              selected ? "bg-violet-600" : "bg-violet-50 dark:bg-violet-500/10"
             }`}
           >
-            <Icon size={18} className={selected ? "text-white" : "text-violet-700"} />
+            <Icon size={18} className={selected ? "text-white" : "text-violet-700 dark:text-violet-300"} />
           </div>
 
           <div>
-            <h3 className="text-[14px] font-semibold text-[#13131A]">{option.name}</h3>
-            <p className="mt-1 text-[13px] text-[#64748B]">{option.description}</p>
-            <p className="mt-1.5 text-[12.5px] font-medium text-[#475569]">
+            <h3 className="text-[14px] font-semibold text-ink">{option.name}</h3>
+            <p className="mt-1 text-[13px] text-muted">{option.description}</p>
+            <p className="mt-1.5 text-[12.5px] font-medium text-ink-3">
               {option.duration}
             </p>
           </div>
         </div>
 
         <div className="flex shrink-0 flex-col items-end justify-between">
-          <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-violet-700">
+          <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-violet-700 dark:text-violet-300">
             {option.price === 0 ? "Free" : money(option.price)}
           </span>
 
-          {selected && <CheckCircle2 size={19} className="text-violet-600" />}
+          {selected && <CheckCircle2 size={19} className="text-violet-600 dark:text-violet-400" />}
         </div>
       </div>
     </button>

@@ -33,7 +33,7 @@ export default function MobileNav() {
   return (
     <>
       <nav
-        className="fixed bottom-0 left-0 right-0 z-50 border-t border-[#ECE9F6] bg-white/90 backdrop-blur-2xl lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-50 border-t border-line bg-surface/90 backdrop-blur-2xl lg:hidden"
         style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       >
         <div className="flex items-center justify-around px-1 py-2">
@@ -47,10 +47,10 @@ export default function MobileNav() {
                 aria-current={active ? "page" : undefined}
                 className="flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5"
               >
-                <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", active ? "bg-violet-50" : "")}>
-                  <item.icon size={20} className={active ? "text-violet-600" : "text-[#94A3B8]"} />
+                <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", active ? "bg-violet-50 dark:bg-violet-500/10" : "")}>
+                  <item.icon size={20} className={active ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
                 </div>
-                <span className={cn("text-[10.5px] font-medium", active ? "text-violet-600" : "text-[#94A3B8]")}>
+                <span className={cn("text-[10.5px] font-medium", active ? "text-violet-600 dark:text-violet-400" : "text-subtle")}>
                   {item.title}
                 </span>
               </Link>
@@ -62,10 +62,10 @@ export default function MobileNav() {
               onClick={() => setMoreOpen(true)}
               className="flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5"
             >
-              <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", isOverflowActive ? "bg-violet-50" : "")}>
-                <MoreHorizontal size={20} className={isOverflowActive ? "text-violet-600" : "text-[#94A3B8]"} />
+              <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", isOverflowActive ? "bg-violet-50 dark:bg-violet-500/10" : "")}>
+                <MoreHorizontal size={20} className={isOverflowActive ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
               </div>
-              <span className={cn("text-[10.5px] font-medium", isOverflowActive ? "text-violet-600" : "text-[#94A3B8]")}>
+              <span className={cn("text-[10.5px] font-medium", isOverflowActive ? "text-violet-600 dark:text-violet-400" : "text-subtle")}>
                 More
               </span>
             </button>
@@ -90,17 +90,17 @@ export default function MobileNav() {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-white p-5 lg:hidden"
+              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-surface p-5 lg:hidden"
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 20px)" }}
             >
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+                <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
                   More
                 </h3>
                 <button
                   onClick={() => setMoreOpen(false)}
                   aria-label="Close"
-                  className="rounded-full p-2 text-[#64748B] hover:bg-[#F7F7FB]"
+                  className="rounded-full p-2 text-muted hover:bg-surface-2"
                 >
                   <X size={18} />
                 </button>
@@ -117,10 +117,10 @@ export default function MobileNav() {
                       onClick={() => setMoreOpen(false)}
                       className="flex flex-col items-center gap-1.5 rounded-xl py-3"
                     >
-                      <div className={cn("flex h-11 w-11 items-center justify-center rounded-full", active ? "bg-violet-50" : "bg-[#F7F7FB]")}>
-                        <item.icon size={20} className={active ? "text-violet-600" : "text-[#64748B]"} />
+                      <div className={cn("flex h-11 w-11 items-center justify-center rounded-full", active ? "bg-violet-50 dark:bg-violet-500/10" : "bg-surface-2")}>
+                        <item.icon size={20} className={active ? "text-violet-600 dark:text-violet-400" : "text-muted"} />
                       </div>
-                      <span className={cn("text-center text-[11.5px] font-medium leading-tight", active ? "text-violet-600" : "text-[#334155]")}>
+                      <span className={cn("text-center text-[11.5px] font-medium leading-tight", active ? "text-violet-600 dark:text-violet-400" : "text-ink-2")}>
                         {item.title}
                       </span>
                     </Link>

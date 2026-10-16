@@ -77,10 +77,10 @@ export default function NotificationsContent({ onNavigate }: Props) {
     <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {unread.length > 0 ? `${unread.length} unread` : "All caught up"}
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-[#13131A]">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
             Notifications
           </h1>
         </div>
@@ -89,7 +89,7 @@ export default function NotificationsContent({ onNavigate }: Props) {
           <button
             onClick={() => markAllRead()}
             disabled={markingAll}
-            className="flex items-center gap-1.5 rounded-xl border border-violet-200 px-3.5 py-2.5 text-[13px] font-medium text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-xl border border-violet-200 dark:border-violet-500/30 px-3.5 py-2.5 text-[13px] font-medium text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <CheckCheck size={15} />
             {markingAll ? "Marking all read..." : "Mark all as read"}
@@ -100,14 +100,14 @@ export default function NotificationsContent({ onNavigate }: Props) {
       {isLoading ? (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-[72px] animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-[72px] animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : items.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <Bell className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] font-medium text-[#13131A]">No notifications yet</p>
-          <p className="mt-1 text-[12.5px] text-[#94A3B8]">
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <Bell className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[13.5px] font-medium text-ink">No notifications yet</p>
+          <p className="mt-1 text-[12.5px] text-subtle">
             Activity on your account will show up here.
           </p>
         </div>
@@ -150,8 +150,8 @@ function NotificationRow({
         relative flex w-full items-start gap-3.5 rounded-2xl border p-4 text-left transition-colors
         ${
           notification.isRead
-            ? "border-[#ECE9F6] bg-white hover:border-violet-100"
-            : "border-violet-200 bg-violet-50/60 hover:border-violet-300"
+            ? "border-line bg-surface hover:border-violet-100 dark:hover:border-violet-500/20"
+            : "border-violet-200 dark:border-violet-500/30 bg-violet-50/60 hover:border-violet-300 dark:hover:border-violet-500/40"
         }
       `}
     >
@@ -161,7 +161,7 @@ function NotificationRow({
 
       <div
         className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-          notification.isRead ? "bg-[#F7F7FB] text-[#94A3B8]" : "bg-violet-100 text-violet-600"
+          notification.isRead ? "bg-surface-2 text-subtle" : "bg-violet-100 dark:bg-violet-500/15 text-violet-600 dark:text-violet-400"
         }`}
       >
         <Icon size={17} />
@@ -170,12 +170,12 @@ function NotificationRow({
       <div className="min-w-0 flex-1">
         <p
           className={`text-[13.5px] leading-snug ${
-            notification.isRead ? "text-[#64748B]" : "font-medium text-[#13131A]"
+            notification.isRead ? "text-muted" : "font-medium text-ink"
           }`}
         >
           {notification.message}
         </p>
-        <p className="mt-1 text-[12px] text-[#94A3B8]">
+        <p className="mt-1 text-[12px] text-subtle">
           {formatRelativeTime(notification.createdAt)}
         </p>
       </div>

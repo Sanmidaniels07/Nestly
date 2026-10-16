@@ -21,7 +21,7 @@ export default function ProfilePosts() {
 
   if (isLoading || !userId) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-subtle">
         Loading posts...
       </div>
     );
@@ -42,8 +42,8 @@ export default function ProfilePosts() {
 
       <section className="space-y-5">
         <div>
-          <h2 className="text-2xl font-bold text-slate-900">Recent Posts</h2>
-          <p className="text-slate-500">Latest activity</p>
+          <h2 className="text-2xl font-bold text-ink">Recent Posts</h2>
+          <p className="text-muted">Latest activity</p>
         </div>
 
         <div className="space-y-6">

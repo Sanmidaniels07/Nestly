@@ -40,17 +40,17 @@ export default function SellerStats({ store, productCount }: Props) {
         return (
           <div
             key={stat.title}
-            className="rounded-2xl border border-[#ECE9F6] bg-white p-5 transition-colors hover:border-violet-200"
+            className="rounded-2xl border border-line bg-surface p-5 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30"
           >
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50">
-              <Icon size={18} className="text-violet-600" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-500/10">
+              <Icon size={18} className="text-violet-600 dark:text-violet-400" />
             </div>
 
-            <h3 className="mt-4 text-[12.5px] text-[#64748B]">{stat.title}</h3>
-            <p className="mt-1 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-[#13131A]">
+            <h3 className="mt-4 text-[12.5px] text-muted">{stat.title}</h3>
+            <p className="mt-1 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-ink">
               {stat.value}
             </p>
-            <p className="mt-1 text-[12px] text-[#94A3B8]">{stat.subtitle}</p>
+            <p className="mt-1 text-[12px] text-subtle">{stat.subtitle}</p>
           </div>
         );
       })}

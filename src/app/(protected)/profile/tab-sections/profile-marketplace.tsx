@@ -97,7 +97,7 @@ export default function ProfileMarketplace() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-10 text-center text-[14px] text-[#94A3B8]">
+      <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-subtle">
         Loading marketplace activity...
       </div>
     );

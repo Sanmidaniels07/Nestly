@@ -34,7 +34,7 @@ export default function SignupPage() {
 
   return (
     <GuestGuard>
-      <div className="min-h-screen bg-gradient-to-br from-[#F5F7FA] via-[#F0F4FF] to-[#F5F0FF] flex items-center justify-center pt-20 pb-12 px-6">
+      <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center pt-20 pb-12 px-6">
         <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -45,22 +45,22 @@ export default function SignupPage() {
               <div className="flex items-center gap-3 mb-6">
                 <NestlyMark size={44} />
 
-                <div className="text-4xl font-bold tracking-tight text-gray-900">
+                <div className="text-4xl font-bold tracking-tight text-ink">
                   Nestly
                 </div>
               </div>
-              <h1 className="text-5xl font-bold leading-tight text-gray-900">
+              <h1 className="text-5xl font-bold leading-tight text-ink">
                 Join the
                 <br />
                 nest
               </h1>
-              <p className="mt-6 text-xl text-gray-600 max-w-md">
+              <p className="mt-6 text-xl text-muted max-w-md">
                 Connect with like-minded people, discover communities, and grow
                 together.
               </p>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-4 text-sm text-muted">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-violet-500" />
                 <span>Meaningful connections</span>
@@ -78,17 +78,17 @@ export default function SignupPage() {
             animate={{ opacity: 1, y: 0 }}
             className="w-full max-w-md mx-auto"
           >
-            <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 p-10">
+            <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10">
               <div className="text-center mb-10">
                 <div className="md:hidden flex justify-center mb-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">
                     N
                   </div>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900">
+                <h2 className="text-3xl font-bold text-ink">
                   Create your account
                 </h2>
-                <p className="text-gray-600 mt-2">
+                <p className="text-muted mt-2">
                   Join thousands already in the nest
                 </p>
               </div>
@@ -136,7 +136,7 @@ export default function SignupPage() {
                 </Button>
               </form>
 
-              <p className="text-center text-sm text-gray-600 mt-8">
+              <p className="text-center text-sm text-muted mt-8">
                 Already have an account?{" "}
                 <Link
                   href="/login"
@@ -148,7 +148,7 @@ export default function SignupPage() {
             </div>
 
             {/* Trust signals */}
-            <div className="text-center text-xs text-gray-500 mt-6">
+            <div className="text-center text-xs text-muted mt-6">
               Protected by industry-leading security
             </div>
           </motion.div>

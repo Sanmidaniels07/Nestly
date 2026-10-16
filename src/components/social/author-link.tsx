@@ -37,7 +37,7 @@ export function AuthorNameLink({ author, className = "" }: NameProps) {
   return (
     <Link
       href={`/users/${author.username ?? author.id}`}
-      className={`transition-colors hover:text-violet-600 ${className}`}
+      className={`transition-colors hover:text-violet-600 dark:hover:text-violet-400 ${className}`}
     >
       {author.name}
     </Link>

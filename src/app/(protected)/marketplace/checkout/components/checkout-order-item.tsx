@@ -20,8 +20,8 @@ export default function CheckoutOrderItem({ item }: Props) {
     item.product.images.find((image) => image.isPrimary)?.url ?? item.product.images[0]?.url;
 
   return (
-    <article className="flex gap-3.5 rounded-xl border border-[#ECE9F6] p-3.5">
-      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-[#F8F8FC]">
+    <article className="flex gap-3.5 rounded-xl border border-line p-3.5">
+      <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg bg-surface-sunken">
         {primaryImage && (
           <Image fill src={primaryImage} alt={item.product.title} className="object-cover" />
         )}
@@ -32,18 +32,18 @@ export default function CheckoutOrderItem({ item }: Props) {
       </div>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <h3 className="truncate text-[14.5px] font-semibold text-[#13131A]">
+        <h3 className="truncate text-[14.5px] font-semibold text-ink">
           {item.product.title}
         </h3>
         {item.product.brand && (
-          <p className="mt-0.5 text-[12.5px] text-[#94A3B8]">{item.product.brand}</p>
+          <p className="mt-0.5 text-[12.5px] text-subtle">{item.product.brand}</p>
         )}
 
         <div className="mt-auto flex items-center justify-between pt-2">
-          <span className="font-[family-name:var(--font-mono)] text-[12px] text-[#64748B]">
+          <span className="font-[family-name:var(--font-mono)] text-[12px] text-muted">
             Qty {item.quantity}
           </span>
-          <span className="font-[family-name:var(--font-mono)] text-[14.5px] font-semibold text-violet-700">
+          <span className="font-[family-name:var(--font-mono)] text-[14.5px] font-semibold text-violet-700 dark:text-violet-300">
             {money(item.product.price * item.quantity)}
           </span>
         </div>

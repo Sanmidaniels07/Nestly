@@ -17,10 +17,10 @@ export default function EditProfilePersonal() {
   return (
     <section className="space-y-6">
       <div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
           Personal information
         </h3>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Information shown on your profile.
         </p>
       </div>
@@ -71,10 +71,10 @@ export default function EditProfilePersonal() {
         />
 
         {website && hasValidUrl && !errors.website && (
-          <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-emerald-600">
+          <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-emerald-600 dark:text-emerald-400">
             <Globe size={12} />
             <span className="font-[family-name:var(--font-mono)]">{website}</span>
-            <span className="text-[#94A3B8]">will be shown on your profile</span>
+            <span className="text-subtle">will be shown on your profile</span>
           </div>
         )}
       </div>

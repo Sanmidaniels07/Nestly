@@ -32,10 +32,10 @@ export default function EarningsView() {
     <div className="space-y-8">
       <section className="space-y-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Balance
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
             Your earnings
           </h2>
         </div>
@@ -44,69 +44,69 @@ export default function EarningsView() {
           <StatTilesSkeleton count={3} />
         ) : (
           <div className="grid gap-4 sm:grid-cols-3">
-            <div className="rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-5">
+            <div className="rounded-2xl border border-violet-200 dark:border-violet-500/30 bg-gradient-to-br from-violet-50 dark:from-violet-500/10 to-indigo-50 dark:to-indigo-500/10 p-5">
               <div className="flex items-center justify-between">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70">
-                  <Wallet size={16} className="text-violet-600" />
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/70">
+                  <Wallet size={16} className="text-violet-600 dark:text-violet-400" />
                 </div>
               </div>
-              <p className="mt-4 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-violet-700">
+              <p className="mt-4 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-violet-700 dark:text-violet-300">
                 {money(earnings.availableBalance)}
               </p>
-              <p className="mt-1 text-[12.5px] text-[#64748B]">Available balance</p>
+              <p className="mt-1 text-[12.5px] text-muted">Available balance</p>
             </div>
 
-            <div className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
-              <p className="font-[family-name:var(--font-mono)] text-[20px] font-semibold text-[#13131A]">
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <p className="font-[family-name:var(--font-mono)] text-[20px] font-semibold text-ink">
                 {money(earnings.totalRevenue)}
               </p>
-              <p className="mt-1 text-[12.5px] text-[#64748B]">Total revenue</p>
+              <p className="mt-1 text-[12.5px] text-muted">Total revenue</p>
             </div>
 
-            <div className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
+            <div className="rounded-2xl border border-line bg-surface p-5">
               <div className="flex items-center gap-1.5">
-                <ArrowDownToLine size={14} className="text-[#64748B]" />
-                <p className="font-[family-name:var(--font-mono)] text-[20px] font-semibold text-[#13131A]">
+                <ArrowDownToLine size={14} className="text-muted" />
+                <p className="font-[family-name:var(--font-mono)] text-[20px] font-semibold text-ink">
                   {money(earnings.totalPaidOut)}
                 </p>
               </div>
-              <p className="mt-1 text-[12.5px] text-[#64748B]">Total paid out</p>
+              <p className="mt-1 text-[12.5px] text-muted">Total paid out</p>
             </div>
           </div>
         )}
 
-        <p className="text-[12px] text-[#94A3B8]">
+        <p className="text-[12px] text-subtle">
           Payouts are issued by the Nestly team based on your available balance. Your available
           balance updates automatically as orders are paid and delivered.
         </p>
       </section>
 
       <section className="space-y-4">
-        <h3 className="text-[15px] font-semibold text-[#13131A]">Payout history</h3>
+        <h3 className="text-[15px] font-semibold text-ink">Payout history</h3>
 
         {isLoadingPayouts ? (
           <ListSkeleton count={4} withAvatar={false} />
         ) : payouts.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-            <p className="text-[13.5px] text-[#94A3B8]">No payouts yet.</p>
+          <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+            <p className="text-[13.5px] text-subtle">No payouts yet.</p>
           </div>
         ) : (
           <div className="space-y-2.5">
             {payouts.map((payout) => (
               <div
                 key={payout.id}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-[#ECE9F6] bg-white p-4"
+                className="flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface p-4"
               >
                 <div>
-                  <p className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-[#13131A]">
+                  <p className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-ink">
                     {money(payout.amount)}
                   </p>
-                  <p className="mt-0.5 text-[12px] text-[#94A3B8]">
+                  <p className="mt-0.5 text-[12px] text-subtle">
                     {formatRelativeTime(payout.createdAt)}
                   </p>
                 </div>
                 {payout.note && (
-                  <p className="max-w-[50%] truncate text-right text-[12.5px] text-[#64748B]">
+                  <p className="max-w-[50%] truncate text-right text-[12.5px] text-muted">
                     {payout.note}
                   </p>
                 )}

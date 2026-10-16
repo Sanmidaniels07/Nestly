@@ -29,7 +29,7 @@ export default function ProfileTabs() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="border-b border-[#ECEAF4]"
+        className="border-b border-line"
       >
         <div className="flex gap-7 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => {
@@ -55,8 +55,8 @@ export default function ProfileTabs() {
                 <span
                   className={
                     selected
-                      ? "text-violet-700"
-                      : "text-[#64748B]"
+                      ? "text-violet-700 dark:text-violet-300"
+                      : "text-muted"
                   }
                 >
                   {tab}

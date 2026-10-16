@@ -42,9 +42,9 @@ export default function ReviewPublish({
       <div className="space-y-6">
         <PreviewCard draft={draft} />
 
-        <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-          <h2 className="text-[16px] font-semibold text-[#13131A]">Publish options</h2>
-          <p className="mt-1 text-[13px] text-[#64748B]">
+        <section className="rounded-2xl border border-line bg-surface p-6">
+          <h2 className="text-[16px] font-semibold text-ink">Publish options</h2>
+          <p className="mt-1 text-[13px] text-muted">
             Choose whether this listing goes live now or stays hidden until you&apos;re ready.
           </p>
 
@@ -66,7 +66,7 @@ export default function ReviewPublish({
           </div>
 
           {publishNow && !isFullyReady && (
-            <div className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 p-3.5 text-[12.5px] text-amber-700">
+            <div className="mt-4 flex items-start gap-2 rounded-xl bg-amber-50 dark:bg-amber-500/10 p-3.5 text-[12.5px] text-amber-700 dark:text-amber-300">
               <AlertCircle size={15} className="mt-0.5 shrink-0" />
               Complete the basic info, pricing, and at least one image before publishing.
             </div>
@@ -77,7 +77,7 @@ export default function ReviewPublish({
       <div className="space-y-6 lg:sticky lg:top-24 lg:self-start">
         <CompletionChecklist completed={completed} onStepClick={onStepClick} />
 
-        <div className="rounded-2xl border border-[#ECE9F6] bg-white p-5">
+        <div className="rounded-2xl border border-line bg-surface p-5">
           <div className="space-y-2.5">
             <Button
               variant="tribely"
@@ -92,7 +92,7 @@ export default function ReviewPublish({
               <button
                 onClick={onSaveDraft}
                 disabled={isSubmitting}
-                className="w-full rounded-xl border border-[#ECE9F6] py-2.5 text-[13px] font-medium text-[#64748B] transition-colors hover:bg-[#F7F7FB]"
+                className="w-full rounded-xl border border-line py-2.5 text-[13px] font-medium text-muted transition-colors hover:bg-surface-2"
               >
                 Save as draft instead
               </button>
@@ -104,7 +104,7 @@ export default function ReviewPublish({
           </div>
 
           {missingCount > 0 && (
-            <p className="mt-3 text-center font-[family-name:var(--font-mono)] text-[11.5px] text-[#94A3B8]">
+            <p className="mt-3 text-center font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">
               {missingCount} item{missingCount !== 1 ? "s" : ""} incomplete
             </p>
           )}

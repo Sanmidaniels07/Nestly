@@ -19,7 +19,7 @@ export default function DashboardStats() {
     return (
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-[110px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />
+          <div key={i} className="h-[110px] animate-pulse rounded-2xl border border-line bg-surface-2" />
         ))}
       </section>
     );
@@ -31,8 +31,8 @@ export default function DashboardStats() {
         title="Products"
         value={stats.totalProducts.toString()}
         icon={Package}
-        color="bg-violet-50"
-        iconColor="text-violet-600"
+        color="bg-violet-50 dark:bg-violet-500/10"
+        iconColor="text-violet-600 dark:text-violet-400"
       />
 
       <StatCard
@@ -40,16 +40,16 @@ export default function DashboardStats() {
         value={stats.totalOrders.toString()}
         subtitle={stats.pendingOrders > 0 ? `${stats.pendingOrders} pending` : undefined}
         icon={ShoppingBag}
-        color="bg-amber-50"
-        iconColor="text-amber-600"
+        color="bg-amber-50 dark:bg-amber-500/10"
+        iconColor="text-amber-600 dark:text-amber-400"
       />
 
       <StatCard
         title="Revenue"
         value={formatNaira(stats.totalRevenue)}
         icon={Wallet}
-        color="bg-emerald-50"
-        iconColor="text-emerald-600"
+        color="bg-emerald-50 dark:bg-emerald-500/10"
+        iconColor="text-emerald-600 dark:text-emerald-400"
       />
 
       {stats.storeRating !== undefined && (
@@ -57,8 +57,8 @@ export default function DashboardStats() {
           title="Store rating"
           value={stats.storeRating.toString()}
           icon={Star}
-          color="bg-rose-50"
-          iconColor="text-rose-600"
+          color="bg-rose-50 dark:bg-rose-500/10"
+          iconColor="text-rose-600 dark:text-rose-400"
         />
       )}
     </section>

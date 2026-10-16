@@ -31,20 +31,20 @@ export default function DashboardPage() {
 
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-8">
-          <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7 sm:p-8">
+          <div className="rounded-2xl border border-line bg-surface p-7 sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div>
-                <p className="font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.3em] text-violet-600">
+                <p className="font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
                   For you
                 </p>
-                <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-[#13131A]">
+                <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-ink">
                   Your feed
                 </h2>
               </div>
 
               <Link
                 href="/feed"
-                className="group flex shrink-0 items-center gap-1.5 text-[13.5px] font-semibold text-violet-600 hover:underline"
+                className="group flex shrink-0 items-center gap-1.5 text-[13.5px] font-semibold text-violet-600 dark:text-violet-400 hover:underline"
               >
                 View full feed
                 <ArrowRight
@@ -64,12 +64,12 @@ export default function DashboardPage() {
               )}
 
               {!isLoading && !isError && posts.length === 0 && (
-                <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
+                <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
                   <Newspaper
-                    className="mx-auto h-8 w-8 text-[#C4C0DC]"
+                    className="mx-auto h-8 w-8 text-faint"
                     strokeWidth={1.5}
                   />
-                  <p className="mt-4 text-[13.5px] text-[#94A3B8]">
+                  <p className="mt-4 text-[13.5px] text-subtle">
                     No posts yet. Be the first to share something.
                   </p>
                 </div>

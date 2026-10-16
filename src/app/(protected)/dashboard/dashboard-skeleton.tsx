@@ -4,7 +4,7 @@ export default function DashboardSkeleton() {
   return (
     <div className="mx-auto max-w-7xl space-y-10 pb-20 pt-6">
       {/* Hero */}
-      <div className="relative overflow-hidden rounded-3xl bg-[#F7F7FB] p-8 sm:p-10 lg:p-14">
+      <div className="relative overflow-hidden rounded-3xl bg-surface-2 p-8 sm:p-10 lg:p-14">
         <div className="max-w-2xl space-y-6">
           <Skeleton className="h-7 w-40 rounded-full" />
           <Skeleton className="h-11 w-72 sm:h-12 sm:w-96" />
@@ -27,7 +27,7 @@ export default function DashboardSkeleton() {
         </div>
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
+            <div key={i} className="rounded-2xl border border-line bg-surface p-7">
               <div className="flex items-start justify-between">
                 <Skeleton className="h-14 w-14 rounded-2xl" />
                 <Skeleton className="h-4 w-4 rounded-full" />
@@ -45,7 +45,7 @@ export default function DashboardSkeleton() {
       {/* Feed + sidebar */}
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="space-y-6 lg:col-span-8">
-          <div className="rounded-2xl border border-[#ECE9F6] bg-white p-7 sm:p-8">
+          <div className="rounded-2xl border border-line bg-surface p-7 sm:p-8">
             <div className="flex items-center justify-between gap-4">
               <div className="space-y-2">
                 <Skeleton className="h-3 w-16" />
@@ -56,7 +56,7 @@ export default function DashboardSkeleton() {
 
             <div className="mt-7 space-y-5">
               {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="rounded-2xl border border-[#ECE9F6] p-5">
+                <div key={i} className="rounded-2xl border border-line p-5">
                   <div className="flex items-center gap-3">
                     <Skeleton className="h-10 w-10 rounded-full" />
                     <div className="flex-1 space-y-2">
@@ -77,7 +77,7 @@ export default function DashboardSkeleton() {
 
         <div className="space-y-6 lg:col-span-4">
           {[3, 3, 2].map((rows, i) => (
-            <div key={i} className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
+            <div key={i} className="rounded-2xl border border-line bg-surface p-7">
               <div className="flex items-center gap-3">
                 <Skeleton className="h-9 w-9 rounded-full" />
                 <Skeleton className="h-5 w-36" />

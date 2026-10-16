@@ -12,9 +12,9 @@ import Input from "@/src/components/ui/input";
 import Pagination from "@/src/components/ui/pagination";
 
 const STATUS_TONE: Record<UserAccountStatus, string> = {
-  ACTIVE: "bg-emerald-50 text-emerald-700",
-  SUSPENDED: "bg-amber-50 text-amber-700",
-  BANNED: "bg-red-50 text-red-700",
+  ACTIVE: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  SUSPENDED: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
+  BANNED: "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
 const ROLE_FILTERS: { label: string; value: UserRole | "ALL" }[] = [
@@ -65,7 +65,7 @@ export default function UsersManager() {
             setRole(e.target.value as UserRole | "ALL");
             setPage(1);
           }}
-          className="h-14 rounded-3xl border border-gray-200 bg-white px-4 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
+          className="h-14 rounded-3xl border border-line bg-surface px-4 text-[14px] text-ink outline-none transition-colors focus:border-violet-400"
         >
           {ROLE_FILTERS.map((f) => (
             <option key={f.value} value={f.value}>
@@ -80,7 +80,7 @@ export default function UsersManager() {
             setStatus(e.target.value as UserAccountStatus | "ALL");
             setPage(1);
           }}
-          className="h-14 rounded-3xl border border-gray-200 bg-white px-4 text-[14px] text-[#13131A] outline-none transition-colors focus:border-violet-400"
+          className="h-14 rounded-3xl border border-line bg-surface px-4 text-[14px] text-ink outline-none transition-colors focus:border-violet-400"
         >
           {STATUS_FILTERS.map((f) => (
             <option key={f.value} value={f.value}>
@@ -93,13 +93,13 @@ export default function UsersManager() {
       {isLoading ? (
         <div className="space-y-2.5">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="h-24 animate-pulse rounded-2xl bg-[#F7F7FB]" />
+            <div key={i} className="h-24 animate-pulse rounded-2xl bg-surface-2" />
           ))}
         </div>
       ) : users.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
-          <UsersIcon className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] text-[#94A3B8]">No users match your filters.</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
+          <UsersIcon className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
+          <p className="mt-4 text-[13.5px] text-subtle">No users match your filters.</p>
         </div>
       ) : (
         <div className="space-y-2.5">
@@ -136,26 +136,26 @@ function UserRow({ user }: { user: AdminUser }) {
   };
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-4 sm:p-5">
+    <div className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <p className="text-[14px] font-semibold text-[#13131A]">{user.name}</p>
+            <p className="text-[14px] font-semibold text-ink">{user.name}</p>
             {user.isVerified && <BadgeCheck size={14} className="text-blue-500" />}
             {isSelf && (
-              <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[10.5px] font-medium text-violet-700">
+              <span className="rounded-full bg-violet-50 dark:bg-violet-500/10 px-2 py-0.5 text-[10.5px] font-medium text-violet-700 dark:text-violet-300">
                 You
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-[12.5px] text-[#64748B]">
+          <p className="mt-0.5 text-[12.5px] text-muted">
             {user.email}
             {user.username && ` · @${user.username}`}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-[#F1F0F5] px-2.5 py-1 text-[11px] font-medium capitalize text-[#64748B]">
+          <span className="rounded-full bg-surface-muted px-2.5 py-1 text-[11px] font-medium capitalize text-muted">
             {user.role.toLowerCase()}
           </span>
           <span
@@ -167,17 +167,17 @@ function UserRow({ user }: { user: AdminUser }) {
       </div>
 
       {user.statusReason && user.status !== "ACTIVE" && (
-        <p className="mt-2 rounded-lg bg-[#FAFAFD] px-3 py-2 text-[12px] text-[#64748B]">
+        <p className="mt-2 rounded-lg bg-surface-sunken px-3 py-2 text-[12px] text-muted">
           Reason: {user.statusReason}
         </p>
       )}
 
       {!isSelf && (
-        <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-[#F2F1F8] pt-3.5">
+        <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-line-soft pt-3.5">
           <button
             onClick={() => updateRole({ id: user.id, role: user.role === "ADMIN" ? "USER" : "ADMIN" })}
             disabled={isUpdatingRole}
-            className="flex items-center gap-1.5 rounded-lg border border-[#E5E7EB] px-3 py-1.5 text-[12px] font-medium text-[#334155] transition-colors hover:border-violet-200 hover:text-violet-700 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded-lg border border-line-strong px-3 py-1.5 text-[12px] font-medium text-ink-2 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
           >
             <ShieldCheck size={13} />
             {user.role === "ADMIN" ? "Remove admin" : "Make admin"}
@@ -187,7 +187,7 @@ function UserRow({ user }: { user: AdminUser }) {
             <button
               onClick={() => updateStatus({ id: user.id, data: { status: "ACTIVE" } })}
               disabled={isUpdatingStatus}
-              className="rounded-lg border border-emerald-200 px-3 py-1.5 text-[12px] font-medium text-emerald-700 transition-colors hover:bg-emerald-50 disabled:opacity-50"
+              className="rounded-lg border border-emerald-200 dark:border-emerald-500/30 px-3 py-1.5 text-[12px] font-medium text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-500/10 disabled:opacity-50"
             >
               Reactivate
             </button>
@@ -195,13 +195,13 @@ function UserRow({ user }: { user: AdminUser }) {
             <>
               <button
                 onClick={() => setPendingAction(pendingAction === "SUSPENDED" ? null : "SUSPENDED")}
-                className="rounded-lg border border-amber-200 px-3 py-1.5 text-[12px] font-medium text-amber-700 transition-colors hover:bg-amber-50"
+                className="rounded-lg border border-amber-200 dark:border-amber-500/30 px-3 py-1.5 text-[12px] font-medium text-amber-700 dark:text-amber-300 transition-colors hover:bg-amber-50 dark:hover:bg-amber-500/10"
               >
                 Suspend
               </button>
               <button
                 onClick={() => setPendingAction(pendingAction === "BANNED" ? null : "BANNED")}
-                className="rounded-lg border border-red-200 px-3 py-1.5 text-[12px] font-medium text-red-600 transition-colors hover:bg-red-50"
+                className="rounded-lg border border-red-200 dark:border-red-500/30 px-3 py-1.5 text-[12px] font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
               >
                 Ban
               </button>
@@ -211,8 +211,8 @@ function UserRow({ user }: { user: AdminUser }) {
       )}
 
       {pendingAction && (
-        <div className="mt-3 space-y-2.5 rounded-xl border border-dashed border-[#E2E0EE] bg-[#FAFAFD] p-3.5">
-          <p className="text-[12.5px] text-[#64748B]">
+        <div className="mt-3 space-y-2.5 rounded-xl border border-dashed border-line-strong bg-surface-sunken p-3.5">
+          <p className="text-[12.5px] text-muted">
             Reason for {pendingAction === "SUSPENDED" ? "suspending" : "banning"}{" "}
             {user.name} (required):
           </p>
@@ -220,7 +220,7 @@ function UserRow({ user }: { user: AdminUser }) {
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={2}
-            className="w-full resize-none rounded-xl border border-[#E4E6EB] bg-white px-3.5 py-2.5 text-[13px] text-[#13131A] outline-none focus:border-violet-400"
+            className="w-full resize-none rounded-xl border border-line-strong bg-surface px-3.5 py-2.5 text-[13px] text-ink outline-none focus:border-violet-400"
           />
           <div className="flex justify-end gap-2">
             <button
@@ -228,7 +228,7 @@ function UserRow({ user }: { user: AdminUser }) {
                 setPendingAction(null);
                 setReason("");
               }}
-              className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-[#64748B] hover:bg-gray-100"
+              className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted"
             >
               Cancel
             </button>

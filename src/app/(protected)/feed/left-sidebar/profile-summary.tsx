@@ -20,7 +20,7 @@ export default function ProfileSummary() {
 
   if (isLoading) {
     return (
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+      <div className="rounded-2xl border border-line bg-surface p-6">
         <div className="flex items-center gap-4">
           <Skeleton className="h-14 w-14 shrink-0 rounded-full" />
           <div className="min-w-0 flex-1 space-y-2">
@@ -43,27 +43,27 @@ export default function ProfileSummary() {
   const username = profile?.username;
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <div className="rounded-2xl border border-line bg-surface p-6">
       <div className="flex items-center gap-4">
         <UserAvatar name={name} src={profile?.avatar} size={56} />
 
         <div className="min-w-0">
-          <h3 className="truncate text-[16px] font-semibold text-[#13131A]">
+          <h3 className="truncate text-[16px] font-semibold text-ink">
             {name ?? "Your account"}
           </h3>
-          <p className="truncate font-[family-name:var(--font-mono)] text-[13px] text-violet-600">
+          <p className="truncate font-[family-name:var(--font-mono)] text-[13px] text-violet-600 dark:text-violet-400">
             {username ? `@${username}` : ""}
           </p>
         </div>
       </div>
 
-      <div className="mt-6 grid grid-cols-3 divide-x divide-[#F0EEF9]">
+      <div className="mt-6 grid grid-cols-3 divide-x divide-line-soft">
         {stats.map((stat) => (
           <div key={stat.label} className="text-center first:pl-0 last:pr-0">
-            <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-[#13131A]">
+            <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-ink">
               {formatCount(stat.value)}
             </p>
-            <p className="mt-0.5 text-[12px] text-[#94A3B8]">{stat.label}</p>
+            <p className="mt-0.5 text-[12px] text-subtle">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -72,9 +72,9 @@ export default function ProfileSummary() {
         href="/profile"
         className="
           group mt-6 flex items-center justify-center gap-1.5
-          rounded-xl bg-[#F6F3FF] py-2.5
-          text-[13px] font-semibold text-violet-600
-          transition-colors hover:bg-violet-100
+          rounded-xl bg-tint py-2.5
+          text-[13px] font-semibold text-violet-600 dark:text-violet-400
+          transition-colors hover:bg-violet-100 dark:hover:bg-violet-500/15
         "
       >
         View profile

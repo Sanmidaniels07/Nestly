@@ -7,16 +7,16 @@ interface Props {
 }
 
 const tones: Record<string, string> = {
-  violet: "bg-violet-50 text-violet-700",
-  indigo: "bg-indigo-50 text-indigo-700",
-  emerald: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
+  violet: "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300",
+  indigo: "bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300",
+  emerald: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+  amber: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
 };
 
 export default function ProfileChipSection({ title, items, tone = "violet" }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         {title}
       </h2>
 

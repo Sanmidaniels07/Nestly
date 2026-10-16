@@ -67,11 +67,11 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
   };
 
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-[#13131A]">
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
         Basic information
       </h2>
-      <p className="mt-1.5 text-[13.5px] text-[#64748B]">
+      <p className="mt-1.5 text-[13.5px] text-muted">
         Give your product a clear name and description buyers can trust.
       </p>
 
@@ -138,7 +138,7 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
         </div>
 
         <div>
-          <label className="mb-2 block text-[13px] font-medium text-[#334155]">
+          <label className="mb-2 block text-[13px] font-medium text-ink-2">
             Description
           </label>
 
@@ -152,10 +152,10 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
               if (descError) setDescError("");
             }}
             className={`
-              w-full resize-none rounded-2xl border bg-[#FAFBFC] px-4 py-3.5 text-[14px] text-[#13131A]
-              outline-none transition-colors placeholder:text-[#94A3B8]
-              focus:border-violet-400 focus:bg-white
-              ${descError ? "border-red-300" : "border-[#E4E6EB]"}
+              w-full resize-none rounded-2xl border bg-surface-sunken px-4 py-3.5 text-[14px] text-ink
+              outline-none transition-colors placeholder:text-subtle
+              focus:border-violet-400 focus:bg-surface
+              ${descError ? "border-red-300 dark:border-red-500/40" : "border-line-strong"}
             `}
           />
 
@@ -163,7 +163,7 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
             <span className="text-[12px] text-red-500">{descError}</span>
             <span
               className={`font-[family-name:var(--font-mono)] text-[11.5px] ${
-                descAtLimit ? "text-red-500" : descNearLimit ? "text-amber-500" : "text-[#94A3B8]"
+                descAtLimit ? "text-red-500" : descNearLimit ? "text-amber-500" : "text-subtle"
               }`}
             >
               {descLength}/{DESCRIPTION_MAX}
@@ -172,7 +172,7 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end border-t border-[#F2F1F8] pt-6">
+      <div className="mt-8 flex justify-end border-t border-line-soft pt-6">
         <Button variant="tribely" onClick={handleContinue} className="h-11 rounded-xl px-7">
           Continue
         </Button>

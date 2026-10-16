@@ -20,10 +20,10 @@ export default function EditProfileBasic() {
   return (
     <section className="space-y-6">
       <div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
           Basic information
         </h3>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">Tell people who you are.</p>
+        <p className="mt-1 text-[13.5px] text-muted">Tell people who you are.</p>
       </div>
 
       <Input
@@ -41,14 +41,14 @@ export default function EditProfileBasic() {
           error={errors.username?.message as string}
         />
         {username && !errors.username && (
-          <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[12px] text-[#94A3B8]">
+          <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[12px] text-subtle">
             nestly.app/@{username}
           </p>
         )}
       </div>
 
       <div>
-        <label className="mb-2 block text-[13.5px] font-medium text-[#334155]">Bio</label>
+        <label className="mb-2 block text-[13.5px] font-medium text-ink-2">Bio</label>
 
         <textarea
           rows={4}
@@ -56,11 +56,11 @@ export default function EditProfileBasic() {
           {...register("bio")}
           placeholder="Tell people about yourself..."
           className="
-            w-full resize-none rounded-2xl border border-[#E4E6EB]
-            bg-[#FAFBFC] px-4 py-3.5 text-[14px] text-[#13131A]
+            w-full resize-none rounded-2xl border border-line-strong
+            bg-surface-sunken px-4 py-3.5 text-[14px] text-ink
             outline-none transition-colors
-            placeholder:text-[#94A3B8]
-            focus:border-violet-400 focus:bg-white
+            placeholder:text-subtle
+            focus:border-violet-400 focus:bg-surface
           "
         />
 
@@ -71,7 +71,7 @@ export default function EditProfileBasic() {
 
           <span
             className={`font-[family-name:var(--font-mono)] text-[11.5px] ${
-              bioAtLimit ? "text-red-500" : bioNearLimit ? "text-amber-500" : "text-[#94A3B8]"
+              bioAtLimit ? "text-red-500" : bioNearLimit ? "text-amber-500" : "text-subtle"
             }`}
           >
             {bioLength}/250

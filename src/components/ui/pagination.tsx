@@ -40,7 +40,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
         aria-label="Previous page"
-        className="flex h-9 items-center gap-1 rounded-lg border border-[#ECE9F6] px-3 text-[13px] font-medium text-[#334155] transition-colors hover:bg-[#F7F7FB] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        className="flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <ChevronLeft size={15} />
         <span className="hidden sm:inline">Previous</span>
@@ -51,7 +51,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
           p === "ellipsis" ? (
             <span
               key={`ellipsis-${index}`}
-              className="w-9 text-center font-[family-name:var(--font-mono)] text-[13px] text-[#94A3B8]"
+              className="w-9 text-center font-[family-name:var(--font-mono)] text-[13px] text-subtle"
             >
               ···
             </span>
@@ -65,7 +65,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
                 ${
                   p === page
                     ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white"
-                    : "text-[#334155] hover:bg-[#F7F7FB]"
+                    : "text-ink-2 hover:bg-surface-2"
                 }
               `}
             >
@@ -79,7 +79,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
         aria-label="Next page"
-        className="flex h-9 items-center gap-1 rounded-lg border border-[#ECE9F6] px-3 text-[13px] font-medium text-[#334155] transition-colors hover:bg-[#F7F7FB] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        className="flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <span className="hidden sm:inline">Next</span>
         <ChevronRight size={15} />

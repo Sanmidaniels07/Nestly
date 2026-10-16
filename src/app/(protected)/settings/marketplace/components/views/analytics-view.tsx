@@ -28,23 +28,23 @@ export default function AnalyticsView() {
       <section className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+            <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
               Trend
             </p>
-            <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+            <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
               Sales over time
             </h2>
           </div>
 
-          <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
+          <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
             {PERIODS.map((p) => (
               <button
                 key={p.value}
                 onClick={() => setPeriod(p.value)}
                 className={`rounded-lg px-3.5 py-2 text-[12.5px] font-medium transition-all ${
                   period === p.value
-                    ? "bg-white text-violet-700 shadow-sm"
-                    : "text-[#64748B] hover:text-[#13131A]"
+                    ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300"
+                    : "text-muted hover:text-ink"
                 }`}
               >
                 {p.label}
@@ -58,10 +58,10 @@ export default function AnalyticsView() {
 
       <section className="space-y-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Breakdown
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
             Orders &amp; revenue mix
           </h2>
         </div>
@@ -80,10 +80,10 @@ export default function AnalyticsView() {
 
       <section className="space-y-4">
         <div>
-          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Reach
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
             Store traffic
           </h2>
         </div>

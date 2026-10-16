@@ -27,11 +27,11 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
   if (!active || !payload || !payload.length) return null;
 
   return (
-    <div className="rounded-xl border border-[#ECE9F6] bg-white px-4 py-3 shadow-[0_12px_32px_-12px_rgba(15,15,20,0.2)]">
-      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wide text-[#94A3B8]">
+    <div className="rounded-xl border border-line bg-surface px-4 py-3 shadow-[0_12px_32px_-12px_rgba(15,15,20,0.2)]">
+      <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wide text-subtle">
         {label}
       </p>
-      <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-violet-700">
+      <p className="mt-1 font-[family-name:var(--font-mono)] text-[18px] font-semibold text-violet-700 dark:text-violet-300">
         {payload[0].value.toLocaleString()} views
       </p>
     </div>
@@ -40,7 +40,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
 
 export default function TrafficChart({ traffic, isLoading }: Props) {
   if (isLoading || !traffic) {
-    return <div className="h-[380px] animate-pulse rounded-2xl border border-[#ECE9F6] bg-[#F7F7FB]" />;
+    return <div className="h-[380px] animate-pulse rounded-2xl border border-line bg-surface-2" />;
   }
 
   const stats = [
@@ -50,25 +50,25 @@ export default function TrafficChart({ traffic, isLoading }: Props) {
   ];
 
   return (
-    <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6">
+    <div className="rounded-2xl border border-line bg-surface p-6">
       <div className="grid gap-4 sm:grid-cols-3">
         {stats.map(({ label, value, icon: Icon }) => (
           <div key={label} className="flex items-center gap-3">
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50">
-              <Icon size={16} className="text-violet-600" />
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+              <Icon size={16} className="text-violet-600 dark:text-violet-400" />
             </div>
             <div>
-              <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-[#13131A]">
+              <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-ink">
                 {value.toLocaleString()}
               </p>
-              <p className="text-[12px] text-[#94A3B8]">{label}</p>
+              <p className="text-[12px] text-subtle">{label}</p>
             </div>
           </div>
         ))}
       </div>
 
       {traffic.dailyViews.every((d) => d.views === 0) ? (
-        <div className="mt-6 flex h-[200px] items-center justify-center rounded-2xl border border-dashed border-[#E2E0EE] text-[13.5px] text-[#94A3B8]">
+        <div className="mt-6 flex h-[200px] items-center justify-center rounded-2xl border border-dashed border-line-strong text-[13.5px] text-subtle">
           No store views in this period yet.
         </div>
       ) : (
@@ -82,25 +82,25 @@ export default function TrafficChart({ traffic, isLoading }: Props) {
                 </linearGradient>
               </defs>
 
-              <CartesianGrid strokeDasharray="3 3" stroke="#F2F1F8" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--line-soft)" vertical={false} />
 
               <XAxis
                 dataKey="date"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#94A3B8", fontSize: 11 }}
+                tick={{ fill: "var(--subtle)", fontSize: 11 }}
                 dy={8}
               />
 
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#94A3B8", fontSize: 11 }}
+                tick={{ fill: "var(--subtle)", fontSize: 11 }}
                 width={32}
                 allowDecimals={false}
               />
 
-              <Tooltip content={<CustomTooltip />} cursor={{ stroke: "#DDD6FE", strokeWidth: 1 }} />
+              <Tooltip content={<CustomTooltip />} cursor={{ stroke: "var(--track)", strokeWidth: 1 }} />
 
               <Area
                 type="monotone"
@@ -108,7 +108,7 @@ export default function TrafficChart({ traffic, isLoading }: Props) {
                 stroke="#7C3AED"
                 strokeWidth={2.5}
                 fill="url(#trafficFill)"
-                activeDot={{ r: 5, fill: "#7C3AED", stroke: "#fff", strokeWidth: 2 }}
+                activeDot={{ r: 5, fill: "#7C3AED", stroke: "var(--surface)", strokeWidth: 2 }}
               />
             </AreaChart>
           </ResponsiveContainer>

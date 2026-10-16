@@ -22,7 +22,7 @@ export default function CartPage() {
         <div className="grid gap-8 xl:grid-cols-[1.8fr_420px]">
           <section className="space-y-4">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="flex gap-4 rounded-2xl border border-[#ECE9F6] bg-white p-4">
+              <div key={i} className="flex gap-4 rounded-2xl border border-line bg-surface p-4">
                 <Skeleton className="h-24 w-24 shrink-0 rounded-xl" />
                 <div className="flex-1 space-y-2.5">
                   <Skeleton className="h-3.5 w-3/4" />

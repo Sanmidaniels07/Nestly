@@ -32,10 +32,10 @@ export default function VariantsSection({ variants, onChange }: Props) {
   return (
     <div className="space-y-4">
       <div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-[#13131A]">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
           Variants
         </h3>
-        <p className="mt-1 text-[13.5px] text-[#64748B]">
+        <p className="mt-1 text-[13.5px] text-muted">
           Add options like size or color. Leave price and stock blank to use this
           product&apos;s base values.
         </p>
@@ -56,7 +56,7 @@ export default function VariantsSection({ variants, onChange }: Props) {
 
       <button
         onClick={addVariant}
-        className="flex items-center gap-2 rounded-xl border border-violet-200 px-4 py-2.5 text-[13.5px] font-medium text-violet-700 transition-colors hover:bg-violet-50"
+        className="flex items-center gap-2 rounded-xl border border-violet-200 dark:border-violet-500/30 px-4 py-2.5 text-[13.5px] font-medium text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10"
       >
         <Plus size={15} />
         Add variant

@@ -19,12 +19,12 @@ export default function PreviewCard({ draft }: Props) {
   const gallery = draft.images.filter((image) => image.id !== cover?.id).slice(0, 4);
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
-      <div className="relative aspect-[16/9] bg-[#F8F8FC] sm:aspect-[21/9]">
+    <section className="overflow-hidden rounded-2xl border border-line bg-surface">
+      <div className="relative aspect-[16/9] bg-surface-sunken sm:aspect-[21/9]">
         {cover ? (
           <Image fill alt={draft.name} src={cover.preview} className="object-cover" />
         ) : (
-          <div className="flex h-full items-center justify-center text-[13px] text-[#94A3B8]">
+          <div className="flex h-full items-center justify-center text-[13px] text-subtle">
             No image uploaded
           </div>
         )}
@@ -44,54 +44,54 @@ export default function PreviewCard({ draft }: Props) {
       </div>
 
       <div className="p-6">
-        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.25em] text-violet-600">
+        <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
           {draft.brand || "No brand"}
         </p>
-        <h2 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
+        <h2 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
           {draft.name || "Untitled product"}
         </h2>
 
-        <p className="mt-3 text-[13.5px] leading-relaxed text-[#64748B]">
+        <p className="mt-3 text-[13.5px] leading-relaxed text-muted">
           {draft.description || "No description provided"}
         </p>
 
-        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-[#F2F1F8] pt-5 sm:grid-cols-4">
+        <div className="mt-5 grid grid-cols-2 gap-3 border-t border-line-soft pt-5 sm:grid-cols-4">
           <div>
-            <p className="text-[11px] text-[#94A3B8]">Price</p>
-            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700">
+            <p className="text-[11px] text-subtle">Price</p>
+            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700 dark:text-violet-300">
               {money(draft.price)}
             </p>
           </div>
           <div>
-            <p className="text-[11px] text-[#94A3B8]">Stock</p>
-            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[17px] font-semibold text-[#13131A]">
+            <p className="text-[11px] text-subtle">Stock</p>
+            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[17px] font-semibold text-ink">
               {draft.stock || "0"}
             </p>
           </div>
           <div>
-            <p className="text-[11px] text-[#94A3B8]">Condition</p>
-            <p className="mt-0.5 text-[14px] font-medium text-[#13131A]">
+            <p className="text-[11px] text-subtle">Condition</p>
+            <p className="mt-0.5 text-[14px] font-medium text-ink">
               {formatConditionLabel(draft.condition)}
             </p>
           </div>
           <div>
-            <p className="text-[11px] text-[#94A3B8]">SKU</p>
-            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13.5px] text-[#334155]">
+            <p className="text-[11px] text-subtle">SKU</p>
+            <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[13.5px] text-ink-2">
               {draft.sku || "—"}
             </p>
           </div>
         </div>
 
         {draft.specifications.length > 0 && (
-          <div className="mt-5 border-t border-[#F2F1F8] pt-5">
-            <p className="mb-3 text-[12.5px] font-semibold text-[#13131A]">Specifications</p>
+          <div className="mt-5 border-t border-line-soft pt-5">
+            <p className="mb-3 text-[12.5px] font-semibold text-ink">Specifications</p>
             <div className="grid gap-x-6 gap-y-2 sm:grid-cols-2">
               {draft.specifications
                 .filter((spec) => spec.key.trim())
                 .map((spec) => (
                   <div key={spec.id} className="flex justify-between text-[13px]">
-                    <span className="text-[#94A3B8]">{spec.key}</span>
-                    <span className="font-medium text-[#13131A]">{spec.value}</span>
+                    <span className="text-subtle">{spec.key}</span>
+                    <span className="font-medium text-ink">{spec.value}</span>
                   </div>
                 ))}
             </div>

@@ -19,7 +19,7 @@ export default function BackButton({ fallbackHref, label = "Back", onClick }: Pr
     <button
       type="button"
       onClick={onClick ?? (() => goBack())}
-      className="-ml-2 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-[13px] font-medium text-[#64748B] transition-colors hover:bg-[#F7F7FB] hover:text-violet-700"
+      className="-ml-2 inline-flex min-h-10 items-center gap-1.5 rounded-lg px-2 text-[13px] font-medium text-muted transition-colors hover:bg-surface-2 hover:text-violet-700 dark:hover:text-violet-300"
     >
       <ArrowLeft size={15} />
       {label}

@@ -22,7 +22,7 @@ export default function ProfileMediaCard({ media, onClick }: Props) {
       whileHover={{ y: -3 }}
       transition={{ duration: 0.2 }}
       onClick={onClick}
-      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-[#ECE9F6]"
+      className="group relative cursor-pointer overflow-hidden rounded-2xl border border-line"
     >
       <Image
         src={media.image}

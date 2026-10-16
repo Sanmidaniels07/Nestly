@@ -7,7 +7,7 @@ interface Props {
 
 export function ProductCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface">
       <Skeleton className="aspect-square w-full rounded-none" />
       <div className="space-y-2 p-4">
         <Skeleton className="h-3.5 w-4/5" />
@@ -20,7 +20,7 @@ export function ProductCardSkeleton() {
 
 export function SellerCardSkeleton() {
   return (
-    <div className="overflow-hidden rounded-2xl border border-[#ECE9F6] bg-white">
+    <div className="overflow-hidden rounded-2xl border border-line bg-surface">
       <Skeleton className="h-32 w-full rounded-none" />
       <div className="px-6 pb-6">
         <div className="-mt-10 flex items-end gap-4">

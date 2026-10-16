@@ -35,7 +35,7 @@ export default function SellerProfile({ store }: Props) {
 
   return (
     <section className="relative z-10 -mt-16 sm:-mt-20">
-      <div className="rounded-2xl border border-[#ECE9F6] bg-white p-6 shadow-[0_20px_50px_-24px_rgba(15,15,20,0.15)] sm:p-7">
+      <div className="rounded-2xl border border-line bg-surface p-6 shadow-[0_20px_50px_-24px_rgba(15,15,20,0.15)] sm:p-7">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-end">
             <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-full border-4 border-white shadow-[0_8px_20px_-8px_rgba(15,15,20,0.25)] sm:h-28 sm:w-28">
@@ -48,7 +48,7 @@ export default function SellerProfile({ store }: Props) {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A] sm:text-[30px]">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink sm:text-[30px]">
                   {store.name}
                 </h1>
                 {store.isVerified && (
@@ -57,21 +57,21 @@ export default function SellerProfile({ store }: Props) {
               </div>
 
               {typeof store.followersCount === "number" && (
-                <p className="mt-1 font-[family-name:var(--font-mono)] text-[12.5px] text-[#94A3B8]">
+                <p className="mt-1 font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
                   {store.followersCount} follower{store.followersCount === 1 ? "" : "s"}
                 </p>
               )}
 
               {store.description && (
-                <p className="mt-2 max-w-xl text-[13.5px] leading-6 text-[#64748B]">
+                <p className="mt-2 max-w-xl text-[13.5px] leading-6 text-muted">
                   {store.description}
                 </p>
               )}
 
               {location && (
-                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-[#475569]">
+                <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-ink-3">
                   <div className="flex items-center gap-1.5">
-                    <MapPin size={14} className="text-violet-600" />
+                    <MapPin size={14} className="text-violet-600 dark:text-violet-400" />
                     {location}
                   </div>
                 </div>
@@ -90,7 +90,7 @@ export default function SellerProfile({ store }: Props) {
                   targetType="STORE"
                   targetId={store.id}
                   label=""
-                  className="flex h-11 items-center justify-center rounded-xl border border-[#E5E7EB] px-3.5 text-[#94A3B8] transition-colors hover:border-red-200 hover:text-red-500"
+                  className="flex h-11 items-center justify-center rounded-xl border border-line-strong px-3.5 text-subtle transition-colors hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
                 />
               </>
             )}
@@ -100,7 +100,7 @@ export default function SellerProfile({ store }: Props) {
                 <a
                   href={`mailto:${store.email}`}
                   onClick={() => copyToClipboard(store.email!, "Email copied to clipboard")}
-                  className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50"
+                  className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10"
                 >
                   <Mail size={14} />
                   Email
@@ -131,7 +131,7 @@ function FollowStoreButton({ slug }: { slug: string }) {
   const { data: isFollowingReal, isLoading } = useStoreFollowStatus(slug);
 
   if (isLoading) {
-    return <div className="h-11 w-24 animate-pulse rounded-xl bg-[#F7F7FB]" />;
+    return <div className="h-11 w-24 animate-pulse rounded-xl bg-surface-2" />;
   }
 
   return (
@@ -161,8 +161,8 @@ function FollowStoreButtonInner({
       disabled={isToggling}
       className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
         isFollowing
-          ? "border border-[#E5E7EB] text-[#64748B] hover:border-red-200 hover:text-red-500"
-          : "border border-violet-600 text-violet-700 hover:bg-violet-50"
+          ? "border border-line-strong text-muted hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
+          : "border border-violet-600 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-500/10"
       }`}
     >
       {isFollowing ? "Following" : "Follow"}
@@ -182,7 +182,7 @@ function MessageSellerButton({ sellerId }: { sellerId: string }) {
         })
       }
       disabled={isPending}
-      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-[#E5E7EB] px-5 text-[13px] font-semibold text-[#334155] transition-colors hover:border-violet-300 hover:text-violet-600 disabled:opacity-50"
+      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
     >
       <MessageCircle size={14} />
       Message
@@ -199,8 +199,8 @@ function VerifyStoreButton({ store }: { store: Store }) {
       disabled={isPending}
       className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
         store.isVerified
-          ? "border border-red-200 text-red-600 hover:bg-red-50"
-          : "border border-emerald-300 text-emerald-700 hover:bg-emerald-50"
+          ? "border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
+          : "border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/10"
       }`}
     >
       <ShieldCheck size={15} />
