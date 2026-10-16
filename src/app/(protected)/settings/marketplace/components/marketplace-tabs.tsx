@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { LayoutDashboard, Package, ClipboardList, Users, BarChart3, Store, RotateCcw, Wallet } from "lucide-react";
 
 export type Tab = "dashboard" | "products" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
@@ -21,6 +22,14 @@ const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
 ];
 
 export default function MarketplaceTabs({ active, onChange }: Props) {
+  const activeRef = useRef<HTMLButtonElement>(null);
+
+  // On mobile the strip scrolls sideways - keep the active tab in view when
+  // arriving via a link (e.g. ?tab=store) or the back button.
+  useEffect(() => {
+    activeRef.current?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [active]);
+
   return (
     <section className="overflow-x-auto scrollbar-hide">
       <div className="inline-flex gap-0.5 rounded-xl bg-[#F7F7FB] p-1">
@@ -30,6 +39,7 @@ export default function MarketplaceTabs({ active, onChange }: Props) {
           return (
             <button
               key={tab.id}
+              ref={isActive ? activeRef : undefined}
               onClick={() => onChange(tab.id)}
               aria-current={isActive ? "page" : undefined}
               className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${

@@ -20,6 +20,7 @@ export const useUpdateShippingOption = (slug: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["store", slug] });
+      queryClient.invalidateQueries({ queryKey: ["store", "me"] });
       toast.success("Shipping option updated");
     },
 

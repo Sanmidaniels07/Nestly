@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Hash, Search, Users2, X } from "lucide-react";
+import { BadgeCheck, Hash, Search, Store, Users2, X } from "lucide-react";
 
 import { useQuickSearch } from "@/src/hooks/use-quick-search";
 import UserAvatar from "@/src/components/ui/user-avatar";
@@ -41,6 +41,7 @@ export default function GlobalSearch() {
   const hasResults =
     !!data &&
     (data.users.length > 0 ||
+      (data.stores?.length ?? 0) > 0 ||
       data.posts.length > 0 ||
       data.communities.length > 0 ||
       data.hashtags.length > 0);
@@ -104,6 +105,44 @@ export default function GlobalSearch() {
                           <p className="truncate text-[11.5px] text-[#94A3B8]">
                             @{user.username}
                           </p>
+                        )}
+                      </div>
+                    </ResultRow>
+                  ))}
+                </ResultGroup>
+              )}
+
+              {!!data?.stores?.length && (
+                <ResultGroup label="Stores">
+                  {data.stores.map((store) => (
+                    <ResultRow
+                      key={store.id}
+                      onClick={() => {
+                        router.push(`/marketplace/seller/${store.slug}`);
+                        setOpen(false);
+                      }}
+                    >
+                      {store.logo ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={store.logo}
+                          alt={store.name}
+                          className="h-7 w-7 shrink-0 rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-600">
+                          <Store size={13} />
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <p className="flex items-center gap-1 truncate text-[13.5px] font-medium text-[#13131A]">
+                          <span className="truncate">{store.name}</span>
+                          {store.isVerified && (
+                            <BadgeCheck size={13} className="shrink-0 text-violet-600" />
+                          )}
+                        </p>
+                        {store.city && (
+                          <p className="truncate text-[11.5px] text-[#94A3B8]">{store.city}</p>
                         )}
                       </div>
                     </ResultRow>

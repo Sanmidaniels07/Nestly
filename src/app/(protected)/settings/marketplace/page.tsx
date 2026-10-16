@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Clock, XCircle } from "lucide-react";
@@ -17,6 +17,7 @@ import StoreView from "./components/views/store-view";
 import ReturnsView from "./components/views/returns-view";
 import AnalyticsView from "./components/views/analytics-view";
 import EarningsView from "./components/views/earnings-view";
+import SetupStorePrompt from "./components/seller-dashboard/setup-store-prompt";
 import Skeleton from "@/src/components/ui/skeleton";
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
 
@@ -34,16 +35,18 @@ const VALID_TABS: Tab[] = [
 function MarketplaceSettingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  // The URL is the single source of truth for the active tab, so the browser /
+  // phone back button steps through previously visited tabs, and links like
+  // ?tab=products from a detail page land on the right one.
   const urlTab = searchParams.get("tab") as Tab | null;
-  const [tab, setTab] = useState<Tab>(urlTab && VALID_TABS.includes(urlTab) ? urlTab : "dashboard");
-
-  useEffect(() => {
-    if (urlTab && VALID_TABS.includes(urlTab)) setTab(urlTab);
-  }, [urlTab]);
+  const tab: Tab = urlTab && VALID_TABS.includes(urlTab) ? urlTab : "dashboard";
 
   const handleTabChange = (next: Tab) => {
-    setTab(next);
-    router.replace(next === "dashboard" ? "/settings/marketplace" : `/settings/marketplace?tab=${next}`);
+    if (next === tab) return;
+    router.push(
+      next === "dashboard" ? "/settings/marketplace" : `/settings/marketplace?tab=${next}`,
+      { scroll: false }
+    );
   };
 
   const { data: seller, isLoading } = useMySeller();
@@ -101,8 +104,19 @@ function MarketplaceSettingsContent() {
     );
   }
 
+  const tabSections: Record<Tab, string> = {
+    dashboard: "dashboard",
+    products: "products",
+    orders: "orders",
+    customers: "customers",
+    returns: "return requests",
+    analytics: "analytics",
+    earnings: "earnings",
+    store: "store settings",
+  };
+
   const tabViews: Partial<Record<Tab, React.ReactNode>> = {
-    dashboard: <DashboardView hasStore={hasStore} />,
+    dashboard: <DashboardView seller={seller} />,
     products: <ProductsView />,
     orders: <OrdersView />,
     customers: <CustomersView />,
@@ -121,7 +135,9 @@ function MarketplaceSettingsContent() {
       <MarketplaceTabs active={tab} onChange={handleTabChange} />
 
       <div className="overflow-x-auto">
-        {tabViews[tab] ?? (
+        {tab !== "dashboard" && !hasStore ? (
+          <SetupStorePrompt section={tabSections[tab]} isSeller={!!seller} />
+        ) : tabViews[tab] ?? (
           <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
             <p className="text-[13.5px] text-[#94A3B8]">This section is coming soon.</p>
           </div>

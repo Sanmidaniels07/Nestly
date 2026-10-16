@@ -22,7 +22,7 @@ export default function InventorySnapshot() {
         </div>
 
         <Link
-          href="/settings/marketplace/components/products"
+          href="/settings/marketplace?tab=products"
           className="group flex shrink-0 items-center gap-1 text-[13.5px] font-semibold text-violet-600 hover:underline"
         >
           View all

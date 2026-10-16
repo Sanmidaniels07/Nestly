@@ -13,9 +13,21 @@ import { useCountdown } from "@/src/hooks/use-countdown";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
+import BackButton from "@/src/components/ui/back-button";
 import { SellerProfile } from "@/src/types/seller";
 
+// Sellers arrive here from the seller dashboard, the marketplace, or a
+// "Set up store" prompt - always offer a way back to where they were.
 export default function SellPage() {
+  return (
+    <div className="mx-auto max-w-3xl space-y-4">
+      <BackButton fallbackHref="/settings/marketplace" />
+      <SellPageContent />
+    </div>
+  );
+}
+
+function SellPageContent() {
   const router = useRouter();
   const { data: seller, isLoading, isError } = useMySeller();
 
@@ -35,7 +47,7 @@ export default function SellPage() {
 
   if (isSeller && seller.status === "PENDING") {
     return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50">
           <Clock size={26} className="text-amber-600" />
         </div>
@@ -52,7 +64,7 @@ export default function SellPage() {
 
   if (isSeller && seller.store) {
     return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+      <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50">
           <CheckCircle2 size={26} className="text-emerald-600" />
         </div>
@@ -87,7 +99,7 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
   const canReapply = seller.canReapply || isDone;
 
   return (
-    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-10 py-16 text-center">
+    <section className="mx-auto max-w-3xl rounded-2xl border border-[#ECE9F6] bg-white px-6 py-16 text-center sm:px-10">
       <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50">
         <XCircle size={26} className="text-red-600" />
       </div>
@@ -133,7 +145,7 @@ function BecomeSellerForm() {
   const { data: categories } = useCategories();
 
   return (
-    <section className="mx-auto max-w-xl rounded-2xl border border-[#ECE9F6] bg-white p-8 sm:p-10">
+    <section className="mx-auto max-w-xl rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-10">
       <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-violet-50">
         <StoreIcon size={26} className="text-violet-600" />
       </div>
@@ -248,12 +260,14 @@ function CreateStoreForm() {
         logo,
         banner,
       },
-      { onSuccess: () => router.push("/settings/marketplace") }
+      // replace, not push: Back from the dashboard shouldn't reopen a
+      // completed setup form.
+      { onSuccess: () => router.replace("/settings/marketplace") }
     );
   };
 
   return (
-    <section className="mx-auto max-w-2xl rounded-2xl border border-[#ECE9F6] bg-white p-8 sm:p-10">
+    <section className="mx-auto max-w-2xl rounded-2xl border border-[#ECE9F6] bg-white p-6 sm:p-10">
       <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-[#13131A]">
         Set up your store
       </h1>

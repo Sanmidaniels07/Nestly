@@ -3,13 +3,13 @@
 import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Hash, Search, Users2 } from "lucide-react";
+import { BadgeCheck, Hash, Search, Store, Users2 } from "lucide-react";
 
 import { useSearchByType } from "@/src/hooks/use-search-by-type";
 import { useFollowStatus } from "@/src/hooks/use-follow-status";
 import { useToggleFollow } from "@/src/hooks/use-toggle-follow";
 import { useToggleCommunityMembership } from "@/src/hooks/use-toggle-community-membership";
-import { SearchResultType, SearchUser } from "@/src/types/search";
+import { SearchResultType, SearchStore, SearchUser } from "@/src/types/search";
 import { Community } from "@/src/types/community";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import FollowButton from "@/src/components/social/follow-button";
@@ -18,6 +18,7 @@ import Pagination from "@/src/components/ui/pagination";
 
 const TABS: { id: SearchResultType; label: string }[] = [
   { id: "users", label: "People" },
+  { id: "stores", label: "Stores" },
   { id: "posts", label: "Posts" },
   { id: "communities", label: "Communities" },
   { id: "hashtags", label: "Hashtags" },
@@ -69,7 +70,7 @@ function SearchPageContent() {
         <div className="rounded-2xl border border-dashed border-[#ECE9F6] bg-[#FAFAFD] px-8 py-16 text-center">
           <Search className="mx-auto h-8 w-8 text-[#C4C0DC]" strokeWidth={1.5} />
           <p className="mt-4 text-[13.5px] text-[#94A3B8]">
-            Use the search bar above to find people, posts, communities, and hashtags.
+            Use the search bar above to find people, stores, posts, communities, and hashtags.
           </p>
         </div>
       ) : isLoading ? (
@@ -86,6 +87,11 @@ function SearchPageContent() {
         <div className="space-y-3">
           {tab === "users" &&
             (items as SearchUser[]).map((user) => <UserResultRow key={user.id} user={user} />)}
+
+          {tab === "stores" &&
+            (items as SearchStore[]).map((store) => (
+              <StoreResultRow key={store.id} store={store} />
+            ))}
 
           {tab === "posts" &&
             (items as import("@/src/types/post").Post[]).map((post) => (
@@ -148,6 +154,38 @@ function UserResultRow({ user }: { user: SearchUser }) {
         <UserFollowButton userId={user.id} initialIsFollowing={isFollowingReal ?? false} />
       )}
     </div>
+  );
+}
+
+function StoreResultRow({ store }: { store: SearchStore }) {
+  const location = [store.city, store.state].filter(Boolean).join(", ");
+
+  return (
+    <Link
+      href={`/marketplace/seller/${store.slug}`}
+      className="flex items-center gap-3.5 rounded-2xl border border-[#ECE9F6] bg-white p-4 transition-colors hover:border-violet-200"
+    >
+      {store.logo ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={store.logo}
+          alt={store.name}
+          className="h-11 w-11 shrink-0 rounded-xl object-cover"
+        />
+      ) : (
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 text-white">
+          <Store size={17} />
+        </div>
+      )}
+
+      <div className="min-w-0 flex-1">
+        <p className="flex items-center gap-1.5 text-[14px] font-semibold text-[#13131A]">
+          <span className="truncate">{store.name}</span>
+          {store.isVerified && <BadgeCheck size={15} className="shrink-0 text-violet-600" />}
+        </p>
+        {location && <p className="mt-0.5 truncate text-[12.5px] text-[#64748B]">{location}</p>}
+      </div>
+    </Link>
   );
 }
 

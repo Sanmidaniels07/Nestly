@@ -1,13 +1,12 @@
 "use client";
 
 import { use, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 import { useMyProduct } from "@/src/hooks/use-my-product";
 import { useUpdateProduct } from "@/src/hooks/use-update-product";
 import Button from "@/src/components/ui/button";
+import BackButton from "@/src/components/ui/back-button";
+import { useGoBack } from "@/src/hooks/use-go-back";
 import { ProductEditDraft } from "./types";
 import EditBasicSection from "./components/edit-basic-section";
 import EditPricingSection from "./components/edit-pricing-section";
@@ -15,7 +14,7 @@ import EditImagesSection from "./components/edit-images-section";
 import EditSpecsSection from "./components/edit-specs-section";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 
-const PRODUCTS_PATH = "/settings/marketplace/components/products";
+const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
 const EMPTY_DRAFT: ProductEditDraft = {
   title: "",
@@ -40,7 +39,7 @@ interface Props {
 
 export default function EditProductPage({ params }: Props) {
   const { id } = use(params);
-  const router = useRouter();
+  const goBack = useGoBack(PRODUCTS_PATH);
 
   const { data: product, isLoading } = useMyProduct(id);
   const { mutate: updateProduct, isPending } = useUpdateProduct();
@@ -127,7 +126,7 @@ export default function EditProductPage({ params }: Props) {
         },
       },
       {
-        onSuccess: () => router.push(PRODUCTS_PATH),
+        onSuccess: () => goBack(),
       }
     );
   };
@@ -152,13 +151,7 @@ export default function EditProductPage({ params }: Props) {
   return (
     <div className="space-y-8">
       <div>
-        <Link
-          href={PRODUCTS_PATH}
-          className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#64748B] transition-colors hover:text-violet-700"
-        >
-          <ArrowLeft size={14} />
-          Back to products
-        </Link>
+        <BackButton fallbackHref={PRODUCTS_PATH} label="Back to products" />
 
         <p className="mt-4 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600">
           Catalog
@@ -176,8 +169,8 @@ export default function EditProductPage({ params }: Props) {
       <EditImagesSection draft={draft} setDraft={setDraft} />
       <EditSpecsSection draft={draft} setDraft={setDraft} />
 
-      <div className="flex items-center justify-end gap-3 rounded-2xl border border-[#ECE9F6] bg-white p-5">
-        <Button variant="outline" onClick={() => router.push(PRODUCTS_PATH)} className="h-11 rounded-xl px-7">
+      <div className="flex flex-col-reverse gap-3 rounded-2xl border border-[#ECE9F6] bg-white p-5 sm:flex-row sm:items-center sm:justify-end">
+        <Button variant="outline" onClick={() => goBack()} className="h-11 rounded-xl px-7">
           Cancel
         </Button>
         <Button

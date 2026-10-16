@@ -16,6 +16,7 @@ export const useCreateShippingOption = (slug: string) => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["store", slug] });
+      queryClient.invalidateQueries({ queryKey: ["store", "me"] });
       toast.success("Shipping option added");
     },
 

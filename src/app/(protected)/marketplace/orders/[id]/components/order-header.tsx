@@ -1,10 +1,9 @@
 "use client";
 
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import OrderStatusBadge from "../../components/order-status-badge";
 import { Order } from "@/src/types/order";
 import { formatRelativeTime } from "@/src/lib/date";
+import BackButton from "@/src/components/ui/back-button";
 
 interface Props {
   order: Order;
@@ -12,14 +11,10 @@ interface Props {
 
 export default function OrderHeader({ order }: Props) {
   return (
-    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-7">
-      <Link
-        href="/marketplace/orders"
-        className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#64748B] transition-colors hover:text-violet-600"
-      >
-        <ArrowLeft size={15} />
-        Back to orders
-      </Link>
+    <section className="rounded-2xl border border-[#ECE9F6] bg-white p-5 sm:p-7">
+      {/* Sellers reach this from their dashboard and buyers from My orders -
+          go back to wherever they came from rather than always to My orders. */}
+      <BackButton fallbackHref="/marketplace/orders" />
 
       <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { useCreateProduct } from "@/src/hooks/use-create-product";
 import { useUpdateProduct } from "@/src/hooks/use-update-product";
@@ -13,12 +13,12 @@ import PricingInventory from "./components/price-inventory";
 import Specifications from "./components/specification";
 import ProductImages from "./components/product-images";
 import ReviewPublish from "./components/review-publish";
+import BackButton from "@/src/components/ui/back-button";
+import { canGoBack, useGoBack } from "@/src/hooks/use-go-back";
 
-export default function AddProductPage() {
-  const router = useRouter();
-  const [step, setStep] = useState(1);
+const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
-  const [draft, setDraft] = useState<ProductDraft>({
+const EMPTY_DRAFT: ProductDraft = {
     name: "",
     categoryId: "",
     brand: "",
@@ -47,7 +47,55 @@ export default function AddProductPage() {
     deliveryAvailable: true,
     freeDelivery: false,
     shippingRegions: [],
-  });
+};
+
+function AddProductContent() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const goBack = useGoBack(PRODUCTS_PATH);
+
+  const [draft, setDraft] = useState<ProductDraft>(EMPTY_DRAFT);
+  const isDirty = JSON.stringify(draft) !== JSON.stringify(EMPTY_DRAFT);
+
+  // Each step is its own history entry (?step=N), so the phone / browser back
+  // button returns to the previous step instead of leaving the form and
+  // throwing the draft away. The draft only lives in memory, so a step can't
+  // be shown beyond the furthest one reached this session (e.g. after a refresh).
+  const [maxStep, setMaxStep] = useState(1);
+  const urlStep = Number(searchParams.get("step")) || 1;
+  const step = Math.min(Math.max(urlStep, 1), maxStep);
+
+  const setStep = (next: number) => {
+    if (next > step) {
+      setMaxStep((current) => Math.max(current, next));
+      router.push(`${pathname}?step=${next}`);
+    } else if (next < step) {
+      // Pop the step entries rather than pushing new ones, so history stays
+      // a clean stack and Back to products can leave the whole form at once.
+      if (canGoBack(step - next)) {
+        window.history.go(-(step - next));
+      } else {
+        router.replace(next === 1 ? pathname : `${pathname}?step=${next}`);
+      }
+    }
+  };
+
+  // Leaves every step of the form at once, back to wherever the seller came from.
+  const exitForm = () => goBack(step);
+
+  const handleBackToProducts = () => {
+    if (isDirty && !window.confirm("Discard this product? Your changes won't be saved.")) return;
+    exitForm();
+  };
+
+  // Refreshing or closing the tab would also lose the draft.
+  useEffect(() => {
+    if (!isDirty) return;
+    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", warn);
+    return () => window.removeEventListener("beforeunload", warn);
+  }, [isDirty]);
 
   const { mutateAsync: createProduct, isPending: isCreating } = useCreateProduct();
   const { mutateAsync: updateProduct, isPending: isPublishing } = useUpdateProduct();
@@ -86,12 +134,21 @@ export default function AddProductPage() {
       await updateProduct({ id: created.id, data: { status: "PUBLISHED" } });
     }
 
-    router.push("/settings/marketplace/components/products");
+    exitForm();
   };
 
   return (
     <div className="space-y-8">
-      <AddProductHeader />
+      <div>
+        <BackButton
+          fallbackHref={PRODUCTS_PATH}
+          label="Back to products"
+          onClick={handleBackToProducts}
+        />
+        <div className="mt-4">
+          <AddProductHeader />
+        </div>
+      </div>
 
       <AddProductStepper currentStep={step} onStepClick={setStep} />
 
@@ -137,5 +194,13 @@ export default function AddProductPage() {
         />
       )}
     </div>
+  );
+}
+
+export default function AddProductPage() {
+  return (
+    <Suspense fallback={null}>
+      <AddProductContent />
+    </Suspense>
   );
 }
