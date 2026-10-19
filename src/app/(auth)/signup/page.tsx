@@ -81,9 +81,7 @@ export default function SignupPage() {
             <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft px-5 py-8 sm:p-10">
               <div className="text-center mb-10">
                 <div className="md:hidden flex justify-center mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">
-                    N
-                  </div>
+                  <NestlyMark size={56} />
                 </div>
                 <h2 className="text-3xl font-bold text-ink">
                   Create your account

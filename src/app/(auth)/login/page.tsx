@@ -11,7 +11,8 @@ import NestlyMark from "@/src/components/ui/nestly-mark";
 export default function LoginPage() {
   return (
       <GuestGuard>
-    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 py-6 sm:p-6">
+    {/* pt-20 clears the fixed navbar so the card's top isn't hidden under it. */}
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 pb-6 pt-20 sm:px-6 sm:pb-6 sm:pt-24">
       <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
         {/* Left Side - Visual */}
         <motion.div
@@ -53,9 +54,7 @@ export default function LoginPage() {
           <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft px-5 py-8 sm:p-10">
             <div className="text-center mb-10">
               <div className="md:hidden flex justify-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">
-                  N
-                </div>
+                <NestlyMark size={56} />
               </div>
               <h2 className="text-3xl font-bold text-ink">Welcome back</h2>
               <p className="text-muted mt-2">Sign in to continue your journey</p>
