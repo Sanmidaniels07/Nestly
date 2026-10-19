@@ -4,7 +4,7 @@ import { Headphones, MessageCircle, ShieldCheck } from "lucide-react";
 
 export default function SupportCard() {
   return (
-    <section className="rounded-2xl border border-line bg-gradient-to-br from-violet-50 dark:from-violet-500/10 to-surface p-6">
+    <section className="rounded-2xl border border-line bg-gradient-to-br from-violet-50 dark:from-violet-500/10 to-surface p-5 sm:p-6">
       <div className="flex items-center gap-3">
         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-600">
           <Headphones size={19} className="text-white" />

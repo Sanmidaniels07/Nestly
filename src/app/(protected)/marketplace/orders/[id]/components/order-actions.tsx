@@ -27,7 +27,7 @@ export default function OrderActions({ order }: Props) {
   };
 
   return (
-    <section className="rounded-2xl border border-line bg-surface p-6">
+    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Actions
       </h2>

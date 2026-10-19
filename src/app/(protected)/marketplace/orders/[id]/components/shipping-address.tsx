@@ -9,7 +9,7 @@ interface Props {
 
 export default function ShippingAddress({ address }: Props) {
   return (
-    <section className="rounded-2xl border border-line bg-surface p-7">
+    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
         Shipping address
       </h2>

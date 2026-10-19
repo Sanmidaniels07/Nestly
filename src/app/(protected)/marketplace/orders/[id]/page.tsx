@@ -26,17 +26,17 @@ export default function OrderDetailsPage({ params }: Props) {
 
   if (isLoading) {
     return (
-      <div className="mx-auto max-w-7xl space-y-6 px-5 py-8">
+      <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-5 sm:py-8">
         <Skeleton className="h-8 w-56" />
 
-        <div className="grid gap-6 xl:grid-cols-[1.7fr_420px]">
-          <section className="space-y-5">
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.7fr)_420px]">
+          <section className="min-w-0 space-y-5">
             <Skeleton className="h-48 w-full rounded-2xl" />
             <Skeleton className="h-32 w-full rounded-2xl" />
             <Skeleton className="h-40 w-full rounded-2xl" />
           </section>
 
-          <aside className="space-y-5">
+          <aside className="min-w-0 space-y-5">
             <Skeleton className="h-40 w-full rounded-2xl" />
             <Skeleton className="h-32 w-full rounded-2xl" />
             <Skeleton className="h-24 w-full rounded-2xl" />
@@ -51,11 +51,11 @@ export default function OrderDetailsPage({ params }: Props) {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 px-5 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-5 sm:py-8">
       <OrderHeader order={order} />
 
-      <div className="grid gap-6 xl:grid-cols-[1.7fr_420px]">
-        <section className="space-y-5">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.7fr)_420px]">
+        <section className="min-w-0 space-y-5">
           <DeliveryCodes order={order} />
           <OrderedProducts order={order} />
 
@@ -63,7 +63,7 @@ export default function OrderDetailsPage({ params }: Props) {
           {order.timeline && order.timeline.length > 0 && <OrderTimeline order={order} />}
         </section>
 
-        <aside className="space-y-5">
+        <aside className="min-w-0 space-y-5">
           <PaymentDetails order={order} />
           <OrderSummary order={order} />
           <OrderActions order={order} />
