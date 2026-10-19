@@ -5,29 +5,19 @@ import {
   CheckCircle2,
   Clock,
   ImagePlus,
-  Plus,
-  Trash2,
   Wallet,
 } from "lucide-react";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useUpdateStore } from "@/src/hooks/use-update-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
-import { useCreateShippingOption } from "@/src/hooks/use-create-shipping-option";
-import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option";
 import { useBanks } from "@/src/hooks/use-banks";
 import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
-
-function money(value: number) {
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+import { useNigerianStates } from "@/src/hooks/use-locations";
+import DeliveryZonesManager from "./delivery-zones-manager";
 
 export default function StoreView() {
   const { data: store, isLoading } = useMyStore();
@@ -46,7 +36,7 @@ export default function StoreView() {
       <StoreDetailsForm storeId={store.id} />
       <PayoutDetailsForm slug={store.slug} />
       <StorePoliciesForm storeId={store.id} />
-      <ShippingOptionsManager slug={store.slug} />
+      <DeliveryZonesManager slug={store.slug} />
     </div>
   );
 }
@@ -173,7 +163,7 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
 
         <div className="grid gap-4 sm:grid-cols-3">
           <Input label="City" value={form.city} onChange={update("city")} />
-          <Input label="State" value={form.state} onChange={update("state")} />
+          <StateSelect value={form.state} onChange={(state) => setForm((prev) => ({ ...prev, state }))} />
           <Input
             label="Country"
             value={form.country}
@@ -421,106 +411,32 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
   );
 }
 
-function ShippingOptionsManager({ slug }: { slug: string }) {
-  const { data: store } = useMyStore();
-  const options = store?.shippingOptions ?? [];
-
-  const [name, setName] = useState("");
-  const [fee, setFee] = useState("");
-  const [eta, setEta] = useState("");
-  const { mutate: createOption, isPending: isCreating } =
-    useCreateShippingOption(slug);
-  const { mutate: deleteOption } = useDeleteShippingOption(slug);
-
-  const canSubmit = name.trim().length > 0 && fee.trim().length > 0;
-
-  const handleAdd = () => {
-    if (!canSubmit) return;
-
-    createOption(
-      {
-        name: name.trim(),
-        fee: Number(fee),
-        eta: eta.trim() || undefined,
-      },
-      {
-        onSuccess: () => {
-          setName("");
-          setFee("");
-          setEta("");
-        },
-      },
-    );
-  };
+// Store's state from the official list - delivery-zone suggestions are based
+// on it. A value saved before this was a dropdown stays selectable.
+function StateSelect({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { data: states } = useNigerianStates();
+  const known = states?.some((state) => state.name === value);
 
   return (
-    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
-        Shipping options
-      </h2>
-      <p className="mt-1 text-[13px] text-muted">
-        Buyers choose one of these at checkout.
-      </p>
-
-      <div className="mt-5 space-y-3">
-        {options.map((option) => (
-          <div
-            key={option.id}
-            className="flex items-center justify-between rounded-xl border border-line-soft px-4 py-3"
-          >
-            <div>
-              <p className="text-[13.5px] font-medium text-ink">
-                {option.name}
-              </p>
-              <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-subtle">
-                {money(option.fee)}
-                {option.eta ? ` · ${option.eta}` : ""}
-              </p>
-            </div>
-            <button
-              onClick={() => deleteOption(option.id)}
-              aria-label="Remove shipping option"
-              className="rounded-full p-2 text-subtle transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-500"
-            >
-              <Trash2 size={15} />
-            </button>
-          </div>
+    <div className="w-full">
+      <label htmlFor="store-state" className="mb-2 block text-sm font-medium text-ink-2">
+        State
+      </label>
+      <select
+        id="store-state"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-14 w-full rounded-3xl border border-line bg-surface px-5 text-base text-ink outline-none transition-colors focus:border-violet-500"
+      >
+        <option value="">Select state</option>
+        {value && !known && <option value={value}>{value}</option>}
+        {states?.map((state) => (
+          <option key={state.name} value={state.name}>
+            {state.name}
+          </option>
         ))}
-
-        {options.length === 0 && (
-          <p className="text-[13px] text-subtle">No shipping options yet.</p>
-        )}
-      </div>
-
-      <div className="mt-5 grid gap-3 border-t border-line-soft pt-5 sm:grid-cols-[1.5fr_1fr_1fr_auto]">
-        <Input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="e.g. Standard Shipping"
-        />
-        <Input
-          value={fee}
-          onChange={(e) => setFee(e.target.value)}
-          type="number"
-          placeholder="Fee (₦)"
-        />
-        <Input
-          value={eta}
-          onChange={(e) => setEta(e.target.value)}
-          type="text"
-          placeholder="e.g. 2 hours, 3–5 days"
-        />
-        <Button
-          variant="tribely"
-          loading={isCreating}
-          disabled={!canSubmit}
-          onClick={handleAdd}
-          className="h-12"
-        >
-          <Plus size={16} />
-        </Button>
-      </div>
-    </section>
+      </select>
+    </div>
   );
 }
 

@@ -29,6 +29,9 @@ export interface OrderShipping {
   optionName: string;
   fee: number;
   eta?: string | null;
+  // PICKUP: the buyer collects from the seller at pickupAddress (always free).
+  type?: "DELIVERY" | "PICKUP";
+  pickupAddress?: string | null;
   // Only ever present on the buyer's own order.
   deliveryCode?: string | null;
   createdAt: string;

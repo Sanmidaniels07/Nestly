@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { CheckCircle2, Clock, KeyRound, Truck } from "lucide-react";
+import { CheckCircle2, Clock, KeyRound, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
@@ -43,7 +43,12 @@ export default function OrdersView() {
 
   return (
     <div className="space-y-5">
-      {orders.map((order) => (
+      {orders.map((order) => {
+        // Sellers only receive their own shipment row (never the buyer's code).
+        const shipment = order.shipping?.[0];
+        const isPickup = shipment?.type === "PICKUP";
+
+        return (
         <div key={order.id} className="rounded-2xl border border-line bg-surface p-4 sm:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line-soft pb-4">
             <div>
@@ -53,6 +58,18 @@ export default function OrdersView() {
               <p className="mt-0.5 text-[12.5px] text-muted">
                 {formatRelativeTime(order.createdAt)}
               </p>
+              {shipment && (
+                <p
+                  className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11.5px] font-semibold ${
+                    isPickup
+                      ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+                      : "bg-surface-2 text-ink-2"
+                  }`}
+                >
+                  {isPickup ? <Store size={11} /> : <Truck size={11} />}
+                  {isPickup ? "Buyer will pick up" : shipment.optionName}
+                </p>
+              )}
             </div>
             <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700 dark:text-violet-300">
               {money(order.total)}
@@ -61,13 +78,15 @@ export default function OrdersView() {
 
           <div className="mt-4 space-y-3">
             {order.items.map((item) => (
-              <SellerOrderItem key={item.id} item={item} />
+              <SellerOrderItem key={item.id} item={item} isPickup={isPickup} />
             ))}
           </div>
 
-          <TrackingNumberInput order={order} />
+          {/* Nothing to track when the buyer collects. */}
+          {!isPickup && <TrackingNumberInput order={order} />}
         </div>
-      ))}
+        );
+      })}
 
       {data && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
@@ -76,7 +95,10 @@ export default function OrdersView() {
   );
 }
 
-function SellerOrderItem({ item }: { item: OrderItem }) {
+// For pickup orders, "shipped" means ready to collect and "delivered" means picked up.
+const PICKUP_LABELS: Record<string, string> = { SHIPPED: "Ready for pickup", DELIVERED: "Picked up" };
+
+function SellerOrderItem({ item, isPickup }: { item: OrderItem; isPickup: boolean }) {
   const { mutate: updateStatus, isPending } = useUpdateOrderItemStatus();
   const [delivering, setDelivering] = useState(false);
   const [code, setCode] = useState("");
@@ -135,7 +157,7 @@ function SellerOrderItem({ item }: { item: OrderItem }) {
               // Status only moves forward; delivered items can't be cancelled.
               disabled={option !== status && option !== "CANCELLED" && STATUS_RANK[option] <= STATUS_RANK[status]}
             >
-              {option.charAt(0) + option.slice(1).toLowerCase()}
+              {(isPickup && PICKUP_LABELS[option]) || option.charAt(0) + option.slice(1).toLowerCase()}
             </option>
           ))}
         </select>
@@ -145,10 +167,10 @@ function SellerOrderItem({ item }: { item: OrderItem }) {
         <div className="mt-3 rounded-xl border border-violet-200 bg-violet-50/60 p-4 dark:border-violet-500/30 dark:bg-violet-500/10">
           <p className="flex items-center gap-1.5 text-[13px] font-semibold text-ink">
             <KeyRound size={14} className="text-violet-600 dark:text-violet-400" />
-            Enter the buyer&apos;s delivery code
+            Enter the buyer&apos;s {isPickup ? "pickup" : "delivery"} code
           </p>
           <p className="mt-1 text-[12.5px] text-muted">
-            Ask the buyer for their 6-digit code when you hand the order over. It confirms delivery instantly.
+            Ask the buyer for their 6-digit code when you hand the order over. It confirms {isPickup ? "pickup" : "delivery"} instantly.
           </p>
           <div className="mt-3 flex flex-col gap-2 sm:flex-row">
             <input

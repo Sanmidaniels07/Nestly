@@ -13,13 +13,13 @@ function VerifyEmailSentContent() {
   const email = searchParams.get("email");
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 py-6 pt-20 sm:p-6 sm:pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10 text-center">
+        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft px-5 py-8 sm:p-10 text-center">
           <div className="mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15">
             <MailCheck className="h-10 w-10 text-violet-600 dark:text-violet-400" />
           </div>

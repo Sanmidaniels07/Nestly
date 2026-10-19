@@ -10,7 +10,8 @@ export default function AuthLayout({
         min-h-screen
         items-center
         justify-center
-        p-6
+        p-0
+        sm:p-6
         bg-[var(--background)]
       "
     >

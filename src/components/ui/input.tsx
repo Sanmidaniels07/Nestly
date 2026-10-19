@@ -30,7 +30,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             border
             border-line
             bg-surface
-            px-5
+            px-4
+            sm:px-5
             transition-all
             duration-200
             focus-within:border-violet-500

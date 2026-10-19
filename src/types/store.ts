@@ -1,19 +1,37 @@
+export type ShippingOptionType = "DELIVERY" | "PICKUP";
+
+// A delivery zone (a price for a group of areas; no areas = any buyer), or
+// a pickup point (always free; the buyer collects from the seller).
 export interface ShippingOption {
   id: string;
   storeId: string;
   name: string;
   fee: number;
   eta?: string | null;
+  type: ShippingOptionType;
+  areas: string[];
+  state?: string | null;
+  pickupAddress?: string | null;
+  isArchived: boolean;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CreateShippingOptionPayload {
-  name: string;
+  name?: string;
   fee: number;
   eta?: string;
+  areas?: string[];
+  state?: string;
+  type?: ShippingOptionType;
+  pickupAddress?: string;
 }
 
-export type UpdateShippingOptionPayload = Partial<CreateShippingOptionPayload>;
+export interface UpdateShippingOptionPayload extends Partial<Omit<CreateShippingOptionPayload, "eta" | "pickupAddress">> {
+  eta?: string | null;
+  pickupAddress?: string | null;
+  isArchived?: boolean;
+}
 
 export interface StoreSeller {
   id: string;
