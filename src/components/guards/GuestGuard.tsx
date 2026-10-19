@@ -6,6 +6,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/hooks/use-auth";
+import Spinner from "@/src/components/ui/loader";
 
 interface Props {
   children: ReactNode;
@@ -55,8 +56,15 @@ export default function GuestGuard({
     router,
   ]);
 
+  // Same dotted loader as the app-wide loading screen, so pages behind this
+  // guard (login, signup, features, preview...) don't sit blank while the
+  // session check runs or the redirect to the dashboard happens.
   if (!isHydrated || isAuthenticated) {
-    return null;
+    return (
+      <div className="flex min-h-screen w-full items-center justify-center bg-canvas">
+        <Spinner size={32} />
+      </div>
+    );
   }
 
   return children;
