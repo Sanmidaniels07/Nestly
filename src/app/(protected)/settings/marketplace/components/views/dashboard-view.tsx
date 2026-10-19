@@ -25,8 +25,9 @@ export default function DashboardView({ seller }: Props) {
     return <SetupChecklist seller={seller} />;
   }
 
+  // The tab wrapper adds no spacing, so the gap between sections lives here.
   return (
-    <>
+    <div className="space-y-10 sm:space-y-12">
       <SetupChecklist seller={seller} />
 
       <DashboardStats />
@@ -40,6 +41,6 @@ export default function DashboardView({ seller }: Props) {
       <SalesOverview />
 
       <TopSellingProducts />
-    </>
+    </div>
   );
 }
