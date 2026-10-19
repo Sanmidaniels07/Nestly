@@ -11,7 +11,7 @@ import NestlyMark from "@/src/components/ui/nestly-mark";
 export default function LoginPage() {
   return (
       <GuestGuard>
-    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 py-6 sm:p-6">
       <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
         {/* Left Side - Visual */}
         <motion.div
@@ -50,7 +50,7 @@ export default function LoginPage() {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md mx-auto"
         >
-          <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10">
+          <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft px-5 py-8 sm:p-10">
             <div className="text-center mb-10">
               <div className="md:hidden flex justify-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-br from-violet-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white text-4xl font-bold">

@@ -31,7 +31,7 @@ export default function VerifyEmailPage() {
   }, [mutation.isSuccess, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 py-6 pt-20 sm:p-6 sm:pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}

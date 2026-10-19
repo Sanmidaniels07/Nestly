@@ -96,6 +96,17 @@ export const createShippingOption = async (
   return response.data;
 };
 
+export const bulkCreateShippingOptions = async (
+  slug: string,
+  options: CreateShippingOptionPayload[]
+) => {
+  const response = await api.post<ApiResponse<ShippingOption[]>>(
+    `/stores/${slug}/shipping-options/bulk`,
+    { options }
+  );
+  return response.data;
+};
+
 export const updateShippingOption = async (
   slug: string,
   optionId: string,

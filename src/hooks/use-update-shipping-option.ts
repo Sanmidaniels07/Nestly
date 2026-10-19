@@ -14,14 +14,14 @@ export const useUpdateShippingOption = (slug: string) => {
   return useMutation<
     unknown,
     AxiosError<ApiErrorResponse>,
-    { optionId: string; data: UpdateShippingOptionPayload }
+    { optionId: string; data: UpdateShippingOptionPayload; successMessage?: string }
   >({
     mutationFn: ({ optionId, data }) => updateShippingOption(slug, optionId, data),
 
-    onSuccess: () => {
+    onSuccess: (_result, { successMessage }) => {
       queryClient.invalidateQueries({ queryKey: ["store", slug] });
       queryClient.invalidateQueries({ queryKey: ["store", "me"] });
-      toast.success("Shipping option updated");
+      toast.success(successMessage ?? "Shipping zone updated");
     },
 
     onError: (error) => {

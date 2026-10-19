@@ -50,13 +50,13 @@ export default function ResetPasswordPage() {
   }, [mutation.isSuccess, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center p-6 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center px-3 py-6 pt-20 sm:p-6 sm:pt-20">
       <motion.div
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft p-10">
+        <div className="bg-surface rounded-3xl shadow-2xl border border-line-soft px-5 py-8 sm:p-10">
           <div className="text-center mb-10">
             <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-violet-100 dark:bg-violet-500/15">
               <Lock className="h-8 w-8 text-violet-600 dark:text-violet-400" />

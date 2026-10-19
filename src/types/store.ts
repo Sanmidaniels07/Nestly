@@ -1,19 +1,29 @@
+// A delivery zone: a price for a group of areas. No areas = applies to any buyer.
 export interface ShippingOption {
   id: string;
   storeId: string;
   name: string;
   fee: number;
   eta?: string | null;
+  areas: string[];
+  state?: string | null;
+  isArchived: boolean;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CreateShippingOptionPayload {
-  name: string;
+  name?: string;
   fee: number;
   eta?: string;
+  areas?: string[];
+  state?: string;
 }
 
-export type UpdateShippingOptionPayload = Partial<CreateShippingOptionPayload>;
+export interface UpdateShippingOptionPayload extends Partial<Omit<CreateShippingOptionPayload, "eta">> {
+  eta?: string | null;
+  isArchived?: boolean;
+}
 
 export interface StoreSeller {
   id: string;
