@@ -47,7 +47,9 @@ export default function RecentOrderRow({ order }: Props) {
 
       <td className="whitespace-nowrap px-5 py-4">
         <Link
-          href={`/marketplace/orders/${order.id}`}
+          // /marketplace/orders/:id is the buyer's page (404s for the seller) -
+          // open this order in the seller's Orders tab instead.
+          href={`/settings/marketplace?tab=orders&order=${order.id}`}
           aria-label="View order"
           className="flex h-8 w-8 items-center justify-center rounded-lg bg-surface-2 text-muted transition-colors hover:bg-surface-muted hover:text-violet-600 dark:hover:text-violet-400"
         >

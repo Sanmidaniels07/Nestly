@@ -39,7 +39,9 @@ function targetHref(notification: Notification): string | null {
     case "ORDER":
       return notification.targetId ? `/marketplace/orders/${notification.targetId}` : "/marketplace/orders";
     case "SELLER_ORDER":
-      return "/settings/marketplace?tab=orders";
+      return notification.targetId
+        ? `/settings/marketplace?tab=orders&order=${notification.targetId}`
+        : "/settings/marketplace?tab=orders";
     default:
       return null;
   }

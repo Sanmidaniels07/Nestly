@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Clock, KeyRound, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
@@ -29,6 +30,17 @@ export default function OrdersView() {
 
   const orders = data?.orders ?? [];
 
+  // ?order=<id> (from the dashboard's recent orders or a notification) -
+  // bring that order's card into view and highlight it.
+  const focusedOrderId = useSearchParams().get("order");
+
+  useEffect(() => {
+    if (!focusedOrderId || orders.length === 0) return;
+    document
+      .getElementById(`order-${focusedOrderId}`)
+      ?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [focusedOrderId, orders.length]);
+
   if (isLoading) {
     return <ListSkeleton count={4} withAvatar={false} />;
   }
@@ -49,7 +61,15 @@ export default function OrdersView() {
         const isPickup = shipment?.type === "PICKUP";
 
         return (
-        <div key={order.id} className="rounded-2xl border border-line bg-surface p-4 sm:p-6">
+        <div
+          key={order.id}
+          id={`order-${order.id}`}
+          className={`scroll-mt-24 rounded-2xl border bg-surface p-4 sm:p-6 ${
+            order.id === focusedOrderId
+              ? "border-violet-400 ring-2 ring-violet-500/20 dark:border-violet-500"
+              : "border-line"
+          }`}
+        >
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-line-soft pb-4">
             <div>
               <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
