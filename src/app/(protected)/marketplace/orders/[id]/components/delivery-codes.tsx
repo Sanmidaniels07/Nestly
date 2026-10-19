@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Eye, EyeOff, KeyRound } from "lucide-react";
+import { Eye, EyeOff, KeyRound, MapPin } from "lucide-react";
 
 import { Order } from "@/src/types/order";
 
@@ -22,6 +22,8 @@ export default function DeliveryCodes({ order }: Props) {
 
   if (order.status === "PENDING" || order.status === "CANCELLED" || pending.length === 0) return null;
 
+  const allPickup = pending.every((shipment) => shipment.type === "PICKUP");
+
   const storeName = (storeId: string) =>
     order.items.find((item) => item.product.store?.id === storeId)?.product.store?.name ?? "Seller";
 
@@ -33,10 +35,12 @@ export default function DeliveryCodes({ order }: Props) {
             <KeyRound size={17} />
           </span>
           <div>
-            <h2 className="text-[15px] font-semibold text-ink">Delivery code{pending.length > 1 ? "s" : ""}</h2>
+            <h2 className="text-[15px] font-semibold text-ink">
+              {allPickup ? "Pickup" : "Delivery"} code{pending.length > 1 ? "s" : ""}
+            </h2>
             <p className="mt-1 text-[13px] leading-relaxed text-muted">
-              Give this to the person delivering your order <strong className="text-ink-2">only once you have your items</strong>. It
-              confirms you received them.
+              Give this to the {allPickup ? "seller when you collect" : "person delivering"} your order{" "}
+              <strong className="text-ink-2">only once you have your items</strong>. It confirms you received them.
             </p>
           </div>
         </div>
@@ -54,7 +58,15 @@ export default function DeliveryCodes({ order }: Props) {
       <div className="mt-4 space-y-2.5">
         {pending.map((shipment) => (
           <div key={shipment.id} className="flex items-center justify-between gap-3 rounded-xl bg-surface px-4 py-3">
-            <p className="min-w-0 truncate text-[13px] text-muted">{storeName(shipment.storeId)}</p>
+            <div className="min-w-0">
+              <p className="truncate text-[13px] text-muted">{storeName(shipment.storeId)}</p>
+              {shipment.type === "PICKUP" && (
+                <p className="mt-0.5 flex items-start gap-1 text-[12px] text-ink-2">
+                  <MapPin size={12} className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400" />
+                  Pick up at {shipment.pickupAddress || "the seller's store"}
+                </p>
+              )}
+            </div>
             <p
               className="font-[family-name:var(--font-mono)] text-[22px] font-bold tracking-[0.3em] text-violet-700 dark:text-violet-300"
               aria-label={revealed ? `Code ${shipment.deliveryCode}` : "Code hidden"}

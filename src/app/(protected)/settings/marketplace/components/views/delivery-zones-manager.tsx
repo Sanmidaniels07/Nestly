@@ -25,6 +25,7 @@ import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option"
 import { useDetectState, useNigerianStates, useStateLocations } from "@/src/hooks/use-locations";
 import { NigerianState, SuggestedZone } from "@/src/types/location";
 import { ShippingOption } from "@/src/types/store";
+import PickupSection from "./pickup-section";
 
 const money = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -55,7 +56,11 @@ const inputClass =
 export default function DeliveryZonesManager({ slug }: { slug: string }) {
   const { data: store } = useMyStore();
   const { data: states } = useNigerianStates();
-  const zones = useMemo(() => store?.shippingOptions ?? [], [store?.shippingOptions]);
+  const allOptions = useMemo(() => store?.shippingOptions ?? [], [store?.shippingOptions]);
+  // Delivery zones and pickup points are managed in separate sections.
+  const zones = allOptions.filter((option) => option.type !== "PICKUP");
+  const pickups = allOptions.filter((option) => option.type === "PICKUP");
+  const storeAddress = [store?.address, store?.city, store?.state].filter(Boolean).join(", ");
 
   const storeState = matchState(store?.state, states);
   const [chosenState, setChosenState] = useState<string | null>(null);
@@ -152,6 +157,8 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
           </div>
         </details>
       )}
+
+      <PickupSection slug={slug} pickups={pickups} storeAddress={storeAddress} />
 
       {/* Add zones */}
       <div className="mt-6 border-t border-line-soft pt-5">

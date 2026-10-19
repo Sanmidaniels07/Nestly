@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2, MapPin, Search, Truck } from "lucide-react";
+import { CheckCircle2, MapPin, Search, Store, Truck } from "lucide-react";
 
 import { useCart } from "@/src/hooks/use-cart";
 import { useProduct } from "@/src/hooks/use-product";
@@ -55,7 +55,7 @@ export default function StoreShipping() {
         </div>
         <div>
           <h2 className="text-[15px] font-semibold text-ink">Delivery</h2>
-          <p className="text-[13px] text-muted">Choose the delivery zone for your area from each seller.</p>
+          <p className="text-[13px] text-muted">Choose delivery to your area, or pick up yourself for free where offered.</p>
         </div>
       </div>
 
@@ -90,10 +90,12 @@ function StoreShippingGroup({
 
   const options = useMemo(() => {
     const zones = store?.shippingOptions ?? [];
-    // Zones covering the buyer's address first, then cheapest first.
+    // Zones covering the buyer's address first, then pickup, then cheapest.
+    const rank = (option: { zone: ShippingOption; matches: boolean }) =>
+      option.matches ? 0 : option.zone.type === "PICKUP" ? 1 : 2;
     return zones
-      .map((zone) => ({ zone, matches: zoneMatchesAddress(zone, addressText) }))
-      .sort((a, b) => Number(b.matches) - Number(a.matches) || a.zone.fee - b.zone.fee);
+      .map((zone) => ({ zone, matches: zone.type !== "PICKUP" && zoneMatchesAddress(zone, addressText) }))
+      .sort((a, b) => rank(a) - rank(b) || a.zone.fee - b.zone.fee);
   }, [store?.shippingOptions, addressText]);
 
   if (isLoading || !store) {
@@ -103,10 +105,14 @@ function StoreShippingGroup({
   if (options.length === 0) return null;
 
   const search = normalise(query);
+  // Pickup stays visible while searching - it's available wherever the buyer is.
   const visible = search
-    ? options.filter(({ zone }) => normalise(`${zone.name} ${zone.areas.join(" ")}`).includes(search))
+    ? options.filter(
+        ({ zone }) => zone.type === "PICKUP" || normalise(`${zone.name} ${zone.areas.join(" ")}`).includes(search)
+      )
     : options;
   const hasMatch = options.some((option) => option.matches);
+  const storeAddress = [store.address, store.city, store.state].filter(Boolean).join(", ");
 
   return (
     <div>
@@ -145,15 +151,28 @@ function StoreShippingGroup({
                   : "border-line hover:border-violet-300 dark:hover:border-violet-500/40"
               }`}
             >
-              <div className="min-w-0">
-                {matches && (
-                  <p className="mb-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
-                    <MapPin size={11} /> Matches your address
+              {zone.type === "PICKUP" ? (
+                <div className="min-w-0">
+                  <p className="flex items-center gap-1.5 text-[13px] font-medium text-ink">
+                    <Store size={13} className="shrink-0 text-violet-600 dark:text-violet-400" />
+                    Pick up yourself
                   </p>
-                )}
-                <p className="text-[13px] font-medium leading-snug text-ink">{zone.name}</p>
-                {zone.eta && <p className="mt-0.5 text-[12px] text-subtle">{zone.eta}</p>}
-              </div>
+                  <p className="mt-0.5 text-[12px] leading-snug text-muted">
+                    {zone.pickupAddress || storeAddress || "From the seller"}
+                  </p>
+                  {zone.eta && <p className="mt-0.5 text-[12px] text-subtle">{zone.eta}</p>}
+                </div>
+              ) : (
+                <div className="min-w-0">
+                  {matches && (
+                    <p className="mb-1 inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                      <MapPin size={11} /> Matches your address
+                    </p>
+                  )}
+                  <p className="text-[13px] font-medium leading-snug text-ink">{zone.name}</p>
+                  {zone.eta && <p className="mt-0.5 text-[12px] text-subtle">{zone.eta}</p>}
+                </div>
+              )}
               <div className="flex shrink-0 items-center gap-2 pt-0.5">
                 <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700 dark:text-violet-300">
                   {zone.fee === 0 ? "Free" : money(zone.fee)}

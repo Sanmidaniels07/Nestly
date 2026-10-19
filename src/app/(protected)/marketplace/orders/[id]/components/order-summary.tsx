@@ -30,8 +30,8 @@ export default function OrderSummary({ order }: Props) {
           order.shipping.map((shipment) => (
             <SummaryRow
               key={shipment.id}
-              label={shipment.optionName}
-              value={money(shipment.fee)}
+              label={shipment.type === "PICKUP" ? "Pickup" : shipment.optionName}
+              value={shipment.fee === 0 ? "Free" : money(shipment.fee)}
             />
           ))
         ) : (
