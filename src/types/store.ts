@@ -76,8 +76,17 @@ export interface Store {
   shippingOptions?: ShippingOption[];
   followersCount?: number;
   isFollowing?: boolean;
+  /** Store listings only: up to 3 recent published products. */
+  previewProducts?: StorePreviewProduct[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface StorePreviewProduct {
+  id: string;
+  title: string;
+  price: number;
+  image: string | null;
 }
 
 export interface CreateStorePayload {
@@ -103,6 +112,7 @@ export interface StoreListParams {
   limit?: number;
   search?: string;
   city?: string;
+  sort?: "newest" | "trending";
 }
 
 export interface Bank {

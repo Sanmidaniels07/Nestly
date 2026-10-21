@@ -10,9 +10,9 @@ export default function CategoriesSection() {
   if (!isLoading && !categories?.length) return null;
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-6">
       <SectionHeader
-        title="Browse Categories"
+        title="Browse categories"
         subtitle="Marketplace"
         action={{
           label: "View all",
@@ -20,12 +20,12 @@ export default function CategoriesSection() {
         }}
       />
 
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
         {isLoading
-          ? Array.from({ length: 4 }).map((_, i) => (
+          ? Array.from({ length: 8 }).map((_, i) => (
               <div
                 key={i}
-                className="h-[164px] animate-pulse rounded-2xl border border-line bg-surface-2"
+                className="h-[148px] animate-pulse rounded-2xl border border-line bg-surface-2"
               />
             ))
           : categories?.map((category) => (
