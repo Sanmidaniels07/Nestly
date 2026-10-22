@@ -63,7 +63,6 @@ export default function CustomersView() {
                   <p className="text-[13.5px] font-medium text-ink">
                     {customer.user.name}
                   </p>
-                  <p className="text-[12px] text-subtle">{customer.user.email}</p>
                 </td>
                 <td className="px-5 py-4 font-[family-name:var(--font-mono)] text-[13px] text-ink-2">
                   {customer.totalOrders}

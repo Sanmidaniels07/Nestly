@@ -59,7 +59,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
             {request.orderItem?.product.title ?? "Order item"}
           </p>
           <p className="mt-0.5 text-[12.5px] text-muted">
-            {request.user?.name} · {request.user?.email}
+            {request.user?.name}
           </p>
           <p className="mt-2 text-[13px] text-ink-2">{request.reason}</p>
           <p className="mt-1.5 text-[12px] text-subtle">
