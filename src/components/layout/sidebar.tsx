@@ -9,6 +9,8 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { useUnreadNotificationsCount } from "@/src/hooks/use-unread-notifications-count";
 import SettingsPopover from "./settings-popover";
 import LogoutConfirmDialog from "@/src/components/ui/logout-confirm-dialog";
+import { MessageCircle } from "lucide-react";
+import { supportWhatsAppUrl } from "@/src/lib/support";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -104,7 +106,20 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="border-t border-line-soft p-4">
+      <div className="space-y-2 border-t border-line-soft p-4">
+        <a
+          href={supportWhatsAppUrl("Hi Nestly Support, I need help with ")}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13.5px] font-medium text-muted transition-colors hover:bg-surface-2 hover:text-ink"
+        >
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#25D366]/15 text-[#128C7E] dark:text-[#25D366]">
+            <MessageCircle size={15} />
+          </span>
+          <span className="flex-1">Help &amp; support</span>
+          <span className="text-[11px] text-subtle">WhatsApp</span>
+        </a>
+
         <Link
           href="/profile"
           className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-surface-sunken"

@@ -1,8 +1,16 @@
 "use client";
 
-import { Headphones, MessageCircle, ShieldCheck } from "lucide-react";
+import { Headphones, MessageCircle } from "lucide-react";
 
-export default function SupportCard() {
+import { orderReference, supportWhatsAppUrl } from "@/src/lib/support";
+
+interface Props {
+  orderId: string;
+}
+
+export default function SupportCard({ orderId }: Props) {
+  const reference = orderReference(orderId);
+
   return (
     <section className="rounded-2xl border border-line bg-gradient-to-br from-violet-50 dark:from-violet-500/10 to-surface p-5 sm:p-6">
       <div className="flex items-center gap-3">
@@ -10,22 +18,23 @@ export default function SupportCard() {
           <Headphones size={19} className="text-white" />
         </div>
         <div>
-          <h3 className="text-[14px] font-semibold text-ink">Need help?</h3>
-          <p className="text-[13px] text-muted">Our support team is here for you.</p>
+          <h3 className="text-[14px] font-semibold text-ink">Need help with this order?</h3>
+          <p className="text-[13px] text-muted">Chat with Nestly Support on WhatsApp.</p>
         </div>
       </div>
 
-      <div className="mt-5 space-y-2.5">
-        <button className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40">
-          <MessageCircle size={16} className="text-violet-600 dark:text-violet-400" />
-          Chat seller
-        </button>
-
-        <button className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40">
-          <ShieldCheck size={16} className="text-violet-600 dark:text-violet-400" />
-          Report an issue
-        </button>
-      </div>
+      <a
+        href={supportWhatsAppUrl(`Hi Nestly Support, I need help with my order ${reference}.`)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] text-[13.5px] font-semibold text-white transition hover:brightness-95"
+      >
+        <MessageCircle size={17} />
+        Chat with support
+      </a>
+      <p className="mt-2.5 text-center text-[12px] text-subtle">
+        Your order number {reference} is added to the message.
+      </p>
     </section>
   );
 }

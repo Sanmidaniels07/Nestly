@@ -4,8 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { MoreHorizontal, X } from "lucide-react";
+import { MessageCircle, MoreHorizontal, X } from "lucide-react";
 import { navigation } from "@/src/constants/navigation";
+import { supportWhatsAppUrl } from "@/src/lib/support";
 import { cn } from "@/src/lib/utils";
 import { useAuthStore } from "@/src/store/auth-store";
 
@@ -126,6 +127,20 @@ export default function MobileNav() {
                     </Link>
                   );
                 })}
+
+                {/* External: opens the Nestly Support WhatsApp chat. */}
+                <a
+                  href={supportWhatsAppUrl("Hi Nestly Support, I need help with ")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMoreOpen(false)}
+                  className="flex flex-col items-center gap-1.5 rounded-xl py-3"
+                >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366]/15">
+                    <MessageCircle size={20} className="text-[#128C7E] dark:text-[#25D366]" />
+                  </div>
+                  <span className="text-center text-[11.5px] font-medium leading-tight text-ink-2">Support</span>
+                </a>
               </div>
             </motion.div>
           </>
