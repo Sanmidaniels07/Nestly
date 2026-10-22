@@ -11,6 +11,7 @@ import {
   CalendarDays,
   MessageCircle,
   ShieldAlert,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 export const navigation = [
@@ -43,6 +44,14 @@ export const navigation = [
     title: "Marketplace",
     href: "/marketplace",
     icon: Store,
+  },
+  // The sellers' workspace (dashboard, products, orders, earnings). Lives
+  // under /settings/marketplace; only shown to applicants and sellers.
+  {
+    title: "Seller Hub",
+    href: "/settings/marketplace",
+    icon: BriefcaseBusiness,
+    sellerOnly: true,
   },
   {
     title: "Communities",

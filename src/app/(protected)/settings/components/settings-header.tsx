@@ -10,7 +10,7 @@ export default function SettingsHeader() {
         Account settings
       </h1>
       <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-        Manage your account, security, notifications, marketplace store and other
+        Manage your account, security, notifications, Seller Hub and other
         preferences.
       </p>
     </section>
