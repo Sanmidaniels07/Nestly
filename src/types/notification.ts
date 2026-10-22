@@ -7,7 +7,8 @@ export type NotificationTargetType =
   | "ADMIN_SELLER_APPLICATION"
   | "ADMIN_PAYOUT_ACCOUNT_CHANGED"
   | "ORDER"
-  | "SELLER_ORDER";
+  | "SELLER_ORDER"
+  | "BIRTHDAY";
 
 export interface Notification {
   id: string;

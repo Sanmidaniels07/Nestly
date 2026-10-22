@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { signupSchema, SignupValues } from "@/src/lib/validations/auth";
@@ -8,19 +8,21 @@ import { useSignup } from "@/src/hooks/use-signup";
 import Input from "@/src/components/ui/input";
 import PasswordInput from "@/src/components/ui/password-input";
 import Button from "@/src/components/ui/button";
+import DateOfBirthPicker from "@/src/components/ui/date-picker";
 import { motion } from "framer-motion";
-import { Users, Sparkles, User, Mail, Lock, LockKeyhole } from "lucide-react";
+import { Users, Sparkles, User, Mail, Lock, LockKeyhole, Cake } from "lucide-react";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
 
 export default function SignupPage() {
+  const form = useForm<SignupValues>({
+    resolver: zodResolver(signupSchema),
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<SignupValues>({
-    resolver: zodResolver(signupSchema),
-  });
+  } = form;
 
   const signupMutation = useSignup();
 
@@ -29,6 +31,7 @@ export default function SignupPage() {
       name: data.name,
       email: data.email,
       password: data.password,
+      dateOfBirth: data.dateOfBirth || undefined,
     });
   };
 
@@ -87,10 +90,11 @@ export default function SignupPage() {
                   Create your account
                 </h2>
                 <p className="text-muted mt-2">
-                  Join thousands already in the nest
+                  Your people, your moments, one nest
                 </p>
               </div>
 
+              <FormProvider {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <Input
                   label="Full Name"
@@ -125,6 +129,14 @@ export default function SignupPage() {
                   icon={<LockKeyhole className="w-5 h-5" />}
                 />
 
+                <div>
+                  <DateOfBirthPicker label="Birthday (optional)" placeholder="Select your date of birth" />
+                  <p className="mt-2 flex items-start gap-1.5 text-[12.5px] leading-snug text-muted">
+                    <Cake className="mt-px h-3.5 w-3.5 shrink-0 text-violet-500" />
+                    So your followers can celebrate you. Only the day is shared — your age stays private.
+                  </p>
+                </div>
+
                 <Button
                   loading={signupMutation.isPending}
                   variant="tribely"
@@ -133,6 +145,7 @@ export default function SignupPage() {
                   Create Account
                 </Button>
               </form>
+              </FormProvider>
 
               <p className="text-center text-sm text-muted mt-8">
                 Already have an account?{" "}

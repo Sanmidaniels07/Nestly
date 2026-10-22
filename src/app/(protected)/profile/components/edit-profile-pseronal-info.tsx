@@ -58,7 +58,12 @@ export default function EditProfilePersonal() {
           error={errors.education?.message as string}
         />
 
-        <DateOfBirthPicker />
+        <div>
+          <DateOfBirthPicker />
+          <p className="mt-2 text-[12px] leading-snug text-muted">
+            Followers get a reminder on your birthday. Only the day is shared — your age stays private.
+          </p>
+        </div>
       </div>
 
       <div>

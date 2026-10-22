@@ -15,6 +15,8 @@ export interface SignupPayload {
   name: string;
   email: string;
   password: string;
+  /** Optional, YYYY-MM-DD. */
+  dateOfBirth?: string;
 }
 
 export interface AuthSuccessData {

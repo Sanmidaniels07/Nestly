@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import {
   Bell,
+  Cake,
   CheckCheck,
   Heart,
   MailIcon,
@@ -23,6 +24,7 @@ function targetHref(notification: Notification): string | null {
     case "POST":
       return notification.targetId ? `/post/${notification.targetId}` : null;
     case "USER":
+    case "BIRTHDAY":
       return notification.targetId ? `/users/${notification.targetId}` : null;
     case "CONVERSATION":
       return notification.targetId ? `/messages/${notification.targetId}` : null;
@@ -147,7 +149,8 @@ function NotificationRow({
   onOpen: () => void;
 }) {
   const iconKey = iconKeyFor(notification.type);
-  const Icon = iconKey ? ICON_MAP[iconKey] : Bell;
+  // Birthday reminders are SYSTEM-type, so pick their icon by target.
+  const Icon = notification.targetType === "BIRTHDAY" ? Cake : iconKey ? ICON_MAP[iconKey] : Bell;
 
   return (
     <button

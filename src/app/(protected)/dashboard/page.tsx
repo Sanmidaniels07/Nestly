@@ -21,6 +21,7 @@ import MarketplacePicks from "./marketplace-widget";
 import RecentActivity from "./recent-activity";
 import SuggestedUsers from "./suggested-users";
 import DashboardSkeleton from "./dashboard-skeleton";
+import BirthdayPrompt from "./birthday-prompt";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -39,6 +40,9 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 pb-20 pt-6 sm:space-y-8">
       <HeroCard name={user?.name || "there"} data={dashboard} profileCompletion={profile?.profileCompletion} />
+
+      {/* Only once the profile has loaded, so it doesn't flash for people who have a birthday set. */}
+      {profile && <BirthdayPrompt dateOfBirth={profile.dateOfBirth} />}
 
       {isError && !dashboard && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-center dark:border-red-500/30 dark:bg-red-500/10 sm:flex-row sm:justify-between sm:text-left">

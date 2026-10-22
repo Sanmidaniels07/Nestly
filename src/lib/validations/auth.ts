@@ -11,6 +11,8 @@ export const signupSchema = z
     email: z.email(),
     password: z.string().min(6),
     confirmPassword: z.string(),
+    // Optional; the picker only offers ages 13-100 and the API re-checks.
+    dateOfBirth: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
