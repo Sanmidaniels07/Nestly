@@ -40,22 +40,24 @@ function SearchPageContent() {
   };
 
   return (
-    <div className="mx-auto max-w-3xl space-y-6 pb-20 pt-6">
-      <div>
+    <div className="mx-auto min-w-0 max-w-3xl space-y-6 pb-20 pt-6">
+      <div className="min-w-0">
         <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
           Search
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-none text-ink">
+        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-tight text-ink [overflow-wrap:anywhere]">
           {q ? `Results for "${q}"` : "Search"}
         </h1>
       </div>
 
-      <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
+      {/* Scrolls sideways on its own on phones instead of widening the page. */}
+      <div className="scrollbar-hide -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0">
+        <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => handleTabChange(t.id)}
-            className={`rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
+            className={`shrink-0 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
               tab === t.id
                 ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300"
                 : "text-muted hover:text-ink"
@@ -64,6 +66,7 @@ function SearchPageContent() {
             {t.label}
           </button>
         ))}
+        </div>
       </div>
 
       {!q ? (

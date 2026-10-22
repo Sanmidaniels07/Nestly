@@ -11,6 +11,7 @@ import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { Category } from "@/src/types/category";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
+import Checkbox from "@/src/components/ui/checkbox";
 
 export default function CategoriesManager() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -259,15 +260,7 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
             placeholder="10"
           />
 
-          <label className="flex items-center gap-2.5 text-[13.5px] text-ink-2">
-            <input
-              type="checkbox"
-              checked={isFeatured}
-              onChange={(e) => setIsFeatured(e.target.checked)}
-              className="h-4 w-4 rounded border-line-strong text-violet-600 dark:text-violet-400 focus:ring-violet-400"
-            />
-            Feature on the marketplace homepage
-          </label>
+          <Checkbox checked={isFeatured} onChange={setIsFeatured} label="Feature on the marketplace homepage" />
         </div>
       </div>
 

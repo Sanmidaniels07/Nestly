@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 
 import { useEvent } from "@/src/hooks/use-event";
+import { DateTimeField } from "@/src/components/ui/calendar-picker";
 import { useEventAttendees } from "@/src/hooks/use-event-attendees";
 import { useRsvpEvent } from "@/src/hooks/use-rsvp-event";
 import { useUpdateEvent } from "@/src/hooks/use-update-event";
@@ -166,17 +167,16 @@ export default function EventDetailPage({
               onChange={(e) => setForm((prev) => ({ ...prev, location: e.target.value }))}
             />
             <div className="grid gap-4 sm:grid-cols-2">
-              <Input
+              <DateTimeField
                 label="Starts"
-                type="datetime-local"
                 value={form.startAt}
-                onChange={(e) => setForm((prev) => ({ ...prev, startAt: e.target.value }))}
+                onChange={(startAt) => setForm((prev) => ({ ...prev, startAt }))}
               />
-              <Input
+              <DateTimeField
                 label="Ends (optional)"
-                type="datetime-local"
                 value={form.endAt}
-                onChange={(e) => setForm((prev) => ({ ...prev, endAt: e.target.value }))}
+                onChange={(endAt) => setForm((prev) => ({ ...prev, endAt }))}
+                min={form.startAt ? form.startAt.slice(0, 10) : undefined}
               />
             </div>
             <div className="flex gap-2.5 border-t border-line-soft pt-5">

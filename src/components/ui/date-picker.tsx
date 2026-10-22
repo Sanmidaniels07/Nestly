@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
-import Input from "@/src/components/ui/input";
-import { cn } from "@/src/lib/utils";
+
+import { DateField, toYMD } from "./calendar-picker";
 
 interface DateOfBirthPickerProps {
   name?: string;
@@ -14,23 +12,9 @@ interface DateOfBirthPickerProps {
   maxAge?: number;
 }
 
-const MONTHS = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
-
-const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
-
-function daysInMonth(month: number, year: number) {
-  return new Date(year, month + 1, 0).getDate();
-}
-
-function formatDisplay(dateStr: string) {
-  if (!dateStr) return "";
-  const d = new Date(dateStr + "T00:00:00");
-  return `${MONTHS[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
-}
-
+// Date of birth inside a react-hook-form form (signup, Edit profile), built
+// on Nestly's DateField. Only offers dates for ages minAge-maxAge; the
+// value stays a "YYYY-MM-DD" string.
 export default function DateOfBirthPicker({
   name = "dateOfBirth",
   label = "Date of birth",
@@ -41,175 +25,31 @@ export default function DateOfBirthPicker({
   const { control, formState: { errors } } = useFormContext();
   const error = (errors[name]?.message as string) || undefined;
 
-  const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-
-  const currentYear = new Date().getFullYear();
-  const minYear = currentYear - maxAge;
-  const maxYear = currentYear - minAge;
-
-  const years = useMemo(() => {
-    return Array.from({ length: maxYear - minYear + 1 }, (_, i) => maxYear - i);
-  }, [minYear, maxYear]);
-
-  const [viewYear, setViewYear] = useState(maxYear);
-  const [viewMonth, setViewMonth] = useState(0);
-
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-      }
-    }
-    if (open) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [open]);
+  const today = new Date();
+  const maxYear = today.getFullYear() - minAge;
+  const minYear = today.getFullYear() - maxAge;
+  const latest = toYMD(maxYear, today.getMonth(), today.getDate());
+  const earliest = toYMD(minYear, today.getMonth(), today.getDate());
 
   return (
     <Controller
       name={name}
       control={control}
-      render={({ field }) => {
-        const parsed = field.value ? new Date(field.value + "T00:00:00") : null;
-
-        const openPicker = () => {
-          if (parsed) {
-            setViewYear(parsed.getFullYear());
-            setViewMonth(parsed.getMonth());
-          }
-          setOpen((prev) => !prev);
-        };
-
-        const selectDay = (day: number) => {
-          const mm = String(viewMonth + 1).padStart(2, "0");
-          const dd = String(day).padStart(2, "0");
-          field.onChange(`${viewYear}-${mm}-${dd}`);
-          setOpen(false);
-        };
-
-        const totalDays = daysInMonth(viewMonth, viewYear);
-        const firstWeekday = new Date(viewYear, viewMonth, 1).getDay();
-        const cells = [
-          ...Array(firstWeekday).fill(null),
-          ...Array.from({ length: totalDays }, (_, i) => i + 1),
-        ];
-
-        const goPrevMonth = () => {
-          if (viewMonth === 0) {
-            setViewMonth(11);
-            setViewYear((y) => y - 1);
-          } else {
-            setViewMonth((m) => m - 1);
-          }
-        };
-
-        const goNextMonth = () => {
-          if (viewMonth === 11) {
-            setViewMonth(0);
-            setViewYear((y) => y + 1);
-          } else {
-            setViewMonth((m) => m + 1);
-          }
-        };
-
-        const isSelected = (day: number) =>
-          parsed &&
-          parsed.getFullYear() === viewYear &&
-          parsed.getMonth() === viewMonth &&
-          parsed.getDate() === day;
-
-        return (
-          <div ref={containerRef} className="relative">
-            <div onClick={openPicker} className="cursor-pointer">
-              <Input
-                label={label}
-                readOnly
-                value={formatDisplay(field.value)}
-                placeholder={placeholder}
-                icon={<Calendar size={17} />}
-                error={error}
-                className="cursor-pointer"
-              />
-            </div>
-
-            {open && (
-              <div className="absolute z-50 mt-2 w-[300px] rounded-3xl border border-line bg-surface p-5 shadow-lg">
-                <div className="mb-4 flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={goPrevMonth}
-                    className="rounded-full p-1.5 text-subtle transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-500"
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-
-                  <div className="flex items-center gap-1.5">
-                    <select
-                      value={viewMonth}
-                      onChange={(e) => setViewMonth(Number(e.target.value))}
-                      className="rounded-lg border border-transparent bg-surface px-1 text-sm font-medium text-ink-2 outline-none hover:border-line"
-                    >
-                      {MONTHS.map((m, i) => (
-                        <option key={m} value={i} className="bg-surface text-ink">
-                          {m}
-                        </option>
-                      ))}
-                    </select>
-
-                    <select
-                      value={viewYear}
-                      onChange={(e) => setViewYear(Number(e.target.value))}
-                      className="rounded-lg border border-transparent bg-surface px-1 text-sm font-medium text-ink-2 outline-none hover:border-line"
-                    >
-                      {years.map((y) => (
-                        <option key={y} value={y} className="bg-surface text-ink">
-                          {y}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={goNextMonth}
-                    className="rounded-full p-1.5 text-subtle transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-500"
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-7 gap-y-1.5 text-center">
-                  {WEEKDAYS.map((wd) => (
-                    <span key={wd} className="text-xs font-medium text-subtle">
-                      {wd}
-                    </span>
-                  ))}
-
-                  {cells.map((day, idx) =>
-                    day === null ? (
-                      <span key={`empty-${idx}`} />
-                    ) : (
-                      <button
-                        key={day}
-                        type="button"
-                        onClick={() => selectDay(day)}
-                        className={cn(
-                          "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
-                          isSelected(day)
-                            ? "bg-violet-500 text-white"
-                            : "text-ink-2 hover:bg-violet-50 dark:hover:bg-violet-500/10"
-                        )}
-                      >
-                        {day}
-                      </button>
-                    )
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-        );
-      }}
+      render={({ field }) => (
+        <DateField
+          label={label}
+          value={field.value ?? ""}
+          onChange={field.onChange}
+          placeholder={placeholder}
+          error={error}
+          minYear={minYear}
+          maxYear={maxYear}
+          min={earliest}
+          max={latest}
+          // Open around a typical adult birthday rather than 13 years ago.
+          defaultView={{ y: today.getFullYear() - 25, m: today.getMonth() }}
+        />
+      )}
     />
   );
 }
