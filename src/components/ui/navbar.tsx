@@ -13,7 +13,7 @@ import SavedButton from "./saved-button";
 import OrdersButton from "./orders-button";
 import NotificationBell from "./notification-bell";
 import LogoutConfirmDialog from "./logout-confirm-dialog";
-import GlobalSearch from "./global-search";
+import GlobalSearch, { MobileSearch } from "./global-search";
 import { useAuth } from "@/src/hooks/use-auth";
 import NestlyMark from "./nestly-mark";
 import MobileMoreMenu, { MenuRow } from "./more-menu";
@@ -83,6 +83,9 @@ export default function Navbar() {
                       <OrdersButton />
                     </Tooltip>
                   </div>
+
+                  {/* Phones only - the inline search box shows from md up. */}
+                  <MobileSearch />
 
                   <Tooltip label="Cart">
                     <CartButton />
