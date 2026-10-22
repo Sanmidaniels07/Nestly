@@ -15,7 +15,7 @@ export const SITE_DESCRIPTION =
 export const OG_IMAGE = { url: "/og.png", width: 1200, height: 630, alt: `${SITE_NAME} – ${SITE_TAGLINE}` };
 
 /** Public, indexable pages - everything else needs an account. */
-export const PUBLIC_ROUTES = ["/", "/features", "/preview", "/signup", "/login"] as const;
+export const PUBLIC_ROUTES = ["/", "/features", "/preview", "/signup", "/login", "/terms", "/privacy", "/seller-terms"] as const;
 
 // schema.org data so search engines know who's behind the site.
 export const organizationJsonLd = {

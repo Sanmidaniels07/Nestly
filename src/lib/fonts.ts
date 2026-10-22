@@ -1,23 +1,32 @@
-import { Fraunces, JetBrains_Mono, Plus_Jakarta_Sans } from "next/font/google";
+import localFont from "next/font/local";
+
+// Fonts are bundled in src/fonts (variable woff2, latin subset, OFL-licensed)
+// instead of next/font/google, which downloads them from Google at build time
+// and intermittently failed Vercel builds when that download didn't complete.
 
 // The app's body/UI font. Without it every device fell back to its own
 // system font (Segoe UI, SF, Roboto), so Nestly looked different everywhere.
-export const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
+export const jakarta = localFont({
+  src: "../fonts/plus-jakarta-sans-latin-wght-normal.woff2",
   variable: "--font-jakarta",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: "200 800",
+  style: "normal",
   display: "swap",
 });
 
-export const fraunces = Fraunces({
-  subsets: ["latin"],
+export const fraunces = localFont({
+  src: [
+    { path: "../fonts/fraunces-latin-wght-normal.woff2", weight: "100 900", style: "normal" },
+    { path: "../fonts/fraunces-latin-wght-italic.woff2", weight: "100 900", style: "italic" },
+  ],
   variable: "--font-fraunces",
-  weight: ["500", "600"],
-  style: ["normal", "italic"],
+  display: "swap",
 });
 
-export const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+export const jetbrainsMono = localFont({
+  src: "../fonts/jetbrains-mono-latin-wght-normal.woff2",
   variable: "--font-mono",
-  weight: ["400", "500"],
+  weight: "100 800",
+  style: "normal",
+  display: "swap",
 });

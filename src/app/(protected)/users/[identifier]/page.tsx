@@ -141,9 +141,12 @@ export default function UserProfilePage({
           )}
 
           <div className="min-w-0 flex-1">
-            <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-start">
-              <div>
-                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
+            {/* Name and actions sit side by side only from md up; long names
+                (or emails used as names) wrap instead of pushing the buttons
+                out of the card. */}
+            <div className="flex flex-col items-center justify-between gap-4 sm:items-start md:flex-row">
+              <div className="min-w-0 max-w-full">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-tight text-ink [overflow-wrap:anywhere]">
                   {user.name}
                 </h1>
                 {user.username && (
@@ -154,7 +157,7 @@ export default function UserProfilePage({
               </div>
 
               {!isSelf && (
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 flex-wrap items-center justify-center gap-2">
                   <FollowStatusButton userId={user.id} />
                   <button
                     onClick={handleMessage}

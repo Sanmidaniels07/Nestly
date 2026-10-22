@@ -5,7 +5,7 @@ import { Product } from "../types/product";
 import { Payout, SellerEarnings, StoreTraffic } from "../types/payout";
 
 export interface SellerCustomer {
-  user: { id: string; name: string; email: string };
+  user: { id: string; name: string };
   totalOrders: number;
   totalSpent: number;
   lastOrderAt: string;
@@ -47,7 +47,7 @@ export interface SellerRecentOrder {
   id: string;
   status: string;
   createdAt: string;
-  customer: { id: string; name: string; email: string };
+  customer: { id: string; name: string };
   items: OrderItem[];
   sellerSubtotal: number;
 }

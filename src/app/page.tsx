@@ -5,6 +5,7 @@ import { Users, Gift, ShoppingBag, Star } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
 import NestlyMark from "../components/ui/nestly-mark";
+import { supportWhatsAppUrl } from "../lib/support";
 
 export default function Home() {
   return (
@@ -36,8 +37,8 @@ function Hero() {
               and Shop Together
             </h1>
             <p className="mt-6 text-xl text-muted max-w-lg">
-              The all-in-one platform where social networking meets birthday
-              discovery and seamless shopping.
+              The social marketplace where your friends, birthdays, communities
+              and sellers you trust live in one place.
             </p>
           </div>
 
@@ -46,7 +47,7 @@ function Hero() {
               <Users className="w-4 h-4" /> Social Feed
             </div>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-tint text-[#8B5CF6] rounded-full text-sm font-medium">
-              <Gift className="w-4 h-4" /> Birthday Match
+              <Gift className="w-4 h-4" /> Birthday Reminders
             </div>
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-tint-orange text-[#FF7A45] rounded-full text-sm font-medium">
               <ShoppingBag className="w-4 h-4" /> Marketplace
@@ -74,18 +75,18 @@ function Hero() {
             </Link>
           </div>
 
-          <div className="flex gap-12 pt-8">
+          <div className="flex flex-wrap gap-x-10 gap-y-5 pt-8">
             <div>
-              <div className="text-4xl font-bold text-[#2B7FFF]">50K+</div>
-              <div className="text-sm text-muted">Active Users</div>
+              <div className="text-3xl font-bold text-[#2B7FFF]">Free</div>
+              <div className="text-sm text-muted">to join</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#2B7FFF]">12K+</div>
-              <div className="text-sm text-muted">Birthday Matches</div>
+              <div className="text-3xl font-bold text-[#2B7FFF]">Paystack</div>
+              <div className="text-sm text-muted">secure checkout</div>
             </div>
             <div>
-              <div className="text-4xl font-bold text-[#2B7FFF]">8K+</div>
-              <div className="text-sm text-muted">Products Sold</div>
+              <div className="text-3xl font-bold text-[#2B7FFF]">Code-confirmed</div>
+              <div className="text-sm text-muted">deliveries</div>
             </div>
           </div>
         </motion.div>
@@ -138,7 +139,7 @@ function Hero() {
                       <div className="font-semibold text-sm">
                         Wireless Headphones
                       </div>
-                      <div className="text-[#2B7FFF] font-bold">$89.99</div>
+                      <div className="text-[#2B7FFF] font-bold">₦45,000</div>
                     </div>
                   </div>
                 </div>
@@ -170,12 +171,12 @@ function Hero() {
             transition={{ duration: 6, repeat: Infinity, delay: 1.5 }}
             className="absolute bottom-16 left-2 sm:bottom-20 sm:-left-8 bg-surface rounded-2xl p-3 sm:p-5 shadow-xl w-36 sm:w-48 text-center"
           >
-            <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎉</div>
+            <div className="text-2xl sm:text-4xl mb-1 sm:mb-2">🎂</div>
             <div className="font-bold text-xs sm:text-sm text-[#8B5CF6]">
-              New Match!
+              Birthday today!
             </div>
             <div className="text-[10px] sm:text-xs text-muted">
-              You and Alex share a birthday
+              Send Alex a wish or a gift
             </div>
           </motion.div>
 
@@ -212,14 +213,14 @@ function Features() {
     {
       icon: <Gift className="w-8 h-8" />,
       color: "bg-tint text-[#8B5CF6]",
-      title: "Birthday Matching",
-      desc: "Discover people who share your birthday. Get celebration reminders and find your birthday twin.",
+      title: "Birthday Reminders",
+      desc: "Never miss a birthday among the people you follow. Get a reminder on the day, then send a wish or a gift.",
     },
     {
       icon: <ShoppingBag className="w-8 h-8" />,
       color: "bg-tint-orange text-[#FF7A45]",
       title: "Marketplace",
-      desc: "Buy and sell products with a seamless shopping experience. Browse, cart, checkout.",
+      desc: "Shop from sellers you know with secure Paystack checkout, delivery or free pickup, and a code to confirm your order arrived.",
     },
   ];
 
@@ -312,16 +313,16 @@ function Preview() {
           <Card className="overflow-hidden border-line-strong">
             <div className="p-5 border-b flex items-center gap-3 bg-surface">
               <Gift className="text-[#8B5CF6]" />
-              <span className="font-semibold">Birthday Matching</span>
+              <span className="font-semibold">Birthday Reminders</span>
             </div>
             <div className="p-8 text-center bg-tint rounded-b-3xl">
               <div className="w-20 h-20 mx-auto rounded-full bg-[#8B5CF6] flex items-center justify-center text-4xl text-white mb-4">
                 SJ
               </div>
               <div className="font-semibold">Sarah Johnson</div>
-              <div className="text-[#8B5CF6] text-sm my-1">Leo • Aug 15</div>
+              <div className="text-[#8B5CF6] text-sm my-1">Birthday today · 15 Aug</div>
               <div className="text-sm text-muted">
-                You share 85% compatibility!
+                Send a wish or a gift 🎁
               </div>
             </div>
           </Card>
@@ -338,14 +339,14 @@ function Preview() {
                   👟
                 </div>
                 <div className="font-medium text-sm">Running Shoes</div>
-                <div className="text-[#2B7FFF] font-bold">$129.99</div>
+                <div className="text-[#2B7FFF] font-bold">₦38,500</div>
               </div>
               <div>
                 <div className="h-24 bg-canvas rounded-2xl flex items-center justify-center text-5xl mb-3">
                   ⌚
                 </div>
                 <div className="font-medium text-sm">Smart Watch</div>
-                <div className="text-[#2B7FFF] font-bold">$249</div>
+                <div className="text-[#2B7FFF] font-bold">₦65,000</div>
               </div>
             </div>
           </Card>
@@ -362,7 +363,7 @@ function Preview() {
                   <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />{" "}
                   LIVE
                 </div>
-                <span className="text-sm">3 friends online now</span>
+                <span className="text-sm">New message from Alice</span>
               </div>
               <div className="bg-surface border p-4 rounded-2xl flex items-center gap-3 text-sm text-muted">
                 Alice is typing...
@@ -400,7 +401,15 @@ function Footer() {
         <p className="text-white/60 max-w-md mx-auto">
           Connect, Celebrate, Commerce — All in one place.
         </p>{" "}
-        <div className="mt-12 text-xs text-white/40">
+        <nav className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/60">
+          <Link href="/terms" className="hover:text-white">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
+          <Link href="/seller-terms" className="hover:text-white">Seller Agreement</Link>
+          <a href={supportWhatsAppUrl("Hi Nestly Support, ")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+            Support
+          </a>
+        </nav>
+        <div className="mt-8 text-xs text-white/40">
           © 2026 Nestly. All rights reserved.
         </div>
       </div>

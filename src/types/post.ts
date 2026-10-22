@@ -3,7 +3,6 @@ import { MediaType } from "./upload";
 export interface PostAuthor {
   id: string;
   name: string;
-  email?: string;
   username?: string | null;
   avatar?: string | null;
 }
@@ -11,6 +10,15 @@ export interface PostAuthor {
 export interface PostMedia {
   url: string;
   type: MediaType;
+}
+
+/** A product the author tagged in their post (only shown while on sale). */
+export interface PostProduct {
+  id: string;
+  title: string;
+  price: number;
+  image: string | null;
+  store: { name: string; slug: string };
 }
 
 export interface Post {
@@ -26,6 +34,7 @@ export interface Post {
   hashtags?: string[];
   likeCount?: number;
   likedByMe?: boolean;
+  product?: PostProduct | null;
   // GET /hashtags/:tag/posts serializes posts slightly differently and
   // includes this instead of `likeCount` — fall back to it when present.
   _count?: { likes: number };
@@ -37,12 +46,15 @@ export interface CreatePostPayload {
   title?: string;
   content?: string;
   media?: PostMedia[];
+  productId?: string;
 }
 
 export interface UpdatePostPayload {
   title?: string;
   content?: string;
   media?: PostMedia[];
+  /** null removes the tag. */
+  productId?: string | null;
 }
 
 export interface PostListParams {

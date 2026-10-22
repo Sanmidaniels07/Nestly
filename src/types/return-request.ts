@@ -13,7 +13,7 @@ export interface ReturnRequest {
     id: string;
     product: { id: string; title: string };
   } | null;
-  user?: { id: string; name: string; email: string };
+  user?: { id: string; name: string };
 }
 
 export interface CreateReturnRequestPayload {

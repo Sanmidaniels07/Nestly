@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CheckCircle2, Clock, ImagePlus, Percent, Store as StoreIcon, XCircle } from "lucide-react";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
@@ -141,6 +142,7 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
 
 function BecomeSellerForm() {
   const [cacNumber, setCacNumber] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const { mutate: becomeSeller, isPending } = useBecomeSeller();
   const { data: categories } = useCategories();
 
@@ -166,8 +168,8 @@ function BecomeSellerForm() {
             </p>
           </div>
           <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
-            The rate varies by category — you keep the rest of what buyers pay,
-            paid out to your registered bank account.
+            The rate varies by category and applies to item prices only — you keep
+            the rest, plus your delivery fees in full, paid to your registered bank account.
           </p>
 
           <div className="mt-3.5 space-y-1.5">
@@ -194,10 +196,27 @@ function BecomeSellerForm() {
           placeholder="RC1234567"
         />
 
+        <label className="flex cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-ink-2">
+          <input
+            type="checkbox"
+            checked={agreed}
+            onChange={(e) => setAgreed(e.target.checked)}
+            className="mt-1 h-4 w-4 shrink-0 accent-violet-600"
+          />
+          <span>
+            I agree to the{" "}
+            <Link href="/seller-terms" target="_blank" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
+              Seller Agreement
+            </Link>
+            , including the commission rates above and the rules on prohibited items, deliveries and refunds.
+          </span>
+        </label>
+
         <Button
           variant="tribely"
           className="w-full"
           loading={isPending}
+          disabled={!agreed || isPending}
           onClick={() =>
             becomeSeller({ cacNumber: cacNumber.trim() || undefined })
           }

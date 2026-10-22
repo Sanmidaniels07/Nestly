@@ -139,6 +139,14 @@ export default function Sidebar() {
             </p>
           </div>
         </Link>
+
+        <p className="px-1 pt-1 text-[11px] leading-relaxed text-subtle">
+          <Link href="/terms" className="hover:text-violet-600 dark:hover:text-violet-400">Terms</Link>
+          {" · "}
+          <Link href="/privacy" className="hover:text-violet-600 dark:hover:text-violet-400">Privacy</Link>
+          {" · "}
+          <Link href="/seller-terms" className="hover:text-violet-600 dark:hover:text-violet-400">Seller Agreement</Link>
+        </p>
       </div>
 
       <LogoutConfirmDialog

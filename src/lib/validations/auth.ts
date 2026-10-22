@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+// Mirrors the API's rule: names are public, so no emails or links in them.
+const EMAIL_LIKE = /[^\s@]+@[^\s@]+\.[^\s@]+/;
+const LINK_LIKE = /(https?:\/\/|www\.)/i;
+
+const displayName = z
+  .string()
+  .trim()
+  .min(2, "Name must be at least 2 characters")
+  .max(60, "Name must be 60 characters or fewer")
+  .refine((name) => !EMAIL_LIKE.test(name), "Please enter your name, not your email address")
+  .refine((name) => !LINK_LIKE.test(name), "Please enter your name, not a link");
+
 export const loginSchema = z.object({
   email: z.email(),
   password: z.string().min(6),
@@ -7,7 +19,7 @@ export const loginSchema = z.object({
 
 export const signupSchema = z
   .object({
-    name: z.string().min(2),
+    name: displayName,
     email: z.email(),
     password: z.string().min(6),
     confirmPassword: z.string(),
@@ -38,7 +50,7 @@ export const resendVerificationSchema = z.object({
 });
 
 export const editProfileSchema = z.object({
-  name: z.string().min(2),
+  name: displayName,
 
   username: z.string().min(3).max(20),
 

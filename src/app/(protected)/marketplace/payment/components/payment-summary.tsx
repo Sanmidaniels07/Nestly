@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { AlertCircle, CreditCard, Loader2 } from "lucide-react";
 import SummaryRow from "./summary-row";
 import { useCart } from "@/src/hooks/use-cart";
@@ -225,6 +226,18 @@ export default function PaymentSummary() {
           `Pay ${money(estimatedTotal)}`
         )}
       </button>
+
+      <p className="mt-3 text-center text-[12px] leading-relaxed text-subtle">
+        By paying, you agree to Nestly&apos;s{" "}
+        <Link href="/terms" target="_blank" className="font-medium text-violet-600 hover:underline dark:text-violet-400">
+          Terms of Service
+        </Link>
+        , including our{" "}
+        <Link href="/terms#returns" target="_blank" className="font-medium text-violet-600 hover:underline dark:text-violet-400">
+          returns &amp; refunds
+        </Link>{" "}
+        policy.
+      </p>
     </aside>
   );
 }
