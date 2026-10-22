@@ -20,7 +20,7 @@ export interface UserProfile extends PublicUser {
   occupation?: string | null;
   company?: string | null;
   education?: string | null;
-  dateOfBirth?: string | null;
+  // No dateOfBirth: public profiles never include it (privacy).
   skills?: string[];
   interests?: string[];
   languages?: string[];
