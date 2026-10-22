@@ -90,6 +90,10 @@
 }
 
 @theme inline {
+  /* Body/UI text: Plus Jakarta Sans. Headlines keep Fraunces italic and
+     numbers/labels JetBrains Mono via their own variables. */
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
   --color-canvas: var(--canvas);
   --color-canvas-via: var(--canvas-via);
   --color-canvas-to: var(--canvas-to);
@@ -115,6 +119,8 @@
 body {
   background: var(--background);
   color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   /* Safety net: without this, any element anywhere that ends up wider than
      the viewport (a scroll strip, a fixed-width table, an oversized image)
      makes the ENTIRE page scroll sideways — navbar included — instead of
@@ -299,5 +305,29 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .spinner-rotate {
     animation-duration: 2.2s;
+  }
+}
+
+/* Hanging "Become a seller" tag on the dashboard hero: swings from its
+   string (transform-origin at the top), with a little nudge on hover. */
+.swing-tag {
+  transform-origin: 50% 0;
+  animation: swing-tag 3.4s ease-in-out infinite;
+}
+.swing-tag:hover {
+  animation-play-state: paused;
+}
+@keyframes swing-tag {
+  0%,
+  100% {
+    transform: rotate(-5deg);
+  }
+  50% {
+    transform: rotate(5deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .swing-tag {
+    animation: none;
   }
 }

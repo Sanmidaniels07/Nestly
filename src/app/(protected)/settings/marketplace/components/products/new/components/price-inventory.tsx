@@ -5,6 +5,7 @@ import { useState } from "react";
 import Button from "@/src/components/ui/button";
 import Input from "@/src/components/ui/input";
 import { ProductDraft } from "@/src/types/products-draft";
+import EarningsPreview from "../../components/earnings-preview";
 
 interface Props {
   draft: ProductDraft;
@@ -85,6 +86,8 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
                 Compare-at price should be higher than the selling price to show a discount.
               </p>
             )}
+
+          <EarningsPreview price={draft.price} categoryId={draft.categoryId} />
         </div>
 
         <div className="border-t border-line-soft" />
