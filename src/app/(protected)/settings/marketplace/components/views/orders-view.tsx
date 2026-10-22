@@ -59,6 +59,7 @@ export default function OrdersView() {
         // Sellers only receive their own shipment row (never the buyer's code).
         const shipment = order.shipping?.[0];
         const isPickup = shipment?.type === "PICKUP";
+        const earnings = sellerEarnings(order);
 
         return (
         <div
@@ -91,9 +92,19 @@ export default function OrdersView() {
                 </p>
               )}
             </div>
-            <p className="font-[family-name:var(--font-mono)] text-[15px] font-semibold text-violet-700 dark:text-violet-300">
-              {money(order.total)}
-            </p>
+            {/* The seller's own take - order.total includes other stores' items. */}
+            <div className="text-right">
+              <p className="text-[11px] font-medium uppercase tracking-wide text-subtle">
+                {earnings.cancelled ? "Cancelled" : "You receive"}
+              </p>
+              <p
+                className={`font-[family-name:var(--font-mono)] text-[15px] font-semibold ${
+                  earnings.cancelled ? "text-subtle line-through" : "text-violet-700 dark:text-violet-300"
+                }`}
+              >
+                {money(earnings.receive)}
+              </p>
+            </div>
           </div>
 
           <div className="mt-4 space-y-3">
@@ -101,6 +112,8 @@ export default function OrdersView() {
               <SellerOrderItem key={item.id} item={item} isPickup={isPickup} />
             ))}
           </div>
+
+          <EarningsBreakdown earnings={earnings} isPickup={isPickup} />
 
           {/* Nothing to track when the buyer collects. */}
           {!isPickup && <TrackingNumberInput order={order} />}
@@ -111,6 +124,82 @@ export default function OrdersView() {
       {data && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
       )}
+    </div>
+  );
+}
+
+interface Earnings {
+  itemsTotal: number;
+  commission: number;
+  /** Single rate when every item shares it, otherwise null ("varies"). */
+  rate: number | null;
+  delivery: number;
+  receive: number;
+  cancelled: boolean;
+}
+
+// What this seller earns from the order: their items (minus commission at
+// the rate locked in at checkout) plus their full delivery fee. Cancelled
+// items don't count.
+function sellerEarnings(order: Order): Earnings {
+  const active = order.items.filter((item) => item.status !== "CANCELLED");
+  const cancelled = order.status === "CANCELLED" || active.length === 0;
+  // A cancelled order still shows (struck through) what it would have paid.
+  const counted = cancelled ? order.items : active;
+
+  const itemsTotal = counted.reduce((sum, item) => sum + item.totalPrice, 0);
+  const commission = counted.reduce(
+    (sum, item) => sum + Math.round((item.totalPrice * (item.commissionRate ?? 0)) / 100),
+    0
+  );
+  const rates = new Set(counted.map((item) => item.commissionRate ?? 0));
+  const delivery = order.shipping?.[0]?.fee ?? 0;
+
+  return {
+    itemsTotal,
+    commission,
+    rate: rates.size === 1 ? [...rates][0] : null,
+    delivery,
+    receive: itemsTotal - commission + delivery,
+    cancelled,
+  };
+}
+
+function EarningsBreakdown({ earnings, isPickup }: { earnings: Earnings; isPickup: boolean }) {
+  if (earnings.cancelled) {
+    return (
+      <p className="mt-4 rounded-xl bg-surface-sunken px-4 py-3 text-[12.5px] text-muted">
+        This order was cancelled, so there&apos;s nothing to receive.
+      </p>
+    );
+  }
+
+  const row = (label: string, value: string, tone = "text-ink-2") => (
+    <div className="flex items-center justify-between gap-3">
+      <span className="text-muted">{label}</span>
+      <span className={`font-[family-name:var(--font-mono)] font-medium ${tone}`}>{value}</span>
+    </div>
+  );
+
+  return (
+    <div className="mt-4 space-y-2 rounded-xl border border-line-soft bg-surface-sunken px-4 py-3.5 text-[12.5px]">
+      {row("Items", money(earnings.itemsTotal))}
+      {row(
+        earnings.rate !== null ? `Nestly commission (${earnings.rate}%)` : "Nestly commission",
+        `−${money(earnings.commission)}`,
+        "text-red-600 dark:text-red-400"
+      )}
+      {!isPickup && earnings.delivery > 0 &&
+        row("Delivery fee (yours in full)", `+${money(earnings.delivery)}`, "text-emerald-700 dark:text-emerald-400")}
+      <div className="flex items-center justify-between gap-3 border-t border-dashed border-line pt-2">
+        <span className="font-semibold text-ink">You receive</span>
+        <span className="font-[family-name:var(--font-mono)] text-[14px] font-semibold text-violet-700 dark:text-violet-300">
+          {money(earnings.receive)}
+        </span>
+      </div>
+      <p className="pt-0.5 text-[11.5px] leading-snug text-subtle">
+        Before Paystack&apos;s processing fee, which is shared by amount and deducted when Paystack pays you.
+      </p>
     </div>
   );
 }

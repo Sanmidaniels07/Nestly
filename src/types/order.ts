@@ -11,6 +11,8 @@ export interface OrderItem {
   quantity: number;
   unitPrice: number;
   totalPrice: number;
+  /** Commission % locked onto this item at checkout (used in the seller's earnings breakdown). */
+  commissionRate?: number;
   status?: string;
   shippedAt?: string | null;
   deliveredAt?: string | null;

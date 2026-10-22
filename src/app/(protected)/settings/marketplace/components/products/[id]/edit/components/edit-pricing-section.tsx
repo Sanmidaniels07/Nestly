@@ -4,6 +4,7 @@ import Input from "@/src/components/ui/input";
 import FormSelect from "@/src/components/ui/form-select";
 import { ProductStatus } from "@/src/types/product";
 import { ProductEditDraft } from "../types";
+import EarningsPreview from "../../../components/earnings-preview";
 
 interface Props {
   draft: ProductEditDraft;
@@ -37,6 +38,8 @@ export default function EditPricingSection({ draft, setDraft }: Props) {
             placeholder="Optional — shows a strikethrough discount"
           />
         </div>
+
+        <EarningsPreview price={draft.price} categoryId={draft.categoryId} />
 
         <div className="grid gap-4 md:grid-cols-2">
           <Input
