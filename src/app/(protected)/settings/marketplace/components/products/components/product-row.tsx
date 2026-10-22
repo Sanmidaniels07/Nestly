@@ -7,6 +7,7 @@ import { Archive, Eye, Pencil } from "lucide-react";
 
 import { Product } from "@/src/types/product";
 import { useDeleteProduct } from "@/src/hooks/use-delete-product";
+import Checkbox from "@/src/components/ui/checkbox";
 
 interface Props {
   product: Product;
@@ -47,13 +48,7 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
   return (
     <tr className="group border-b border-line-soft transition-colors last:border-0 hover:bg-surface-sunken">
       <td className="w-10 px-4 py-3 pl-5">
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={onToggleSelect}
-          aria-label={`Select ${product.title}`}
-          className="h-4 w-4 rounded border-line-strong text-violet-600 dark:text-violet-400 focus:ring-violet-400"
-        />
+        <Checkbox size="sm" checked={selected} onChange={() => onToggleSelect()} ariaLabel={`Select ${product.title}`} />
       </td>
 
       <td className="px-4 py-3">

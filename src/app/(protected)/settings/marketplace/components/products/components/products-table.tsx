@@ -3,6 +3,7 @@
 import { Product } from "@/src/types/product";
 import ManagementTable from "@/src/components/ui/management-tables";
 import ProductRow from "./product-row";
+import Checkbox from "@/src/components/ui/checkbox";
 
 interface Props {
   products: Product[];
@@ -33,13 +34,13 @@ export default function ProductsTable({
       <thead>
         <tr className="border-b border-line bg-surface-sunken">
           <th className="w-10 px-4 py-3 pl-5">
-            <input
-              type="checkbox"
+            <Checkbox
+              size="sm"
               checked={allSelected}
-              onChange={onToggleAll}
-              aria-label="Select all products"
+              indeterminate={!allSelected && products.some((p) => selectedIds.has(p.id))}
+              onChange={() => onToggleAll()}
+              ariaLabel="Select all products"
               disabled={products.length === 0}
-              className="h-4 w-4 rounded border-line-strong text-violet-600 dark:text-violet-400 focus:ring-violet-400"
             />
           </th>
           {columns.map((col) => (

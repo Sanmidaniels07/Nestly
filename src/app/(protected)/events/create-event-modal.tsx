@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
 import Input from "@/src/components/ui/input";
+import { DateTimeField } from "@/src/components/ui/calendar-picker";
 import Button from "@/src/components/ui/button";
 import { useCreateEvent } from "@/src/hooks/use-create-event";
 
@@ -122,30 +123,14 @@ export default function CreateEventModal({ open, onClose }: Props) {
                 placeholder="e.g. Lagos, Nigeria"
               />
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
-                    Starts
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={startAt}
-                    onChange={(e) => setStartAt(e.target.value)}
-                    className="w-full rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
-                  />
-                </div>
-
-                <div>
-                  <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
-                    Ends (optional)
-                  </label>
-                  <input
-                    type="datetime-local"
-                    value={endAt}
-                    onChange={(e) => setEndAt(e.target.value)}
-                    className="w-full rounded-2xl border border-line-strong bg-surface-sunken px-4 py-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:bg-surface"
-                  />
-                </div>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <DateTimeField label="Starts" value={startAt} onChange={setStartAt} min={new Date().toISOString().slice(0, 10)} />
+                <DateTimeField
+                  label="Ends (optional)"
+                  value={endAt}
+                  onChange={setEndAt}
+                  min={startAt ? startAt.slice(0, 10) : new Date().toISOString().slice(0, 10)}
+                />
               </div>
             </div>
 

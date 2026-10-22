@@ -16,6 +16,7 @@ import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 import BackButton from "@/src/components/ui/back-button";
 import { SellerProfile } from "@/src/types/seller";
+import Checkbox from "@/src/components/ui/checkbox";
 
 // Sellers arrive here from the seller dashboard, the marketplace, or a
 // "Set up store" prompt - always offer a way back to where they were.
@@ -196,21 +197,17 @@ function BecomeSellerForm() {
           placeholder="RC1234567"
         />
 
-        <label className="flex cursor-pointer items-start gap-2.5 text-[13px] leading-relaxed text-ink-2">
-          <input
-            type="checkbox"
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className="mt-1 h-4 w-4 shrink-0 accent-violet-600"
-          />
-          <span>
+        {/* The link can't live inside the checkbox button, so the text toggles it separately. */}
+        <div className="flex items-start gap-3 text-[13px] leading-relaxed text-ink-2">
+          <Checkbox checked={agreed} onChange={setAgreed} ariaLabel="I agree to the Seller Agreement" className="mt-0.5" />
+          <span className="cursor-pointer" onClick={() => setAgreed(!agreed)}>
             I agree to the{" "}
-            <Link href="/seller-terms" target="_blank" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
+            <Link href="/seller-terms" target="_blank" onClick={(e) => e.stopPropagation()} className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
               Seller Agreement
             </Link>
             , including the commission rates above and the rules on prohibited items, deliveries and refunds.
           </span>
-        </label>
+        </div>
 
         <Button
           variant="tribely"
