@@ -46,11 +46,11 @@ export default function ProfileHeader({ profile }: Props) {
       className="mt-16 text-center md:mt-20 md:pl-44 md:text-left"
     >
       <div className="flex items-center justify-center gap-2 md:justify-start">
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink md:text-[38px]">
+        <h1 className="min-w-0 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-ink [overflow-wrap:anywhere] md:text-[38px]">
           {profile.name}
         </h1>
 
-        {profile.isVerified && <BadgeCheck className="text-blue-500" size={22} />}
+        {profile.isVerified && <BadgeCheck className="shrink-0 text-blue-500" size={22} />}
       </div>
 
       {profile.username && (
