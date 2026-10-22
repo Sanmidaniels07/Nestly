@@ -1,8 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
+import toast from "react-hot-toast";
 import {
   Heart,
+  Share2,
   Image as ImageIcon,
   Loader2,
   MessageCircle,
@@ -25,6 +28,11 @@ import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author
 import ReportButton from "@/src/components/ui/report-button";
 import { formatRelativeTime } from "@/src/lib/date";
 import CommentSection from "./comment-section";
+import PostMediaGallery from "./post-media-gallery";
+import PostProductTag from "./post-product-tag";
+
+// Long posts are clamped to this many characters until "See more".
+const CLAMP_CHARS = 280;
 
 interface Props {
   post: Post;
@@ -53,6 +61,32 @@ export default function PostCard({ post, autoOpenComments }: Props) {
   const { mutate: uploadFiles, isPending: isUploading } = useUploadFiles();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [expandedText, setExpandedText] = useState(false);
+  const [likePop, setLikePop] = useState(0);
+
+  const like = () => {
+    if (!isLiked) setLikePop((n) => n + 1);
+    toggleLike();
+  };
+  // Double-tap only ever likes (never unlikes), like Instagram.
+  const likeFromDoubleTap = () => {
+    if (!isLiked && !isToggling) like();
+  };
+
+  const share = async () => {
+    const url = `${window.location.origin}/post/${post.id}`;
+    const text = post.title || post.content?.slice(0, 100) || "A post on Nestly";
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: "Nestly", text, url });
+        return;
+      }
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied");
+    } catch {
+      // Share sheet dismissed - nothing to do.
+    }
+  };
   const [commentsOpen, setCommentsOpen] = useState(!!autoOpenComments);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(post.content ?? "");
@@ -119,14 +153,15 @@ export default function PostCard({ post, autoOpenComments }: Props) {
     <article className="overflow-hidden rounded-2xl border border-line bg-surface">
       {/* Header */}
       <div className="flex items-center justify-between p-5 sm:p-6">
-        <div className="flex items-center gap-3.5">
+        <div className="flex min-w-0 items-center gap-3.5">
           <AuthorAvatarLink author={post.author} size={44} />
 
-          <div>
-            <h3 className="text-[15px] font-semibold text-ink">
+          <div className="min-w-0">
+            <h3 className="truncate text-[15px] font-semibold text-ink">
               <AuthorNameLink author={post.author} />
             </h3>
-            <p className="font-[family-name:var(--font-mono)] text-[12px] text-subtle">
+            <p className="truncate text-[12.5px] text-subtle">
+              {post.author?.username && <span>@{post.author.username} · </span>}
               {formatRelativeTime(post.createdAt)}
             </p>
           </div>
@@ -271,8 +306,18 @@ export default function PostCard({ post, autoOpenComments }: Props) {
           </div>
         ) : (
           post.content && (
-            <p className="text-[15.5px] leading-relaxed text-ink">
-              {post.content}
+            <p className="whitespace-pre-line text-[15.5px] leading-relaxed text-ink [overflow-wrap:anywhere]">
+              {post.content.length > CLAMP_CHARS && !expandedText
+                ? `${post.content.slice(0, CLAMP_CHARS).trimEnd()}… `
+                : post.content}
+              {post.content.length > CLAMP_CHARS && (
+                <button
+                  onClick={() => setExpandedText((v) => !v)}
+                  className="ml-1 text-[14px] font-semibold text-violet-600 hover:underline dark:text-violet-400"
+                >
+                  {expandedText ? "See less" : "See more"}
+                </button>
+              )}
             </p>
           )
         )}
@@ -280,55 +325,40 @@ export default function PostCard({ post, autoOpenComments }: Props) {
         {!isEditing && post.hashtags && post.hashtags.length > 0 && (
           <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1">
             {post.hashtags.map((tag) => (
-              <span key={tag} className="text-[13.5px] font-medium text-violet-600 dark:text-violet-400">
+              <Link
+                key={tag}
+                href={`/hashtags/${encodeURIComponent(tag)}`}
+                className="text-[13.5px] font-medium text-violet-600 hover:underline dark:text-violet-400"
+              >
                 #{tag}
-              </span>
+              </Link>
             ))}
           </div>
         )}
 
         {!isEditing && post.media && post.media.length > 0 && (
-          <div
-            className={`mt-3 grid gap-1.5 overflow-hidden rounded-2xl ${
-              post.media.length === 1 ? "grid-cols-1" : "grid-cols-2"
-            }`}
-          >
-            {post.media.map((item, index) =>
-              item.type === "VIDEO" ? (
-                <video
-                  key={index}
-                  src={item.url}
-                  controls
-                  className="max-h-[420px] w-full bg-black object-contain"
-                />
-              ) : (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={index}
-                  src={item.url}
-                  alt="Post attachment"
-                  className="max-h-[420px] w-full object-cover"
-                />
-              )
-            )}
-          </div>
+          <PostMediaGallery media={post.media} onDoubleTapLike={likeFromDoubleTap} />
         )}
+
+        {!isEditing && post.product && <PostProductTag product={post.product} />}
       </div>
 
       {/* Actions */}
       <div className="flex items-center justify-between border-t border-line-soft px-5 py-4 sm:px-6">
         <div className="flex items-center gap-6">
           <button
-            onClick={toggleLike}
+            onClick={like}
             disabled={isToggling}
+            aria-label={isLiked ? "Unlike" : "Like"}
             className={`
               flex items-center gap-2 transition-colors
               ${isLiked ? "text-red-500" : "text-muted hover:text-red-500"}
             `}
           >
             <Heart
+              key={likePop}
               size={21}
-              className={`transition-transform ${isLiked ? "scale-110" : ""}`}
+              className={`transition-transform ${isLiked ? "like-pop scale-110" : ""}`}
               fill={isLiked ? "currentColor" : "none"}
             />
             <span className="font-[family-name:var(--font-mono)] text-[13px] font-medium">
@@ -346,6 +376,15 @@ export default function PostCard({ post, autoOpenComments }: Props) {
             </span>
           </button>
         </div>
+
+        <button
+          onClick={share}
+          aria-label="Share post"
+          className="flex items-center gap-1.5 text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
+        >
+          <Share2 size={19} />
+          <span className="text-[13px] font-medium">Share</span>
+        </button>
       </div>
 
       {commentsOpen && <CommentSection postId={post.id} />}

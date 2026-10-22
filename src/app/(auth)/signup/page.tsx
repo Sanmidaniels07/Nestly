@@ -98,7 +98,7 @@ export default function SignupPage() {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <Input
                   label="Full Name"
-                  placeholder="Enter your full name"
+                  placeholder="e.g. Ada Okafor"
                   {...register("name")}
                   error={errors.name?.message}
                   icon={<User className="w-5 h-5" />}

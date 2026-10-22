@@ -2,7 +2,12 @@
 
 import { Fragment } from "react";
 import Link from "next/link";
-import { ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { ArrowUp, Loader2, RefreshCw, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+
+import { getPosts } from "@/src/services/post.services";
+import { usePullToRefresh } from "@/src/hooks/use-pull-to-refresh";
+import { useAuthStore } from "@/src/store/auth-store";
 
 import Stories from "./stories";
 import CreatePostCard from "./create-post-card";
@@ -28,6 +33,7 @@ const INTERSTITIALS = [
 const slotAfter = (afterPost: number, postCount: number) => Math.min(afterPost, postCount);
 
 export default function FeedCenter() {
+  const myId = useAuthStore((state) => state.user?.id);
   const {
     data,
     isLoading,
@@ -35,16 +41,71 @@ export default function FeedCenter() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = usePosts({ sort: "desc" });
 
   const posts = data?.pages.flatMap((page) => page.data.posts) ?? [];
   const isQuiet = !isLoading && !isError && posts.length < 3;
+
+  // Cheap check for newer posts every 45s while the tab is open (only the
+  // newest post's id). Its own query key, so posting yourself (which
+  // invalidates ["posts"]) doesn't touch it.
+  const { data: latest } = useQuery({
+    queryKey: ["feed-latest"],
+    queryFn: () => getPosts({ page: 1, limit: 1, sort: "desc" }),
+    select: (response) => response.data.posts[0],
+    refetchInterval: 45_000,
+    refetchIntervalInBackground: false,
+    enabled: !isLoading,
+  });
+  const hasNewPosts =
+    !!latest &&
+    !!posts[0] &&
+    latest.id !== posts[0].id &&
+    latest.authorId !== myId &&
+    new Date(latest.createdAt) > new Date(posts[0].createdAt);
+
+  const refresh = () => refetch();
+  const { pull, refreshing, ready } = usePullToRefresh(refresh);
+
+  const showNewPosts = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    refetch();
+  };
 
   const interstitialsAt = (index: number) =>
     INTERSTITIALS.filter((slot) => slotAfter(slot.afterPost, posts.length) === index);
 
   return (
     <div className="space-y-6">
+      {/* Pull-to-refresh indicator (touch screens). */}
+      {(pull > 0 || refreshing) && (
+        <div
+          className="flex items-end justify-center overflow-hidden transition-[height] duration-150"
+          style={{ height: refreshing ? 44 : pull * 0.6 }}
+        >
+          <span className="mb-1 flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-violet-600 shadow-sm dark:text-violet-400">
+            {refreshing ? (
+              <Loader2 size={17} className="animate-spin" />
+            ) : (
+              <RefreshCw size={16} style={{ transform: `rotate(${pull * 3}deg)` }} className={ready ? "" : "opacity-60"} />
+            )}
+          </span>
+        </div>
+      )}
+
+      {/* "New posts" pill, floating under the navbar. */}
+      {hasNewPosts && (
+        <div className="pointer-events-none sticky top-20 z-30 -mb-6 flex justify-center">
+          <button
+            onClick={showNewPosts}
+            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2 text-[13px] font-semibold text-white shadow-[0_12px_30px_-10px_rgba(76,29,149,0.7)] transition hover:brightness-110"
+          >
+            <ArrowUp size={14} /> New posts
+          </button>
+        </div>
+      )}
+
       <Stories />
 
       <CreatePostCard />

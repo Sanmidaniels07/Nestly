@@ -9,6 +9,7 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { useProfile } from "@/src/hooks/use-profile";
 import { PostMedia } from "@/src/types/post";
 import UserAvatar from "@/src/components/ui/user-avatar";
+import ProductTagPicker from "./product-tag-picker";
 
 export default function CreatePostCard() {
   const user = useAuthStore((state) => state.user);
@@ -17,6 +18,7 @@ export default function CreatePostCard() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [media, setMedia] = useState<PostMedia[]>([]);
+  const [productId, setProductId] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate: createPost, isPending } = useCreatePost();
@@ -31,6 +33,7 @@ export default function CreatePostCard() {
     setTitle("");
     setContent("");
     setMedia([]);
+    setProductId(null);
     setExpanded(false);
   };
 
@@ -56,6 +59,7 @@ export default function CreatePostCard() {
         title: title.trim() || undefined,
         content: content.trim() || undefined,
         ...(media.length > 0 && { media }),
+        ...(productId && { productId }),
       },
       { onSuccess: reset }
     );
@@ -159,6 +163,7 @@ export default function CreatePostCard() {
                 >
                   <Video size={18} />
                 </button>
+                <ProductTagPicker productId={productId} onChange={setProductId} />
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
