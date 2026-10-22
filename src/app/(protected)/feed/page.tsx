@@ -3,8 +3,6 @@
 import FeedLeftSidebar from "./left-sidebar/left-sidebar-center";
 import FeedCenter from "./main-feed/feed-center";
 import FeedRightSidebar from "./right-sidebar/right-sidebar-center";
-import MarketplacePreview from "./right-sidebar/marketplace-preview";
-import SuggestedPeople from "./right-sidebar/suggested-friends";
 
 export default function FeedPage() {
   return (
@@ -18,13 +16,9 @@ export default function FeedPage() {
           <FeedLeftSidebar />
         </aside>
 
-        <main className="min-w-0 space-y-6">
-          {/* Mobile-only: condensed strip of what the sidebars carry */}
-          <div className="space-y-4 lg:hidden">
-            <MarketplacePreview />
-            <SuggestedPeople />
-          </div>
-
+        {/* Stories and posts come first on every screen; on smaller screens
+            the sidebar cards are woven in between posts by FeedCenter. */}
+        <main className="min-w-0">
           <FeedCenter />
         </main>
 
