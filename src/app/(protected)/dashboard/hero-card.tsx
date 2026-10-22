@@ -137,6 +137,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
   const highlights = data ? buildHighlights(data) : [];
   const seller = data?.seller;
   const isActiveSeller = seller?.status === "APPROVED" && seller.hasStore;
+  const sellerTag = data ? sellerTagFor(seller ?? null) : null;
 
   return (
     <section
@@ -151,7 +152,11 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
         <rect width="100%" height="100%" filter="url(#grain)" />
       </svg>
 
-      <div className="relative z-10 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+      {sellerTag && <SellerTag tag={sellerTag} />}
+
+      {/* Room for the hanging tag: below it on phones, beside it on desktop
+          (the reach panel drops down instead). */}
+      <div className={`relative z-10 grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center ${sellerTag ? "pt-[5.5rem] sm:pt-16 lg:pt-0" : ""}`}>
         <div className="min-w-0">
           <div className="inline-flex flex-wrap items-center gap-x-2.5 gap-y-1 rounded-full bg-white/10 px-4 py-1.5 backdrop-blur-xl">
             <Icon size={15} className="text-white/90" />
@@ -215,9 +220,57 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
           </div>
         </div>
 
-        {data && <ReachPanel data={data} profileCompletion={profileCompletion} />}
+        {data && (
+          <div className={sellerTag ? "lg:pt-20" : ""}>
+            <ReachPanel data={data} profileCompletion={profileCompletion} />
+          </div>
+        )}
       </div>
     </section>
+  );
+}
+
+interface SellerTagContent {
+  eyebrow: string;
+  label: string;
+  href: string;
+}
+
+// The swing tag nudges people who don't sell yet. None while an application
+// is pending, and none for active sellers.
+function sellerTagFor(seller: UserDashboard["seller"]): SellerTagContent | null {
+  if (!seller || seller.status === "REJECTED") {
+    return { eyebrow: "Sell on Nestly", label: "Become a seller", href: "/marketplace/sell" };
+  }
+  if (seller.status === "APPROVED" && !seller.hasStore) {
+    return { eyebrow: "Almost there", label: "Set up your store", href: "/settings/marketplace?tab=store" };
+  }
+  return null;
+}
+
+// Hangs from the top edge of the hero on a "string" and swings gently.
+function SellerTag({ tag }: { tag: SellerTagContent }) {
+  return (
+    <Link
+      href={tag.href}
+      aria-label={tag.label}
+      className="swing-tag group absolute right-5 top-0 z-20 flex flex-col items-center sm:right-10 lg:right-14"
+    >
+      {/* the string */}
+      <span className="block h-6 w-[2px] rounded-full bg-white/60 sm:h-8" />
+      <span className="relative -mt-0.5 block rounded-2xl bg-gradient-to-br from-amber-200 via-amber-300 to-orange-400 px-3 pb-2.5 pt-4 text-center text-[#3B1D00] shadow-[0_18px_30px_-12px_rgba(0,0,0,0.55)] ring-1 ring-white/50 transition-transform duration-200 group-hover:scale-105 sm:px-4 sm:pb-3 sm:pt-5">
+        {/* the hole the string goes through */}
+        <span className="absolute left-1/2 top-1.5 h-2 w-2 -translate-x-1/2 rounded-full bg-[#3B1D00]/35 ring-2 ring-white/70 sm:top-2" />
+        <Store size={18} className="mx-auto" />
+        <span className="mt-1 block font-[family-name:var(--font-mono)] text-[9px] font-medium uppercase tracking-[0.18em] opacity-75 sm:text-[10px]">
+          {tag.eyebrow}
+        </span>
+        <span className="mt-0.5 flex items-center justify-center gap-1 whitespace-nowrap text-[12.5px] font-extrabold sm:text-[13.5px]">
+          {tag.label}
+          <ArrowRight size={13} className="transition-transform group-hover:translate-x-0.5" />
+        </span>
+      </span>
+    </Link>
   );
 }
 
