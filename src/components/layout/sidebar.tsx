@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { navigation } from "@/src/constants/navigation";
+import { isNavActive, useVisibleNavigation } from "@/src/hooks/use-visible-navigation";
 import { cn } from "@/src/lib/utils";
 import { useAuthStore } from "@/src/store/auth-store";
 import { useUnreadNotificationsCount } from "@/src/hooks/use-unread-notifications-count";
@@ -20,14 +20,11 @@ export default function Sidebar() {
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const { count: unreadNotifications } = useUnreadNotificationsCount();
 
-  const isActive = (href: string) => {
-    if (href === "/dashboard") return pathname === href;
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
+  const isActive = (href: string) => isNavActive(href, pathname);
+  // Settings stays unhighlighted inside Seller Hub (/settings/marketplace).
+  const inSettings = isNavActive("/settings", pathname);
 
-  const visibleNavigation = navigation.filter(
-    (item) => !item.adminOnly || user?.role === "ADMIN"
-  );
+  const visibleNavigation = useVisibleNavigation();
 
   return (
     <aside className="fixed left-0 top-16 hidden h-[calc(100vh-4rem)] w-[264px] flex-col border-r border-line bg-surface/80 backdrop-blur-2xl lg:flex">
@@ -45,18 +42,18 @@ export default function Sidebar() {
                   aria-expanded={settingsOpen}
                   className={cn(
                     "group relative flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[14px] font-medium transition-colors",
-                    settingsOpen || pathname.startsWith("/settings")
+                    settingsOpen || inSettings
                       ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300"
                       : "text-muted hover:bg-surface-2 hover:text-ink"
                   )}
                 >
-                  {(settingsOpen || pathname.startsWith("/settings")) && (
+                  {(settingsOpen || inSettings) && (
                     <span className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-full bg-gradient-to-b from-violet-600 to-indigo-600" />
                   )}
                   <item.icon
                     size={19}
                     className={
-                      settingsOpen || pathname.startsWith("/settings")
+                      settingsOpen || inSettings
                         ? "text-violet-600 dark:text-violet-400"
                         : "text-subtle group-hover:text-violet-600 dark:group-hover:text-violet-400"
                     }

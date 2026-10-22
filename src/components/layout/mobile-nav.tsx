@@ -5,26 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, MoreHorizontal, X } from "lucide-react";
-import { navigation } from "@/src/constants/navigation";
+import { isNavActive, useVisibleNavigation } from "@/src/hooks/use-visible-navigation";
 import { supportWhatsAppUrl } from "@/src/lib/support";
 import { cn } from "@/src/lib/utils";
-import { useAuthStore } from "@/src/store/auth-store";
 
 const VISIBLE_COUNT = 4;
 
 export default function MobileNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
-  const user = useAuthStore((state) => state.user);
-
-  const isActive = (href: string) => {
-    if (href === "/dashboard") return pathname === href;
-    return pathname === href || pathname.startsWith(`${href}/`);
-  };
-
-  const visibleNavigation = navigation.filter(
-    (item) => !item.adminOnly || user?.role === "ADMIN"
-  );
+  const isActive = (href: string) => isNavActive(href, pathname);
+  const visibleNavigation = useVisibleNavigation();
 
   const primaryItems = visibleNavigation.slice(0, VISIBLE_COUNT);
   const overflowItems = visibleNavigation.slice(VISIBLE_COUNT);

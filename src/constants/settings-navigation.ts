@@ -4,7 +4,7 @@ import {
   Lock,
   Bell,
   Palette,
-  Store,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 export const settingsNavigation = [
@@ -34,8 +34,8 @@ export const settingsNavigation = [
     icon: Palette,
   },
   {
-    title: "Marketplace",
+    title: "Seller Hub",
     href: "/settings/marketplace",
-    icon: Store,
+    icon: BriefcaseBusiness,
   },
 ];
