@@ -24,3 +24,12 @@ export const updateSellerStatus = async (
   );
   return response.data;
 };
+
+// Manual CAC check result - also drives the store's public verified badge.
+export const setSellerVerified = async (id: string, isVerified: boolean) => {
+  const response = await api.patch<ApiResponse<AdminSeller>>(
+    `/admin/sellers/${id}/verify`,
+    { isVerified }
+  );
+  return response.data;
+};

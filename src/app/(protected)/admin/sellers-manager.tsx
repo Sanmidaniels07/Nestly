@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Store as StoreIcon } from "lucide-react";
+import { BadgeCheck, Check, Copy, ExternalLink, ShieldCheck, Store as StoreIcon } from "lucide-react";
 
 import { useAdminSellers } from "@/src/hooks/use-admin-sellers";
 import { useUpdateSellerStatus } from "@/src/hooks/use-update-seller-status";
+import { useSetSellerVerified } from "@/src/hooks/use-set-seller-verified";
 import { AdminSeller } from "@/src/types/admin-seller";
 import { SellerApplicationStatus } from "@/src/types/seller";
 import Pagination from "@/src/components/ui/pagination";
@@ -77,6 +78,86 @@ export default function SellersManager() {
   );
 }
 
+const CAC_SEARCH_URL = "https://search.cac.gov.ng";
+
+// Manual CAC check: copy the number, look it up on the free CAC public
+// search, then mark the business verified (drives the store's ✓ badge).
+function CacCheck({ seller }: { seller: AdminSeller }) {
+  const { mutate: setVerified, isPending } = useSetSellerVerified();
+  const [copied, setCopied] = useState(false);
+
+  if (!seller.cacNumber?.trim()) {
+    return <p className="mt-2 text-[12px] text-subtle">No CAC number provided.</p>;
+  }
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(seller.cacNumber!.trim());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // Clipboard blocked - the number is visible to copy by hand.
+    }
+  };
+
+  return (
+    <div className="mt-3 rounded-xl border border-line-soft bg-surface-sunken p-3.5">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[11px] font-semibold uppercase tracking-wide text-subtle">CAC</span>
+        <span className="font-[family-name:var(--font-mono)] text-[13px] font-semibold text-ink">{seller.cacNumber}</span>
+        <button
+          onClick={copy}
+          aria-label="Copy CAC number"
+          className="inline-flex items-center gap-1 rounded-md px-1.5 py-0.5 text-[11.5px] text-muted transition hover:bg-surface-2 hover:text-ink"
+        >
+          {copied ? <Check size={12} className="text-emerald-600" /> : <Copy size={12} />}
+          {copied ? "Copied" : "Copy"}
+        </button>
+        <span
+          className={`ml-auto rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+            seller.isVerified
+              ? "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300"
+              : "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
+          }`}
+        >
+          {seller.isVerified ? "Verified" : "Not checked"}
+        </span>
+      </div>
+
+      {!seller.isVerified && (
+        <p className="mt-2 text-[12px] leading-snug text-muted">
+          Search this number on CAC and confirm the business is <strong className="text-ink-2">active</strong> and its name matches
+          {seller.store ? <> the store <strong className="text-ink-2">{seller.store.name}</strong></> : " this seller"}.
+        </p>
+      )}
+
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <a
+          href={CAC_SEARCH_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={copy}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-[12px] font-medium text-ink-2 transition hover:border-violet-300 dark:hover:border-violet-500/40"
+        >
+          <ExternalLink size={12} />
+          Check on CAC
+        </a>
+        <button
+          onClick={() => setVerified({ id: seller.id, isVerified: !seller.isVerified })}
+          disabled={isPending}
+          className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[12px] font-semibold transition disabled:opacity-50 ${
+            seller.isVerified
+              ? "border border-line-strong text-muted hover:bg-surface-2"
+              : "bg-emerald-600 text-white hover:bg-emerald-700"
+          }`}
+        >
+          {seller.isVerified ? "Remove verification" : (<><ShieldCheck size={13} /> Mark business verified</>)}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function SellerRow({ seller }: { seller: AdminSeller }) {
   const { mutate: updateStatus, isPending } = useUpdateSellerStatus();
 
@@ -104,8 +185,8 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
             {seller.user.email}
             {seller.user.username && ` · @${seller.user.username}`}
           </p>
-          {seller.cacNumber && (
-            <p className="mt-1 text-[12px] text-subtle">CAC: {seller.cacNumber}</p>
+          {seller.store && (
+            <p className="mt-1 text-[12px] text-subtle">Store: {seller.store.name}</p>
           )}
         </div>
 
@@ -120,6 +201,8 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
           </span>
         </div>
       </div>
+
+      <CacCheck seller={seller} />
 
       {seller.statusReason && seller.status === "REJECTED" && (
         <p className="mt-2 rounded-lg bg-surface-sunken px-3 py-2 text-[12px] text-muted">

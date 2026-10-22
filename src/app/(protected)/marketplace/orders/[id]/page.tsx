@@ -12,6 +12,7 @@ import OrderActions from "./components/order-actions";
 import OrderTimeline from "./components/order-timeline";
 import OrderedProducts from "./components/ordered-products";
 import DeliveryCodes from "./components/delivery-codes";
+import SupportCard from "./components/support-card";
 import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
@@ -67,6 +68,7 @@ export default function OrderDetailsPage({ params }: Props) {
           <PaymentDetails order={order} />
           <OrderSummary order={order} />
           <OrderActions order={order} />
+          <SupportCard orderId={order.id} />
         </aside>
       </div>
     </div>
