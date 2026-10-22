@@ -144,6 +144,18 @@ export default function SignupPage() {
                 >
                   Create Account
                 </Button>
+
+                <p className="text-center text-[12.5px] leading-relaxed text-muted">
+                  By creating an account, you agree to Nestly&apos;s{" "}
+                  <Link href="/terms" target="_blank" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
+                    Terms of Service
+                  </Link>{" "}
+                  and{" "}
+                  <Link href="/privacy" target="_blank" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
               </form>
               </FormProvider>
 

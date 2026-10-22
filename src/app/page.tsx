@@ -5,6 +5,7 @@ import { Users, Gift, ShoppingBag, Star } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
 import NestlyMark from "../components/ui/nestly-mark";
+import { supportWhatsAppUrl } from "../lib/support";
 
 export default function Home() {
   return (
@@ -400,7 +401,15 @@ function Footer() {
         <p className="text-white/60 max-w-md mx-auto">
           Connect, Celebrate, Commerce — All in one place.
         </p>{" "}
-        <div className="mt-12 text-xs text-white/40">
+        <nav className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/60">
+          <Link href="/terms" className="hover:text-white">Terms of Service</Link>
+          <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
+          <Link href="/seller-terms" className="hover:text-white">Seller Agreement</Link>
+          <a href={supportWhatsAppUrl("Hi Nestly Support, ")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
+            Support
+          </a>
+        </nav>
+        <div className="mt-8 text-xs text-white/40">
           © 2026 Nestly. All rights reserved.
         </div>
       </div>
