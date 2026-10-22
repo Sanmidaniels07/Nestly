@@ -13,6 +13,7 @@ export interface AdminSeller {
     email: string;
     username: string | null;
   };
+  store: { id: string; name: string; slug: string } | null;
 }
 
 export interface AdminSellerListParams {
