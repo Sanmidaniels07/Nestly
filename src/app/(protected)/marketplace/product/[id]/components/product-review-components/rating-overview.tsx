@@ -17,7 +17,7 @@ export default function RatingOverview({ rating, reviews }: Props) {
         <Star size={24} className="fill-yellow-400 text-yellow-400" />
       </div>
       <p className="font-[family-name:var(--font-mono)] text-[13px] text-muted">
-        Based on {reviews} reviews
+        Based on {reviews} review{reviews === 1 ? "" : "s"}
       </p>
     </div>
   );

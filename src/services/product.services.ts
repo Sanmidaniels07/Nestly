@@ -10,7 +10,7 @@ import {
   ProductListParams,
   UpdateProductPayload,
 } from "../types/product";
-import { Review } from "../types/review";
+import { Review, ReviewSummary } from "../types/review";
 
 export const createProduct = async (data: CreateProductPayload) => {
   const response = await api.post<ApiResponse<Product>>("/products", data);
@@ -71,7 +71,7 @@ export const getProductReviews = async (
   id: string,
   params: { page?: number; limit?: number }
 ) => {
-  const response = await api.get<ApiResponse<Paginated<"reviews", Review>>>(
+  const response = await api.get<ApiResponse<Paginated<"reviews", Review> & ReviewSummary>>(
     `/products/${id}/reviews`,
     { params }
   );

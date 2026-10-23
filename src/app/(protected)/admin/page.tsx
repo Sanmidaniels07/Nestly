@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { LayoutGrid, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
+import { LayoutGrid, Package, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
@@ -11,15 +11,17 @@ import PayoutsManager from "./payouts-manager";
 import CategoriesManager from "./categories-manager";
 import UsersManager from "./users-manager";
 import SellersManager from "./sellers-manager";
+import ProductsManager from "./products-manager";
 
-type Tab = "reports" | "users" | "sellers" | "coupons" | "payouts" | "categories";
+type Tab = "reports" | "users" | "sellers" | "products" | "coupons" | "payouts" | "categories";
 
-const VALID_TABS: Tab[] = ["reports", "users", "sellers", "coupons", "payouts", "categories"];
+const VALID_TABS: Tab[] = ["reports", "users", "sellers", "products", "coupons", "payouts", "categories"];
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "reports", label: "Reports", icon: ShieldAlert },
   { id: "users", label: "Users", icon: Users },
   { id: "sellers", label: "Sellers", icon: Store },
+  { id: "products", label: "Products", icon: Package },
   { id: "coupons", label: "Coupons", icon: Ticket },
   { id: "payouts", label: "Payouts", icon: Wallet },
   { id: "categories", label: "Categories", icon: LayoutGrid },
@@ -50,6 +52,7 @@ function AdminPageContent() {
     reports: <ReportsQueue />,
     users: <UsersManager />,
     sellers: <SellersManager />,
+    products: <ProductsManager />,
     coupons: <CouponsManager />,
     payouts: <PayoutsManager />,
     categories: <CategoriesManager />,

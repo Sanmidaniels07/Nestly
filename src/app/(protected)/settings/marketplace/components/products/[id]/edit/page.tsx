@@ -14,6 +14,8 @@ import EditImagesSection from "./components/edit-images-section";
 import EditSpecsSection from "./components/edit-specs-section";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 import { EMPTY_OPTIONS, optionsDraftFrom, optionsError, optionsPayload, totalStock } from "@/src/lib/product-options";
+import { isDifferentProduct } from "@/src/lib/product-history";
+import { History } from "lucide-react";
 
 const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
@@ -167,6 +169,20 @@ export default function EditProductPage({ params }: Props) {
       />
       <EditImagesSection draft={draft} setDraft={setDraft} />
       <EditSpecsSection draft={draft} setDraft={setDraft} />
+
+      {draft.title.trim() &&
+        draft.categoryId &&
+        isDifferentProduct(product, { title: draft.title, categoryId: draft.categoryId }) && (
+          <div className="flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-[13px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+            <History size={17} className="mt-0.5 shrink-0" />
+            <p>
+              <span className="font-semibold">This looks like a different product now</span>
+              {product.categoryId !== draft.categoryId ? " (new category)" : " (mostly new title)"}. If you save, reviews written so far will
+              be labelled as for an earlier version and won&apos;t count towards its rating. To sell something new, add it as a new
+              product instead.
+            </p>
+          </div>
+        )}
 
       <div className="flex flex-col-reverse gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-end">
         <Button variant="outline" onClick={() => goBack()} className="h-11 rounded-xl px-7">

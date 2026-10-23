@@ -85,7 +85,13 @@ export default function ProductDetailsPage({ params }: Props) {
 
       <ProductDescription product={product} />
       <ProductSpecifications product={product} />
-      <ProductReviews product={product} reviews={reviewsData?.reviews ?? []} total={reviewsData?.total ?? 0} />
+      <ProductReviews
+        reviews={reviewsData?.reviews ?? []}
+        total={reviewsData?.total ?? 0}
+        averageRating={reviewsData?.averageRating ?? 0}
+        ratingCount={reviewsData?.ratingCount ?? 0}
+        earlierVersionCount={reviewsData?.earlierVersionCount ?? 0}
+      />
     </div>
   );
 }
