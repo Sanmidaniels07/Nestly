@@ -3,20 +3,26 @@
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 import { Product } from "@/src/types/product";
+import { stateLabel, stateSlug } from "@/src/lib/locations";
 
 interface Props {
   product: Product;
 }
 
 export default function ProductBreadcrumb({ product }: Props) {
+  // Public category pages: Categories > Cakes & Pastries > Lagos > product.
+  const state = product.store?.state;
   const items = [
-    { label: "Marketplace", href: "/marketplace" },
+    { label: "Categories", href: "/marketplace/categories" },
     ...(product.category
       ? [
           {
             label: product.category.name,
-            href: `/marketplace/products?category=${product.category.slug}`,
+            href: `/marketplace/categories/${product.category.slug}`,
           },
+          ...(state
+            ? [{ label: stateLabel(state), href: `/marketplace/categories/${product.category.slug}/${stateSlug(state)}` }]
+            : []),
         ]
       : []),
     { label: product.title },

@@ -3,6 +3,8 @@ import type { MetadataRoute } from "next";
 import { isStaging } from "../lib/environment";
 import { serverGet } from "../lib/server-api";
 import { PUBLIC_ROUTES, SITE_URL } from "../lib/site";
+import { stateSlug } from "../lib/locations";
+import { Catalogue } from "../types/catalogue";
 
 const PRIORITY: Record<string, number> = {
   "/": 1,
@@ -36,11 +38,36 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // If the API can't be reached the sitemap still lists the main pages.
-  const entries = (await serverGet<SitemapEntries>("/seo/sitemap", revalidate).catch(() => null))?.data;
-  if (!entries) return pages;
+  const [entries, catalogue] = await Promise.all([
+    serverGet<SitemapEntries>("/seo/sitemap", revalidate).then((r) => r?.data).catch(() => undefined),
+    serverGet<Catalogue>("/seo/catalogue", revalidate).then((r) => r?.data).catch(() => undefined),
+  ]);
+
+  // Category pages with listings: across Nigeria and per state.
+  const categoryPages: MetadataRoute.Sitemap = (catalogue?.categories ?? [])
+    .filter((category) => category.productCount > 0)
+    .flatMap((category) => [
+      {
+        url: `${SITE_URL}/marketplace/categories/${category.slug}`,
+        lastModified: category.updatedAt ? new Date(category.updatedAt) : undefined,
+        changeFrequency: "daily" as const,
+        priority: 0.8,
+      },
+      ...category.states.map((state) => ({
+        url: `${SITE_URL}/marketplace/categories/${category.slug}/${stateSlug(state.name)}`,
+        lastModified: new Date(state.updatedAt),
+        changeFrequency: "daily" as const,
+        priority: 0.8,
+      })),
+    ]);
+  const hub = catalogue ? [{ url: `${SITE_URL}/marketplace/categories`, changeFrequency: "daily" as const, priority: 0.8 }] : [];
+
+  if (!entries) return [...pages, ...hub, ...categoryPages];
 
   return [
     ...pages,
+    ...hub,
+    ...categoryPages,
     ...entries.stores.map((store) => ({
       url: `${SITE_URL}/marketplace/seller/${encodeURIComponent(store.slug)}`,
       lastModified: new Date(store.updatedAt),

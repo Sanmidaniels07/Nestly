@@ -16,7 +16,7 @@ export default function CategoryCard({ category }: Props) {
 
   return (
     <Link
-      href={`/marketplace/products?category=${category.slug}`}
+      href={`/marketplace/categories/${category.slug}`}
       className={`group relative flex min-h-[148px] flex-col justify-between overflow-hidden rounded-2xl border p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_18px_40px_-22px_rgba(76,29,149,0.45)] sm:p-6 ${tone.card}`}
     >
       {/* Oversized faded icon for depth */}
