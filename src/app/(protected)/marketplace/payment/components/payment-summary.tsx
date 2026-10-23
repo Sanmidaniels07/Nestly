@@ -55,7 +55,7 @@ export default function PaymentSummary() {
     : items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
   const subtotal = confirmedOrder
     ? confirmedOrder.subtotal ?? confirmedOrder.total
-    : items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
+    : items?.reduce((sum, item) => sum + (item.unitPrice ?? item.product.price) * item.quantity, 0) ?? 0;
   const deliveryFee = confirmedOrder
     ? confirmedOrder.deliveryFee ?? 0
     : Object.values(shippingSelections).reduce((sum, selection) => sum + selection.fee, 0);

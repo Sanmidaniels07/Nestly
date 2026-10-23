@@ -8,6 +8,7 @@ import { Order, OrderEvent, OrderItem } from "@/src/types/order";
 import { useConfirmDelivery } from "@/src/hooks/use-confirm-delivery";
 import WriteReviewForm from "./write-review-form";
 import RequestReturnForm from "./request-return-form";
+import OrderedSnapshot from "./ordered-snapshot";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -85,12 +86,15 @@ function OrderedProductItem({
       <div className="flex min-w-0 flex-1 flex-col gap-4">
         <div className="flex flex-1 flex-col justify-between gap-4 sm:flex-row sm:items-start">
           <div className="min-w-0">
-            {item.product.brand && (
-              <p className="text-[12px] font-medium text-violet-600 dark:text-violet-400">{item.product.brand}</p>
+            {(item.productBrand ?? item.product.brand) && (
+              <p className="text-[12px] font-medium text-violet-600 dark:text-violet-400">{item.productBrand ?? item.product.brand}</p>
             )}
             <h3 className="mt-0.5 truncate text-[15px] font-semibold text-ink">
               {item.product.title}
             </h3>
+            {item.variantLabel && (
+              <p className="mt-1 text-[13px] font-medium text-ink-2">{item.variantLabel}</p>
+            )}
             {item.product.store && (
               <p className="mt-1.5 text-[12.5px] text-muted">
                 Sold by{" "}
@@ -127,7 +131,7 @@ function OrderedProductItem({
               href={`/marketplace/product/${item.productId}`}
               className="flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
             >
-              View product
+              {item.listingChanged ? "View current listing" : "View product"}
             </Link>
 
             {isDelivered && !item.awaitingConfirmation && !reviewing && (
@@ -151,6 +155,8 @@ function OrderedProductItem({
             )}
           </div>
         </div>
+
+        <OrderedSnapshot item={item} />
 
         {item.awaitingConfirmation && !problemReported && returnMode === null && (
           <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">

@@ -22,6 +22,20 @@ export interface OrderItem {
   awaitingConfirmation?: boolean;
   returnWindowEndsAt?: string | null;
   returnWindowOpen?: boolean;
+  // The listing as it was when ordered (product.title/images already show it).
+  productTitle?: string | null;
+  productImage?: string | null;
+  productDescription?: string | null;
+  productBrand?: string | null;
+  productCondition?: string | null;
+  productSku?: string | null;
+  productHighlights?: string[];
+  productSpecs?: { name: string; value: string }[] | null;
+  // The buyer's choice for products with options, e.g. "Size: Large · Flavour: Vanilla".
+  variantLabel?: string | null;
+  variationId?: string | null;
+  // Buyer-facing only: the seller has edited the listing since this order.
+  listingChanged?: boolean;
 }
 
 export interface OrderShipping {
@@ -34,6 +48,7 @@ export interface OrderShipping {
   // PICKUP: the buyer collects from the seller at pickupAddress (always free).
   type?: "DELIVERY" | "PICKUP";
   pickupAddress?: string | null;
+  vehicle?: "BIKE" | "CAR" | "TRUCK" | null;
   // Only ever present on the buyer's own order.
   deliveryCode?: string | null;
   createdAt: string;

@@ -34,7 +34,7 @@ export default function OrderCard({ order }: Props) {
 
   const handleBuyAgain = () => {
     order.items.forEach((item) => {
-      addToCart({ productId: item.productId, quantity: item.quantity });
+      addToCart({ productId: item.productId, quantity: item.quantity, variationId: item.variationId ?? undefined });
     });
     setAdded(true);
     setTimeout(() => setAdded(false), 2000);

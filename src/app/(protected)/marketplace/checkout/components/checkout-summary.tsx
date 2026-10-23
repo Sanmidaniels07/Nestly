@@ -20,7 +20,7 @@ export default function CheckoutSummary() {
   const appliedCoupon = useCheckoutStore((state) => state.appliedCoupon);
 
   const totalItems = items?.reduce((sum, item) => sum + item.quantity, 0) ?? 0;
-  const subtotal = items?.reduce((sum, item) => sum + item.product.price * item.quantity, 0) ?? 0;
+  const subtotal = items?.reduce((sum, item) => sum + (item.unitPrice ?? item.product.price) * item.quantity, 0) ?? 0;
   const deliveryFee = Object.values(shippingSelections).reduce(
     (sum, selection) => sum + selection.fee,
     0

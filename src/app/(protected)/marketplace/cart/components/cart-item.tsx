@@ -29,8 +29,10 @@ export default function CartItem({ item }: Props) {
   const { toggle: saveForLater } = useToggleWishlist(item.productId);
 
   const product = item.product;
+  const unitPrice = item.unitPrice ?? product.price;
+  const stock = item.variation ? item.variation.stock : product.stock;
   const atMin = item.quantity <= 1;
-  const atMax = item.quantity >= product.stock;
+  const atMax = item.quantity >= stock;
 
   const primaryImage =
     product.images.find((image) => image.isPrimary)?.url ?? product.images[0]?.url;
@@ -47,7 +49,7 @@ export default function CartItem({ item }: Props) {
           )}
         </Link>
 
-        <div className="flex flex-1 flex-col">
+        <div className="flex min-w-0 flex-1 flex-col">
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <Link href={`/marketplace/product/${product.id}`}>
@@ -55,6 +57,10 @@ export default function CartItem({ item }: Props) {
                   {product.title}
                 </h3>
               </Link>
+
+              {item.variantLabel && (
+                <p className="mt-1 text-[12.5px] font-medium text-ink-2">{item.variantLabel}</p>
+              )}
 
               {product.store && (
                 <p className="mt-1.5 truncate text-[12.5px] text-muted">
@@ -83,9 +89,9 @@ export default function CartItem({ item }: Props) {
 
             <div className="shrink-0 text-right">
               <p className="font-[family-name:var(--font-mono)] text-[17px] font-semibold text-violet-700 dark:text-violet-300 sm:text-[19px]">
-                {formatPrice(product.price)}
+                {formatPrice(unitPrice)}
               </p>
-              {product.originalPrice && (
+              {product.originalPrice && unitPrice === product.price && (
                 <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[12px] text-subtle line-through">
                   {formatPrice(product.originalPrice)}
                 </p>
@@ -97,7 +103,7 @@ export default function CartItem({ item }: Props) {
             <div className="flex items-center rounded-xl border border-line">
               <button
                 onClick={() =>
-                  updateQuantity({ productId: product.id, quantity: item.quantity - 1 })
+                  updateQuantity({ itemId: item.id, quantity: item.quantity - 1 })
                 }
                 disabled={atMin}
                 aria-label="Decrease quantity"
@@ -112,7 +118,7 @@ export default function CartItem({ item }: Props) {
 
               <button
                 onClick={() =>
-                  updateQuantity({ productId: product.id, quantity: item.quantity + 1 })
+                  updateQuantity({ itemId: item.id, quantity: item.quantity + 1 })
                 }
                 disabled={atMax}
                 aria-label="Increase quantity"
@@ -126,7 +132,7 @@ export default function CartItem({ item }: Props) {
               <button
                 onClick={() => {
                   saveForLater();
-                  removeItem(product.id);
+                  removeItem(item.id);
                 }}
                 className="flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
               >
@@ -135,7 +141,7 @@ export default function CartItem({ item }: Props) {
               </button>
 
               <button
-                onClick={() => removeItem(product.id)}
+                onClick={() => removeItem(item.id)}
                 className="flex items-center gap-1.5 text-[13px] text-red-500 transition-colors hover:text-red-600 dark:hover:text-red-400"
               >
                 <Trash2 size={15} />

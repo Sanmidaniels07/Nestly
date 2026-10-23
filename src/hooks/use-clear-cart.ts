@@ -11,7 +11,7 @@ export const useClearCart = () => {
 
   return useMutation({
     mutationFn: (items: CartItem[]) =>
-      Promise.all(items.map((item) => removeCartItem(item.productId))),
+      Promise.all(items.map((item) => removeCartItem(item.id))),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });

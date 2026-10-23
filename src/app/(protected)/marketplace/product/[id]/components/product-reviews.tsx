@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { Product } from "@/src/types/product";
+import { Info } from "lucide-react";
 import { Review } from "@/src/types/review";
 
 import ReviewFilter, { ReviewFilterValue } from "./product-review-components/review-filter";
@@ -10,20 +10,25 @@ import RatingBreakdown from "./product-review-components/rating-breakdown";
 import ReviewCard from "./product-review-components/review-card";
 
 interface Props {
-  product: Product;
   reviews: Review[];
   total: number;
+  // Current-version reviews only (see Review.earlierVersion).
+  averageRating: number;
+  ratingCount: number;
+  earlierVersionCount: number;
 }
 
-export default function ProductReviews({ product, reviews, total }: Props) {
+export default function ProductReviews({ reviews, total, averageRating, ratingCount, earlierVersionCount }: Props) {
   const [filter, setFilter] = useState<ReviewFilterValue>("all");
+
+  const current = useMemo(() => reviews.filter((r) => !r.earlierVersion), [reviews]);
 
   const breakdown = useMemo(() => {
     return [5, 4, 3, 2, 1].map((stars) => ({
       stars,
-      value: reviews.filter((r) => r.rating === stars).length,
+      value: current.filter((r) => r.rating === stars).length,
     }));
-  }, [reviews]);
+  }, [current]);
 
   const counts: Record<ReviewFilterValue, number> = useMemo(
     () => ({
@@ -52,11 +57,18 @@ export default function ProductReviews({ product, reviews, total }: Props) {
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[260px_1fr]">
         <div>
-          <RatingOverview rating={product.rating ?? 0} reviews={total} />
+          <RatingOverview rating={Math.round(averageRating * 10) / 10} reviews={ratingCount} />
+          {earlierVersionCount > 0 && (
+            <p className="mt-3 flex items-start gap-1.5 text-[12px] leading-snug text-muted">
+              <Info size={13} className="mt-0.5 shrink-0" />
+              {earlierVersionCount} review{earlierVersionCount === 1 ? " is" : "s are"} for an earlier version of this listing and
+              {earlierVersionCount === 1 ? " isn't" : " aren't"} counted in the rating.
+            </p>
+          )}
           <div className="mt-6">
             <RatingBreakdown
               breakdown={breakdown}
-              total={reviews.length}
+              total={current.length}
               activeStars={filter === "all" ? null : Number(filter)}
               onSelectStars={(stars) => setFilter(stars === null ? "all" : (String(stars) as ReviewFilterValue))}
             />

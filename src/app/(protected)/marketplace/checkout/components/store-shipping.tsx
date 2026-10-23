@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CheckCircle2, MapPin, Search, Store, Truck } from "lucide-react";
 
 import { useCart } from "@/src/hooks/use-cart";
@@ -9,6 +9,7 @@ import { useStore } from "@/src/hooks/use-store";
 import { useAddresses } from "@/src/hooks/use-addresses";
 import { useCheckoutStore } from "@/src/store/checkout-store";
 import { ShippingOption } from "@/src/types/store";
+import { DeliveryVehicle, canCarry, requiredVehicle, vehicleInfo } from "@/src/lib/delivery-vehicle";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -35,14 +36,18 @@ const zoneMatchesAddress = (zone: ShippingOption, addressText: string) =>
 export default function StoreShipping() {
   const { data: items } = useCart();
 
+  // One group per store: a sample product (to look the store up) and the
+  // biggest vehicle any of its items needs.
   const storeGroups = useMemo(() => {
-    const map = new Map<string, string>();
+    const map = new Map<string, { sampleProductId: string; products: { deliveryVehicle?: DeliveryVehicle }[] }>();
     items?.forEach((item) => {
-      if (!map.has(item.product.storeId)) {
-        map.set(item.product.storeId, item.productId);
-      }
+      const group = map.get(item.product.storeId) ?? { sampleProductId: item.productId, products: [] };
+      group.products.push(item.product);
+      map.set(item.product.storeId, group);
     });
-    return Array.from(map.entries());
+    return Array.from(map.entries()).map(
+      ([storeId, group]) => [storeId, group.sampleProductId, requiredVehicle(group.products)] as const
+    );
   }, [items]);
 
   if (storeGroups.length === 0) return null;
@@ -60,8 +65,8 @@ export default function StoreShipping() {
       </div>
 
       <div className="space-y-6">
-        {storeGroups.map(([storeId, sampleProductId]) => (
-          <StoreShippingGroup key={storeId} storeId={storeId} sampleProductId={sampleProductId} />
+        {storeGroups.map(([storeId, sampleProductId, needed]) => (
+          <StoreShippingGroup key={storeId} storeId={storeId} sampleProductId={sampleProductId} needed={needed} />
         ))}
       </div>
     </section>
@@ -71,9 +76,11 @@ export default function StoreShipping() {
 function StoreShippingGroup({
   storeId,
   sampleProductId,
+  needed,
 }: {
   storeId: string;
   sampleProductId: string;
+  needed: DeliveryVehicle;
 }) {
   const { data: product } = useProduct(sampleProductId);
   const slug = product?.store?.slug ?? "";
@@ -84,25 +91,46 @@ function StoreShippingGroup({
 
   const selectedOptionId = useCheckoutStore((state) => state.shippingSelections[storeId]?.shippingOptionId);
   const setShippingSelection = useCheckoutStore((state) => state.setShippingSelection);
+  const clearShippingSelection = useCheckoutStore((state) => state.clearShippingSelection);
 
   const address = addresses?.find((item) => item.id === addressId);
   const addressText = address ? normalise(`${address.address} ${address.city} ${address.state}`) : "";
 
+  const allZones = store?.shippingOptions ?? [];
   const options = useMemo(() => {
-    const zones = store?.shippingOptions ?? [];
+    // Only zones whose vehicle can carry everything from this store.
+    const zones = (store?.shippingOptions ?? []).filter((zone) => canCarry(zone, needed));
     // Zones covering the buyer's address first, then pickup, then cheapest.
     const rank = (option: { zone: ShippingOption; matches: boolean }) =>
       option.matches ? 0 : option.zone.type === "PICKUP" ? 1 : 2;
     return zones
       .map((zone) => ({ zone, matches: zone.type !== "PICKUP" && zoneMatchesAddress(zone, addressText) }))
       .sort((a, b) => rank(a) - rank(b) || a.zone.fee - b.zone.fee);
-  }, [store?.shippingOptions, addressText]);
+  }, [store?.shippingOptions, addressText, needed]);
+
+  // A choice made before a bigger item was added may no longer fit - drop it
+  // so the total and the payment step don't use it.
+  useEffect(() => {
+    if (!store || !selectedOptionId) return;
+    if (!options.some(({ zone }) => zone.id === selectedOptionId)) clearShippingSelection(storeId);
+  }, [store, options, selectedOptionId, storeId, clearShippingSelection]);
 
   if (isLoading || !store) {
     return <div className="h-16 animate-pulse rounded-xl bg-surface-2" />;
   }
 
-  if (options.length === 0) return null;
+  if (options.length === 0) {
+    if (allZones.length === 0) return null;
+    return (
+      <div>
+        <p className="text-[13.5px] font-semibold text-ink">{store.name}</p>
+        <p className="mt-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+          Your items from this seller need a {vehicleInfo(needed)?.label.toLowerCase()}, and they don&apos;t have a delivery zone for that yet.
+          Remove the larger item or message the seller.
+        </p>
+      </div>
+    );
+  }
 
   const search = normalise(query);
   // Pickup stays visible while searching - it's available wherever the buyer is.
@@ -117,6 +145,11 @@ function StoreShippingGroup({
   return (
     <div>
       <p className="text-[13.5px] font-semibold text-ink">{store.name}</p>
+      {needed !== "BIKE" && (
+        <p className="mt-0.5 text-[12px] text-subtle">
+          Your items need a {vehicleInfo(needed)?.label.toLowerCase()} or bigger, so only those delivery options are shown.
+        </p>
+      )}
       {address && !hasMatch && (
         <p className="mt-0.5 text-[12px] text-subtle">
           None of this seller&apos;s zones mention your address. Search for your area or pick the closest one.
@@ -170,6 +203,14 @@ function StoreShippingGroup({
                     </p>
                   )}
                   <p className="text-[13px] font-medium leading-snug text-ink">{zone.name}</p>
+                  {(() => {
+                    const info = vehicleInfo(zone.vehicle);
+                    return info ? (
+                      <p className="mt-0.5 flex items-center gap-1 text-[12px] text-muted">
+                        <info.icon size={12} /> By {info.short.toLowerCase()}
+                      </p>
+                    ) : null;
+                  })()}
                   {zone.eta && <p className="mt-0.5 text-[12px] text-subtle">{zone.eta}</p>}
                 </div>
               )}

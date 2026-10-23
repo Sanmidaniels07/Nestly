@@ -6,6 +6,10 @@ import Button from "@/src/components/ui/button";
 import Input from "@/src/components/ui/input";
 import { ProductDraft } from "@/src/types/products-draft";
 import EarningsPreview from "../../components/earnings-preview";
+import OptionsEditor from "../../components/options-editor";
+import { optionsError } from "@/src/lib/product-options";
+import VehiclePicker from "@/src/components/ui/vehicle-picker";
+import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 
 interface Props {
   draft: ProductDraft;
@@ -17,6 +21,7 @@ interface Props {
 interface Errors {
   price?: string;
   stock?: string;
+  options?: string;
 }
 
 export default function PricingInventory({ draft, setDraft, onBack, onNext }: Props) {
@@ -34,9 +39,15 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
       nextErrors.price = "Enter a valid selling price";
     }
 
-    const stock = Number(draft.stock);
-    if (draft.stock === "" || Number.isNaN(stock) || stock < 0) {
-      nextErrors.stock = "Enter a valid stock quantity";
+    // With options, stock is entered per combination instead.
+    if (draft.optionsDraft.enabled) {
+      const problem = optionsError(draft.optionsDraft);
+      if (problem) nextErrors.options = problem;
+    } else {
+      const stock = Number(draft.stock);
+      if (draft.stock === "" || Number.isNaN(stock) || stock < 0) {
+        nextErrors.stock = "Enter a valid stock quantity";
+      }
     }
 
     setErrors(nextErrors);
@@ -101,20 +112,38 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
             Track how much stock you have.
           </p>
 
-          <div className="mt-5">
-            <Input
-              label="Stock quantity"
-              placeholder="0"
-              inputMode="numeric"
-              value={draft.stock}
-              onChange={(e) => {
-                setDraft((prev) => ({ ...prev, stock: e.target.value }));
-                clearError("stock");
-              }}
-              error={errors.stock}
-            />
-          </div>
+          {!draft.optionsDraft.enabled && (
+            <div className="mt-5">
+              <Input
+                label="Stock quantity"
+                placeholder="0"
+                inputMode="numeric"
+                value={draft.stock}
+                onChange={(e) => {
+                  setDraft((prev) => ({ ...prev, stock: e.target.value }));
+                  clearError("stock");
+                }}
+                error={errors.stock}
+              />
+            </div>
+          )}
         </div>
+
+        <div className="border-t border-line-soft" />
+
+        <DeliverySection value={draft.deliveryVehicle} onChange={(deliveryVehicle) => setDraft((prev) => ({ ...prev, deliveryVehicle }))} />
+
+        <div className="border-t border-line-soft" />
+
+        <OptionsEditor
+          value={draft.optionsDraft}
+          onChange={(optionsDraft) => {
+            setDraft((prev) => ({ ...prev, optionsDraft }));
+            clearError("options");
+          }}
+          basePrice={draft.price}
+          error={errors.options}
+        />
       </div>
 
       <div className="mt-8 flex justify-between border-t border-line-soft pt-6">
@@ -126,5 +155,27 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
         </Button>
       </div>
     </section>
+  );
+}
+
+// The smallest vehicle that can deliver it - buyers then only see your
+// delivery zones that use that vehicle or a bigger one.
+export function DeliverySection({
+  value,
+  onChange,
+}: {
+  value: DeliveryVehicle;
+  onChange: (vehicle: DeliveryVehicle) => void;
+}) {
+  return (
+    <div>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery</h2>
+      <p className="mt-1 text-[13px] text-muted">
+        What&apos;s the smallest vehicle that can deliver this safely? Buyers only see your delivery zones for that vehicle or a bigger one.
+      </p>
+      <div className="mt-4">
+        <VehiclePicker variant="cards" value={value} onChange={onChange} label="Delivery vehicle for this product" />
+      </div>
+    </div>
   );
 }

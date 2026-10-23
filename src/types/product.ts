@@ -1,4 +1,5 @@
 import { Category } from "./category";
+import { DeliveryVehicle } from "../lib/delivery-vehicle";
 
 export interface ProductImage {
   id?: string;
@@ -12,21 +13,44 @@ export interface ProductSpecification {
   value: string;
 }
 
-export interface ProductVariant {
+// Old free-form name/value rows from before options existed (seller-only).
+export interface LegacyProductVariant {
   id?: string;
   name: string;
   value: string;
-  price?: number;
-  stock?: number;
+  price?: number | null;
+  stock?: number | null;
 }
 
-
-export interface EditableVariant {
-  id: string;
+// A choice buyers make, e.g. Size: [Small, Medium, Large].
+export interface ProductOption {
+  id?: string;
   name: string;
-  value: string;
-  price: string;
-  stock: string;
+  values: string[];
+  position?: number;
+}
+
+// One combination of option values (option2 is "" with a single option).
+export interface ProductVariation {
+  id: string;
+  option1: string;
+  option2: string;
+  price: number | null;
+  stock: number;
+  isActive: boolean;
+}
+
+export interface OptionInput {
+  name: string;
+  values: string[];
+}
+
+export interface VariationInput {
+  option1: string;
+  option2?: string;
+  price?: number | null;
+  stock: number;
+  isActive?: boolean;
 }
 
 export type ProductCondition = "NEW" | "USED" | "REFURBISHED" | "FRESHLY_MADE" | "MADE_TO_ORDER" | "PRE_ORDER";
@@ -50,6 +74,8 @@ export interface Product {
   sku: string;
   brand?: string | null;
   condition: ProductCondition;
+  // Smallest vehicle that can deliver it.
+  deliveryVehicle?: DeliveryVehicle;
   price: number;
   originalPrice?: number | null;
   stock: number;
@@ -58,7 +84,9 @@ export interface Product {
   status: ProductStatus;
   images: ProductImage[];
   specifications: ProductSpecification[];
-  variants: ProductVariant[];
+  options?: ProductOption[];
+  variations?: ProductVariation[];
+  legacyVariants?: LegacyProductVariant[];
   store?: ProductStoreSummary;
   category?: Category;
   rating?: number;
@@ -74,6 +102,7 @@ export interface CreateProductPayload {
   sku: string;
   brand?: string;
   condition: ProductCondition;
+  deliveryVehicle?: DeliveryVehicle;
   price: number;
   originalPrice?: number;
   stock: number;
@@ -81,7 +110,9 @@ export interface CreateProductPayload {
   highlights?: string[];
   images?: ProductImage[];
   specifications?: ProductSpecification[];
-  variants?: ProductVariant[];
+  // Sent together; [] removes options. Leave out to keep them as they are.
+  options?: OptionInput[];
+  variations?: VariationInput[];
 }
 
 export type UpdateProductPayload = Partial<CreateProductPayload> & {

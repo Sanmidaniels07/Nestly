@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Pencil, Star, Store, Trash2 } from "lucide-react";
+import { History, Pencil, Star, Store, Trash2 } from "lucide-react";
 import { Review } from "@/src/types/review";
 import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import StarRatingInput from "@/src/components/ui/star-rating-input";
@@ -77,6 +77,13 @@ export default function ReviewCard({ review }: Props) {
               </div>
             )}
           </div>
+
+          {review.earlierVersion && (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-amber-50 px-2.5 py-1 text-[11.5px] font-medium text-amber-800 dark:bg-amber-500/10 dark:text-amber-200">
+              <History size={12} />
+              Reviewed an earlier version of this listing
+            </p>
+          )}
 
           {editing ? (
             <div className="mt-3 space-y-2.5">
