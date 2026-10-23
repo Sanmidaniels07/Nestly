@@ -7,7 +7,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/hooks/use-auth";
 import Spinner from "@/src/components/ui/loader";
-import { getSafeReturnTo } from "@/src/lib/return-to";
+import { getSafeReturnTo, rememberedReturnTo } from "@/src/lib/return-to";
 
 interface Props {
   children: ReactNode;
@@ -49,7 +49,8 @@ export default function GuestGuard({
     // Honour ?returnTo= (e.g. a guest who tapped "Add to cart" on a product,
     // or a session that expired) - otherwise this would win the race with
     // the login hook's own redirect and always land on the dashboard.
-    const returnTo = getSafeReturnTo(new URLSearchParams(window.location.search).get("returnTo"));
+    const returnTo =
+      getSafeReturnTo(new URLSearchParams(window.location.search).get("returnTo")) ?? rememberedReturnTo();
 
     router.replace(
       returnTo ?? "/dashboard"

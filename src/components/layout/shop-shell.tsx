@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { ShieldCheck } from "lucide-react";
 
 import { useSession } from "@/src/hooks/use-session";
+import { rememberReturnTo } from "@/src/lib/return-to";
 import Sidebar from "./sidebar";
 import MobileNav from "./mobile-nav";
 import MessageSocketListener from "./message-socket-listener";
@@ -34,8 +35,10 @@ export default function ShopShell({ children }: { children: React.ReactNode }) {
 }
 
 function GuestBanner() {
-  // Back to this product or store after logging in.
-  const returnTo = encodeURIComponent(usePathname());
+  // Back to this product or store after logging in (or signing up first).
+  const pathname = usePathname();
+  const returnTo = encodeURIComponent(pathname);
+  const remember = () => rememberReturnTo(pathname);
 
   return (
     <div className="mx-auto mt-4 flex max-w-7xl flex-col gap-3 rounded-2xl border border-violet-200 bg-violet-50/80 px-4 py-3.5 sm:flex-row sm:items-center sm:px-5 dark:border-violet-500/30 dark:bg-violet-500/10">
@@ -47,12 +50,14 @@ function GuestBanner() {
       <div className="flex shrink-0 gap-2">
         <Link
           href={`/login?returnTo=${returnTo}`}
+          onClick={remember}
           className="flex h-10 flex-1 items-center justify-center rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 sm:flex-none"
         >
           Log in
         </Link>
         <Link
           href={`/signup?returnTo=${returnTo}`}
+          onClick={remember}
           className="flex h-10 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-[13px] font-semibold text-white sm:flex-none"
         >
           Join free

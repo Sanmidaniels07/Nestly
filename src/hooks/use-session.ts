@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { useAuthStore } from "../store/auth-store";
+import { rememberReturnTo } from "../lib/return-to";
 
 // Who's looking at a page that guests can open too (product and store
 // pages). isLoggedIn stays false until the session check has finished.
@@ -29,6 +30,7 @@ export const useRequireLogin = () => {
       if (isLoggedIn) return true;
       toast(reason, { icon: "👋" });
       const returnTo = `${pathname}${typeof window !== "undefined" ? window.location.search : ""}`;
+      rememberReturnTo(returnTo);
       router.push(`/login?returnTo=${encodeURIComponent(returnTo)}`);
       return false;
     },
