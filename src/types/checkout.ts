@@ -5,10 +5,16 @@ export interface ShippingSelection {
   shippingOptionId: string;
 }
 
+export interface SellerNote {
+  storeId: string;
+  note: string;
+}
+
 export interface InitiateCheckoutPayload {
   addressId: string;
   shippingSelections?: ShippingSelection[];
   couponCode?: string;
+  sellerNotes?: SellerNote[];
 }
 
 export interface InitiateCheckoutResponse {
@@ -28,4 +34,5 @@ export interface ChargeSavedCardPayload {
   savedCardId: string;
   shippingSelections?: ShippingSelection[];
   couponCode?: string;
+  sellerNotes?: SellerNote[];
 }

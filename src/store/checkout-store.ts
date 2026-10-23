@@ -31,6 +31,10 @@ interface CheckoutStore {
   shippingSelections: Record<string, ShippingSelection>;
   setShippingSelection: (storeId: string, selection: ShippingSelection) => void;
 
+  // storeId -> optional note from the buyer to that seller
+  sellerNotes: Record<string, string>;
+  setSellerNote: (storeId: string, note: string) => void;
+
   appliedCoupon?: AppliedCoupon;
   setAppliedCoupon: (coupon: AppliedCoupon) => void;
   clearAppliedCoupon: () => void;
@@ -62,6 +66,10 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
       shippingSelections: { ...state.shippingSelections, [storeId]: selection },
     })),
 
+  sellerNotes: {},
+  setSellerNote: (storeId, note) =>
+    set((state) => ({ sellerNotes: { ...state.sellerNotes, [storeId]: note } })),
+
   appliedCoupon: undefined,
   setAppliedCoupon: (appliedCoupon) => set({ appliedCoupon }),
   clearAppliedCoupon: () => set({ appliedCoupon: undefined }),
@@ -85,6 +93,7 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
     set({
       addressId: undefined,
       shippingSelections: {},
+      sellerNotes: {},
       appliedCoupon: undefined,
       selectedAddress: undefined,
       selectedDelivery: undefined,

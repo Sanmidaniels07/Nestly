@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { queryClient } from "../lib/query-client";
 import { ThemeProvider } from "../providers/theme-provider";
 import AuthInitializer from "../components/auth/auth-initializer";
+import RouteMemory from "../components/navigation/route-memory";
 
 
 
@@ -19,6 +20,7 @@ export default function Providers({
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <AuthInitializer />
+        <RouteMemory />
         {children}
 
         <ReactQueryDevtools

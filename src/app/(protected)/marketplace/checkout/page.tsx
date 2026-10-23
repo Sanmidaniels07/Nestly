@@ -7,6 +7,7 @@ import OrderItems from "./components/order-item";
 import ShippingAddress from "./components/shipping-address";
 import StoreShipping from "./components/store-shipping";
 import CouponSection from "./components/coupon-section";
+import SellerNotes from "./components/seller-notes";
 
 export default function CheckoutPage() {
   return (
@@ -16,12 +17,14 @@ export default function CheckoutPage() {
       <CheckoutStepper step={2} />
 
       <div className="grid gap-8 xl:grid-cols-[1.8fr_420px]">
-        <section className="space-y-6">
+        <section className="min-w-0 space-y-6">
           <ShippingAddress />
 
           <OrderItems />
 
           <StoreShipping />
+
+          <SellerNotes />
 
           <CouponSection />
         </section>
