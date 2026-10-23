@@ -13,6 +13,9 @@ const conditionLabels: Record<string, string> = {
   NEW: "New",
   USED: "Used",
   REFURBISHED: "Refurbished",
+  FRESHLY_MADE: "Freshly made",
+  MADE_TO_ORDER: "Made to order",
+  PRE_ORDER: "Pre-order",
 };
 
 export function formatConditionLabel(condition: string) {

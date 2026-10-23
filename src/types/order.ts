@@ -22,6 +22,17 @@ export interface OrderItem {
   awaitingConfirmation?: boolean;
   returnWindowEndsAt?: string | null;
   returnWindowOpen?: boolean;
+  // The listing as it was when ordered (product.title/images already show it).
+  productTitle?: string | null;
+  productImage?: string | null;
+  productDescription?: string | null;
+  productBrand?: string | null;
+  productCondition?: string | null;
+  productSku?: string | null;
+  productHighlights?: string[];
+  productSpecs?: { name: string; value: string }[] | null;
+  // Buyer-facing only: the seller has edited the listing since this order.
+  listingChanged?: boolean;
 }
 
 export interface OrderShipping {
