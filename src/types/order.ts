@@ -31,6 +31,9 @@ export interface OrderItem {
   productSku?: string | null;
   productHighlights?: string[];
   productSpecs?: { name: string; value: string }[] | null;
+  // The buyer's choice for products with options, e.g. "Size: Large · Flavour: Vanilla".
+  variantLabel?: string | null;
+  variationId?: string | null;
   // Buyer-facing only: the seller has edited the listing since this order.
   listingChanged?: boolean;
 }

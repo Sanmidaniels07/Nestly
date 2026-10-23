@@ -10,6 +10,7 @@ import { useAddToCart } from "@/src/hooks/use-add-to-cart";
 import QuantitySelector from "./buy-box-components/quantity-selector";
 import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
+import OptionPicker from "./buy-box-components/option-picker";
 
 interface Props {
   product: Product;
@@ -32,14 +33,41 @@ export default function BuyBox({ product }: Props) {
   const { mutate: addToCart, isPending: isAdding } = useAddToCart();
   const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
 
-  const outOfStock = product.stock === 0;
-  const lowStock = product.stock > 0 && product.stock <= 5;
+  // Products with options (e.g. Size, Colour) are bought as one combination.
+  const options = product.options ?? [];
+  const variations = product.variations ?? [];
+  const hasOptions = options.length > 0 && variations.length > 0;
+  const [picked, setPicked] = useState<string[]>(() =>
+    options.map((option) => (option.values.length === 1 ? option.values[0] : ""))
+  );
+  const match = hasOptions
+    ? variations.find(
+        (variation) =>
+          variation.option1 === picked[0] && (options.length < 2 || variation.option2 === picked[1])
+      )
+    : undefined;
+  const choiceMade = !hasOptions || (!!match && match.isActive);
+  const missing = hasOptions ? options.find((option, i) => !picked[i]) : undefined;
+
+  const prices = variations.filter((v) => v.isActive).map((v) => v.price ?? product.price);
+  const lowest = prices.length > 0 ? Math.min(...prices) : product.price;
+  const price = match ? match.price ?? product.price : product.price;
+  const showFrom = hasOptions && !match && prices.some((p) => p !== lowest);
+
+  const stock = match ? (match.isActive ? match.stock : 0) : product.stock;
+  const outOfStock = stock === 0;
+  const lowStock = stock > 0 && stock <= 5;
+
+  const pick = (position: number, value: string) => {
+    setPicked((current) => current.map((v, i) => (i === position ? (v === value ? "" : value) : v)));
+    setQuantity(1);
+  };
 
   const handleAddToCart = () => {
-    if (outOfStock) return;
+    if (outOfStock || !choiceMade) return;
 
     addToCart(
-      { productId: product.id, quantity },
+      { productId: product.id, quantity, variationId: match?.id },
       {
         onSuccess: () => {
           setAdded(true);
@@ -50,10 +78,10 @@ export default function BuyBox({ product }: Props) {
   };
 
   const handleBuyNow = () => {
-    if (outOfStock) return;
+    if (outOfStock || !choiceMade) return;
 
     addToCart(
-      { productId: product.id, quantity },
+      { productId: product.id, quantity, variationId: match?.id },
       { onSuccess: () => router.push("/marketplace/checkout") }
     );
   };
@@ -63,9 +91,10 @@ export default function BuyBox({ product }: Props) {
       <div>
         <div className="flex flex-wrap items-end gap-2">
           <p className="font-[family-name:var(--font-mono)] text-[28px] font-bold text-violet-700 dark:text-violet-300">
-            {money(product.price)}
+            {showFrom && <span className="mr-1.5 text-[14px] font-medium text-muted">From</span>}
+            {money(showFrom ? lowest : price)}
           </p>
-          {product.originalPrice && (
+          {product.originalPrice && price === product.price && !showFrom && (
             <p className="font-[family-name:var(--font-mono)] text-[14px] text-subtle line-through">
               {money(product.originalPrice)}
             </p>
@@ -84,16 +113,20 @@ export default function BuyBox({ product }: Props) {
             }`}
           >
             {outOfStock
-              ? "Out of stock"
+              ? match
+                ? "This option is sold out"
+                : "Out of stock"
               : lowStock
-                ? `Only ${product.stock} left`
+                ? `Only ${stock} left`
                 : "In stock"}
           </span>
         </div>
       </div>
 
-      {!outOfStock && (
-        <QuantitySelector quantity={quantity} setQuantity={setQuantity} stock={product.stock} />
+      {hasOptions && <OptionPicker options={options} variations={variations} picked={picked} onPick={pick} />}
+
+      {!outOfStock && choiceMade && (
+        <QuantitySelector quantity={quantity} setQuantity={setQuantity} stock={stock} />
       )}
 
       <DeliveryEstimate product={product} />
@@ -101,7 +134,7 @@ export default function BuyBox({ product }: Props) {
       <div className="space-y-2.5">
         <button
           onClick={handleAddToCart}
-          disabled={outOfStock || added || isAdding}
+          disabled={outOfStock || !choiceMade || added || isAdding}
           className={`
             flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-[14px] font-semibold text-white
             transition-all disabled:cursor-not-allowed disabled:opacity-40
@@ -113,6 +146,8 @@ export default function BuyBox({ product }: Props) {
               <Check size={16} />
               Added to cart
             </>
+          ) : missing ? (
+            `Choose ${/^[aeiou]/i.test(missing.name) ? "an" : "a"} ${missing.name.toLowerCase()}`
           ) : (
             "Add to cart"
           )}
@@ -120,7 +155,7 @@ export default function BuyBox({ product }: Props) {
 
         <button
           onClick={handleBuyNow}
-          disabled={outOfStock || isAdding}
+          disabled={outOfStock || !choiceMade || isAdding}
           className="w-full rounded-xl border border-violet-600 py-3.5 text-[14px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 disabled:cursor-not-allowed disabled:border-line-strong disabled:text-subtle disabled:hover:bg-transparent"
         >
           Buy now

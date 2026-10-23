@@ -92,6 +92,9 @@ function OrderedProductItem({
             <h3 className="mt-0.5 truncate text-[15px] font-semibold text-ink">
               {item.product.title}
             </h3>
+            {item.variantLabel && (
+              <p className="mt-1 text-[13px] font-medium text-ink-2">{item.variantLabel}</p>
+            )}
             {item.product.store && (
               <p className="mt-1.5 text-[12.5px] text-muted">
                 Sold by{" "}

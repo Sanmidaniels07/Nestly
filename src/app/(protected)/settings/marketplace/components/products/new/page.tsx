@@ -15,6 +15,7 @@ import ProductImages from "./components/product-images";
 import ReviewPublish from "./components/review-publish";
 import BackButton from "@/src/components/ui/back-button";
 import { canGoBack, useGoBack } from "@/src/hooks/use-go-back";
+import { EMPTY_OPTIONS, optionsPayload, totalStock } from "@/src/lib/product-options";
 
 const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
@@ -29,10 +30,10 @@ const EMPTY_DRAFT: ProductDraft = {
     price: "",
     comparePrice: "",
     stock: "",
+    optionsDraft: EMPTY_OPTIONS,
 
     specifications: [],
     highlights: [],
-    variants: [],
 
     images: [],
 
@@ -110,7 +111,7 @@ function AddProductContent() {
       condition: draft.condition,
       price: Number(draft.price),
       originalPrice: draft.comparePrice ? Number(draft.comparePrice) : undefined,
-      stock: Number(draft.stock),
+      stock: draft.optionsDraft.enabled ? totalStock(draft.optionsDraft) : Number(draft.stock),
       images: draft.images
         .filter((image) => image.url)
         .map((image) => ({ url: image.url as string, isPrimary: image.isCover })),
@@ -118,14 +119,7 @@ function AddProductContent() {
         .filter((spec) => spec.key.trim())
         .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
       highlights: draft.highlights,
-      variants: draft.variants
-        .filter((variant) => variant.name.trim() && variant.value.trim())
-        .map((variant) => ({
-          name: variant.name.trim(),
-          value: variant.value.trim(),
-          price: variant.price ? Number(variant.price) : undefined,
-          stock: variant.stock ? Number(variant.stock) : undefined,
-        })),
+      ...(draft.optionsDraft.enabled ? optionsPayload(draft.optionsDraft) : {}),
     });
 
     const created = (response as { data: { id: string } }).data;

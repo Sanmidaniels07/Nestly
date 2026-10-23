@@ -1,5 +1,6 @@
 import { DraftImage } from "./product-image";
-import { EditableVariant, ProductCondition } from "./product";
+import { ProductCondition } from "./product";
+import { OptionsDraft } from "../lib/product-options";
 
 export interface ProductDraft {
   // Step 1
@@ -14,6 +15,8 @@ export interface ProductDraft {
   price: string;
   comparePrice: string;
   stock: string;
+  // Size / Colour etc. - when on, stock is set per combination.
+  optionsDraft: OptionsDraft;
 
   // Step 3
   specifications: {
@@ -22,7 +25,6 @@ export interface ProductDraft {
     value: string;
   }[];
   highlights: string[];
-  variants: EditableVariant[];
 
   // Step 4
   images: DraftImage[];

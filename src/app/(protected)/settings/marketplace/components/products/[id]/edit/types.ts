@@ -1,5 +1,6 @@
 import { DraftImage } from "@/src/types/product-image";
-import { EditableVariant, ProductCondition, ProductStatus } from "@/src/types/product";
+import { ProductCondition, ProductStatus } from "@/src/types/product";
+import { OptionsDraft } from "@/src/lib/product-options";
 
 export interface EditableSpecification {
   id: string;
@@ -19,9 +20,10 @@ export interface ProductEditDraft {
   price: string;
   originalPrice: string;
   stock: string;
+  // Size / Colour etc. - when on, stock is set per combination.
+  optionsDraft: OptionsDraft;
 
   highlights: string[];
   specifications: EditableSpecification[];
-  variants: EditableVariant[];
   images: DraftImage[];
 }

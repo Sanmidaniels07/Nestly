@@ -35,6 +35,9 @@ export default function CheckoutOrderItem({ item }: Props) {
         <h3 className="truncate text-[14.5px] font-semibold text-ink">
           {item.product.title}
         </h3>
+        {item.variantLabel && (
+          <p className="mt-0.5 text-[12.5px] font-medium text-ink-2">{item.variantLabel}</p>
+        )}
         {item.product.brand && (
           <p className="mt-0.5 text-[12.5px] text-subtle">{item.product.brand}</p>
         )}
@@ -44,7 +47,7 @@ export default function CheckoutOrderItem({ item }: Props) {
             Qty {item.quantity}
           </span>
           <span className="font-[family-name:var(--font-mono)] text-[14.5px] font-semibold text-violet-700 dark:text-violet-300">
-            {money(item.product.price * item.quantity)}
+            {money((item.unitPrice ?? item.product.price) * item.quantity)}
           </span>
         </div>
       </div>

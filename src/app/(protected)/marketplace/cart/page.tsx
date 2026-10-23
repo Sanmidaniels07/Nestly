@@ -52,7 +52,7 @@ export default function CartPage() {
       <CartHeader itemsCount={items.length} onClearCart={() => clearCart(items)} />
 
       <div className="grid gap-8 xl:grid-cols-[1.8fr_420px]">
-        <section className="space-y-6">
+        <section className="min-w-0 space-y-6">
           {items.map((item) => (
             <CartItem key={item.id} item={item} />
           ))}

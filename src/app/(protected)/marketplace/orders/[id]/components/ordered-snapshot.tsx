@@ -15,6 +15,7 @@ export default function OrderedSnapshot({ item }: { item: OrderItem }) {
   const specs = item.productSpecs ?? [];
   const highlights = item.productHighlights ?? [];
   const facts = [
+    item.variantLabel && { label: "Your choice", value: item.variantLabel },
     item.productCondition && { label: "Condition", value: formatConditionLabel(item.productCondition) },
     item.productBrand && { label: "Brand", value: item.productBrand },
     item.productSku && { label: "SKU", value: item.productSku },

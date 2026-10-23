@@ -13,9 +13,9 @@ export const useUpdateCartItem = () => {
   return useMutation<
     unknown,
     AxiosError<ApiErrorResponse>,
-    { productId: string; quantity: number }
+    { itemId: string; quantity: number }
   >({
-    mutationFn: ({ productId, quantity }) => updateCartItem(productId, quantity),
+    mutationFn: ({ itemId, quantity }) => updateCartItem(itemId, quantity),
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });

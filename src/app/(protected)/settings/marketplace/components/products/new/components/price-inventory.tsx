@@ -6,6 +6,8 @@ import Button from "@/src/components/ui/button";
 import Input from "@/src/components/ui/input";
 import { ProductDraft } from "@/src/types/products-draft";
 import EarningsPreview from "../../components/earnings-preview";
+import OptionsEditor from "../../components/options-editor";
+import { optionsError } from "@/src/lib/product-options";
 
 interface Props {
   draft: ProductDraft;
@@ -17,6 +19,7 @@ interface Props {
 interface Errors {
   price?: string;
   stock?: string;
+  options?: string;
 }
 
 export default function PricingInventory({ draft, setDraft, onBack, onNext }: Props) {
@@ -34,9 +37,15 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
       nextErrors.price = "Enter a valid selling price";
     }
 
-    const stock = Number(draft.stock);
-    if (draft.stock === "" || Number.isNaN(stock) || stock < 0) {
-      nextErrors.stock = "Enter a valid stock quantity";
+    // With options, stock is entered per combination instead.
+    if (draft.optionsDraft.enabled) {
+      const problem = optionsError(draft.optionsDraft);
+      if (problem) nextErrors.options = problem;
+    } else {
+      const stock = Number(draft.stock);
+      if (draft.stock === "" || Number.isNaN(stock) || stock < 0) {
+        nextErrors.stock = "Enter a valid stock quantity";
+      }
     }
 
     setErrors(nextErrors);
@@ -101,20 +110,34 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
             Track how much stock you have.
           </p>
 
-          <div className="mt-5">
-            <Input
-              label="Stock quantity"
-              placeholder="0"
-              inputMode="numeric"
-              value={draft.stock}
-              onChange={(e) => {
-                setDraft((prev) => ({ ...prev, stock: e.target.value }));
-                clearError("stock");
-              }}
-              error={errors.stock}
-            />
-          </div>
+          {!draft.optionsDraft.enabled && (
+            <div className="mt-5">
+              <Input
+                label="Stock quantity"
+                placeholder="0"
+                inputMode="numeric"
+                value={draft.stock}
+                onChange={(e) => {
+                  setDraft((prev) => ({ ...prev, stock: e.target.value }));
+                  clearError("stock");
+                }}
+                error={errors.stock}
+              />
+            </div>
+          )}
         </div>
+
+        <div className="border-t border-line-soft" />
+
+        <OptionsEditor
+          value={draft.optionsDraft}
+          onChange={(optionsDraft) => {
+            setDraft((prev) => ({ ...prev, optionsDraft }));
+            clearError("options");
+          }}
+          basePrice={draft.price}
+          error={errors.options}
+        />
       </div>
 
       <div className="mt-8 flex justify-between border-t border-line-soft pt-6">

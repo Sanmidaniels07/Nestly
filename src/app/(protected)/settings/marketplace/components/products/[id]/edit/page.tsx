@@ -13,6 +13,7 @@ import EditPricingSection from "./components/edit-pricing-section";
 import EditImagesSection from "./components/edit-images-section";
 import EditSpecsSection from "./components/edit-specs-section";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
+import { EMPTY_OPTIONS, optionsDraftFrom, optionsError, optionsPayload, totalStock } from "@/src/lib/product-options";
 
 const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
@@ -27,9 +28,9 @@ const EMPTY_DRAFT: ProductEditDraft = {
   price: "",
   originalPrice: "",
   stock: "",
+  optionsDraft: EMPTY_OPTIONS,
   highlights: [],
   specifications: [],
-  variants: [],
   images: [],
 };
 
@@ -60,18 +61,12 @@ export default function EditProductPage({ params }: Props) {
       price: String(product.price),
       originalPrice: product.originalPrice != null ? String(product.originalPrice) : "",
       stock: String(product.stock),
+      optionsDraft: optionsDraftFrom(product),
       highlights: product.highlights ?? [],
       specifications: product.specifications.map((spec) => ({
         id: spec.id ?? crypto.randomUUID(),
         key: spec.name,
         value: spec.value,
-      })),
-      variants: product.variants.map((variant) => ({
-        id: variant.id ?? crypto.randomUUID(),
-        name: variant.name,
-        value: variant.value,
-        price: variant.price != null ? String(variant.price) : "",
-        stock: variant.stock != null ? String(variant.stock) : "",
       })),
       images: product.images.map((image) => ({
         id: image.id ?? crypto.randomUUID(),
@@ -85,12 +80,18 @@ export default function EditProductPage({ params }: Props) {
   }, [product?.id]);
 
   const isUploading = draft.images.some((image) => image.uploading);
+  const optionsProblem = optionsError(draft.optionsDraft);
+  // Options are only sent when the product has (or had) them, so editing a
+  // product without options never touches them.
+  const hadOptions = (product?.options?.length ?? 0) > 0;
+  const sendOptions = draft.optionsDraft.enabled || hadOptions;
   const canSave =
     !!draft.title.trim() &&
     !!draft.categoryId &&
     !!draft.sku.trim() &&
     !!draft.price &&
-    draft.stock !== "" &&
+    (draft.optionsDraft.enabled || draft.stock !== "") &&
+    !optionsProblem &&
     !isUploading;
 
   const handleSave = () => {
@@ -107,7 +108,7 @@ export default function EditProductPage({ params }: Props) {
           status: draft.status,
           price: Number(draft.price),
           originalPrice: draft.originalPrice ? Number(draft.originalPrice) : undefined,
-          stock: Number(draft.stock),
+          stock: draft.optionsDraft.enabled ? totalStock(draft.optionsDraft) : Number(draft.stock),
           images: draft.images
             .filter((image) => image.url)
             .map((image) => ({ url: image.url as string, isPrimary: image.isCover })),
@@ -115,14 +116,7 @@ export default function EditProductPage({ params }: Props) {
             .filter((spec) => spec.key.trim())
             .map((spec) => ({ name: spec.key.trim(), value: spec.value.trim() })),
           highlights: draft.highlights,
-          variants: draft.variants
-            .filter((variant) => variant.name.trim() && variant.value.trim())
-            .map((variant) => ({
-              name: variant.name.trim(),
-              value: variant.value.trim(),
-              price: variant.price ? Number(variant.price) : undefined,
-              stock: variant.stock ? Number(variant.stock) : undefined,
-            })),
+          ...(sendOptions ? optionsPayload(draft.optionsDraft) : {}),
         },
       },
       {
@@ -165,7 +159,12 @@ export default function EditProductPage({ params }: Props) {
       </div>
 
       <EditBasicSection draft={draft} setDraft={setDraft} />
-      <EditPricingSection draft={draft} setDraft={setDraft} />
+      <EditPricingSection
+        draft={draft}
+        setDraft={setDraft}
+        optionsError={optionsProblem}
+        legacyVariants={product.legacyVariants}
+      />
       <EditImagesSection draft={draft} setDraft={setDraft} />
       <EditSpecsSection draft={draft} setDraft={setDraft} />
 

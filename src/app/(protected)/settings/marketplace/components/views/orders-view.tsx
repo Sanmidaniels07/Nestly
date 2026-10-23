@@ -259,6 +259,9 @@ function SellerOrderItem({ item, isPickup }: { item: OrderItem; isPickup: boolea
 
         <div className="min-w-0 flex-1">
           <p className="truncate text-[13.5px] font-medium text-ink">{item.product.title}</p>
+          {item.variantLabel && (
+            <p className="mt-0.5 text-[12.5px] font-semibold text-violet-700 dark:text-violet-300">{item.variantLabel}</p>
+          )}
           <p className="mt-0.5 text-[12px] text-subtle">
             Qty {item.quantity} · {money(item.unitPrice)}
           </p>

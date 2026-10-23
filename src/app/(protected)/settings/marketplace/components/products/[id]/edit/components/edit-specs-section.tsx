@@ -3,7 +3,6 @@
 import { Plus, ListChecks } from "lucide-react";
 import EditProfileTags from "@/src/app/(protected)/profile/components/edit-profile-tags";
 import SpecificationRow from "../../../new/components/specification-row";
-import VariantsSection from "../../../new/components/variants-section";
 import { ProductEditDraft } from "../types";
 
 interface Props {
@@ -85,12 +84,6 @@ export default function EditSpecsSection({ draft, setDraft }: Props) {
         />
       </div>
 
-      <div className="mt-8 border-t border-line-soft pt-6">
-        <VariantsSection
-          variants={draft.variants}
-          onChange={(variants) => setDraft((prev) => ({ ...prev, variants }))}
-        />
-      </div>
     </section>
   );
 }
