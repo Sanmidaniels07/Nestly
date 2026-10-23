@@ -1,6 +1,5 @@
 "use client";
 
-import { use } from "react";
 import { notFound } from "next/navigation";
 
 import { useStore } from "@/src/hooks/use-store";
@@ -19,17 +18,17 @@ import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton"
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
 
 interface Props {
-  params: Promise<{
-    id: string;
-  }>;
+  slug: string;
+  // Fetched by the server page so the content is in the HTML (search, link previews).
+  initialStore?: Parameters<typeof useStore>[1];
+  initialProducts?: Parameters<typeof useStoreProducts>[2];
 }
 
-export default function SellerStorePage({ params }: Props) {
-  const { id: slug } = use(params);
+export default function SellerStorePage({ slug, initialStore, initialProducts }: Props) {
   const authUser = useAuthStore((state) => state.user);
 
-  const { data: store, isLoading, isError } = useStore(slug);
-  const { data: productsData } = useStoreProducts(slug, { limit: 12 });
+  const { data: store, isLoading, isError } = useStore(slug, initialStore);
+  const { data: productsData } = useStoreProducts(slug, { limit: 12 }, initialProducts);
   const { data: reviewsData } = useStoreReviews(slug, { limit: 10 });
 
   if (isLoading) {

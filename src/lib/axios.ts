@@ -53,7 +53,13 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    const { setAccessToken, logout } = useAuthStore.getState();
+    const { setAccessToken, logout, accessToken, isHydrated } = useAuthStore.getState();
+
+    // A guest on a public page (product, store) has no session to refresh
+    // or expire - just fail the request instead of showing "session expired".
+    if (isHydrated && !accessToken) {
+      return Promise.reject(error);
+    }
 
     originalRequest._retry = true;
 

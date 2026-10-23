@@ -11,6 +11,7 @@ import QuantitySelector from "./buy-box-components/quantity-selector";
 import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
 import OptionPicker from "./buy-box-components/option-picker";
+import { useRequireLogin } from "@/src/hooks/use-session";
 
 interface Props {
   product: Product;
@@ -31,6 +32,7 @@ export default function BuyBox({ product }: Props) {
   const router = useRouter();
 
   const { mutate: addToCart, isPending: isAdding } = useAddToCart();
+  const requireLogin = useRequireLogin();
   const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
 
   // Products with options (e.g. Size, Colour) are bought as one combination.
@@ -65,6 +67,7 @@ export default function BuyBox({ product }: Props) {
 
   const handleAddToCart = () => {
     if (outOfStock || !choiceMade) return;
+    if (!requireLogin("Log in or create a free account to buy from Nestly sellers.")) return;
 
     addToCart(
       { productId: product.id, quantity, variationId: match?.id },
@@ -79,6 +82,7 @@ export default function BuyBox({ product }: Props) {
 
   const handleBuyNow = () => {
     if (outOfStock || !choiceMade) return;
+    if (!requireLogin("Log in or create a free account to buy from Nestly sellers.")) return;
 
     addToCart(
       { productId: product.id, quantity, variationId: match?.id },

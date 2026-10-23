@@ -13,6 +13,7 @@ import { useStoreFollowStatus } from "@/src/hooks/use-store-follow-status";
 import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useVerifyStore } from "@/src/hooks/use-verify-store";
+import { useRequireLogin } from "@/src/hooks/use-session";
 
 async function copyToClipboard(value: string, message: string) {
   try {
@@ -82,6 +83,8 @@ export default function SellerProfile({ store }: Props) {
           <div className="flex flex-wrap gap-2.5">
             {isAdmin && !isOwnStore && <VerifyStoreButton store={store} />}
 
+            {!authUser && <GuestFollowButton />}
+
             {!isOwnStore && authUser && (
               <>
                 <MessageSellerButton sellerId={store.seller!.user.id} />
@@ -124,6 +127,18 @@ export default function SellerProfile({ store }: Props) {
         </div>
       </div>
     </section>
+  );
+}
+
+function GuestFollowButton() {
+  const requireLogin = useRequireLogin();
+  return (
+    <button
+      onClick={() => requireLogin("Log in or create a free account to follow stores.")}
+      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+    >
+      Follow
+    </button>
   );
 }
 
