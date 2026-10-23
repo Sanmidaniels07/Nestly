@@ -5,10 +5,13 @@ import toast from "react-hot-toast";
 
 import { addToWishlist, removeFromWishlist } from "../services/wishlist.services";
 import { useWishlist } from "./use-wishlist";
+import { useRequireLogin, useSession } from "./use-session";
 
 export const useToggleWishlist = (productId: string) => {
   const queryClient = useQueryClient();
-  const { data: wishlist } = useWishlist();
+  const { isLoggedIn } = useSession();
+  const requireLogin = useRequireLogin();
+  const { data: wishlist } = useWishlist({ enabled: isLoggedIn });
 
   const isSaved = !!wishlist?.some((item) => item.productId === productId);
 
@@ -28,7 +31,9 @@ export const useToggleWishlist = (productId: string) => {
 
   return {
     isSaved,
-    toggle: () => toggle.mutate(),
+    toggle: () => {
+      if (requireLogin("Log in to save items you like.")) toggle.mutate();
+    },
     isToggling: toggle.isPending,
   };
 };

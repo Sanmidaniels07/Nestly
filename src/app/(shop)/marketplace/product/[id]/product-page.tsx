@@ -1,7 +1,5 @@
 "use client";
 
-import { use } from "react";
-
 import { useProduct } from "@/src/hooks/use-product";
 import { useRelatedProducts } from "@/src/hooks/use-related-products";
 import { useProductReviews } from "@/src/hooks/use-product-reviews";
@@ -16,13 +14,13 @@ import ProductReviews from "./components/product-reviews";
 import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
-  params: Promise<{ id: string }>;
+  id: string;
+  // Fetched by the server page so the content is in the HTML (search, link previews).
+  initialProduct?: Parameters<typeof useProduct>[1];
 }
 
-export default function ProductDetailsPage({ params }: Props) {
-  const { id } = use(params);
-
-  const { data: product, isLoading, isError } = useProduct(id);
+export default function ProductDetailsPage({ id, initialProduct }: Props) {
+  const { data: product, isLoading, isError } = useProduct(id, initialProduct);
   useRelatedProducts(id, 8);
   const { data: reviewsData } = useProductReviews(id, { limit: 20 });
 
