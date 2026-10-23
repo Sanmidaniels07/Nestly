@@ -13,6 +13,7 @@ import OrderTimeline from "./components/order-timeline";
 import OrderedProducts from "./components/ordered-products";
 import DeliveryCodes from "./components/delivery-codes";
 import SupportCard from "./components/support-card";
+import SellerNotesCard from "./components/seller-notes-card";
 import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
@@ -59,6 +60,7 @@ export default function OrderDetailsPage({ params }: Props) {
         <section className="min-w-0 space-y-5">
           <DeliveryCodes order={order} />
           <OrderedProducts order={order} />
+          <SellerNotesCard order={order} />
 
           {order.address && <ShippingAddress address={order.address} />}
           {order.timeline && order.timeline.length > 0 && <OrderTimeline order={order} />}

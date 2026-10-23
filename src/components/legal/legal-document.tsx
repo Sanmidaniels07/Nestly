@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import NestlyMark from "@/src/components/ui/nestly-mark";
+import LegalBackLink from "./legal-back-link";
 import { LEGAL_LAST_UPDATED } from "@/src/lib/legal";
 
 export interface LegalSection {
@@ -28,9 +29,12 @@ export default function LegalDocument({ eyebrow, title, intro, sections }: Props
   return (
     <main className="min-h-screen bg-canvas px-4 pb-24 pt-24 sm:pt-28">
       <article className="mx-auto max-w-3xl">
-        <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink">
-          <NestlyMark size={26} /> Nestly
-        </Link>
+        <div className="flex items-center justify-between gap-3">
+          <LegalBackLink />
+          <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink">
+            <NestlyMark size={26} /> Nestly
+          </Link>
+        </div>
 
         <p className="mt-8 font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
           {eyebrow}

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock, KeyRound, Store, Truck } from "lucide-react";
+import { CheckCircle2, Clock, KeyRound, MessageSquareText, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
@@ -107,6 +107,8 @@ export default function OrdersView() {
             </div>
           </div>
 
+          {order.sellerNotes?.[0]?.note && <BuyerNote note={order.sellerNotes[0].note} />}
+
           <div className="mt-4 space-y-3">
             {order.items.map((item) => (
               <SellerOrderItem key={item.id} item={item} isPickup={isPickup} />
@@ -124,6 +126,17 @@ export default function OrdersView() {
       {data && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
       )}
+    </div>
+  );
+}
+
+function BuyerNote({ note }: { note: string }) {
+  return (
+    <div className="mt-4 rounded-xl border-l-[3px] border-violet-500 bg-violet-50 px-4 py-3 dark:bg-violet-500/10">
+      <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-violet-700 dark:text-violet-300">
+        <MessageSquareText size={12} /> Note from the buyer
+      </p>
+      <p className="mt-1 whitespace-pre-line text-[13.5px] leading-relaxed text-ink [overflow-wrap:anywhere]">{note}</p>
     </div>
   );
 }

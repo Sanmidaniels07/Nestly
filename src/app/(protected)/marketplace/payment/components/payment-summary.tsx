@@ -27,6 +27,7 @@ export default function PaymentSummary() {
   const { data: items } = useCart();
   const addressId = useCheckoutStore((state) => state.addressId);
   const shippingSelections = useCheckoutStore((state) => state.shippingSelections);
+  const sellerNotes = useCheckoutStore((state) => state.sellerNotes);
   const appliedCoupon = useCheckoutStore((state) => state.appliedCoupon);
   const resetCheckout = useCheckoutStore((state) => state.resetCheckout);
 
@@ -68,6 +69,9 @@ export default function PaymentSummary() {
   const shippingSelectionsArray = Object.entries(shippingSelections).map(
     ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
   );
+  const sellerNotesArray = Object.entries(sellerNotes)
+    .map(([storeId, note]) => ({ storeId, note: note.trim() }))
+    .filter((entry) => entry.note);
 
   const handlePay = async () => {
     if (!addressId) {
@@ -89,6 +93,7 @@ export default function PaymentSummary() {
           savedCardId: selectedCardId,
           shippingSelections: shippingSelectionsArray,
           couponCode: appliedCoupon?.code,
+          sellerNotes: sellerNotesArray,
         });
         const order = (response as { data: Order }).data;
         if (isStale()) return;
@@ -106,6 +111,7 @@ export default function PaymentSummary() {
         addressId,
         shippingSelections: shippingSelectionsArray,
         couponCode: appliedCoupon?.code,
+        sellerNotes: sellerNotesArray,
       });
       const { accessCode, reference } = (response as { data: { accessCode: string; reference: string } }).data;
 

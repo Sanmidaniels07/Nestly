@@ -77,6 +77,8 @@ export interface Order {
   trackingNumber?: string | null;
   items: OrderItem[];
   shipping?: OrderShipping[];
+  // Buyer's notes to sellers. Sellers only get their own store's (no storeId).
+  sellerNotes?: { storeId?: string; note: string }[];
   address?: Address;
   paymentReference?: string;
   paymentMethod?: string;
