@@ -26,6 +26,8 @@ import { useDetectState, useNigerianStates, useStateLocations } from "@/src/hook
 import { NigerianState, SuggestedZone } from "@/src/types/location";
 import { ShippingOption } from "@/src/types/store";
 import PickupSection from "./pickup-section";
+import VehiclePicker from "@/src/components/ui/vehicle-picker";
+import { DeliveryVehicle, vehicleInfo } from "@/src/lib/delivery-vehicle";
 
 const money = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -69,6 +71,8 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
 
   const { mutate: detectState, isPending: isDetecting } = useDetectState();
   const [mode, setMode] = useState<"suggested" | "custom" | null>(null);
+  // What new zones are priced for - the same areas can be added again for another vehicle.
+  const [vehicle, setVehicle] = useState<DeliveryVehicle>("BIKE");
 
   const active = zones.filter((zone) => !zone.isArchived);
   const archived = zones.filter((zone) => zone.isArchived);
@@ -87,15 +91,16 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
     });
 
   const suggestions = locations?.suggestedZones ?? [];
-  const existingKeys = new Set(zones.map((zone) => areaKey(zone.areas)));
-  const unusedSuggestions = suggestions.filter((zone) => !existingKeys.has(areaKey(zone.areas)));
+  const existingKeys = new Set(zones.map((zone) => `${areaKey(zone.areas)}#${zone.vehicle ?? ""}`));
+  const unusedSuggestions = suggestions.filter((zone) => !existingKeys.has(`${areaKey(zone.areas)}#${vehicle}`));
   const effectiveMode = mode ?? (unusedSuggestions.length > 0 ? "suggested" : "custom");
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery zones</h2>
       <p className="mt-1 text-[13px] leading-relaxed text-muted">
-        Set a price for each group of areas you deliver to. Buyers pick their zone at checkout.
+        Set a price for each group of areas you deliver to, by dispatch bike, car or truck. Buyers only see the zones whose vehicle
+        can carry what they&apos;re buying.
       </p>
 
       {/* Where suggestions come from */}
@@ -187,6 +192,14 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
           </div>
         </div>
 
+        <div className="mt-4">
+          <p className="mb-1.5 text-[12.5px] font-medium text-ink-2">Delivered by</p>
+          <VehiclePicker value={vehicle} onChange={setVehicle} label="Vehicle for new zones" />
+          <p className="mt-1.5 text-[11.5px] leading-snug text-subtle">
+            {vehicleInfo(vehicle)?.examples}. Price the same areas again with another vehicle if it costs more.
+          </p>
+        </div>
+
         {!activeState && (
           <p className="mt-3 text-[12.5px] text-subtle">
             Pick your state above (or detect your location) to get area suggestions.
@@ -195,11 +208,11 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
         {activeState && isLoadingLocations && <div className="mt-4 h-24 animate-pulse rounded-xl bg-surface-2" />}
 
         {effectiveMode === "suggested" && unusedSuggestions.length > 0 && (
-          <SuggestedZonesForm slug={slug} state={activeState} suggestions={unusedSuggestions} />
+          <SuggestedZonesForm slug={slug} state={activeState} suggestions={unusedSuggestions} vehicle={vehicle} />
         )}
         {effectiveMode === "custom" && (
           <div className="mt-4">
-            <ZoneForm slug={slug} state={activeState} areaOptions={locations?.areas ?? []} />
+            <ZoneForm slug={slug} state={activeState} areaOptions={locations?.areas ?? []} vehicle={vehicle} />
           </div>
         )}
         {activeState && !isLoadingLocations && suggestions.length === 0 && effectiveMode === "custom" && (
@@ -217,10 +230,12 @@ function SuggestedZonesForm({
   slug,
   state,
   suggestions,
+  vehicle,
 }: {
   slug: string;
   state: string | null;
   suggestions: SuggestedZone[];
+  vehicle: DeliveryVehicle;
 }) {
   const [prices, setPrices] = useState<Record<string, string>>({});
   const [eta, setEta] = useState("");
@@ -235,6 +250,7 @@ function SuggestedZonesForm({
         areas: zone.areas,
         state: state ?? undefined,
         eta: eta.trim() || undefined,
+        vehicle,
       })),
       { onSuccess: () => setPrices({}) }
     );
@@ -242,7 +258,7 @@ function SuggestedZonesForm({
   return (
     <div className="mt-4">
       <p className="text-[12.5px] text-muted">
-        Enter a price for each zone you deliver to. Leave the rest empty.
+        Enter a {vehicleInfo(vehicle)?.label.toLowerCase()} price for each zone you deliver to. Leave the rest empty.
       </p>
       <ul className="mt-3 divide-y divide-line-soft overflow-hidden rounded-xl border border-line">
         {suggestions.map((zone) => {
@@ -304,14 +320,19 @@ function ZoneForm({
   areaOptions,
   zone,
   onDone,
+  vehicle: newVehicle,
 }: {
   slug: string;
   state: string | null;
   areaOptions: string[];
   zone?: ShippingOption;
   onDone?: () => void;
+  // New zones use the section's vehicle; an edited zone picks its own.
+  vehicle?: DeliveryVehicle;
 }) {
   const [areas, setAreas] = useState<string[]>(zone?.areas ?? []);
+  const [ownVehicle, setOwnVehicle] = useState<DeliveryVehicle | null>(zone?.vehicle ?? null);
+  const vehicle = zone ? ownVehicle : newVehicle ?? "BIKE";
   const [query, setQuery] = useState("");
   const [name, setName] = useState(zone && zone.name !== zone.areas.join(" / ") ? zone.name : "");
   const [fee, setFee] = useState(zone ? String(zone.fee) : "");
@@ -351,6 +372,7 @@ function ZoneForm({
       fee: Number(fee),
       areas,
       state: state ?? undefined,
+      ...(vehicle ? { vehicle } : {}),
     };
 
     if (zone) {
@@ -365,6 +387,15 @@ function ZoneForm({
 
   return (
     <div className="space-y-3 rounded-xl border border-line p-3.5 sm:p-4">
+      {zone && (
+        <div>
+          <p className="mb-1.5 text-[12.5px] font-medium text-ink-2">Delivered by</p>
+          <VehiclePicker value={ownVehicle} onChange={setOwnVehicle} label="Vehicle for this zone" />
+          {!ownVehicle && (
+            <p className="mt-1.5 text-[11.5px] text-subtle">Not set yet - this zone is offered for every product until you pick one.</p>
+          )}
+        </div>
+      )}
       <div>
         <label className="mb-1.5 block text-[12.5px] font-medium text-ink-2">Areas in this zone</label>
         {areas.length > 0 && (
@@ -517,6 +548,7 @@ function ZoneRow({
     >
       <div className="min-w-0 flex-1">
         <p className="text-[13.5px] font-medium leading-snug text-ink">{zone.name}</p>
+        <VehicleBadge vehicle={zone.vehicle} />
         <p className="mt-1 font-[family-name:var(--font-mono)] text-[12.5px] text-violet-700 dark:text-violet-300">
           {money(zone.fee)}
           {zone.eta && <span className="font-sans text-subtle"> · {zone.eta}</span>}
@@ -568,5 +600,17 @@ function ZoneRow({
         </div>
       )}
     </div>
+  );
+}
+
+function VehicleBadge({ vehicle }: { vehicle?: DeliveryVehicle | null }) {
+  const info = vehicleInfo(vehicle);
+  if (!info) {
+    return <p className="mt-1 text-[11.5px] text-subtle">Vehicle not set - offered for every product</p>;
+  }
+  return (
+    <p className="mt-1 inline-flex items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[11.5px] font-medium text-ink-2">
+      <info.icon size={12} /> {info.label}
+    </p>
   );
 }

@@ -1,5 +1,6 @@
 import { DraftImage } from "./product-image";
 import { ProductCondition } from "./product";
+import { DeliveryVehicle } from "../lib/delivery-vehicle";
 import { OptionsDraft } from "../lib/product-options";
 
 export interface ProductDraft {
@@ -10,6 +11,7 @@ export interface ProductDraft {
   description: string;
   condition: ProductCondition;
   sku: string;
+  deliveryVehicle: DeliveryVehicle;
 
   // Step 2
   price: string;

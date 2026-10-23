@@ -26,6 +26,7 @@ const EMPTY_DRAFT: ProductDraft = {
     description: "",
     condition: "NEW",
     sku: "",
+    deliveryVehicle: "BIKE",
 
     price: "",
     comparePrice: "",
@@ -109,6 +110,7 @@ function AddProductContent() {
       sku: draft.sku.trim(),
       brand: draft.brand.trim() || undefined,
       condition: draft.condition,
+      deliveryVehicle: draft.deliveryVehicle,
       price: Number(draft.price),
       originalPrice: draft.comparePrice ? Number(draft.comparePrice) : undefined,
       stock: draft.optionsDraft.enabled ? totalStock(draft.optionsDraft) : Number(draft.stock),

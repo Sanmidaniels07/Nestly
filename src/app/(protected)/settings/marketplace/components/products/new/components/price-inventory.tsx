@@ -8,6 +8,8 @@ import { ProductDraft } from "@/src/types/products-draft";
 import EarningsPreview from "../../components/earnings-preview";
 import OptionsEditor from "../../components/options-editor";
 import { optionsError } from "@/src/lib/product-options";
+import VehiclePicker from "@/src/components/ui/vehicle-picker";
+import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 
 interface Props {
   draft: ProductDraft;
@@ -129,6 +131,10 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
 
         <div className="border-t border-line-soft" />
 
+        <DeliverySection value={draft.deliveryVehicle} onChange={(deliveryVehicle) => setDraft((prev) => ({ ...prev, deliveryVehicle }))} />
+
+        <div className="border-t border-line-soft" />
+
         <OptionsEditor
           value={draft.optionsDraft}
           onChange={(optionsDraft) => {
@@ -149,5 +155,27 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
         </Button>
       </div>
     </section>
+  );
+}
+
+// The smallest vehicle that can deliver it - buyers then only see your
+// delivery zones that use that vehicle or a bigger one.
+export function DeliverySection({
+  value,
+  onChange,
+}: {
+  value: DeliveryVehicle;
+  onChange: (vehicle: DeliveryVehicle) => void;
+}) {
+  return (
+    <div>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery</h2>
+      <p className="mt-1 text-[13px] text-muted">
+        What&apos;s the smallest vehicle that can deliver this safely? Buyers only see your delivery zones for that vehicle or a bigger one.
+      </p>
+      <div className="mt-4">
+        <VehiclePicker variant="cards" value={value} onChange={onChange} label="Delivery vehicle for this product" />
+      </div>
+    </div>
   );
 }

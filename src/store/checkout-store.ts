@@ -30,6 +30,7 @@ interface CheckoutStore {
   // storeId -> selected shipping option, one per store present in the cart
   shippingSelections: Record<string, ShippingSelection>;
   setShippingSelection: (storeId: string, selection: ShippingSelection) => void;
+  clearShippingSelection: (storeId: string) => void;
 
   // storeId -> optional note from the buyer to that seller
   sellerNotes: Record<string, string>;
@@ -64,6 +65,12 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
   setShippingSelection: (storeId, selection) =>
     set((state) => ({
       shippingSelections: { ...state.shippingSelections, [storeId]: selection },
+    })),
+  clearShippingSelection: (storeId) =>
+    set((state) => ({
+      shippingSelections: Object.fromEntries(
+        Object.entries(state.shippingSelections).filter(([id]) => id !== storeId)
+      ),
     })),
 
   sellerNotes: {},

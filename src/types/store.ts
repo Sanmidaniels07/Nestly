@@ -1,3 +1,4 @@
+import { DeliveryVehicle } from "../lib/delivery-vehicle";
 export type ShippingOptionType = "DELIVERY" | "PICKUP";
 
 // A delivery zone (a price for a group of areas; no areas = any buyer), or
@@ -12,6 +13,8 @@ export interface ShippingOption {
   areas: string[];
   state?: string | null;
   pickupAddress?: string | null;
+  // Delivery only. Null on zones made before vehicles existed (any product).
+  vehicle?: DeliveryVehicle | null;
   isArchived: boolean;
   createdAt: string;
   updatedAt?: string;
@@ -25,11 +28,13 @@ export interface CreateShippingOptionPayload {
   state?: string;
   type?: ShippingOptionType;
   pickupAddress?: string;
+  vehicle?: DeliveryVehicle;
 }
 
-export interface UpdateShippingOptionPayload extends Partial<Omit<CreateShippingOptionPayload, "eta" | "pickupAddress">> {
+export interface UpdateShippingOptionPayload extends Partial<Omit<CreateShippingOptionPayload, "eta" | "pickupAddress" | "vehicle">> {
   eta?: string | null;
   pickupAddress?: string | null;
+  vehicle?: DeliveryVehicle | null;
   isArchived?: boolean;
 }
 

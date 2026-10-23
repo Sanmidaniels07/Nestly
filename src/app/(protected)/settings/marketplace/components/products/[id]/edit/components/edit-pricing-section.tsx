@@ -7,6 +7,7 @@ import { ProductEditDraft } from "../types";
 import EarningsPreview from "../../../components/earnings-preview";
 import OptionsEditor from "../../../components/options-editor";
 import { LegacyProductVariant } from "@/src/types/product";
+import { DeliverySection } from "../../../new/components/price-inventory";
 
 interface Props {
   draft: ProductEditDraft;
@@ -72,6 +73,13 @@ export default function EditPricingSection({ draft, setDraft, optionsError, lega
               { label: "Out of stock", value: "OUT_OF_STOCK" },
               { label: "Archived", value: "ARCHIVED" },
             ]}
+          />
+        </div>
+
+        <div className="border-t border-line-soft pt-6">
+          <DeliverySection
+            value={draft.deliveryVehicle}
+            onChange={(deliveryVehicle) => setDraft((prev) => ({ ...prev, deliveryVehicle }))}
           />
         </div>
 

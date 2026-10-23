@@ -1,4 +1,5 @@
 import { Category } from "./category";
+import { DeliveryVehicle } from "../lib/delivery-vehicle";
 
 export interface ProductImage {
   id?: string;
@@ -73,6 +74,8 @@ export interface Product {
   sku: string;
   brand?: string | null;
   condition: ProductCondition;
+  // Smallest vehicle that can deliver it.
+  deliveryVehicle?: DeliveryVehicle;
   price: number;
   originalPrice?: number | null;
   stock: number;
@@ -99,6 +102,7 @@ export interface CreateProductPayload {
   sku: string;
   brand?: string;
   condition: ProductCondition;
+  deliveryVehicle?: DeliveryVehicle;
   price: number;
   originalPrice?: number;
   stock: number;

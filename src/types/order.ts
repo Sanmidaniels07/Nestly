@@ -48,6 +48,7 @@ export interface OrderShipping {
   // PICKUP: the buyer collects from the seller at pickupAddress (always free).
   type?: "DELIVERY" | "PICKUP";
   pickupAddress?: string | null;
+  vehicle?: "BIKE" | "CAR" | "TRUCK" | null;
   // Only ever present on the buyer's own order.
   deliveryCode?: string | null;
   createdAt: string;

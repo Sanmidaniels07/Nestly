@@ -1,6 +1,7 @@
 import { DraftImage } from "@/src/types/product-image";
 import { ProductCondition, ProductStatus } from "@/src/types/product";
 import { OptionsDraft } from "@/src/lib/product-options";
+import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 
 export interface EditableSpecification {
   id: string;
@@ -15,6 +16,7 @@ export interface ProductEditDraft {
   description: string;
   condition: ProductCondition;
   sku: string;
+  deliveryVehicle: DeliveryVehicle;
   status: ProductStatus;
 
   price: string;

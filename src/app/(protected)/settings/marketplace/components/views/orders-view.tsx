@@ -88,7 +88,9 @@ export default function OrdersView() {
                   }`}
                 >
                   {isPickup ? <Store size={11} /> : <Truck size={11} />}
-                  {isPickup ? "Buyer will pick up" : shipment.optionName}
+                  {isPickup
+                    ? "Buyer will pick up"
+                    : `${shipment.optionName}${shipment.vehicle ? ` · by ${shipment.vehicle === "BIKE" ? "bike" : shipment.vehicle.toLowerCase()}` : ""}`}
                 </p>
               )}
             </div>
