@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Users, Gift, ShoppingBag, Star } from "lucide-react";
+import { ArrowRight, BookOpen, Users, Gift, ShoppingBag, Star, Store } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
 import NestlyMark from "../components/ui/nestly-mark";
@@ -13,6 +13,8 @@ export default function Home() {
       <Hero />
 
       <Features />
+
+      <Guides />
 
       <Preview />
 
@@ -73,6 +75,22 @@ function Hero() {
                 Sign In
               </Button>
             </Link>
+          </div>
+
+          {/* Read before signing up - see Guides below. */}
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <span className="inline-flex items-center gap-1.5 text-muted">
+              <BookOpen className="w-4 h-4" /> New here? See how it works:
+            </span>
+            {GUIDE_LINKS.map((guide) => (
+              <Link
+                key={guide.href}
+                href={guide.href}
+                className="inline-flex items-center gap-1 rounded-full border border-line-strong bg-surface px-3.5 py-1.5 font-medium text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+              >
+                {guide.short} <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ))}
           </div>
 
           <div className="flex flex-wrap gap-x-10 gap-y-5 pt-8">
@@ -254,6 +272,80 @@ function Features() {
               </div>
               <h3 className="text-2xl font-semibold mb-4">{feature.title}</h3>
               <p className="text-muted leading-relaxed">{feature.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ==================== GUIDES ==================== */
+// The step-by-step guides (/guides/*), so people can see how Nestly works
+// before they sign up.
+const GUIDE_LINKS = [
+  {
+    href: "/guides/buyers",
+    short: "Buying",
+    title: "Shop on Nestly",
+    desc: "Find products, pay securely with Paystack, track delivery and get returns - step by step.",
+    cta: "Read the buyer guide",
+    icon: ShoppingBag,
+    color: "bg-tint-orange text-[#FF7A45]",
+  },
+  {
+    href: "/guides/sellers",
+    short: "Selling",
+    title: "Sell on Nestly",
+    desc: "Apply, set up your store, delivery and payouts, list products and get paid for every order.",
+    cta: "Read the seller guide",
+    icon: Store,
+    color: "bg-tint text-[#8B5CF6]",
+  },
+  {
+    href: "/guides/community",
+    short: "Community",
+    title: "Get started",
+    desc: "Set up your profile, follow friends, post, join communities and events, and stay safe.",
+    cta: "Read the community guide",
+    icon: Users,
+    color: "bg-tint-blue text-[#2B7FFF]",
+  },
+];
+
+function Guides() {
+  return (
+    <section id="guides" className="py-20 bg-canvas">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="text-center mb-14">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">How Nestly Works</h2>
+          <p className="mt-4 text-xl text-muted max-w-lg mx-auto">
+            Read a quick step-by-step guide before you join - no account needed.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {GUIDE_LINKS.map(({ href, title, desc, cta, icon: Icon, color }, i) => (
+            <motion.div
+              key={href}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+            >
+              <Link
+                href={href}
+                className="group flex h-full flex-col bg-surface border border-line-strong rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <div className={`${color} w-14 h-14 rounded-2xl flex items-center justify-center mb-6`}>
+                  <Icon className="w-7 h-7" />
+                </div>
+                <h3 className="text-2xl font-semibold mb-3">{title}</h3>
+                <p className="text-muted leading-relaxed flex-1">{desc}</p>
+                <span className="mt-6 inline-flex items-center gap-2 font-semibold text-violet-700 dark:text-violet-300">
+                  {cta} <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                </span>
+              </Link>
             </motion.div>
           ))}
         </div>
