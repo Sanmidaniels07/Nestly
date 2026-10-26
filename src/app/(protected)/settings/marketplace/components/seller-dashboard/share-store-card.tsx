@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Copy, Download, ImageIcon, Loader2, QrCode, Share2 } from "lucide-react";
+import { Check, Copy, Download, Gift, ImageIcon, Loader2, QrCode, Share2 } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useMyProducts } from "@/src/hooks/use-my-products";
+import { useMyReferrals } from "@/src/hooks/use-my-referrals";
 import { SITE_URL } from "@/src/lib/site";
+import type { ReferralStats } from "@/src/types/referral";
 import { shareLinks } from "@/src/lib/social";
 import { downloadBlob, qrImage, storyImage } from "@/src/lib/share-image";
 import { FacebookIcon, InstagramIcon, WhatsAppIcon, XIcon } from "@/src/components/ui/social-icons";
@@ -16,12 +18,15 @@ import { FacebookIcon, InstagramIcon, WhatsAppIcon, XIcon } from "@/src/componen
 export default function ShareStoreCard() {
   const { data: store } = useMyStore();
   const { data: productsData } = useMyProducts({ limit: 6, status: "PUBLISHED" }, { enabled: !!store });
+  const { data: referrals } = useMyReferrals(!!store);
   const [copied, setCopied] = useState(false);
   const [busy, setBusy] = useState<"story" | "qr" | null>(null);
 
   if (!store) return null;
 
-  const url = `${SITE_URL}/marketplace/seller/${store.slug}`;
+  // Tagged with the store's code so people who join through it count as
+  // this seller's referrals (lower commission on their orders).
+  const url = `${SITE_URL}/marketplace/seller/${store.slug}${referrals ? `?ref=${referrals.code}` : ""}`;
   const message = `Shop ${store.name} on Nestly - order securely with Paystack and get it delivered:`;
   const links = shareLinks(url, message);
   const location = [...new Set([store.city, store.state].filter(Boolean))].join(", ");
@@ -145,6 +150,42 @@ export default function ShareStoreCard() {
           <span className="font-semibold text-ink-2">Tip:</span> add your store link to your Instagram and TikTok bio, and pin a post about it.
         </span>
       </p>
+
+      {referrals && <ReferralRewards stats={referrals} />}
     </section>
+  );
+}
+
+const naira = (amount: number) => `₦${amount.toLocaleString("en-NG", { maximumFractionDigits: 0 })}`;
+
+// The reward for sharing, and what the seller's links have brought in.
+function ReferralRewards({ stats }: { stats: ReferralStats }) {
+  const tiles = [
+    { label: "Visits (30 days)", value: stats.visitsLast30Days.toLocaleString() },
+    { label: "Joined Nestly", value: stats.buyersJoined.toLocaleString() },
+    { label: "Orders", value: stats.ordersFromReferrals.toLocaleString() },
+    { label: "Commission saved", value: naira(stats.commissionSaved) },
+  ];
+
+  return (
+    <div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50/60 p-4 dark:border-emerald-500/25 dark:bg-emerald-500/5">
+      <div className="flex items-start gap-2.5">
+        <Gift size={18} className="mt-0.5 shrink-0 text-emerald-600" />
+        <div className="min-w-0">
+          <p className="text-[13.5px] font-semibold text-ink">Pay {stats.rewardPercent}% less commission on buyers you bring</p>
+          <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">
+            When someone joins Nestly through your link, you pay {stats.rewardPercent}% less commission on their orders from your store for {stats.rewardDays} days. It&apos;s applied automatically at checkout.
+          </p>
+        </div>
+      </div>
+      <dl className="mt-3.5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+        {tiles.map((tile) => (
+          <div key={tile.label} className="min-w-0 rounded-lg bg-surface px-3 py-2.5">
+            <dt className="truncate text-[11.5px] text-muted">{tile.label}</dt>
+            <dd className="mt-0.5 truncate text-[16px] font-semibold text-ink">{tile.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }

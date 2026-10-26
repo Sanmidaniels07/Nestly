@@ -17,6 +17,8 @@ export interface SignupPayload {
   password: string;
   /** Optional, YYYY-MM-DD. */
   dateOfBirth?: string;
+  /** Seller share link (?ref=) they arrived through, if any. */
+  referralCode?: string;
 }
 
 export interface AuthSuccessData {

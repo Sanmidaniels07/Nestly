@@ -137,6 +137,11 @@ const sections: LegalSection[] = [
             <strong>Payment processing:</strong> Paystack&apos;s transaction fee is shared between you and Nestly in proportion to the amount each receives from the
             order.
           </li>
+          <li>
+            <strong>Referral reward:</strong> when someone creates a Nestly account after opening your store&apos;s share link, your commission on their
+            orders from your store is 2 percentage points lower (never below 0%) for 90 days from when they joined. It is applied automatically when the
+            order is placed and doesn&apos;t apply to purchases from your own account. Nestly may end or change this reward for future referrals with notice.
+          </li>
           <li>There is no fee to join, list products or keep a store open.</li>
         </ul>
         <p>
