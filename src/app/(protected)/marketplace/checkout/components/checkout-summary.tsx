@@ -28,7 +28,9 @@ export default function CheckoutSummary() {
   const discountAmount = appliedCoupon?.discountAmount ?? 0;
   const total = Math.max(0, subtotal - discountAmount + deliveryFee);
 
-  const canProceed = !!addressId && totalItems > 0;
+  // A store with no delivery zone or pickup point can't be ordered from.
+  const undeliverable = items?.filter((item) => item.product.store?.canDeliver === false) ?? [];
+  const canProceed = !!addressId && totalItems > 0 && undeliverable.length === 0;
 
   return (
     <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-6">
@@ -62,7 +64,11 @@ export default function CheckoutSummary() {
 
       {!canProceed && (
         <p className="mt-2.5 text-center text-[12px] text-subtle">
-          {!addressId ? "Select a delivery address." : "Your cart is empty."}
+          {undeliverable.length > 0
+            ? `Remove ${undeliverable.length === 1 ? "the item" : "items"} from sellers who haven't set up delivery or pickup yet.`
+            : !addressId
+              ? "Select a delivery address."
+              : "Your cart is empty."}
         </p>
       )}
     </aside>

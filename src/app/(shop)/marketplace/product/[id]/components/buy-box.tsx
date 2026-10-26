@@ -57,7 +57,9 @@ export default function BuyBox({ product }: Props) {
   const showFrom = hasOptions && !match && prices.some((p) => p !== lowest);
 
   const stock = match ? (match.isActive ? match.stock : 0) : product.stock;
-  const outOfStock = stock === 0;
+  // The seller has no delivery zone or pickup point yet - can't be bought.
+  const noDelivery = product.store?.canDeliver === false;
+  const outOfStock = stock === 0 || noDelivery;
   const lowStock = stock > 0 && stock <= 5;
 
   const pick = (position: number, value: string) => {
@@ -116,7 +118,9 @@ export default function BuyBox({ product }: Props) {
               outOfStock ? "text-red-600 dark:text-red-400" : lowStock ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
             }`}
           >
-            {outOfStock
+            {noDelivery
+              ? "Not available yet"
+              : outOfStock
               ? match
                 ? "This option is sold out"
                 : "Out of stock"
@@ -126,6 +130,12 @@ export default function BuyBox({ product }: Props) {
           </span>
         </div>
       </div>
+
+      {noDelivery && (
+        <p className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+          This seller hasn&apos;t set up delivery or pickup yet, so it can&apos;t be ordered right now. Check back soon or message the seller.
+        </p>
+      )}
 
       {hasOptions && <OptionPicker options={options} variations={variations} picked={picked} onPick={pick} />}
 

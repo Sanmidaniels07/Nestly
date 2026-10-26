@@ -65,6 +65,9 @@ export interface ProductStoreSummary {
   state?: string | null;
   // Only ever true for admins (everyone else can't open suspended stores).
   isSuspended?: boolean;
+  // False when the store has no delivery zone and no pickup point yet -
+  // its products can be viewed but not bought.
+  canDeliver?: boolean;
 }
 
 export interface Product {
