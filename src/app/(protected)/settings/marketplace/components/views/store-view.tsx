@@ -18,6 +18,7 @@ import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 import { useNigerianStates } from "@/src/hooks/use-locations";
 import DeliveryZonesManager from "./delivery-zones-manager";
+import BusinessVerification from "./business-verification";
 
 export default function StoreView() {
   const { data: store, isLoading } = useMyStore();
@@ -35,6 +36,7 @@ export default function StoreView() {
     <div className="space-y-6">
       <StoreDetailsForm storeId={store.id} />
       <PayoutDetailsForm slug={store.slug} />
+      <BusinessVerification />
       <StorePoliciesForm storeId={store.id} />
       <DeliveryZonesManager slug={store.slug} />
     </div>

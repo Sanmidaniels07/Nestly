@@ -60,5 +60,7 @@ export interface UserDashboard {
     status: SellerApplicationStatus;
     hasStore: boolean;
     store: { id: string; name: string; slug: string } | null;
+    // Approved but hasn't added a CAC number yet.
+    needsCacNumber?: boolean;
   } | null;
 }

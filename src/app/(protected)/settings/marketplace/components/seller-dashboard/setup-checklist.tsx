@@ -17,6 +17,8 @@ interface Step {
   done: boolean;
   href: string;
   cta: string;
+  // Optional steps are shown but don't count towards finishing setup.
+  optional?: boolean;
 }
 
 // Shown to approved sellers until their store is fully ready to sell -
@@ -68,12 +70,21 @@ export default function SetupChecklist({ seller }: Props) {
       href: "/settings/marketplace/components/products/new",
       cta: "Add product",
     },
+    {
+      title: "Add your CAC number",
+      description: "Registered business? Get a verified badge buyers trust.",
+      done: !!seller.cacNumber,
+      href: "/settings/marketplace?cac=1",
+      cta: "Add CAC number",
+      optional: true,
+    },
   ];
 
-  const completed = steps.filter((step) => step.done).length;
-  if (completed === steps.length) return null;
+  const required = steps.filter((step) => !step.optional);
+  const completed = required.filter((step) => step.done).length;
+  if (completed === required.length) return null;
 
-  const nextStep = steps.find((step) => !step.done);
+  const nextStep = required.find((step) => !step.done);
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
@@ -87,14 +98,14 @@ export default function SetupChecklist({ seller }: Props) {
           </h2>
         </div>
         <p className="font-[family-name:var(--font-mono)] text-[12.5px] text-subtle">
-          {completed} of {steps.length} done
+          {completed} of {required.length} done
         </p>
       </div>
 
       <div className="mt-4 h-1.5 overflow-hidden rounded-full bg-track">
         <div
           className="h-full rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 transition-all"
-          style={{ width: `${(completed / steps.length) * 100}%` }}
+          style={{ width: `${(completed / required.length) * 100}%` }}
         />
       </div>
 
@@ -129,6 +140,11 @@ export default function SetupChecklist({ seller }: Props) {
                     }`}
                   >
                     {step.title}
+                    {step.optional && !step.done && (
+                      <span className="ml-2 rounded-full bg-surface-2 px-2 py-0.5 align-middle text-[10.5px] font-medium uppercase tracking-wide text-subtle">
+                        Optional
+                      </span>
+                    )}
                   </p>
                   {!step.done && (
                     <p className="mt-0.5 text-[12.5px] leading-relaxed text-muted">

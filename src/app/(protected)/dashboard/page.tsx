@@ -21,6 +21,7 @@ import MarketplacePicks from "./marketplace-widget";
 import RecentActivity from "./recent-activity";
 import SuggestedUsers from "./suggested-users";
 import DashboardSkeleton from "./dashboard-skeleton";
+import CacReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/cac-reminder-banner";
 import BirthdayPrompt from "./birthday-prompt";
 
 export default function DashboardPage() {
@@ -40,6 +41,8 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 pb-20 pt-6 sm:space-y-8">
       <HeroCard name={user?.name || "there"} data={dashboard} profileCompletion={profile?.profileCompletion} />
+
+      {dashboard?.seller?.needsCacNumber && <CacReminderBanner />}
 
       {/* Only once the profile has loaded, so it doesn't flash for people who have a birthday set. */}
       {profile && <BirthdayPrompt dateOfBirth={profile.dateOfBirth} />}
