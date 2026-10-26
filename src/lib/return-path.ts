@@ -1,13 +1,14 @@
 // Remembers the last regular page a user was on, so pages people visit
-// in passing (Terms, Privacy, Seller Agreement) can send them back there,
-// including when they were opened in a new tab.
+// in passing (Terms, Privacy, Seller Agreement, the guides) can send them
+// back there, including when they were opened in a new tab.
 
 const KEY = "nestly:return-path";
 
-export const PASSING_PATHS = ["/terms", "/privacy", "/seller-terms"];
+// Each also covers the pages under it (/guides covers /guides/sellers).
+export const PASSING_PATHS = ["/terms", "/privacy", "/seller-terms", "/guides"];
 
 const isPassing = (path: string) =>
-  PASSING_PATHS.some((p) => path === p || path.startsWith(`${p}?`) || path.startsWith(`${p}#`));
+  PASSING_PATHS.some((p) => path === p || ["/", "?", "#"].some((next) => path.startsWith(`${p}${next}`)));
 
 export const rememberPath = (path: string) => {
   if (isPassing(path)) return;

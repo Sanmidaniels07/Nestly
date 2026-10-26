@@ -157,7 +157,10 @@ function BecomeSellerForm() {
         Become a seller
       </h1>
       <p className="mt-2.5 text-center text-[13.5px] text-muted">
-        Activate your seller account to start setting up your store.
+        Activate your seller account to start setting up your store.{" "}
+        <Link href="/guides/sellers" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
+          How selling works
+        </Link>
       </p>
 
       {!!categories?.length && (

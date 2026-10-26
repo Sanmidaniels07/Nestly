@@ -41,8 +41,9 @@ export default function Navbar() {
                 {[
                   { href: "/features", label: "Features" },
                   { href: "/preview", label: "Preview" },
+                  { href: "/guides", label: "Guides" },
                 ].map((item) => {
-                  const isActive = pathname === item.href;
+                  const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
                   return (
                     <Link
                       key={item.href}

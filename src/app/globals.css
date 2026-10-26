@@ -310,22 +310,27 @@ body {
 
 /* Legal pages (Terms, Privacy, Seller Agreement): Tailwind's reset strips
    list bullets and link styling, so restore them inside the document body. */
-.legal-body ul {
+.legal-body ul,
+.guide-body ul {
   list-style: disc;
   padding-left: 1.25rem;
 }
-.legal-body li + li {
+.legal-body li + li,
+.guide-body li + li {
   margin-top: 0.35rem;
 }
-.legal-body a {
+.legal-body a,
+.guide-body a {
   color: #6d28d9;
   text-decoration: underline;
   text-underline-offset: 2px;
 }
-.dark .legal-body a {
+.dark .legal-body a,
+.dark .guide-body a {
   color: #c4b5fd;
 }
-.legal-body strong {
+.legal-body strong,
+.guide-body strong {
   color: var(--ink);
 }
 

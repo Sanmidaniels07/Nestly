@@ -1,6 +1,7 @@
 "use client";
 
-import { PackagePlus, Boxes, ShoppingBag, Store, BarChart3, Wallet } from "lucide-react";
+import Link from "next/link";
+import { BookOpen, PackagePlus, Boxes, ShoppingBag, Store, BarChart3, Wallet } from "lucide-react";
 import ActionCard from "./action-card";
 
 const actions = [
@@ -61,9 +62,14 @@ export default function QuickActions() {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Quick actions
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
-          Manage your business
-        </h2>
+        <div className="mt-2 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+            Manage your business
+          </h2>
+          <Link href="/guides/sellers" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300">
+            <BookOpen size={14} /> Seller guide
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
