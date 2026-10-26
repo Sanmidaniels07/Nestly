@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { BadgeCheck, Lock, Mail, MapPin, MessageCircle, Phone, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Store } from "@/src/types/store";
@@ -14,6 +15,8 @@ import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useVerifyStore } from "@/src/hooks/use-verify-store";
 import { useRequireLogin } from "@/src/hooks/use-session";
+import { useMyStore } from "@/src/hooks/use-my-store";
+import { getStoreBySlug } from "@/src/services/store.services";
 import ShareButton from "@/src/components/ui/share-button";
 import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from "@/src/components/ui/social-icons";
 import { SITE_URL } from "@/src/lib/site";
@@ -35,7 +38,19 @@ async function copyToClipboard(value: string, message: string) {
 // The seller's social pages. Buyers never see these (the API leaves them
 // out) so deals don't move to WhatsApp/DMs; the owner sees their own, and
 // admins use them to check a store is genuine.
-function PrivateSocials({ store, isOwnStore }: { store: Store; isOwnStore: boolean }) {
+function PrivateSocials({ slug, isOwnStore }: { slug: string; isOwnStore: boolean }) {
+  // The page's store data may have been fetched before login (server
+  // render), so ask again as the signed-in owner/admin.
+  const { data: myStore } = useMyStore(isOwnStore);
+  const { data: adminStore } = useQuery({
+    queryKey: ["store", slug, "admin"],
+    queryFn: () => getStoreBySlug(slug),
+    select: (response) => response.data,
+    enabled: !isOwnStore,
+  });
+  const store = isOwnStore ? myStore : adminStore;
+  if (!store) return null;
+
   const links = [
     store.whatsapp && { href: socialUrl("whatsapp", store.whatsapp), label: "WhatsApp", Icon: WhatsAppIcon, tone: "text-emerald-600" },
     store.instagram && { href: socialUrl("instagram", store.instagram), label: "Instagram", Icon: InstagramIcon, tone: "text-pink-600" },
@@ -108,7 +123,7 @@ export default function SellerProfile({ store }: Props) {
                 </p>
               )}
 
-              {(isAdmin || isOwnStore) && <PrivateSocials store={store} isOwnStore={isOwnStore} />}
+              {(isAdmin || isOwnStore) && <PrivateSocials slug={store.slug} isOwnStore={isOwnStore} />}
 
               {location && (
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-ink-3">
