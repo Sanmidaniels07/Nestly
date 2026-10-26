@@ -70,15 +70,14 @@ export default function SetupChecklist({ seller }: Props) {
       href: "/settings/marketplace/components/products/new",
       cta: "Add product",
     },
-    // Only once there's a store for the badge to go on.
-    ...(hasStore ? [{
+    {
       title: "Add your CAC number",
       description: "Registered business? Get a verified badge buyers trust.",
       done: !!seller.cacNumber,
-      href: "/settings/marketplace?tab=store#business-verification",
+      href: "/settings/marketplace?cac=1",
       cta: "Add CAC number",
       optional: true,
-    }] : []),
+    },
   ];
 
   const required = steps.filter((step) => !step.optional);

@@ -17,6 +17,7 @@ export const useUpdateMySeller = () => {
 
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["seller", "me"] });
+      queryClient.invalidateQueries({ queryKey: ["user-dashboard"] });
       toast.success(variables.cacNumber ? "CAC number saved - we'll check it shortly" : "CAC number removed");
     },
 
