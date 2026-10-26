@@ -239,6 +239,10 @@ function CreateStoreForm() {
     city: "",
     state: "",
     country: "",
+    instagram: "",
+    whatsapp: "",
+    facebook: "",
+    tiktok: "",
   });
   const [logo, setLogo] = useState<string>();
   const [banner, setBanner] = useState<string>();
@@ -273,6 +277,10 @@ function CreateStoreForm() {
         city: form.city.trim() || undefined,
         state: form.state.trim() || undefined,
         country: form.country.trim() || undefined,
+        instagram: form.instagram.trim() || undefined,
+        whatsapp: form.whatsapp.trim() || undefined,
+        facebook: form.facebook.trim() || undefined,
+        tiktok: form.tiktok.trim() || undefined,
         logo,
         banner,
       },
@@ -358,6 +366,17 @@ function CreateStoreForm() {
             value={form.country}
             onChange={update("country")}
           />
+        </div>
+
+        <div>
+          <p className="text-sm font-medium text-ink-2">Social links <span className="font-normal text-subtle">(optional)</span></p>
+          <p className="mt-0.5 text-[12.5px] text-muted">Shown on your store page so buyers can see you&apos;re active. Paste a username or link.</p>
+          <div className="mt-3 grid gap-4 sm:grid-cols-2">
+            <Input label="Instagram" value={form.instagram} onChange={update("instagram")} placeholder="@yourshop" autoCapitalize="none" />
+            <Input label="WhatsApp number" value={form.whatsapp} onChange={update("whatsapp")} placeholder="0815 967 1809" inputMode="tel" />
+            <Input label="Facebook page" value={form.facebook} onChange={update("facebook")} placeholder="facebook.com/yourshop" autoCapitalize="none" />
+            <Input label="TikTok" value={form.tiktok} onChange={update("tiktok")} placeholder="@yourshop" autoCapitalize="none" />
+          </div>
         </div>
 
         <div className="rounded-xl border border-violet-200 bg-violet-50/70 px-4 py-3.5 text-[13px] leading-relaxed text-ink-2 dark:border-violet-500/30 dark:bg-violet-500/10">

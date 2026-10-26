@@ -19,6 +19,7 @@ import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton"
 import { useNigerianStates } from "@/src/hooks/use-locations";
 import DeliveryZonesManager from "./delivery-zones-manager";
 import BusinessVerification from "./business-verification";
+import SocialLinksForm from "./social-links-form";
 
 export default function StoreView() {
   const { data: store, isLoading } = useMyStore();
@@ -46,6 +47,7 @@ export default function StoreView() {
   return (
     <div className="space-y-6">
       <StoreDetailsForm storeId={store.id} />
+      <SocialLinksForm store={store} />
       <PayoutDetailsForm slug={store.slug} />
       <BusinessVerification />
       <StorePoliciesForm storeId={store.id} />

@@ -9,6 +9,7 @@ import RecentOrders from "../seller-dashboard/recent-orders";
 import SalesOverview from "../seller-dashboard/sales-overview";
 import SetupChecklist from "../seller-dashboard/setup-checklist";
 import TopSellingProducts from "../seller-dashboard/top-selling-products";
+import ShareStoreCard from "../seller-dashboard/share-store-card";
 
 interface Props {
   seller?: SellerProfile;
@@ -33,6 +34,8 @@ export default function DashboardView({ seller }: Props) {
       <DashboardStats />
 
       <QuickActions />
+
+      <ShareStoreCard />
 
       <InventorySnapshot />
 

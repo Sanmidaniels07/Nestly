@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Share2, ShieldCheck, Check } from "lucide-react";
+import { Heart, ShieldCheck, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Product } from "@/src/types/product";
@@ -12,6 +12,8 @@ import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
 import OptionPicker from "./buy-box-components/option-picker";
 import { useRequireLogin } from "@/src/hooks/use-session";
+import ShareButton from "@/src/components/ui/share-button";
+import { SITE_URL } from "@/src/lib/site";
 
 interface Props {
   product: Product;
@@ -187,12 +189,15 @@ export default function BuyBox({ product }: Props) {
           <Heart size={17} className={saved ? "fill-red-500 text-red-500" : "text-muted"} />
         </button>
 
-        <button
-          className="flex flex-1 items-center justify-center rounded-xl border border-line py-2.5 transition-colors hover:bg-surface-sunken"
-          aria-label="Share product"
-        >
-          <Share2 size={17} className="text-muted" />
-        </button>
+        <div className="flex-1 [&>div>button]:w-full">
+          <ShareButton
+            url={`${SITE_URL}/marketplace/product/${product.id}`}
+            title={product.title}
+            text={`${product.title} on Nestly:`}
+            label=""
+            className="flex w-full items-center justify-center rounded-xl border border-line py-2.5 transition-colors hover:bg-surface-sunken"
+          />
+        </div>
       </div>
 
       <PaymentMethods />
