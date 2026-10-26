@@ -74,8 +74,8 @@ const parts: GuidePart[] = [
               sell, your email, phone and address, then tap <strong>Create store</strong>.
             </p>
             <ul>
-              <li>Buyers can see your email and phone on your store page.</li>
-              <li>Your Instagram, Facebook and TikTok are private - only you and the Nestly team see them.</li>
+              <li>Your email, phone, Instagram, Facebook and TikTok are private - only you and the Nestly team see them.</li>
+              <li>Buyers talk to you through Nestly messages, so every conversation and sale stays in the app.</li>
             </ul>
           </>
         ),
@@ -221,6 +221,11 @@ const parts: GuidePart[] = [
               <strong>Referral reward:</strong> when someone joins Nestly through your link, you pay 2% less commission on their orders from your store
               for 90 days. The card shows your visits, sign-ups and commission saved.
             </p>
+            <p>
+              <strong>Get followers:</strong> everyone who follows your store is told when you list new products, buyers who asked are told when a
+              sold-out product is back, and buyers who leave items in their cart get a reminder - so restock and list often. Your products are also
+              listed for Google search and Google Shopping.
+            </p>
           </>
         ),
       },
@@ -230,7 +235,12 @@ const parts: GuidePart[] = [
         where: { label: "Seller Hub → Orders", href: "/settings/marketplace?tab=orders" },
         body: (
           <>
-            <p>You&apos;re notified when a buyer pays. Open the order, read any note the buyer left you, then move each item along:</p>
+            <p>
+              You&apos;re notified when a buyer pays. Open the order to see the buyer&apos;s name and <strong>delivery address</strong> and any note
+              they left you. For delivery orders you also get the <strong>phone number to call for delivery</strong> - in the order alert, the email and
+              on the order until it&apos;s delivered. Use it only to deliver; for anything else tap <strong>Message buyer</strong>. Then move each item
+              along:
+            </p>
             <ul>
               <li>
                 <strong>Processing</strong> while you prepare it → <strong>Shipped</strong> when it leaves you (add a tracking number if you have

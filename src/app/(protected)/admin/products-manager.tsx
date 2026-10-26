@@ -2,9 +2,9 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, ChevronDown, ExternalLink, History, Package, Search, Star } from "lucide-react";
+import { ArrowRight, ChevronDown, ExternalLink, History, Package, Search, Sparkles, Star } from "lucide-react";
 
-import { useAdminProducts, useProductHistory } from "@/src/hooks/use-admin-products";
+import { useAdminProducts, useProductHistory, useSetProductFeatured } from "@/src/hooks/use-admin-products";
 import { AdminProduct, ProductChange } from "@/src/types/admin-product";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -110,6 +110,11 @@ function ProductRow({ product, open, onToggle }: { product: AdminProduct; open: 
             <span className="inline-flex items-center gap-1 rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
               <History size={11} /> {edits} edit{edits === 1 ? "" : "s"}
             </span>
+            {product.isFeatured && (
+              <span className="inline-flex items-center gap-1 rounded-full bg-violet-600 px-2 py-0.5 text-[11px] font-semibold text-white">
+                <Sparkles size={11} /> Featured
+              </span>
+            )}
             {product.reviewsResetAt && (
               <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2 py-0.5 text-[11px] font-semibold text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
                 <Star size={11} /> Reviews reset
@@ -120,7 +125,34 @@ function ProductRow({ product, open, onToggle }: { product: AdminProduct; open: 
         <ChevronDown size={18} className={`shrink-0 text-subtle transition-transform ${open ? "rotate-180" : ""}`} />
       </button>
 
+      {open && <FeaturedToggle product={product} />}
       {open && <HistoryPanel productId={product.id} />}
+    </div>
+  );
+}
+
+// Only admins choose what's featured on the marketplace.
+function FeaturedToggle({ product }: { product: AdminProduct }) {
+  const { mutate: setFeatured, isPending } = useSetProductFeatured();
+  const canFeature = product.status === "PUBLISHED";
+
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line px-4 py-3">
+      <p className="text-[12.5px] text-muted">
+        {product.isFeatured ? "Shown in the marketplace's featured sections." : canFeature ? "Not featured." : "Only published products can be featured."}
+      </p>
+      <button
+        type="button"
+        onClick={() => setFeatured({ id: product.id, isFeatured: !product.isFeatured })}
+        disabled={isPending || (!product.isFeatured && !canFeature)}
+        className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-[12.5px] font-semibold transition-colors disabled:opacity-50 ${
+          product.isFeatured
+            ? "border border-line-strong text-ink-2 hover:border-red-200 hover:text-red-600"
+            : "bg-violet-600 text-white hover:bg-violet-700"
+        }`}
+      >
+        <Sparkles size={13} /> {product.isFeatured ? "Unfeature" : "Feature on marketplace"}
+      </button>
     </div>
   );
 }

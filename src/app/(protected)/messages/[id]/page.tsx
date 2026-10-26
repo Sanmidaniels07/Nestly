@@ -8,6 +8,8 @@ import { ArrowLeft, Check, CheckCheck, ChevronRight, Image as ImageIcon, Loader2
 import { useConversations } from "@/src/hooks/use-conversations";
 import { useMessages } from "@/src/hooks/use-messages";
 import { useSendMessage } from "@/src/hooks/use-send-message";
+import MessageText from "@/src/components/messages/message-text";
+import toast from "react-hot-toast";
 import { useMarkConversationRead } from "@/src/hooks/use-mark-conversation-read";
 import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { useAuthStore } from "@/src/store/auth-store";
@@ -185,9 +187,15 @@ function ConversationThread({ id }: { id: string }) {
     sendMessage(
       { content: content.trim() || undefined, media: media.length > 0 ? media : undefined },
       {
-        onSuccess: () => {
+        onSuccess: (sent) => {
           setContent("");
           setMedia([]);
+          if (sent.contactHidden) {
+            toast("Phone numbers, emails and social handles are hidden in chats with sellers. Keep chats and payments on Nestly so you're protected.", {
+              icon: "🔒",
+              duration: 6000,
+            });
+          }
         },
       }
     );
@@ -313,7 +321,7 @@ function ConversationThread({ id }: { id: string }) {
                           : "bg-surface-2 text-ink"
                       }`}
                     >
-                      {message.content}
+                      <MessageText text={message.content} />
                     </div>
                   )}
 

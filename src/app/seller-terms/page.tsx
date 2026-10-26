@@ -194,7 +194,7 @@ const sections: LegalSection[] = [
     heading: "Buyers' personal data",
     body: (
       <p>
-        You receive buyers&apos; names, addresses and phone numbers only to fulfil their orders. Use them for nothing else - no marketing, sharing or selling
+        You receive buyers&apos; names, delivery addresses and, for delivery orders, a phone number to call only to deliver their orders - for anything else, talk to buyers through Nestly messages (contact details there are hidden automatically). Use them for nothing else - no marketing, sharing or selling
         without the buyer&apos;s permission - keep them secure, and delete them when no longer needed. This is required by the Nigeria Data Protection Act.
       </p>
     ),

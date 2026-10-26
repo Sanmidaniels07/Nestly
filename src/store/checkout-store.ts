@@ -27,6 +27,10 @@ interface CheckoutStore {
   addressId?: string;
   setAddressId: (addressId: string) => void;
 
+  // Number the seller calls to deliver; undefined = the address's phone.
+  deliveryPhone?: string;
+  setDeliveryPhone: (phone: string) => void;
+
   // storeId -> selected shipping option, one per store present in the cart
   shippingSelections: Record<string, ShippingSelection>;
   setShippingSelection: (storeId: string, selection: ShippingSelection) => void;
@@ -59,7 +63,11 @@ interface CheckoutStore {
 
 export const useCheckoutStore = create<CheckoutStore>((set) => ({
   addressId: undefined,
-  setAddressId: (addressId) => set({ addressId }),
+  // A new address brings its own phone.
+  setAddressId: (addressId) => set({ addressId, deliveryPhone: undefined }),
+
+  deliveryPhone: undefined,
+  setDeliveryPhone: (deliveryPhone) => set({ deliveryPhone }),
 
   shippingSelections: {},
   setShippingSelection: (storeId, selection) =>
@@ -99,6 +107,7 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
   resetCheckout: () =>
     set({
       addressId: undefined,
+      deliveryPhone: undefined,
       shippingSelections: {},
       sellerNotes: {},
       appliedCoupon: undefined,

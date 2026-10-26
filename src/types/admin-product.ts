@@ -6,6 +6,8 @@ export interface AdminProduct {
   sku: string;
   status: ProductStatus;
   price: number;
+  /** Shown in the marketplace's featured sections - set by admins only. */
+  isFeatured: boolean;
   updatedAt: string;
   reviewsResetAt: string | null;
   images: { url: string }[];

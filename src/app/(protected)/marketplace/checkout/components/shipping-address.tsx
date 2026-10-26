@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Phone, Plus, X } from "lucide-react";
 
 import { useAddresses } from "@/src/hooks/use-addresses";
 import { useCreateAddress } from "@/src/hooks/use-create-address";
@@ -11,6 +11,7 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import Skeleton from "@/src/components/ui/skeleton";
 import AddressCard from "./address-card";
+import { PHONE_PATTERN } from "@/src/lib/phone";
 
 const emptyForm = {
   fullName: "",
@@ -152,6 +153,43 @@ export default function ShippingAddress() {
           />
         ))}
       </div>
+
+      <DeliveryPhone key={addressId} phone={addresses?.find((a) => a.id === addressId)?.phone} />
     </section>
+  );
+}
+
+// The number the seller (who delivers) will call - the address's phone
+// unless the buyer changes it, e.g. when it's a gift for someone else.
+// Sellers get it for delivery orders only, never their email.
+function DeliveryPhone({ phone }: { phone?: string }) {
+  const deliveryPhone = useCheckoutStore((state) => state.deliveryPhone);
+  const setDeliveryPhone = useCheckoutStore((state) => state.setDeliveryPhone);
+  if (phone === undefined) return null;
+
+  const value = deliveryPhone ?? phone;
+  const invalid = value.trim().length > 0 && !PHONE_PATTERN.test(value.trim());
+
+  return (
+    <div className="mt-5 border-t border-line-soft pt-5">
+      <label htmlFor="delivery-phone" className="flex items-center gap-1.5 text-[13.5px] font-semibold text-ink">
+        <Phone size={14} className="text-violet-600 dark:text-violet-400" /> Phone number for delivery
+      </label>
+      <p className="mt-0.5 text-[12.5px] text-muted">
+        The seller calls this number to deliver your order. Change it if someone else is receiving it.
+      </p>
+      <input
+        id="delivery-phone"
+        type="tel"
+        inputMode="tel"
+        value={value}
+        onChange={(e) => setDeliveryPhone(e.target.value)}
+        placeholder="0803 123 4567"
+        className={`mt-2.5 h-12 w-full rounded-xl border bg-surface px-4 text-[16px] text-ink outline-none transition-colors placeholder:text-subtle focus:ring-4 focus:ring-violet-500/10 sm:max-w-xs sm:text-[14px] ${
+          invalid ? "border-red-300 focus:border-red-400" : "border-line focus:border-violet-400"
+        }`}
+      />
+      {invalid && <p className="mt-1.5 text-[12px] text-red-600">Enter a valid phone number, e.g. 0803 123 4567.</p>}
+    </div>
   );
 }

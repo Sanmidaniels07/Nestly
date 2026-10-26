@@ -94,7 +94,13 @@ export interface Order {
   shipping?: OrderShipping[];
   // Buyer's notes to sellers. Sellers only get their own store's (no storeId).
   sellerNotes?: { storeId?: string; note: string }[];
+  // Sellers get the delivery address without the buyer's phone - they
+  // message the buyer in the app.
   address?: Address;
+  /** Sellers only: the buyer (no email or phone). */
+  user?: { id: string; name: string };
+  /** Number to call to deliver. Sellers get it only for delivery orders until delivered. */
+  deliveryPhone?: string | null;
   paymentReference?: string;
   paymentMethod?: string;
   timeline?: OrderTimelineEntry[];

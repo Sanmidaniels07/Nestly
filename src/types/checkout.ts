@@ -15,6 +15,8 @@ export interface InitiateCheckoutPayload {
   shippingSelections?: ShippingSelection[];
   couponCode?: string;
   sellerNotes?: SellerNote[];
+  /** Number the seller calls to deliver; defaults to the address's phone. */
+  deliveryPhone?: string;
 }
 
 export interface InitiateCheckoutResponse {
@@ -35,4 +37,6 @@ export interface ChargeSavedCardPayload {
   shippingSelections?: ShippingSelection[];
   couponCode?: string;
   sellerNotes?: SellerNote[];
+  /** Number the seller calls to deliver; defaults to the address's phone. */
+  deliveryPhone?: string;
 }

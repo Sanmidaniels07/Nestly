@@ -13,6 +13,7 @@ import { useSavedCards } from "@/src/hooks/use-saved-cards";
 import { useChargeSavedCard } from "@/src/hooks/use-charge-saved-card";
 import { payWithPaystack } from "@/src/lib/paystack";
 import { Order } from "@/src/types/order";
+import { PHONE_PATTERN } from "@/src/lib/phone";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -28,6 +29,7 @@ export default function PaymentSummary() {
   const addressId = useCheckoutStore((state) => state.addressId);
   const shippingSelections = useCheckoutStore((state) => state.shippingSelections);
   const sellerNotes = useCheckoutStore((state) => state.sellerNotes);
+  const deliveryPhone = useCheckoutStore((state) => state.deliveryPhone?.trim() || undefined);
   const appliedCoupon = useCheckoutStore((state) => state.appliedCoupon);
   const resetCheckout = useCheckoutStore((state) => state.resetCheckout);
 
@@ -78,6 +80,10 @@ export default function PaymentSummary() {
       setError("Select a delivery address on the checkout page first.");
       return;
     }
+    if (deliveryPhone && !PHONE_PATTERN.test(deliveryPhone)) {
+      setError("Check the phone number for delivery on the checkout page.");
+      return;
+    }
 
     const attempt = ++attemptRef.current;
     const isStale = () => attempt !== attemptRef.current;
@@ -94,6 +100,7 @@ export default function PaymentSummary() {
           shippingSelections: shippingSelectionsArray,
           couponCode: appliedCoupon?.code,
           sellerNotes: sellerNotesArray,
+          deliveryPhone,
         });
         const order = (response as { data: Order }).data;
         if (isStale()) return;
@@ -112,6 +119,7 @@ export default function PaymentSummary() {
         shippingSelections: shippingSelectionsArray,
         couponCode: appliedCoupon?.code,
         sellerNotes: sellerNotesArray,
+        deliveryPhone,
       });
       const { accessCode, reference } = (response as { data: { accessCode: string; reference: string } }).data;
 

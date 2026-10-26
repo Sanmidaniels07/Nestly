@@ -11,6 +11,7 @@ import QuantitySelector from "./buy-box-components/quantity-selector";
 import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
 import OptionPicker from "./buy-box-components/option-picker";
+import NotifyMe from "./buy-box-components/notify-me";
 import { useRequireLogin } from "@/src/hooks/use-session";
 import ShareButton from "@/src/components/ui/share-button";
 import { SITE_URL } from "@/src/lib/site";
@@ -63,6 +64,9 @@ export default function BuyBox({ product }: Props) {
   const noDelivery = product.store?.canDeliver === false;
   const outOfStock = stock === 0 || noDelivery;
   const lowStock = stock > 0 && stock <= 5;
+  // Sold out - the whole product, or the option they picked: offer to tell
+  // them when it's back (not while they're still choosing options).
+  const soldOut = !noDelivery && stock === 0 && (!hasOptions || !!match || product.stock === 0);
 
   const pick = (position: number, value: string) => {
     setPicked((current) => current.map((v, i) => (i === position ? (v === value ? "" : value) : v)));
@@ -148,6 +152,9 @@ export default function BuyBox({ product }: Props) {
       <DeliveryEstimate product={product} />
 
       <div className="space-y-2.5">
+        {soldOut && <NotifyMe productId={product.id} variationId={match?.id} />}
+
+        {!soldOut && (
         <button
           onClick={handleAddToCart}
           disabled={outOfStock || !choiceMade || added || isAdding}
@@ -168,7 +175,9 @@ export default function BuyBox({ product }: Props) {
             "Add to cart"
           )}
         </button>
+        )}
 
+        {!soldOut && (
         <button
           onClick={handleBuyNow}
           disabled={outOfStock || !choiceMade || isAdding}
@@ -176,6 +185,7 @@ export default function BuyBox({ product }: Props) {
         >
           Buy now
         </button>
+        )}
       </div>
 
       <div className="flex gap-2.5">

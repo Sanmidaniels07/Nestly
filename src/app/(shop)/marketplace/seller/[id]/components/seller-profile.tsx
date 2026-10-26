@@ -3,12 +3,10 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 import { BadgeCheck, Lock, Mail, MapPin, MessageCircle, Phone, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Store } from "@/src/types/store";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import ReportButton from "@/src/components/ui/report-button";
-import Tooltip from "@/src/components/ui/tooltip";
 import { useAuthStore } from "@/src/store/auth-store";
 import { useStoreFollowStatus } from "@/src/hooks/use-store-follow-status";
 import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
@@ -26,19 +24,11 @@ interface Props {
   store: Store;
 }
 
-async function copyToClipboard(value: string, message: string) {
-  try {
-    await navigator.clipboard.writeText(value);
-    toast.success(message);
-  } catch {
-    toast.error("Couldn't copy to clipboard");
-  }
-}
-
-// The seller's social pages. Buyers never see these (the API leaves them
-// out) so deals don't move to WhatsApp/DMs; the owner sees their own, and
-// admins use them to check a store is genuine.
-function PrivateSocials({ slug, isOwnStore }: { slug: string; isOwnStore: boolean }) {
+// The seller's contact details and social pages. Buyers never see these
+// (the API leaves them out) so every conversation and sale stays in the
+// app; the owner sees their own, and admins use them to check a store is
+// genuine.
+function PrivateContacts({ slug, isOwnStore }: { slug: string; isOwnStore: boolean }) {
   // The page's store data may have been fetched before login (server
   // render), so ask again as the signed-in owner/admin.
   const { data: myStore } = useMyStore(isOwnStore);
@@ -56,6 +46,8 @@ function PrivateSocials({ slug, isOwnStore }: { slug: string; isOwnStore: boolea
     store.instagram && { href: socialUrl("instagram", store.instagram), label: "Instagram", Icon: InstagramIcon, tone: "text-pink-600" },
     store.facebook && { href: socialUrl("facebook", store.facebook), label: "Facebook", Icon: FacebookIcon, tone: "text-blue-600" },
     store.tiktok && { href: socialUrl("tiktok", store.tiktok), label: "TikTok", Icon: TikTokIcon, tone: "text-ink" },
+    store.email && { href: `mailto:${store.email}`, label: store.email, Icon: Mail, tone: "text-violet-600" },
+    store.phone && { href: `tel:${store.phone}`, label: store.phone, Icon: Phone, tone: "text-violet-600" },
   ].filter(Boolean) as { href: string; label: string; Icon: typeof WhatsAppIcon; tone: string }[];
 
   if (links.length === 0) return null;
@@ -63,7 +55,7 @@ function PrivateSocials({ slug, isOwnStore }: { slug: string; isOwnStore: boolea
   return (
     <div className="mt-3 rounded-xl border border-dashed border-amber-300 bg-amber-50/60 p-2.5 dark:border-amber-500/30 dark:bg-amber-500/5">
       <p className="mb-2 flex items-center gap-1.5 text-[11.5px] font-medium text-amber-700 dark:text-amber-300">
-        <Lock size={12} /> {isOwnStore ? "Only you and Nestly admins see your social pages" : "Only admins see this"}
+        <Lock size={12} /> {isOwnStore ? "Only you and Nestly admins see your contact details" : "Only admins see this"}
       </p>
       <div className="flex flex-wrap gap-2">
         {links.map(({ href, label, Icon, tone }) => (
@@ -123,7 +115,7 @@ export default function SellerProfile({ store }: Props) {
                 </p>
               )}
 
-              {(isAdmin || isOwnStore) && <PrivateSocials slug={store.slug} isOwnStore={isOwnStore} />}
+              {(isAdmin || isOwnStore) && <PrivateContacts slug={store.slug} isOwnStore={isOwnStore} />}
 
               {location && (
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-ink-3">
@@ -140,6 +132,8 @@ export default function SellerProfile({ store }: Props) {
             {isAdmin && !isOwnStore && <VerifyStoreButton store={store} />}
 
             {!authUser && <GuestFollowButton />}
+
+            {!authUser && <GuestMessageButton />}
 
             <ShareButton
               url={`${SITE_URL}/marketplace/seller/${store.slug}`}
@@ -161,52 +155,40 @@ export default function SellerProfile({ store }: Props) {
                 />
               </>
             )}
-
-            {store.email && (
-              <Tooltip label={store.email}>
-                <a
-                  href={`mailto:${store.email}`}
-                  onClick={() => copyToClipboard(store.email!, "Email copied to clipboard")}
-                  className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10"
-                >
-                  <Mail size={14} />
-                  Email
-                </a>
-              </Tooltip>
-            )}
-
-            {store.phone && (
-              <Tooltip label={store.phone}>
-                <a
-                  href={`tel:${store.phone}`}
-                  onClick={() => copyToClipboard(store.phone!, "Phone number copied to clipboard")}
-                  className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110"
-                >
-                  <Phone size={15} />
-                  Call
-                </a>
-              </Tooltip>
-            )}
           </div>
         </div>
 
-        {!isOwnStore && (store.email || store.phone) && <KeepPaymentsOnNestly />}
+        {!isOwnStore && <KeepPaymentsOnNestly />}
       </div>
     </section>
   );
 }
 
-// Buyers can call or email the seller, but paying outside Nestly checkout
-// leaves them without buyer protection - say so next to the buttons.
+// Buyers talk to sellers through in-app messages (no phone or email shown)
+// and pay through Nestly checkout - say so under the store header.
 function KeepPaymentsOnNestly() {
   return (
     <p className="mt-5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/25 dark:bg-amber-500/5 dark:text-amber-200">
       <ShieldAlert size={15} className="mt-0.5 shrink-0 text-amber-600" />
       <span>
-        <span className="font-semibold">Keep payments on Nestly.</span> Only pay through Nestly checkout - money sent straight to a seller (bank
-        transfer, cash, POS) isn&apos;t covered by buyer protection. If a seller asks you to pay outside Nestly, please report them.
+        <span className="font-semibold">Keep it on Nestly.</span> Tap Message to chat with the seller, and only pay through Nestly checkout - money
+        sent straight to a seller (bank transfer, cash, POS) isn&apos;t covered by buyer protection. If a seller asks you to pay or talk outside
+        Nestly, please report them.
       </span>
     </p>
+  );
+}
+
+function GuestMessageButton() {
+  const requireLogin = useRequireLogin();
+  return (
+    <button
+      onClick={() => requireLogin("Log in or create a free account to message sellers.")}
+      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-600 dark:hover:border-violet-500/40 dark:hover:text-violet-400"
+    >
+      <MessageCircle size={14} />
+      Message
+    </button>
   );
 }
 
