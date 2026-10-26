@@ -221,6 +221,11 @@ const parts: GuidePart[] = [
               <strong>Referral reward:</strong> when someone joins Nestly through your link, you pay 2% less commission on their orders from your store
               for 90 days. The card shows your visits, sign-ups and commission saved.
             </p>
+            <p>
+              <strong>Get followers:</strong> everyone who follows your store is told when you list new products, buyers who asked are told when a
+              sold-out product is back, and buyers who leave items in their cart get a reminder - so restock and list often. Your products are also
+              listed for Google search and Google Shopping.
+            </p>
           </>
         ),
       },

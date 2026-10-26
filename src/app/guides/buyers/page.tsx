@@ -45,7 +45,8 @@ const parts: GuidePart[] = [
         body: (
           <p>
             Tap <strong>Save item</strong> on anything you like - it waits for you in <strong>Saved products</strong>. <strong>Follow</strong> stores you
-            love to see their new products.
+            love and we&apos;ll tell you when they list something new. Sold out? Tap <strong>Notify me when it&apos;s back</strong>. You can turn these
+            alerts off under Settings → Notifications → Shopping updates.
           </p>
         ),
       },

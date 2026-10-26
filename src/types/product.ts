@@ -111,7 +111,6 @@ export interface CreateProductPayload {
   price: number;
   originalPrice?: number;
   stock: number;
-  isFeatured?: boolean;
   highlights?: string[];
   images?: ProductImage[];
   specifications?: ProductSpecification[];

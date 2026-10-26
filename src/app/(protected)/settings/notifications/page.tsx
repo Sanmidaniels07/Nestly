@@ -32,6 +32,10 @@ const PREFERENCE_META: Record<
     label: "Marketplace orders",
     description: "Order status updates, shipping, and returns.",
   },
+  SHOPPING: {
+    label: "Shopping updates",
+    description: "New products from stores you follow, items left in your cart, and things you asked about being back in stock. Includes emails.",
+  },
   SYSTEM: {
     label: "System announcements",
     description: "Important updates about your account and Nestly.",

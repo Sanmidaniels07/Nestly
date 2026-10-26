@@ -47,6 +47,14 @@ function targetHref(notification: Notification): string | null {
       return "/admin?tab=payouts";
     case "ORDER":
       return notification.targetId ? `/marketplace/orders/${notification.targetId}` : "/marketplace/orders";
+    // Shopping updates: a product (store page view, not the seller's editor),
+    // a store (targetId is its slug) or the cart.
+    case "PRODUCT_PAGE":
+      return notification.targetId ? `/marketplace/product/${notification.targetId}` : null;
+    case "STORE_PAGE":
+      return notification.targetId ? `/marketplace/seller/${notification.targetId}` : null;
+    case "CART":
+      return "/marketplace/cart";
     case "SELLER_ORDER":
       return notification.targetId
         ? `/settings/marketplace?tab=orders&order=${notification.targetId}`
@@ -65,6 +73,7 @@ const ICON_MAP = {
   message: MailIcon,
   order: ShoppingBag,
   marketplace: ShoppingBag,
+  shopping: ShoppingBag,
   community: Users,
 } as const;
 

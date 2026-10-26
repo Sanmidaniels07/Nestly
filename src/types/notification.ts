@@ -12,7 +12,11 @@ export type NotificationTargetType =
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
   | "SELLER_SETUP"
-  | "ADMIN_CAC_SUBMITTED";
+  | "ADMIN_CAC_SUBMITTED"
+  // Shopping updates for buyers.
+  | "PRODUCT_PAGE"
+  | "STORE_PAGE"
+  | "CART";
 
 export interface Notification {
   id: string;
@@ -32,7 +36,8 @@ export type NotificationPreferenceType =
   | "FOLLOW"
   | "MESSAGE"
   | "ORDER"
-  | "SYSTEM";
+  | "SYSTEM"
+  | "SHOPPING";
 
 export interface NotificationPreference {
   type: NotificationPreferenceType;

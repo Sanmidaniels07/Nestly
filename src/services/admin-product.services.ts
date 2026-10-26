@@ -18,3 +18,9 @@ export const getProductHistory = async (id: string, params: { page?: number; lim
   );
   return response.data;
 };
+
+// Featured products appear in the marketplace's featured sections.
+export const setProductFeatured = async (id: string, isFeatured: boolean) => {
+  const response = await api.patch<ApiResponse<{ id: string; isFeatured: boolean }>>(`/admin/products/${id}/featured`, { isFeatured });
+  return response.data;
+};
