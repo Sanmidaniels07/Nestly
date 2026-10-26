@@ -63,6 +63,8 @@ export interface ProductStoreSummary {
   logo?: string | null;
   city?: string | null;
   state?: string | null;
+  // Only ever true for admins (everyone else can't open suspended stores).
+  isSuspended?: boolean;
 }
 
 export interface Product {

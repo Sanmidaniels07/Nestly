@@ -186,7 +186,14 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
             {seller.user.username && ` · @${seller.user.username}`}
           </p>
           {seller.store && (
-            <p className="mt-1 text-[12px] text-subtle">Store: {seller.store.name}</p>
+            <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-subtle">
+              Store: {seller.store.name}
+              {seller.store.isSuspended && (
+                <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-red-700 dark:bg-red-500/10 dark:text-red-300">
+                  Suspended
+                </span>
+              )}
+            </p>
           )}
 
           {/* Open in a new tab so the approval list keeps its place. */}
