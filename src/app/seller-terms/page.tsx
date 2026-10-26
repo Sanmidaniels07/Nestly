@@ -134,8 +134,9 @@ const sections: LegalSection[] = [
             <strong>Delivery fees are yours in full</strong> - no commission is taken on them.
           </li>
           <li>
-            <strong>Payment processing:</strong> Paystack&apos;s transaction fee is shared between you and Nestly in proportion to the amount each receives from the
-            order.
+            <strong>Payment processing:</strong> Nestly currently pays Paystack&apos;s transaction fee on your sales out of its commission - you
+            receive your full share. On the rare order where Nestly&apos;s commission is smaller than the fee, that order&apos;s fee is shared between you and
+            Nestly in proportion to the amount each receives. We&apos;ll give you notice before changing this.
           </li>
           <li>
             <strong>Referral reward:</strong> when someone creates a Nestly account after opening your store&apos;s share link, your commission on their
