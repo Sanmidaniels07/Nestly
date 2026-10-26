@@ -79,7 +79,12 @@ const parts: GuidePart[] = [
         id: "messages",
         title: "Send messages",
         where: { label: "Messages", href: "/messages" },
-        body: <p>Chat privately with people, and share photos or videos in the conversation.</p>,
+        body: (
+          <p>
+            Chat privately and see when people are online or typing. Share photos and videos, reply to a specific message, react with an emoji
+            (on a computer, double-click a message to ❤️ it), or delete a message for everyone. Long-press a message on your phone for these options.
+          </p>
+        ),
       },
       {
         id: "communities",
