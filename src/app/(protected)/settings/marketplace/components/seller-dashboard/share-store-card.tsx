@@ -181,7 +181,7 @@ function ReferralRewards({ stats }: { stats: ReferralStats }) {
       <dl className="mt-3.5 grid grid-cols-2 gap-2 sm:grid-cols-4">
         {tiles.map((tile) => (
           <div key={tile.label} className="min-w-0 rounded-lg bg-surface px-3 py-2.5">
-            <dt className="truncate text-[11.5px] text-muted">{tile.label}</dt>
+            <dt className="text-[11.5px] leading-snug text-muted">{tile.label}</dt>
             <dd className="mt-0.5 truncate text-[16px] font-semibold text-ink">{tile.value}</dd>
           </div>
         ))}
