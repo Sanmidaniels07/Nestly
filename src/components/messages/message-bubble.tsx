@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Ban, Check, CheckCheck, Clock, Copy, CornerUpLeft, MoreHorizontal, SmilePlus, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -28,6 +28,9 @@ interface Props {
 }
 
 const LONG_PRESS_MS = 450;
+// Roughly how tall the action menu is - open it below the message when
+// there isn't this much room above it in the chat.
+const MENU_HEIGHT_PX = 210;
 
 // One message: quote (if it's a reply), photos, product card, text, time
 // and ticks inside the bubble, reactions under it. Actions (react, reply,
@@ -49,6 +52,8 @@ export default function MessageBubble({
   onOpenImage,
 }: Props) {
   const pressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const bubbleRef = useRef<HTMLDivElement>(null);
+  const [menuBelow, setMenuBelow] = useState(false);
   const deleted = !!message.deletedAt;
   const media = message.media ?? [];
   const reactions = message.reactions ?? [];
@@ -79,9 +84,20 @@ export default function MessageBubble({
     </span>
   );
 
+  // Open the menu above the message, or below it when it's near the top
+  // of the chat (the header would otherwise cover it).
+  const openMenu = () => {
+    const bubble = bubbleRef.current;
+    const scroller = bubble?.closest("[data-chat-scroll]");
+    if (bubble && scroller) {
+      setMenuBelow(bubble.getBoundingClientRect().top - scroller.getBoundingClientRect().top < MENU_HEIGHT_PX);
+    }
+    onMenu(true);
+  };
+
   const startPress = () => {
     if (!canAct) return;
-    pressTimer.current = setTimeout(() => onMenu(true), LONG_PRESS_MS);
+    pressTimer.current = setTimeout(openMenu, LONG_PRESS_MS);
   };
   const endPress = () => {
     if (pressTimer.current) clearTimeout(pressTimer.current);
@@ -107,6 +123,7 @@ export default function MessageBubble({
     >
       <div className={`relative flex max-w-[82%] items-center gap-1.5 sm:max-w-[70%] ${mine ? "flex-row-reverse" : ""}`}>
         <div
+          ref={bubbleRef}
           className={`relative min-w-0 transition-[transform,opacity] ${message.pending ? "opacity-70" : ""} ${highlighted ? "animate-[pulse_1s_ease-in-out_2]" : ""}`}
           onTouchStart={startPress}
           onTouchEnd={endPress}
@@ -114,7 +131,7 @@ export default function MessageBubble({
           onContextMenu={(e) => {
             if (!canAct) return;
             e.preventDefault();
-            onMenu(true);
+            openMenu();
           }}
           onDoubleClick={() => canAct && onReact(myReaction === "❤️" ? null : "❤️")}
         >
@@ -183,6 +200,7 @@ export default function MessageBubble({
 
           {menuOpen && (
             <ActionMenu
+              below={menuBelow}
               mine={mine}
               hasText={!!message.content}
               myReaction={myReaction}
@@ -206,13 +224,13 @@ export default function MessageBubble({
         {/* Desktop hover actions. */}
         {canAct && !menuOpen && (
           <div className="hidden shrink-0 items-center gap-0.5 opacity-0 transition-opacity group-hover/msg:opacity-100 sm:flex">
-            <HoverButton label="React" onClick={() => onMenu(true)}>
+            <HoverButton label="React" onClick={openMenu}>
               <SmilePlus size={15} />
             </HoverButton>
             <HoverButton label="Reply" onClick={onReply}>
               <CornerUpLeft size={15} />
             </HoverButton>
-            <HoverButton label="More" onClick={() => onMenu(true)}>
+            <HoverButton label="More" onClick={openMenu}>
               <MoreHorizontal size={15} />
             </HoverButton>
           </div>
@@ -237,6 +255,7 @@ function HoverButton({ label, onClick, children }: { label: string; onClick: () 
 }
 
 function ActionMenu({
+  below,
   mine,
   hasText,
   myReaction,
@@ -245,6 +264,7 @@ function ActionMenu({
   onCopy,
   onDelete,
 }: {
+  below: boolean;
   mine: boolean;
   hasText: boolean;
   myReaction: string | null;
@@ -253,10 +273,18 @@ function ActionMenu({
   onCopy: () => void;
   onDelete: () => void;
 }) {
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Make sure all of it is visible (scrolls the chat a little if needed).
+  useEffect(() => {
+    menuRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, []);
+
   return (
     <div
+      ref={menuRef}
       data-chat-menu
-      className={`absolute bottom-full z-20 mb-2 w-max min-w-[220px] overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_18px_40px_-16px_rgba(15,15,20,0.35)] ${
+      className={`absolute z-20 w-max min-w-[220px] ${below ? "top-full mt-2" : "bottom-full mb-2"} overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_18px_40px_-16px_rgba(15,15,20,0.35)] ${
         mine ? "right-0" : "left-0"
       }`}
     >

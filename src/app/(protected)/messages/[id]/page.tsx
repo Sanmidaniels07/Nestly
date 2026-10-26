@@ -366,6 +366,7 @@ function ThreadMessages({
     <div className="relative min-h-0 flex-1">
       <div
         ref={scrollRef}
+        data-chat-scroll
         onScroll={onScroll}
         className="h-full overflow-y-auto overscroll-contain bg-surface-sunken bg-[radial-gradient(rgba(124,58,237,0.07)_1px,transparent_1px)] px-3 py-4 [background-size:18px_18px] sm:px-6"
       >
