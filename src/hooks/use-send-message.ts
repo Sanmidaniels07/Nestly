@@ -90,6 +90,9 @@ export const useSendMessage = (conversationId: string) => {
         }
       );
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // Sending cancels an in-flight load of the thread (onMutate), which can
+      // leave a brand-new conversation showing as empty - refetch it.
+      queryClient.invalidateQueries({ predicate: messagesQueryPredicate(conversationId) });
     },
 
     onError: (error, _payload, context) => {

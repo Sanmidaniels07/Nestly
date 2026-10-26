@@ -5,9 +5,11 @@ import { MapPin, Phone, User } from "lucide-react";
 
 interface Props {
   address: Address;
+  /** The number the seller calls to deliver (chosen at checkout). */
+  deliveryPhone?: string | null;
 }
 
-export default function ShippingAddress({ address }: Props) {
+export default function ShippingAddress({ address, deliveryPhone }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
@@ -26,7 +28,7 @@ export default function ShippingAddress({ address }: Props) {
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-violet-50 dark:bg-violet-500/10">
             <Phone size={15} className="text-violet-700 dark:text-violet-300" />
           </div>
-          <span className="text-[13.5px] text-ink-3">{address.phone}</span>
+          <span className="text-[13.5px] text-ink-3">{deliveryPhone || address.phone}</span>
         </div>
 
         <div className="flex items-start gap-3">

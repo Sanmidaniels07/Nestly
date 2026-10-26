@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock, KeyRound, MapPin, MessageCircle, MessageSquareText, Store, Truck } from "lucide-react";
+import { CheckCircle2, Clock, KeyRound, MapPin, MessageCircle, MessageSquareText, Phone, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
@@ -135,8 +135,9 @@ export default function OrdersView() {
   );
 }
 
-// Who the order is for and where it goes. No phone or email - sellers
-// reach the buyer through in-app messages so everything stays on Nestly.
+// Who the order is for and where it goes. The phone to call comes only for
+// delivery orders still on the way (the API leaves it out otherwise); for
+// anything else sellers message the buyer in the app.
 function BuyerContact({ order, isPickup }: { order: Order; isPickup: boolean }) {
   const router = useRouter();
   const { mutate: createConversation, isPending } = useCreateConversation();
@@ -154,6 +155,14 @@ function BuyerContact({ order, isPickup }: { order: Order; isPickup: boolean }) 
         {!isPickup && address && (
           <p className="[overflow-wrap:anywhere]">
             {[address.address, address.city, address.state, address.postalCode].filter(Boolean).join(", ")}
+          </p>
+        )}
+        {!isPickup && order.deliveryPhone && (
+          <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <a href={`tel:${order.deliveryPhone}`} className="inline-flex items-center gap-1.5 font-semibold text-violet-700 hover:underline dark:text-violet-300">
+              <Phone size={13} /> {order.deliveryPhone}
+            </a>
+            <span className="text-[11.5px] text-subtle">for delivering this order only</span>
           </p>
         )}
       </div>
@@ -252,7 +261,7 @@ function EarningsBreakdown({ earnings, isPickup }: { earnings: Earnings; isPicku
         </span>
       </div>
       <p className="pt-0.5 text-[11.5px] leading-snug text-subtle">
-        Before Paystack&apos;s processing fee, which is shared by amount and deducted when Paystack pays you.
+        Nestly pays Paystack&apos;s processing fee on this sale.
       </p>
     </div>
   );

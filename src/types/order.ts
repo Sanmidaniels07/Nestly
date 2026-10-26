@@ -99,6 +99,8 @@ export interface Order {
   address?: Address;
   /** Sellers only: the buyer (no email or phone). */
   user?: { id: string; name: string };
+  /** Number to call to deliver. Sellers get it only for delivery orders until delivered. */
+  deliveryPhone?: string | null;
   paymentReference?: string;
   paymentMethod?: string;
   timeline?: OrderTimelineEntry[];

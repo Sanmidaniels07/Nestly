@@ -59,7 +59,7 @@ const parts: GuidePart[] = [
           </p>
         ),
         warning:
-          "Keep payments on Nestly. Only pay through Nestly checkout - money sent straight to a seller (bank transfer, cash, POS) isn't covered by buyer protection. If a seller asks you to pay outside Nestly, please report them.",
+          "Keep payments on Nestly. Only pay through Nestly checkout - money sent straight to a seller (bank transfer, cash, POS) isn't covered by buyer protection. If a seller asks you to pay outside Nestly, please report them. Phone numbers, emails and social handles are hidden in chats with sellers.",
       },
     ],
   },
@@ -79,7 +79,7 @@ const parts: GuidePart[] = [
       {
         id: "address",
         title: "Add your delivery address",
-        body: <p>Enter your full name, phone number, address, city and state. The seller sees your name and address to deliver - never your phone number or email. They&apos;ll message you in the app if they need you.</p>,
+        body: <p>Enter your full name, phone number, address, city and state, then check the <strong>phone number for delivery</strong> - change it if someone else is receiving the order. The seller (who delivers) gets your name, address and that number only to deliver; your email is never shared.</p>,
       },
       {
         id: "delivery",

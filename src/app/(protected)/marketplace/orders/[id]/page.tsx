@@ -62,7 +62,7 @@ export default function OrderDetailsPage({ params }: Props) {
           <OrderedProducts order={order} />
           <SellerNotesCard order={order} />
 
-          {order.address && <ShippingAddress address={order.address} />}
+          {order.address && <ShippingAddress address={order.address} deliveryPhone={order.deliveryPhone} />}
           {order.timeline && order.timeline.length > 0 && <OrderTimeline order={order} />}
         </section>
 

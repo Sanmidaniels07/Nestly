@@ -232,8 +232,9 @@ const parts: GuidePart[] = [
           <>
             <p>
               You&apos;re notified when a buyer pays. Open the order to see the buyer&apos;s name and <strong>delivery address</strong> and any note
-              they left you. Need to reach them? Tap <strong>Message buyer</strong> - buyers&apos; phone numbers and emails aren&apos;t shared. Then
-              move each item along:
+              they left you. For delivery orders you also get the <strong>phone number to call for delivery</strong> - in the order alert, the email and
+              on the order until it&apos;s delivered. Use it only to deliver; for anything else tap <strong>Message buyer</strong>. Then move each item
+              along:
             </p>
             <ul>
               <li>

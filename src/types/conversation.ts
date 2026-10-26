@@ -17,6 +17,9 @@ export interface Message {
   readAt?: string | null;
   createdAt: string;
   sender?: PublicUser;
+  // Only on a send response: contact details in it were hidden (chats with
+  // a seller - see components/messages/message-text).
+  contactHidden?: boolean;
   // Client-only: set on the optimistic copy of a message while it's still
   // in flight to the server. Never present on anything the API returns.
   pending?: boolean;
