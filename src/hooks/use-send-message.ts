@@ -6,12 +6,14 @@ import toast from "react-hot-toast";
 
 import { sendMessage } from "../services/conversation.services";
 import { ApiErrorResponse, ApiResponse, Paginated } from "../types/api";
-import { Message, MessageMedia } from "../types/conversation";
+import { ChatProduct, Message, QuotedMessage, SendMessageInput } from "../types/conversation";
 import { useAuthStore } from "../store/auth-store";
 
-interface SendMessageInput {
-  content?: string;
-  media?: MessageMedia[];
+// What the composer sends, plus what the bubble shows while it's in
+// flight (the quoted message, the product card) - only the API fields go up.
+interface SendMessageVariables extends SendMessageInput {
+  quote?: QuotedMessage;
+  productCard?: ChatProduct;
 }
 
 type MessagesResponse = ApiResponse<Paginated<"messages", Message>>;
@@ -28,10 +30,12 @@ export const useSendMessage = (conversationId: string) => {
   return useMutation<
     Message,
     AxiosError<ApiErrorResponse>,
-    SendMessageInput,
+    SendMessageVariables,
     { tempId: string; snapshot: [readonly unknown[], MessagesResponse | undefined][] }
   >({
-    mutationFn: async (payload) => {
+    mutationFn: async ({ quote: _quote, productCard: _productCard, ...payload }) => {
+      void _quote;
+      void _productCard;
       const response = await sendMessage(conversationId, payload);
       return response.data;
     },
@@ -49,6 +53,9 @@ export const useSendMessage = (conversationId: string) => {
         senderId: currentUser?.id ?? "",
         content: payload.content ?? null,
         media: payload.media,
+        replyTo: payload.quote ?? null,
+        product: payload.productCard ?? null,
+        reactions: [],
         readAt: null,
         createdAt: new Date().toISOString(),
         pending: true,

@@ -91,7 +91,7 @@ export default function ProductDetailsPage({ id, initialProduct }: Props) {
         <BuyBox product={product} />
       </div>
 
-      {product.store && <SellerSummary store={product.store} />}
+      {product.store && <SellerSummary store={product.store} productId={product.id} />}
 
       <ProductDescription product={product} />
       <ProductSpecifications product={product} />
