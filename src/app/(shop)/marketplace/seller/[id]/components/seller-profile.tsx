@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { BadgeCheck, Mail, MapPin, MessageCircle, Phone, ShieldCheck } from "lucide-react";
+import { BadgeCheck, Lock, Mail, MapPin, MessageCircle, Phone, ShieldAlert, ShieldCheck } from "lucide-react";
 import { Store } from "@/src/types/store";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import ReportButton from "@/src/components/ui/report-button";
@@ -14,10 +15,16 @@ import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useVerifyStore } from "@/src/hooks/use-verify-store";
 import { useRequireLogin } from "@/src/hooks/use-session";
+import { useMyStore } from "@/src/hooks/use-my-store";
+import { getStoreBySlug } from "@/src/services/store.services";
 import ShareButton from "@/src/components/ui/share-button";
 import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from "@/src/components/ui/social-icons";
 import { SITE_URL } from "@/src/lib/site";
 import { socialUrl } from "@/src/lib/social";
+
+interface Props {
+  store: Store;
+}
 
 async function copyToClipboard(value: string, message: string) {
   try {
@@ -28,14 +35,24 @@ async function copyToClipboard(value: string, message: string) {
   }
 }
 
-interface Props {
-  store: Store;
-}
+// The seller's social pages. Buyers never see these (the API leaves them
+// out) so deals don't move to WhatsApp/DMs; the owner sees their own, and
+// admins use them to check a store is genuine.
+function PrivateSocials({ slug, isOwnStore }: { slug: string; isOwnStore: boolean }) {
+  // The page's store data may have been fetched before login (server
+  // render), so ask again as the signed-in owner/admin.
+  const { data: myStore } = useMyStore(isOwnStore);
+  const { data: adminStore } = useQuery({
+    queryKey: ["store", slug, "admin"],
+    queryFn: () => getStoreBySlug(slug),
+    select: (response) => response.data,
+    enabled: !isOwnStore,
+  });
+  const store = isOwnStore ? myStore : adminStore;
+  if (!store) return null;
 
-// The seller's other profiles - shown under their name.
-function SocialLinks({ store }: { store: Store }) {
   const links = [
-    store.whatsapp && { href: socialUrl("whatsapp", store.whatsapp, `Hi ${store.name}, I found you on Nestly.`), label: "WhatsApp", Icon: WhatsAppIcon, tone: "text-emerald-600" },
+    store.whatsapp && { href: socialUrl("whatsapp", store.whatsapp), label: "WhatsApp", Icon: WhatsAppIcon, tone: "text-emerald-600" },
     store.instagram && { href: socialUrl("instagram", store.instagram), label: "Instagram", Icon: InstagramIcon, tone: "text-pink-600" },
     store.facebook && { href: socialUrl("facebook", store.facebook), label: "Facebook", Icon: FacebookIcon, tone: "text-blue-600" },
     store.tiktok && { href: socialUrl("tiktok", store.tiktok), label: "TikTok", Icon: TikTokIcon, tone: "text-ink" },
@@ -44,18 +61,23 @@ function SocialLinks({ store }: { store: Store }) {
   if (links.length === 0) return null;
 
   return (
-    <div className="mt-3 flex flex-wrap gap-2">
-      {links.map(({ href, label, Icon, tone }) => (
-        <a
-          key={label}
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40"
-        >
-          <Icon size={15} className={tone} /> {label}
-        </a>
-      ))}
+    <div className="mt-3 rounded-xl border border-dashed border-amber-300 bg-amber-50/60 p-2.5 dark:border-amber-500/30 dark:bg-amber-500/5">
+      <p className="mb-2 flex items-center gap-1.5 text-[11.5px] font-medium text-amber-700 dark:text-amber-300">
+        <Lock size={12} /> {isOwnStore ? "Only you and Nestly admins see your social pages" : "Only admins see this"}
+      </p>
+      <div className="flex flex-wrap gap-2">
+        {links.map(({ href, label, Icon, tone }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-8 min-w-0 max-w-full items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[12px] font-medium text-ink-2"
+          >
+            <Icon size={14} className={`shrink-0 ${tone}`} /> <span className="truncate">{label}</span>
+          </a>
+        ))}
+      </div>
     </div>
   );
 }
@@ -101,7 +123,7 @@ export default function SellerProfile({ store }: Props) {
                 </p>
               )}
 
-              <SocialLinks store={store} />
+              {(isAdmin || isOwnStore) && <PrivateSocials slug={store.slug} isOwnStore={isOwnStore} />}
 
               {location && (
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-ink-3">
@@ -167,8 +189,24 @@ export default function SellerProfile({ store }: Props) {
             )}
           </div>
         </div>
+
+        {!isOwnStore && (store.email || store.phone) && <KeepPaymentsOnNestly />}
       </div>
     </section>
+  );
+}
+
+// Buyers can call or email the seller, but paying outside Nestly checkout
+// leaves them without buyer protection - say so next to the buttons.
+function KeepPaymentsOnNestly() {
+  return (
+    <p className="mt-5 flex items-start gap-2 rounded-xl border border-amber-200 bg-amber-50/70 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/25 dark:bg-amber-500/5 dark:text-amber-200">
+      <ShieldAlert size={15} className="mt-0.5 shrink-0 text-amber-600" />
+      <span>
+        <span className="font-semibold">Keep payments on Nestly.</span> Only pay through Nestly checkout - money sent straight to a seller (bank
+        transfer, cash, POS) isn&apos;t covered by buyer protection. If a seller asks you to pay outside Nestly, please report them.
+      </span>
+    </p>
   );
 }
 

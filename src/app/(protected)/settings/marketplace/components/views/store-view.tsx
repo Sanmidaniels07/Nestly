@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import {
   CheckCircle2,
   Clock,
@@ -169,6 +170,10 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
           />
           <Input label="Phone" value={form.phone} onChange={update("phone")} />
         </div>
+        <p className="-mt-2 text-[12px] leading-relaxed text-muted">
+          Buyers can see your email and phone. Every sale must still be paid through Nestly checkout - asking buyers to pay you directly can get
+          your store suspended (<Link href="/seller-terms#conduct" className="font-medium text-violet-600 underline-offset-2 hover:underline dark:text-violet-400">seller rules</Link>).
+        </p>
 
         <Input
           label="Address"
