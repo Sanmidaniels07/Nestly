@@ -62,9 +62,12 @@ const item = (p: FeedProduct) => {
 };
 
 export async function GET() {
+  // The website and API deploy at the same time, so at build time the API
+  // may not have this endpoint yet (404) - serve an empty feed rather than
+  // fail the build; the hourly refresh fills it in.
   const products = isStaging
     ? []
-    : ((await serverGet<{ products: FeedProduct[] }>("/seo/merchant-feed", revalidate))?.data.products ?? []);
+    : ((await serverGet<{ products: FeedProduct[] }>("/seo/merchant-feed", revalidate).catch(() => null))?.data.products ?? []);
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
