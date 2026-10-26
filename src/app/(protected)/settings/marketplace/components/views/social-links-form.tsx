@@ -1,28 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import { Lock } from "lucide-react";
 
 import { useUpdateStore } from "@/src/hooks/use-update-store";
 import { Store } from "@/src/types/store";
-import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from "@/src/components/ui/social-icons";
+import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/src/components/ui/social-icons";
 
 const FIELDS = [
   { key: "instagram", label: "Instagram", placeholder: "@yourshop", Icon: InstagramIcon, tone: "text-pink-600" },
-  { key: "whatsapp", label: "WhatsApp number", placeholder: "0815 967 1809", Icon: WhatsAppIcon, tone: "text-emerald-600" },
   { key: "facebook", label: "Facebook page", placeholder: "facebook.com/yourshop", Icon: FacebookIcon, tone: "text-blue-600" },
   { key: "tiktok", label: "TikTok", placeholder: "@yourshop", Icon: TikTokIcon, tone: "text-ink" },
 ] as const;
 
 type Key = (typeof FIELDS)[number]["key"];
 
-// Where buyers can also find the seller - shown as buttons on their public
-// store page. Accepts @usernames, profile links or numbers as typed.
+// The seller's other profiles. Private: only the Nestly team sees them (to
+// check the store is genuine) - buyers aren't sent off Nestly to buy.
+// Accepts @usernames or profile links as typed.
 export default function SocialLinksForm({ store }: { store: Store }) {
   const { mutate: updateStore, isPending } = useUpdateStore();
-  const initial = (key: Key) => (key === "whatsapp" && store.whatsapp ? `+${store.whatsapp}` : store[key] ?? "");
+  const initial = (key: Key) => store[key] ?? "";
   const [values, setValues] = useState<Record<Key, string>>({
     instagram: initial("instagram"),
-    whatsapp: initial("whatsapp"),
     facebook: initial("facebook"),
     tiktok: initial("tiktok"),
   });
@@ -37,12 +37,16 @@ export default function SocialLinksForm({ store }: { store: Store }) {
 
   return (
     <section id="social-links" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Social links</h2>
-      <p className="mt-1 text-[13px] leading-relaxed text-muted">
-        Shown as buttons on your store page, so buyers can see you&apos;re active and message you on WhatsApp. Paste a username or a link.
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Social pages</h2>
+      <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-relaxed text-muted">
+        <Lock size={13} className="mt-[3px] shrink-0" />
+        <span>
+          Private - only the Nestly team sees these, to help confirm your store is genuine. To bring your followers here, use{" "}
+          <span className="font-semibold text-ink-2">Share your store</span> on your dashboard.
+        </span>
       </p>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+      <div className="mt-5 grid gap-4 sm:grid-cols-3">
         {FIELDS.map(({ key, label, placeholder, Icon, tone }) => (
           <label key={key} className="block">
             <span className="mb-1.5 block text-[13px] font-medium text-ink-2">{label}</span>
@@ -52,7 +56,6 @@ export default function SocialLinksForm({ store }: { store: Store }) {
                 value={values[key]}
                 onChange={(e) => setValues((prev) => ({ ...prev, [key]: e.target.value }))}
                 placeholder={placeholder}
-                inputMode={key === "whatsapp" ? "tel" : "text"}
                 autoCapitalize="none"
                 autoCorrect="off"
                 className="h-full min-w-0 flex-1 bg-transparent text-[14px] text-ink outline-none placeholder:text-subtle"
@@ -69,7 +72,7 @@ export default function SocialLinksForm({ store }: { store: Store }) {
           disabled={!changed || isPending}
           className="h-11 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13.5px] font-semibold text-white transition-opacity disabled:opacity-50"
         >
-          {isPending ? "Saving..." : "Save social links"}
+          {isPending ? "Saving..." : "Save social pages"}
         </button>
       </div>
     </section>

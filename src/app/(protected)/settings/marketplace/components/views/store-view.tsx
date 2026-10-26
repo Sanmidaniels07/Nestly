@@ -169,6 +169,9 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
           />
           <Input label="Phone" value={form.phone} onChange={update("phone")} />
         </div>
+        <p className="-mt-2 text-[12px] leading-relaxed text-muted">
+          Private - only the Nestly team sees your email and phone. Buyers message you in the app.
+        </p>
 
         <Input
           label="Address"
