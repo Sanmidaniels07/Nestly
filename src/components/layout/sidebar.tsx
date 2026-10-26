@@ -138,6 +138,8 @@ export default function Sidebar() {
         </Link>
 
         <p className="px-1 pt-1 text-[11px] leading-relaxed text-subtle">
+          <Link href="/guides" className="hover:text-violet-600 dark:hover:text-violet-400">Guides</Link>
+          {" · "}
           <Link href="/terms" className="hover:text-violet-600 dark:hover:text-violet-400">Terms</Link>
           {" · "}
           <Link href="/privacy" className="hover:text-violet-600 dark:hover:text-violet-400">Privacy</Link>

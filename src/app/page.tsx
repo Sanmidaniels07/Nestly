@@ -402,6 +402,9 @@ function Footer() {
           Connect, Celebrate, Commerce — All in one place.
         </p>{" "}
         <nav className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white/60">
+          <Link href="/guides/sellers" className="hover:text-white">Seller guide</Link>
+          <Link href="/guides/buyers" className="hover:text-white">Buyer guide</Link>
+          <Link href="/guides/community" className="hover:text-white">Getting started</Link>
           <Link href="/terms" className="hover:text-white">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/seller-terms" className="hover:text-white">Seller Agreement</Link>
