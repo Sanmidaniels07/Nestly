@@ -15,8 +15,9 @@ const FIELDS = [
 
 type Key = (typeof FIELDS)[number]["key"];
 
-// The seller's other profiles. Private: only the Nestly team sees them (to
-// check the store is genuine) - buyers aren't sent off Nestly to buy.
+// The seller's other profiles. Not shown to buyers (so deals don't move to
+// DMs); the seller sees them on their own store page, admins to check the
+// store is genuine.
 // Accepts @usernames or profile links as typed.
 export default function SocialLinksForm({ store }: { store: Store }) {
   const { mutate: updateStore, isPending } = useUpdateStore();
@@ -41,7 +42,8 @@ export default function SocialLinksForm({ store }: { store: Store }) {
       <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-relaxed text-muted">
         <Lock size={13} className="mt-[3px] shrink-0" />
         <span>
-          Private - only the Nestly team sees these, to help confirm your store is genuine. To bring your followers here, use{" "}
+          Not shown to buyers - only you (on your store page) and the Nestly team see these, to help confirm your store is genuine. To bring your
+          followers here, use{" "}
           <span className="font-semibold text-ink-2">Share your store</span> on your dashboard.
         </span>
       </p>

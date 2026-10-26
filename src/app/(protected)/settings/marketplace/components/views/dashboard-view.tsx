@@ -10,6 +10,7 @@ import SalesOverview from "../seller-dashboard/sales-overview";
 import SetupChecklist from "../seller-dashboard/setup-checklist";
 import TopSellingProducts from "../seller-dashboard/top-selling-products";
 import ShareStoreCard from "../seller-dashboard/share-store-card";
+import KeepSalesOnNestly from "../seller-dashboard/keep-sales-on-nestly";
 
 interface Props {
   seller?: SellerProfile;
@@ -36,6 +37,8 @@ export default function DashboardView({ seller }: Props) {
       <QuickActions />
 
       <ShareStoreCard />
+
+      <KeepSalesOnNestly />
 
       <InventorySnapshot />
 

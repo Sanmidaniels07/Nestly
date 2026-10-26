@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, MessageCircle } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldAlert } from "lucide-react";
 import { Store } from "@/src/types/store";
 
 interface Props {
@@ -29,8 +29,9 @@ export default function SellerAbout({ store }: Props) {
 
       <div className="mt-7 space-y-4 border-t border-dashed border-line pt-6">
         {location && <ContactRow icon={<MapPin size={15} />}>{location}</ContactRow>}
-        {/* No email/phone here - buyers message sellers in the app (see seller-profile). */}
-        <ContactRow icon={<MessageCircle size={15} />}>Questions? Message the seller on Nestly, and pay through Nestly checkout to stay protected.</ContactRow>
+        {store.email && <ContactRow icon={<Mail size={15} />}>{store.email}</ContactRow>}
+        {store.phone && <ContactRow icon={<Phone size={15} />}>{store.phone}</ContactRow>}
+        <ContactRow icon={<ShieldAlert size={15} />}>Always pay through Nestly checkout - payments made directly to a seller aren&apos;t covered by buyer protection.</ContactRow>
       </div>
     </section>
   );

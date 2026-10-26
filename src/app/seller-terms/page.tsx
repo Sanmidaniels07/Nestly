@@ -203,7 +203,16 @@ const sections: LegalSection[] = [
     heading: "Fair trading",
     body: (
       <ul>
-        <li>Complete sales you find on Nestly through Nestly checkout; don&apos;t move buyers to off-platform payment.</li>
+        <li>
+          <strong>Keep sales on Nestly.</strong> Every sale with a buyer you met on Nestly must be paid through Nestly checkout. Don&apos;t ask or encourage
+          buyers to pay you by bank transfer, cash, POS or any other way outside Nestly, or to finish the deal on WhatsApp, Instagram, phone or email.
+          Buyers who pay outside Nestly lose Nestly&apos;s buyer protection, and you lose seller protection and dispute support.
+        </li>
+        <li>
+          If you break this rule, Nestly may, depending on how serious or repeated it is: send you a warning; remove the products involved; withdraw
+          your verified badge and referral rewards; suspend your store; or permanently end your seller access. Buyers can report sellers who ask for
+          payment outside Nestly.
+        </li>
         <li>Don&apos;t post or buy fake reviews, or review your own products.</li>
         <li>Communicate politely and honestly with buyers, through Nestly messages where possible.</li>
         <li>You are responsible for your own taxes and any business registration, licences and permits your business needs.</li>
