@@ -39,6 +39,8 @@ function targetHref(notification: Notification): string | null {
     case "ADMIN_SELLER_APPLICATION":
     case "ADMIN_CAC_SUBMITTED":
       return "/admin?tab=sellers";
+    case "SELLER_SETUP":
+      return "/settings/marketplace";
     case "CAC_REMINDER":
       return "/settings/marketplace?cac=1";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":

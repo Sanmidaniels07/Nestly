@@ -9,6 +9,7 @@ import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
 import CacReminderBanner from "./components/seller-dashboard/cac-reminder-banner";
+import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-banner";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
@@ -132,6 +133,9 @@ function MarketplaceSettingsContent() {
       <SellerDashboardHeader />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
+
+      {/* What's left before buyers can order (the Dashboard tab has the full checklist). */}
+      {seller?.status === "APPROVED" && tab !== "dashboard" && <SetupReminderBanner />}
 
       {/* Every approved seller without a CAC number, store or not. */}
       {seller?.status === "APPROVED" && !seller.cacNumber && <CacReminderBanner />}

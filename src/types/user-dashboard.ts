@@ -62,5 +62,7 @@ export interface UserDashboard {
     store: { id: string; name: string; slug: string } | null;
     // Approved but hasn't added a CAC number yet.
     needsCacNumber?: boolean;
+    // Setup steps still to do before buyers can order.
+    missingSetup?: ("STORE" | "PAYOUT" | "DELIVERY" | "PRODUCT")[];
   } | null;
 }

@@ -360,6 +360,21 @@ function CreateStoreForm() {
           />
         </div>
 
+        <div className="rounded-xl border border-violet-200 bg-violet-50/70 px-4 py-3.5 text-[13px] leading-relaxed text-ink-2 dark:border-violet-500/30 dark:bg-violet-500/10">
+          <p className="font-semibold text-ink">Next, in Seller Hub &rarr; Store settings:</p>
+          <ul className="mt-1.5 list-disc space-y-1 pl-4">
+            <li>
+              <span className="font-medium text-ink">Delivery zones or pickup</span> - buyers can only order if they have a way to get it.
+            </li>
+            <li>
+              <span className="font-medium text-ink">Payout bank account</span> - so each sale is paid straight to your bank.
+            </li>
+            <li>
+              <span className="font-medium text-ink">Your first product</span> - publish it and you&apos;re open for orders.
+            </li>
+          </ul>
+        </div>
+
         <Button
           variant="tribely"
           className="mt-2 w-full"

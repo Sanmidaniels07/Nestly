@@ -19,6 +19,19 @@ export interface SellerProfile {
   store?: Store | null;
 }
 
+// GET /seller/me/readiness - what's left before buyers can order.
+export interface SellerReadinessStep {
+  key: "STORE" | "PAYOUT" | "DELIVERY" | "PRODUCT";
+  title: string;
+  why: string;
+  path: string;
+}
+
+export interface SellerReadiness {
+  ready: boolean;
+  missing: SellerReadinessStep[];
+}
+
 export interface BecomeSellerPayload {
   cacNumber?: string;
 }

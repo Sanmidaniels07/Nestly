@@ -11,6 +11,7 @@ export type NotificationTargetType =
   | "BIRTHDAY"
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
+  | "SELLER_SETUP"
   | "ADMIN_CAC_SUBMITTED";
 
 export interface Notification {
