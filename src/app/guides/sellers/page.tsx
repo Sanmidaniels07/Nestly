@@ -74,8 +74,8 @@ const parts: GuidePart[] = [
               sell, your email, phone and address, then tap <strong>Create store</strong>.
             </p>
             <ul>
-              <li>Buyers can see your email and phone on your store page.</li>
-              <li>Your Instagram, Facebook and TikTok are private - only you and the Nestly team see them.</li>
+              <li>Your email, phone, Instagram, Facebook and TikTok are private - only you and the Nestly team see them.</li>
+              <li>Buyers talk to you through Nestly messages, so every conversation and sale stays in the app.</li>
             </ul>
           </>
         ),
@@ -230,7 +230,11 @@ const parts: GuidePart[] = [
         where: { label: "Seller Hub → Orders", href: "/settings/marketplace?tab=orders" },
         body: (
           <>
-            <p>You&apos;re notified when a buyer pays. Open the order, read any note the buyer left you, then move each item along:</p>
+            <p>
+              You&apos;re notified when a buyer pays. Open the order to see the buyer&apos;s name and <strong>delivery address</strong> and any note
+              they left you. Need to reach them? Tap <strong>Message buyer</strong> - buyers&apos; phone numbers and emails aren&apos;t shared. Then
+              move each item along:
+            </p>
             <ul>
               <li>
                 <strong>Processing</strong> while you prepare it → <strong>Shipped</strong> when it leaves you (add a tracking number if you have

@@ -79,7 +79,7 @@ const parts: GuidePart[] = [
       {
         id: "address",
         title: "Add your delivery address",
-        body: <p>Enter your full name, phone number, address, city and state. Sellers use your phone number to reach you about delivery.</p>,
+        body: <p>Enter your full name, phone number, address, city and state. The seller sees your name and address to deliver - never your phone number or email. They&apos;ll message you in the app if they need you.</p>,
       },
       {
         id: "delivery",

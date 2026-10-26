@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock, KeyRound, MessageSquareText, Store, Truck } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { CheckCircle2, Clock, KeyRound, MapPin, MessageCircle, MessageSquareText, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
 import { useUpdateTrackingNumber } from "@/src/hooks/use-update-tracking-number";
+import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { Order, OrderItem } from "@/src/types/order";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -109,6 +110,8 @@ export default function OrdersView() {
             </div>
           </div>
 
+          <BuyerContact order={order} isPickup={isPickup} />
+
           {order.sellerNotes?.[0]?.note && <BuyerNote note={order.sellerNotes[0].note} />}
 
           <div className="mt-4 space-y-3">
@@ -127,6 +130,42 @@ export default function OrdersView() {
 
       {data && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
+      )}
+    </div>
+  );
+}
+
+// Who the order is for and where it goes. No phone or email - sellers
+// reach the buyer through in-app messages so everything stays on Nestly.
+function BuyerContact({ order, isPickup }: { order: Order; isPickup: boolean }) {
+  const router = useRouter();
+  const { mutate: createConversation, isPending } = useCreateConversation();
+  const address = order.address;
+  const buyer = order.user;
+  if (!buyer && !address) return null;
+
+  return (
+    <div className="mt-4 flex flex-col gap-3 rounded-xl border border-line bg-surface-sunken px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+      <div className="min-w-0 text-[13px] leading-relaxed text-ink-2">
+        <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-subtle">
+          {isPickup ? <Store size={12} /> : <MapPin size={12} />} {isPickup ? "Buyer" : "Deliver to"}
+        </p>
+        <p className="mt-1 font-semibold text-ink">{address?.fullName ?? buyer?.name}</p>
+        {!isPickup && address && (
+          <p className="[overflow-wrap:anywhere]">
+            {[address.address, address.city, address.state, address.postalCode].filter(Boolean).join(", ")}
+          </p>
+        )}
+      </div>
+      {buyer && (
+        <button
+          type="button"
+          onClick={() => createConversation(buyer.id, { onSuccess: (response) => router.push(`/messages/${response.data.id}`) })}
+          disabled={isPending}
+          className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 disabled:opacity-50 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+        >
+          <MessageCircle size={14} /> Message buyer
+        </button>
       )}
     </div>
   );

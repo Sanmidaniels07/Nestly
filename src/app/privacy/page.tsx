@@ -61,7 +61,7 @@ const sections: LegalSection[] = [
       <ul>
         <li>Your public profile (name, username, photos, bio and the profile details you add), your posts and your follower counts are visible to other users.</li>
         <li><strong>Your date of birth is never shown.</strong> People who follow you only see the day and month of your birthday, in their reminders. Your age stays private.</li>
-        <li>When you buy, the seller sees your name, the delivery address and phone number for that order, and the items ordered. Sellers never see your delivery code or payment details.</li>
+        <li>When you buy, the seller sees your name, the delivery address for that order, and the items ordered. Sellers never see your phone number, email address, delivery code or payment details - you and the seller talk through Nestly messages. Sellers&apos; email addresses and phone numbers aren&apos;t shown to buyers either.</li>
         <li>Messages are visible only to the people in the conversation, and to Nestly when investigating a report.</li>
       </ul>
     ),
