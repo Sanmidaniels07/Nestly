@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { NotFoundError, jsonLd, serverGet } from "@/src/lib/server-api";
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/src/lib/site";
@@ -18,18 +17,24 @@ const clip = (text: string, max: number) => {
 };
 
 // One fetch per request - Next dedupes it between metadata and the page.
+// "hidden": the public API says not found - it may still be a suspended
+// store an admin can open, so the page lets the browser check with their
+// login (and shows "not found" to everyone else).
 const loadStore = async (slug: string) => {
   try {
-    return await serverGet<Store>(`/stores/${encodeURIComponent(slug)}`);
+    return { response: await serverGet<Store>(`/stores/${encodeURIComponent(slug)}`), hidden: false };
   } catch (error) {
-    if (error instanceof NotFoundError) notFound();
+    if (error instanceof NotFoundError) return { response: null, hidden: true };
     throw error;
   }
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id: slug } = await params;
-  const response = await loadStore(slug);
+  const { response, hidden } = await loadStore(slug);
+  // Not public (missing, or a suspended store only admins may open):
+  // the browser retries with the viewer's login; never index it.
+  if (hidden) return { title: "Store", robots: { index: false, follow: false } };
   if (!response) return { title: "Store" };
 
   const store = response.data;
@@ -76,7 +81,7 @@ const storeJsonLd = (store: Store) => ({
 
 export default async function StorePage({ params }: Props) {
   const { id: slug } = await params;
-  const response = await loadStore(slug);
+  const { response } = await loadStore(slug);
   const products = response
     ? await serverGet<Paginated<"products", Product>>(`/stores/${encodeURIComponent(slug)}/products?limit=12`).catch(() => null)
     : null;

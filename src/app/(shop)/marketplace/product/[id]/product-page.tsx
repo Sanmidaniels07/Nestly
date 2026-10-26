@@ -12,6 +12,8 @@ import ProductSpecifications from "./components/product-specifications";
 import ProductDescription from "./components/product-description";
 import ProductReviews from "./components/product-reviews";
 import Skeleton from "@/src/components/ui/skeleton";
+import SuspendedNotice from "@/src/components/ui/suspended-notice";
+import { useSession } from "@/src/hooks/use-session";
 
 interface Props {
   id: string;
@@ -20,7 +22,12 @@ interface Props {
 }
 
 export default function ProductDetailsPage({ id, initialProduct }: Props) {
-  const { data: product, isLoading, isError } = useProduct(id, initialProduct);
+  // No server data means it wasn't public (e.g. a suspended store's product
+  // an admin may open) - wait for the session so the request carries their login.
+  const { isHydrated } = useSession();
+  const waiting = !initialProduct && !isHydrated;
+  const { data: product, isLoading: isFetching, isError } = useProduct(id, initialProduct, { enabled: !waiting });
+  const isLoading = waiting || isFetching;
   useRelatedProducts(id, 8);
   const { data: reviewsData } = useProductReviews(id, { limit: 20 });
 
@@ -71,6 +78,11 @@ export default function ProductDetailsPage({ id, initialProduct }: Props) {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
+      {product.store?.isSuspended && (
+        <div className="mb-6">
+          <SuspendedNotice what="product" />
+        </div>
+      )}
       <ProductBreadcrumb product={product} />
 
       <div className="mt-8 grid gap-10 lg:grid-cols-[1.2fr_1fr_360px]">

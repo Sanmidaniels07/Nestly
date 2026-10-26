@@ -14,6 +14,10 @@ import { useToggleStoreFollow } from "@/src/hooks/use-toggle-store-follow";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useVerifyStore } from "@/src/hooks/use-verify-store";
 import { useRequireLogin } from "@/src/hooks/use-session";
+import ShareButton from "@/src/components/ui/share-button";
+import { FacebookIcon, InstagramIcon, TikTokIcon, WhatsAppIcon } from "@/src/components/ui/social-icons";
+import { SITE_URL } from "@/src/lib/site";
+import { socialUrl } from "@/src/lib/social";
 
 async function copyToClipboard(value: string, message: string) {
   try {
@@ -26,6 +30,34 @@ async function copyToClipboard(value: string, message: string) {
 
 interface Props {
   store: Store;
+}
+
+// The seller's other profiles - shown under their name.
+function SocialLinks({ store }: { store: Store }) {
+  const links = [
+    store.whatsapp && { href: socialUrl("whatsapp", store.whatsapp, `Hi ${store.name}, I found you on Nestly.`), label: "WhatsApp", Icon: WhatsAppIcon, tone: "text-emerald-600" },
+    store.instagram && { href: socialUrl("instagram", store.instagram), label: "Instagram", Icon: InstagramIcon, tone: "text-pink-600" },
+    store.facebook && { href: socialUrl("facebook", store.facebook), label: "Facebook", Icon: FacebookIcon, tone: "text-blue-600" },
+    store.tiktok && { href: socialUrl("tiktok", store.tiktok), label: "TikTok", Icon: TikTokIcon, tone: "text-ink" },
+  ].filter(Boolean) as { href: string; label: string; Icon: typeof WhatsAppIcon; tone: string }[];
+
+  if (links.length === 0) return null;
+
+  return (
+    <div className="mt-3 flex flex-wrap gap-2">
+      {links.map(({ href, label, Icon, tone }) => (
+        <a
+          key={label}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[12.5px] font-medium text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40"
+        >
+          <Icon size={15} className={tone} /> {label}
+        </a>
+      ))}
+    </div>
+  );
 }
 
 export default function SellerProfile({ store }: Props) {
@@ -69,6 +101,8 @@ export default function SellerProfile({ store }: Props) {
                 </p>
               )}
 
+              <SocialLinks store={store} />
+
               {location && (
                 <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13px] text-ink-3">
                   <div className="flex items-center gap-1.5">
@@ -84,6 +118,14 @@ export default function SellerProfile({ store }: Props) {
             {isAdmin && !isOwnStore && <VerifyStoreButton store={store} />}
 
             {!authUser && <GuestFollowButton />}
+
+            <ShareButton
+              url={`${SITE_URL}/marketplace/seller/${store.slug}`}
+              title={store.name}
+              text={`Shop ${store.name} on Nestly:`}
+              label="Share"
+              className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40"
+            />
 
             {!isOwnStore && authUser && (
               <>

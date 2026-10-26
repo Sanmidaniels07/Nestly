@@ -9,13 +9,14 @@ type StoreProductsResponse = Awaited<ReturnType<typeof getStoreProducts>>;
 export const useStoreProducts = (
   slug: string,
   params: { page?: number; limit?: number } = {},
-  initialData?: StoreProductsResponse
+  initialData?: StoreProductsResponse,
+  options: { enabled?: boolean } = {}
 ) => {
   return useQuery({
     queryKey: ["store-products", slug, params],
     queryFn: () => getStoreProducts(slug, params),
     select: (response) => response.data,
-    enabled: !!slug,
+    enabled: !!slug && options.enabled !== false,
     initialData,
   });
 };

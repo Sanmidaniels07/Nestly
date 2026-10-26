@@ -19,9 +19,21 @@ import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton"
 import { useNigerianStates } from "@/src/hooks/use-locations";
 import DeliveryZonesManager from "./delivery-zones-manager";
 import BusinessVerification from "./business-verification";
+import SocialLinksForm from "./social-links-form";
 
 export default function StoreView() {
   const { data: store, isLoading } = useMyStore();
+
+  // Reminders link to a section (#payout-account, #delivery-zones...) -
+  // scroll there once the forms have rendered.
+  const loaded = !isLoading && !!store;
+  useEffect(() => {
+    if (!loaded || !window.location.hash) return;
+    const timer = setTimeout(() => {
+      document.getElementById(window.location.hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [loaded]);
 
   if (isLoading || !store) {
     return (
@@ -35,6 +47,7 @@ export default function StoreView() {
   return (
     <div className="space-y-6">
       <StoreDetailsForm storeId={store.id} />
+      <SocialLinksForm store={store} />
       <PayoutDetailsForm slug={store.slug} />
       <BusinessVerification />
       <StorePoliciesForm storeId={store.id} />
@@ -213,7 +226,7 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
   };
 
   return (
-    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+    <section id="payout-account" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <div className="flex items-start gap-3.5">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
           <Wallet size={17} className="text-violet-600 dark:text-violet-400" />

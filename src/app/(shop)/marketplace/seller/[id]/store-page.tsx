@@ -14,6 +14,8 @@ import SellerReviews from "./components/seller-review";
 import SellerAbout from "./components/seller-about";
 import SellerPolicies from "./components/seller-policies";
 import Skeleton from "@/src/components/ui/skeleton";
+import SuspendedNotice from "@/src/components/ui/suspended-notice";
+import { useSession } from "@/src/hooks/use-session";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
 
@@ -26,9 +28,14 @@ interface Props {
 
 export default function SellerStorePage({ slug, initialStore, initialProducts }: Props) {
   const authUser = useAuthStore((state) => state.user);
+  // No server data means it wasn't public (e.g. a suspended store an admin
+  // may open) - wait for the session so the request carries their login.
+  const { isHydrated } = useSession();
+  const waiting = !initialStore && !isHydrated;
 
-  const { data: store, isLoading, isError } = useStore(slug, initialStore);
-  const { data: productsData } = useStoreProducts(slug, { limit: 12 }, initialProducts);
+  const { data: store, isLoading: isFetching, isError } = useStore(slug, initialStore, { enabled: !waiting });
+  const { data: productsData } = useStoreProducts(slug, { limit: 12 }, initialProducts, { enabled: !waiting });
+  const isLoading = waiting || isFetching;
   const { data: reviewsData } = useStoreReviews(slug, { limit: 10 });
 
   if (isLoading) {
@@ -58,6 +65,7 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 lg:px-8">
+      {store.isSuspended && <SuspendedNotice what="store" />}
       <SellerCover store={store} />
       <SellerProfile store={store} />
       <SellerStats store={store} productCount={productsData?.total ?? 0} />

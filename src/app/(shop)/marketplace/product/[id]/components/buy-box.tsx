@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, Share2, ShieldCheck, Check } from "lucide-react";
+import { Heart, ShieldCheck, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Product } from "@/src/types/product";
@@ -12,6 +12,8 @@ import DeliveryEstimate from "./buy-box-components/delivery-estimate";
 import PaymentMethods from "./buy-box-components/payment-methods";
 import OptionPicker from "./buy-box-components/option-picker";
 import { useRequireLogin } from "@/src/hooks/use-session";
+import ShareButton from "@/src/components/ui/share-button";
+import { SITE_URL } from "@/src/lib/site";
 
 interface Props {
   product: Product;
@@ -57,7 +59,9 @@ export default function BuyBox({ product }: Props) {
   const showFrom = hasOptions && !match && prices.some((p) => p !== lowest);
 
   const stock = match ? (match.isActive ? match.stock : 0) : product.stock;
-  const outOfStock = stock === 0;
+  // The seller has no delivery zone or pickup point yet - can't be bought.
+  const noDelivery = product.store?.canDeliver === false;
+  const outOfStock = stock === 0 || noDelivery;
   const lowStock = stock > 0 && stock <= 5;
 
   const pick = (position: number, value: string) => {
@@ -116,7 +120,9 @@ export default function BuyBox({ product }: Props) {
               outOfStock ? "text-red-600 dark:text-red-400" : lowStock ? "text-amber-600 dark:text-amber-400" : "text-emerald-600 dark:text-emerald-400"
             }`}
           >
-            {outOfStock
+            {noDelivery
+              ? "Not available yet"
+              : outOfStock
               ? match
                 ? "This option is sold out"
                 : "Out of stock"
@@ -126,6 +132,12 @@ export default function BuyBox({ product }: Props) {
           </span>
         </div>
       </div>
+
+      {noDelivery && (
+        <p className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+          This seller hasn&apos;t set up delivery or pickup yet, so it can&apos;t be ordered right now. Check back soon or message the seller.
+        </p>
+      )}
 
       {hasOptions && <OptionPicker options={options} variations={variations} picked={picked} onPick={pick} />}
 
@@ -177,12 +189,15 @@ export default function BuyBox({ product }: Props) {
           <Heart size={17} className={saved ? "fill-red-500 text-red-500" : "text-muted"} />
         </button>
 
-        <button
-          className="flex flex-1 items-center justify-center rounded-xl border border-line py-2.5 transition-colors hover:bg-surface-sunken"
-          aria-label="Share product"
-        >
-          <Share2 size={17} className="text-muted" />
-        </button>
+        <div className="flex-1 [&>div>button]:w-full">
+          <ShareButton
+            url={`${SITE_URL}/marketplace/product/${product.id}`}
+            title={product.title}
+            text={`${product.title} on Nestly:`}
+            label=""
+            className="flex w-full items-center justify-center rounded-xl border border-line py-2.5 transition-colors hover:bg-surface-sunken"
+          />
+        </div>
       </div>
 
       <PaymentMethods />

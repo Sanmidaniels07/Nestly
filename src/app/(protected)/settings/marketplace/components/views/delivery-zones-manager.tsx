@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import {
+  AlertTriangle,
   Archive,
   ArchiveRestore,
   Check,
@@ -96,12 +97,22 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
   const effectiveMode = mode ?? (unusedSuggestions.length > 0 ? "suggested" : "custom");
 
   return (
-    <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
+    <section id="delivery-zones" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-5 sm:p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery zones</h2>
       <p className="mt-1 text-[13px] leading-relaxed text-muted">
         Set a price for each group of areas you deliver to, by dispatch bike, car or truck. Buyers only see the zones whose vehicle
         can carry what they&apos;re buying.
       </p>
+
+      {active.length === 0 && pickups.filter((p) => !p.isArchived).length === 0 && (
+        <div className="mt-4 flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[13px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+          <AlertTriangle size={16} className="mt-0.5 shrink-0" />
+          <p>
+            <span className="font-semibold">Add at least one delivery zone or a pickup point.</span> Without one, buyers have no way to get
+            their order from you - pick your state below and price the areas you deliver to, or offer pickup.
+          </p>
+        </div>
+      )}
 
       {/* Where suggestions come from */}
       <div className="mt-5 flex flex-col gap-3 rounded-xl bg-surface-sunken p-4 sm:flex-row sm:items-center">

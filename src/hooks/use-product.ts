@@ -7,12 +7,12 @@ import { getProductById } from "../services/product.services";
 type ProductResponse = Awaited<ReturnType<typeof getProductById>>;
 
 // initialData: the response the server already fetched for a public page.
-export const useProduct = (id: string, initialData?: ProductResponse) => {
+export const useProduct = (id: string, initialData?: ProductResponse, options: { enabled?: boolean } = {}) => {
   return useQuery({
     queryKey: ["product", id],
     queryFn: () => getProductById(id),
     select: (response) => response.data,
-    enabled: !!id,
+    enabled: !!id && options.enabled !== false,
     initialData,
   });
 };

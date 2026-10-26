@@ -68,6 +68,12 @@ export default function CartItem({ item }: Props) {
                 </p>
               )}
 
+              {product.store?.canDeliver === false && (
+                <p className="mt-2 rounded-lg bg-amber-50 px-2.5 py-1.5 text-[12px] leading-snug text-amber-900 dark:bg-amber-500/10 dark:text-amber-100">
+                  This seller hasn&apos;t set up delivery or pickup yet - remove it to check out.
+                </p>
+              )}
+
               {product.rating !== undefined && (
                 <div className="mt-1.5 flex items-center gap-1">
                   <Star size={13} className="fill-yellow-400 text-yellow-400" />

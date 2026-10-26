@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Users, Sparkles, User, Mail, Lock, LockKeyhole, Cake } from "lucide-react";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
+import { referralCode } from "@/src/lib/referral";
 
 export default function SignupPage() {
   const form = useForm<SignupValues>({
@@ -32,6 +33,7 @@ export default function SignupPage() {
       email: data.email,
       password: data.password,
       dateOfBirth: data.dateOfBirth || undefined,
+      referralCode: referralCode(),
     });
   };
 

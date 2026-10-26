@@ -66,6 +66,11 @@ export interface Store {
   returnPolicy?: string | null;
   shippingPolicy?: string | null;
   warrantyPolicy?: string | null;
+  // Social links (usernames; WhatsApp as 234XXXXXXXXXX).
+  instagram?: string | null;
+  facebook?: string | null;
+  tiktok?: string | null;
+  whatsapp?: string | null;
   payoutBankName?: string | null;
   payoutBankCode?: string | null;
   payoutAccountNumber?: string | null;
@@ -108,6 +113,11 @@ export interface CreateStorePayload {
   returnPolicy?: string;
   shippingPolicy?: string;
   warrantyPolicy?: string;
+  // Username, @username, profile link or phone number - "" removes it.
+  instagram?: string;
+  facebook?: string;
+  tiktok?: string;
+  whatsapp?: string;
 }
 
 export type UpdateStorePayload = Partial<CreateStorePayload>;

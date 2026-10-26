@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
 
 import { NotFoundError, jsonLd, serverGet } from "@/src/lib/server-api";
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/src/lib/site";
@@ -20,11 +19,13 @@ const clip = (text: string, max: number) => {
 };
 
 // One fetch per request - Next dedupes it between metadata and the page.
+// "hidden": the public API says not found - it may still be a product of a
+// suspended store an admin can open, so the browser checks with their login.
 const loadProduct = async (id: string) => {
   try {
-    return await serverGet<Product>(`/products/${encodeURIComponent(id)}`);
+    return { response: await serverGet<Product>(`/products/${encodeURIComponent(id)}`), hidden: false };
   } catch (error) {
-    if (error instanceof NotFoundError) notFound();
+    if (error instanceof NotFoundError) return { response: null, hidden: true };
     throw error;
   }
 };
@@ -34,7 +35,10 @@ const coverOf = (product: Product) =>
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
-  const response = await loadProduct(id);
+  const { response, hidden } = await loadProduct(id);
+  // Not public (missing, or a suspended store only admins may open):
+  // the browser retries with the viewer's login; never index it.
+  if (hidden) return { title: "Product", robots: { index: false, follow: false } };
   if (!response) return { title: "Product" };
 
   const product = response.data;
@@ -118,7 +122,7 @@ const productJsonLd = (product: Product, reviews: ReviewSummary | null) => {
 
 export default async function ProductPage({ params }: Props) {
   const { id } = await params;
-  const response = await loadProduct(id);
+  const { response } = await loadProduct(id);
   const reviews = response ? await serverGet<ReviewSummary>(`/products/${encodeURIComponent(id)}/reviews?limit=1`).catch(() => null) : null;
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Check, Copy, ExternalLink, ShieldCheck, Store as StoreIcon } from "lucide-react";
+import { BadgeCheck, Check, Copy, ExternalLink, ShieldCheck, Store as StoreIcon, UserRound } from "lucide-react";
 
 import { useAdminSellers } from "@/src/hooks/use-admin-sellers";
 import { useUpdateSellerStatus } from "@/src/hooks/use-update-seller-status";
@@ -186,8 +186,41 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
             {seller.user.username && ` · @${seller.user.username}`}
           </p>
           {seller.store && (
-            <p className="mt-1 text-[12px] text-subtle">Store: {seller.store.name}</p>
+            <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-subtle">
+              Store: {seller.store.name}
+              {seller.store.isSuspended && (
+                <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-red-700 dark:bg-red-500/10 dark:text-red-300">
+                  Suspended
+                </span>
+              )}
+            </p>
           )}
+
+          {/* Open in a new tab so the approval list keeps its place. */}
+          <div className="mt-2.5 flex flex-wrap gap-2">
+            <a
+              href={`/users/${seller.user.username ?? seller.user.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-[12px] font-medium text-ink-2 transition hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+            >
+              <UserRound size={13} /> View profile <ExternalLink size={11} className="text-subtle" />
+            </a>
+            {seller.store ? (
+              <a
+                href={`/marketplace/seller/${seller.store.slug}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-[12px] font-medium text-ink-2 transition hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+              >
+                <StoreIcon size={13} /> View store <ExternalLink size={11} className="text-subtle" />
+              </a>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 rounded-lg border border-dashed border-line px-3 py-1.5 text-[12px] text-subtle">
+                <StoreIcon size={13} /> No store yet
+              </span>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-2">

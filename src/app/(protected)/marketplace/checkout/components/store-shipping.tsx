@@ -120,7 +120,17 @@ function StoreShippingGroup({
   }
 
   if (options.length === 0) {
-    if (allZones.length === 0) return null;
+    if (allZones.length === 0) {
+      return (
+        <div>
+          <p className="text-[13.5px] font-semibold text-ink">{store.name}</p>
+          <p className="mt-1.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100">
+            This seller hasn&apos;t set up delivery or pickup yet, so their items can&apos;t be ordered right now. Remove them from your cart to
+            check out the rest.
+          </p>
+        </div>
+      );
+    }
     return (
       <div>
         <p className="text-[13.5px] font-semibold text-ink">{store.name}</p>
