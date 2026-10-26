@@ -5,7 +5,7 @@ import { SUPPORT_WHATSAPP } from "./support";
 export const LEGAL_ENTITY = "Nestly";
 /** ", operated by X" once a registered company name is set; empty until then. */
 export const OPERATED_BY = LEGAL_ENTITY === "Nestly" ? "" : `, operated by ${LEGAL_ENTITY}`;
-export const LEGAL_LAST_UPDATED = "22 October 2026";
+export const LEGAL_LAST_UPDATED = "26 October 2026";
 export const LEGAL_EMAIL = "hello@nestlyapp.site";
 export const LEGAL_WHATSAPP_DISPLAY = `+${SUPPORT_WHATSAPP.slice(0, 3)} ${SUPPORT_WHATSAPP.slice(3, 6)} ${SUPPORT_WHATSAPP.slice(6, 9)} ${SUPPORT_WHATSAPP.slice(9)}`;
 export const LEGAL_WHATSAPP_URL = `https://wa.me/${SUPPORT_WHATSAPP}`;

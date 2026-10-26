@@ -52,7 +52,7 @@ export default function EarningsPreview({ price, categoryId }: Props) {
             <p className="mt-0.5 text-muted">Enter a price to see what you&apos;ll receive.</p>
           )}
           <p className="mt-1.5 text-[12px] text-muted">
-            Delivery fees are yours in full (no commission). Paystack&apos;s processing fee is shared by amount between you and Nestly.
+            Delivery fees are yours in full (no commission). Nestly pays Paystack&apos;s processing fee.
           </p>
         </div>
       </div>

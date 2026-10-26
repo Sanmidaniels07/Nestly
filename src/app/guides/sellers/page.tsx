@@ -267,7 +267,7 @@ const parts: GuidePart[] = [
             </p>
             <p>
               If automatic payouts are paused (for example right after you change bank details), the money is kept in your Earnings balance and paid
-              out to you by Nestly. Paystack&apos;s transaction fee is shared between you and Nestly in proportion to what each receives.
+              out to you by Nestly. Nestly pays Paystack&apos;s transaction fee out of its commission, so you receive your full share.
             </p>
           </>
         ),
