@@ -9,7 +9,9 @@ export type NotificationTargetType =
   | "ORDER"
   | "SELLER_ORDER"
   | "BIRTHDAY"
-  | "COMMISSION_CHANGE";
+  | "COMMISSION_CHANGE"
+  | "CAC_REMINDER"
+  | "ADMIN_CAC_SUBMITTED";
 
 export interface Notification {
   id: string;

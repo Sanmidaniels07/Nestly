@@ -37,7 +37,10 @@ function targetHref(notification: Notification): string | null {
     case "COMMISSION_CHANGE":
       return "/settings/marketplace?tab=products";
     case "ADMIN_SELLER_APPLICATION":
+    case "ADMIN_CAC_SUBMITTED":
       return "/admin?tab=sellers";
+    case "CAC_REMINDER":
+      return "/settings/marketplace?tab=store#business-verification";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":
       return "/admin?tab=payouts";
     case "ORDER":

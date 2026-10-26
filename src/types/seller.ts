@@ -12,6 +12,8 @@ export interface SellerProfile {
   reapplyEligibleAt?: string | null;
   canReapply?: boolean;
   cacNumber?: string | null;
+  // CAC number checked by an admin - drives the store's verified badge.
+  isVerified?: boolean;
   createdAt: string;
   updatedAt: string;
   store?: Store | null;

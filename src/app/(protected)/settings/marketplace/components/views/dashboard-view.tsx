@@ -9,6 +9,7 @@ import RecentOrders from "../seller-dashboard/recent-orders";
 import SalesOverview from "../seller-dashboard/sales-overview";
 import SetupChecklist from "../seller-dashboard/setup-checklist";
 import TopSellingProducts from "../seller-dashboard/top-selling-products";
+import CacReminderBanner from "../seller-dashboard/cac-reminder-banner";
 
 interface Props {
   seller?: SellerProfile;
@@ -28,6 +29,8 @@ export default function DashboardView({ seller }: Props) {
   // The tab wrapper adds no spacing, so the gap between sections lives here.
   return (
     <div className="space-y-10 sm:space-y-12">
+      <CacReminderBanner seller={seller} />
+
       <SetupChecklist seller={seller} />
 
       <DashboardStats />
