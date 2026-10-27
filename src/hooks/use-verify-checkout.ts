@@ -10,7 +10,7 @@ import { ApiErrorResponse } from "../types/api";
 export const useVerifyCheckout = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<unknown, AxiosError<ApiErrorResponse>, string>({
+  return useMutation<Awaited<ReturnType<typeof verifyCheckout>>, AxiosError<ApiErrorResponse>, string>({
     mutationFn: verifyCheckout,
 
     onSuccess: () => {

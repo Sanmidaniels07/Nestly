@@ -14,6 +14,7 @@ import OrderedProducts from "./components/ordered-products";
 import DeliveryCodes from "./components/delivery-codes";
 import SupportCard from "./components/support-card";
 import SellerNotesCard from "./components/seller-notes-card";
+import SoldOutNotice from "./components/sold-out-notice";
 import Skeleton from "@/src/components/ui/skeleton";
 
 interface Props {
@@ -58,6 +59,7 @@ export default function OrderDetailsPage({ params }: Props) {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.7fr)_420px]">
         <section className="min-w-0 space-y-5">
+          <SoldOutNotice order={order} />
           <DeliveryCodes order={order} />
           <OrderedProducts order={order} />
           <SellerNotesCard order={order} />

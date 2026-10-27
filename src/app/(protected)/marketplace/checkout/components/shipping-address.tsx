@@ -23,7 +23,10 @@ const emptyForm = {
   postalCode: "",
 };
 
-export default function ShippingAddress() {
+// "select" picks the delivery address at checkout / on a payment link;
+// "manage" just lists, adds and removes saved addresses (profile settings).
+export default function ShippingAddress({ mode = "select" }: { mode?: "select" | "manage" }) {
+  const manage = mode === "manage";
   const { data: addresses, isLoading } = useAddresses();
   const { mutate: createAddress, isPending: isCreating } = useCreateAddress();
   const { mutate: deleteAddress } = useDeleteAddress();
@@ -35,11 +38,11 @@ export default function ShippingAddress() {
   const [form, setForm] = useState(emptyForm);
 
   useEffect(() => {
-    if (!addressId && addresses && addresses.length > 0) {
+    if (!manage && !addressId && addresses && addresses.length > 0) {
       const defaultAddress = addresses.find((a) => a.isDefault) ?? addresses[0];
       setAddressId(defaultAddress.id);
     }
-  }, [addresses, addressId, setAddressId]);
+  }, [manage, addresses, addressId, setAddressId]);
 
   const update = (field: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -80,10 +83,12 @@ export default function ShippingAddress() {
       <div className="mb-5 flex items-center justify-between">
         <div>
           <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
-            Shipping address
+            {manage ? "Delivery addresses" : "Shipping address"}
           </h2>
           <p className="mt-1 text-[13px] text-muted">
-            Select where your order should be delivered.
+            {manage
+              ? "Saved for quick checkout. Only sellers delivering your orders see them."
+              : "Select where your order should be delivered."}
           </p>
         </div>
 
@@ -138,7 +143,7 @@ export default function ShippingAddress() {
 
       {!isLoading && addresses?.length === 0 && !showForm && (
         <p className="text-[13px] text-subtle">
-          No saved addresses yet. Add one to continue.
+          {manage ? "No saved addresses yet." : "No saved addresses yet. Add one to continue."}
         </p>
       )}
 
@@ -147,14 +152,14 @@ export default function ShippingAddress() {
           <AddressCard
             key={address.id}
             address={address}
-            selected={addressId === address.id}
-            onSelect={() => setAddressId(address.id)}
+            selected={!manage && addressId === address.id}
+            onSelect={() => !manage && setAddressId(address.id)}
             onDelete={() => deleteAddress(address.id)}
           />
         ))}
       </div>
 
-      <DeliveryPhone key={addressId} phone={addresses?.find((a) => a.id === addressId)?.phone} />
+      {!manage && <DeliveryPhone key={addressId} phone={addresses?.find((a) => a.id === addressId)?.phone} />}
     </section>
   );
 }

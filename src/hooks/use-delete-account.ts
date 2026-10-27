@@ -13,7 +13,7 @@ export const useDeleteAccount = () => {
   const router = useRouter();
   const logout = useAuthStore((state) => state.logout);
 
-  return useMutation<unknown, AxiosError<ApiErrorResponse>, string>({
+  return useMutation<unknown, AxiosError<ApiErrorResponse>, Parameters<typeof deleteAccount>[0]>({
     mutationFn: deleteAccount,
 
     onSuccess: () => {

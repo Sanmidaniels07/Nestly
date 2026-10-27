@@ -12,6 +12,7 @@ import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useSavedCards } from "@/src/hooks/use-saved-cards";
 import { useChargeSavedCard } from "@/src/hooks/use-charge-saved-card";
 import { payWithPaystack } from "@/src/lib/paystack";
+import { afterPaymentPath } from "@/src/lib/order-result";
 import { Order } from "@/src/types/order";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 
@@ -105,8 +106,8 @@ export default function PaymentSummary() {
         const order = (response as { data: Order }).data;
         if (isStale()) return;
         setConfirmedOrder(order);
-        resetCheckout();
-        router.push(`/marketplace/order-success?orderId=${order.id}`);
+        if (order.status !== "CANCELLED") resetCheckout();
+        router.push(afterPaymentPath(order));
       } catch {
         if (!isStale()) setProcessing(false);
       }
@@ -126,12 +127,12 @@ export default function PaymentSummary() {
       await payWithPaystack(accessCode, {
         onSuccess: async () => {
           try {
-            const verifyResponse = await verifyCheckout(reference);
-            const order = (verifyResponse as { data: { order: Order } }).data.order;
+            // The verify response's data is the order itself.
+            const { data: order } = await verifyCheckout(reference);
             if (isStale()) return;
             setConfirmedOrder(order);
-            resetCheckout();
-            router.push(`/marketplace/order-success?orderId=${order.id}`);
+            if (order.status !== "CANCELLED") resetCheckout();
+            router.push(afterPaymentPath(order));
           } catch {
             if (!isStale()) {
               setError("Payment was received but we couldn't confirm it. Check your orders page.");

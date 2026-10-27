@@ -13,10 +13,12 @@ export const changePassword = async (data: {
   return response.data;
 };
 
-export const deleteAccount = async (password: string) => {
+// Confirmed with the password, or for Google-only accounts a fresh Google
+// sign-in (googleCredential).
+export const deleteAccount = async (confirm: { password?: string; googleCredential?: string }) => {
   const response = await api.delete<ApiResponse<{ message: string }>>(
     "/account",
-    { data: { password } }
+    { data: confirm }
   );
   return response.data;
 };

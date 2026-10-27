@@ -11,6 +11,7 @@ import PasswordInput from "../ui/password-input";
 import Button from "../ui/button";
 import Link from "next/link";
 import { Mail, Lock, ShieldCheck } from "lucide-react";
+import GoogleSignIn from "./google-sign-in";
 
 export default function LoginForm() {
   const { mutate, isPending } = useLogin();
@@ -44,45 +45,49 @@ export default function LoginForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <Input
-        label="Email Address"
-        type="email"
-        placeholder="you@example.com"
-        {...register("email")}
-        error={errors.email?.message}
-        icon={<Mail className="w-5 h-5" />}
-      />
+    <div className="space-y-6">
+      <GoogleSignIn onTwoFactor={setTwoFactorToken} />
 
-      <PasswordInput
-        label="Password"
-        placeholder="Enter your password"
-        {...register("password")}
-        error={errors.password?.message}
-        icon={<Lock className="w-5 h-5" />}
-      />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <Input
+          label="Email Address"
+          type="email"
+          placeholder="you@example.com"
+          {...register("email")}
+          error={errors.email?.message}
+          icon={<Mail className="w-5 h-5" />}
+        />
 
-      <Button
-        loading={isPending}
-        variant="tribely"
-        className="w-full h-14 text-base font-semibold rounded-2xl mt-2"
-      >
-        Sign In
-      </Button>
+        <PasswordInput
+          label="Password"
+          placeholder="Enter your password"
+          {...register("password")}
+          error={errors.password?.message}
+          icon={<Lock className="w-5 h-5" />}
+        />
 
-      <div className="text-center pt-2">
-        <Link
-          href="/forgot-password"
-          className="text-sm text-primary hover:underline font-medium"
+        <Button
+          loading={isPending}
+          variant="tribely"
+          className="w-full h-14 text-base font-semibold rounded-2xl mt-2"
         >
-          Forgot your password?
-        </Link>
-      </div>
-    </form>
+          Sign In
+        </Button>
+
+        <div className="text-center pt-2">
+          <Link
+            href="/forgot-password"
+            className="text-sm text-primary hover:underline font-medium"
+          >
+            Forgot your password?
+          </Link>
+        </div>
+      </form>
+    </div>
   );
 }
 
-function TwoFactorChallengeForm({
+export function TwoFactorChallengeForm({
   twoFactorToken,
   onBack,
 }: {

@@ -16,6 +16,8 @@ export const useCreateAddress = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      // The profile checklist's "Save a delivery address" step.
+      queryClient.invalidateQueries({ queryKey: ["profile", "me"] });
       toast.success("Address added");
     },
 

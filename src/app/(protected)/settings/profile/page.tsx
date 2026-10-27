@@ -1,13 +1,24 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useProfile } from "@/src/hooks/use-profile";
 import EditProfileForm from "@/src/app/(protected)/profile/components/edit-profile-form";
 import Skeleton from "@/src/components/ui/skeleton";
+import ShippingAddress from "@/src/app/(protected)/marketplace/checkout/components/shipping-address";
 
 export default function SettingsProfilePage() {
   const router = useRouter();
   const { data: profile, isLoading } = useProfile();
+  const loaded = !!profile;
+
+  // /settings/profile#addresses (dashboard checklist) - the section only
+  // exists once the profile has loaded, so scroll to it then.
+  useEffect(() => {
+    if (loaded && window.location.hash === "#addresses") {
+      document.getElementById("addresses")?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [loaded]);
 
   if (isLoading || !profile) {
     return (
@@ -41,6 +52,11 @@ export default function SettingsProfilePage() {
 
       <div className="overflow-hidden rounded-2xl border border-line bg-surface">
         <EditProfileForm variant="page" onClose={() => router.push("/profile")} />
+      </div>
+
+      {/* Linked from the dashboard's "Save a delivery address" step. */}
+      <div id="addresses" className="scroll-mt-24">
+        <ShippingAddress mode="manage" />
       </div>
     </div>
   );

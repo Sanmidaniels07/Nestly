@@ -21,10 +21,18 @@ export interface SignupPayload {
   referralCode?: string;
 }
 
+export interface GoogleAuthPayload {
+  /** Google's ID token from the sign-in button. */
+  credential: string;
+  referralCode?: string;
+}
+
 export interface AuthSuccessData {
   accessToken: string;
   refreshToken: string;
   user: User;
+  /** Continue with Google only: an account was just created. */
+  isNewUser?: boolean;
 }
 
 export interface TwoFactorChallengeData {
