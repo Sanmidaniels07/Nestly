@@ -41,6 +41,8 @@ function targetHref(notification: Notification): string | null {
       return "/admin?tab=sellers";
     case "SELLER_SETUP":
       return "/settings/marketplace";
+    case "PROFILE_SETUP":
+      return "/dashboard?checklist=1";
     case "CAC_REMINDER":
       return "/settings/marketplace?cac=1";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":

@@ -1,6 +1,7 @@
 import { api } from "../lib/axios";
 import {
   AuthResponse,
+  GoogleAuthPayload,
   LoginPayload,
   ResetPasswordPayload,
   SignupPayload,
@@ -17,6 +18,13 @@ export const login = async (
       data
     );
 
+  return response.data;
+};
+
+export const googleAuth = async (
+  data: GoogleAuthPayload
+): Promise<AuthResponse> => {
+  const response = await api.post<AuthResponse>("/auth/google", data);
   return response.data;
 };
 

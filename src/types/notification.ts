@@ -12,6 +12,7 @@ export type NotificationTargetType =
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
   | "SELLER_SETUP"
+  | "PROFILE_SETUP"
   | "ADMIN_CAC_SUBMITTED"
   // Shopping updates for buyers.
   | "PRODUCT_PAGE"

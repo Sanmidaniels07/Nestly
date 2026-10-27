@@ -17,6 +17,8 @@ import { useProfile } from "@/src/hooks/use-profile";
 import { useLogout } from "@/src/hooks/use-logout";
 import { useChangePassword } from "@/src/hooks/use-change-password";
 import { useDeleteAccount } from "@/src/hooks/use-delete-account";
+import { useForgotPassword } from "@/src/hooks/use-forgot-password";
+import GoogleButton from "@/src/components/auth/google-button";
 import { useAccountSessions } from "@/src/hooks/use-account-sessions";
 import { useRevokeSession } from "@/src/hooks/use-revoke-session";
 import { useRevokeOtherSessions } from "@/src/hooks/use-revoke-other-sessions";
@@ -119,7 +121,7 @@ export default function SettingsAccountPage() {
         </p>
       </section>
 
-      <ChangePasswordSection />
+      {profile.hasPassword === false ? <AddPasswordSection email={profile.email} /> : <ChangePasswordSection />}
 
       <SessionsSection />
 
@@ -150,8 +152,47 @@ export default function SettingsAccountPage() {
         </Button>
       </section>
 
-      <DeleteAccountSection />
+      <DeleteAccountSection hasPassword={profile.hasPassword !== false} />
     </div>
+  );
+}
+
+// Google sign-ups have no password. Adding one goes through the reset email,
+// which also proves they still own the address.
+function AddPasswordSection({ email }: { email: string }) {
+  const { mutate: sendLink, isPending, isSuccess } = useForgotPassword();
+
+  return (
+    <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
+      <div className="flex items-start gap-3.5">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
+          <KeyRound size={17} className="text-violet-600 dark:text-violet-400" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-[15px] font-semibold text-ink">
+            Add a password
+          </h3>
+          <p className="mt-1 text-[13px] text-muted">
+            You sign in with Google. Add a password to also sign in with your email address.
+          </p>
+        </div>
+      </div>
+
+      {isSuccess ? (
+        <p className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-[13px] text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+          We&apos;ve emailed a link to <strong>{email}</strong>. Open it to choose your password.
+        </p>
+      ) : (
+        <Button
+          variant="outline"
+          loading={isPending}
+          onClick={() => sendLink(email)}
+          className="mt-4 h-11 rounded-xl px-6"
+        >
+          Email me a link to add one
+        </Button>
+      )}
+    </section>
   );
 }
 
@@ -415,14 +456,14 @@ function SavedCardsSection() {
   );
 }
 
-function DeleteAccountSection() {
+function DeleteAccountSection({ hasPassword }: { hasPassword: boolean }) {
   const { mutate: deleteAccount, isPending } = useDeleteAccount();
   const [confirming, setConfirming] = useState(false);
   const [password, setPassword] = useState("");
 
   const handleDelete = () => {
     if (!password.trim()) return;
-    deleteAccount(password);
+    deleteAccount({ password });
   };
 
   return (
@@ -441,7 +482,28 @@ function DeleteAccountSection() {
         </div>
       </div>
 
-      {confirming ? (
+      {confirming && !hasPassword ? (
+        // No password to type - choosing their Google account again confirms it's them.
+        <div className="mt-4 space-y-3">
+          <p className="text-[13px] font-medium text-ink">
+            To confirm, choose the Google account you sign in with. Your account is deleted straight away.
+          </p>
+          <div className="max-w-sm">
+            <GoogleButton
+              text="continue_with"
+              busy={isPending}
+              onCredential={(googleCredential) => deleteAccount({ googleCredential })}
+            />
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setConfirming(false)}
+            className="h-11 w-full rounded-xl px-6 sm:w-auto"
+          >
+            Cancel
+          </Button>
+        </div>
+      ) : confirming ? (
         <div className="mt-4 space-y-3">
           <Input
             type="password"

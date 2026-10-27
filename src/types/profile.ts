@@ -30,6 +30,21 @@ export interface Profile {
   twoFactorEnabled: boolean;
   createdAt: string;
   profileCompletion: number;
+  /** False for Google sign-ups that never set a password. */
+  hasPassword: boolean;
+  hasGoogle: boolean;
+  /** The dashboard's "Finish your profile" checklist. */
+  setupSteps: ProfileSetupStep[];
+}
+
+export type ProfileSetupStepKey = "USERNAME" | "PHOTO" | "BIRTHDAY" | "BIO" | "ADDRESS";
+
+export interface ProfileSetupStep {
+  key: ProfileSetupStepKey;
+  title: string;
+  why: string;
+  path: string;
+  done: boolean;
 }
 
 export interface UpdateProfilePayload {

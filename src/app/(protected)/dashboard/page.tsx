@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Newspaper } from "lucide-react";
 
@@ -23,7 +23,7 @@ import SuggestedUsers from "./suggested-users";
 import DashboardSkeleton from "./dashboard-skeleton";
 import CacReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/cac-reminder-banner";
 import SetupReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/setup-reminder-banner";
-import BirthdayPrompt from "./birthday-prompt";
+import ProfileChecklist from "./profile-checklist";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -47,8 +47,12 @@ export default function DashboardPage() {
 
       {dashboard?.seller?.needsCacNumber && <CacReminderBanner />}
 
-      {/* Only once the profile has loaded, so it doesn't flash for people who have a birthday set. */}
-      {profile && <BirthdayPrompt dateOfBirth={profile.dateOfBirth} />}
+      {/* Only once the profile has loaded, so it doesn't flash for people who are done. */}
+      {profile?.setupSteps && (
+        <Suspense fallback={null}>
+          <ProfileChecklist steps={profile.setupSteps} />
+        </Suspense>
+      )}
 
       {isError && !dashboard && (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-red-200 bg-red-50 px-6 py-5 text-center dark:border-red-500/30 dark:bg-red-500/10 sm:flex-row sm:justify-between sm:text-left">

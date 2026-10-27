@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -14,6 +15,8 @@ import { Users, Sparkles, User, Mail, Lock, LockKeyhole, Cake } from "lucide-rea
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
 import { referralCode } from "@/src/lib/referral";
+import GoogleSignIn from "@/src/components/auth/google-sign-in";
+import { TwoFactorChallengeForm } from "@/src/components/auth/LoginForm";
 
 export default function SignupPage() {
   const form = useForm<SignupValues>({
@@ -26,6 +29,8 @@ export default function SignupPage() {
   } = form;
 
   const signupMutation = useSignup();
+  // An existing account with 2FA can tap Continue with Google here too.
+  const [twoFactorToken, setTwoFactorToken] = useState<string | null>(null);
 
   const onSubmit = (data: SignupValues) => {
     signupMutation.mutate({
@@ -96,6 +101,18 @@ export default function SignupPage() {
                 </p>
               </div>
 
+              {twoFactorToken ? (
+                <Suspense fallback={null}>
+                  <TwoFactorChallengeForm twoFactorToken={twoFactorToken} onBack={() => setTwoFactorToken(null)} />
+                </Suspense>
+              ) : (
+              <>
+              <Suspense fallback={<div className="h-[106px]" />}>
+                <div className="mb-6">
+                  <GoogleSignIn text="signup_with" onTwoFactor={setTwoFactorToken} />
+                </div>
+              </Suspense>
+
               <FormProvider {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <Input
@@ -160,6 +177,8 @@ export default function SignupPage() {
                 </p>
               </form>
               </FormProvider>
+              </>
+              )}
 
               <p className="text-center text-sm text-muted mt-8">
                 Already have an account?{" "}

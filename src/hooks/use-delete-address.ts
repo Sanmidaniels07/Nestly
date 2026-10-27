@@ -15,6 +15,7 @@ export const useDeleteAddress = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["addresses"] });
+      queryClient.invalidateQueries({ queryKey: ["profile", "me"] });
       toast.success("Address removed");
     },
 
