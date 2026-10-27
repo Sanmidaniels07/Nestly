@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock, KeyRound, MapPin, MessageCircle, MessageSquareText, Phone, Store, Truck } from "lucide-react";
+import { CheckCircle2, Clock, KeyRound, Link2, MapPin, MessageCircle, MessageSquareText, Phone, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
@@ -109,6 +109,12 @@ export default function OrdersView() {
               </p>
             </div>
           </div>
+
+          {order.items.some((item) => item.product.status === "PRIVATE") && (
+            <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-2.5 py-1 text-[11.5px] font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+              <Link2 size={12} /> Paid through your payment link
+            </p>
+          )}
 
           <BuyerContact order={order} isPickup={isPickup} />
 

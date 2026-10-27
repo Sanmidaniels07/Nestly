@@ -54,7 +54,8 @@ export interface VariationInput {
 }
 
 export type ProductCondition = "NEW" | "USED" | "REFURBISHED" | "FRESHLY_MADE" | "MADE_TO_ORDER" | "PRE_ORDER";
-export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED";
+// PRIVATE: the item behind a payment link (bought only through /pay/{code}).
+export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED" | "PRIVATE";
 
 export interface ProductStoreSummary {
   id: string;
