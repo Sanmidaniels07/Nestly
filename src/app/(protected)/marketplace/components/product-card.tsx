@@ -11,6 +11,8 @@ import { Product } from "@/src/types/product";
 interface Props {
   product: Product;
   compact?: boolean;
+  // Short note on the photo, e.g. "120 sold" or "Trending".
+  badge?: string;
 }
 
 function formatPrice(price: number) {
@@ -21,7 +23,7 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function ProductCard({ product, compact = false }: Props) {
+export default function ProductCard({ product, compact = false, badge }: Props) {
   const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
 
   const primaryImage =
@@ -63,6 +65,11 @@ export default function ProductCard({ product, compact = false }: Props) {
           >
             {formatConditionLabel(product.condition)}
           </span>
+          {badge && (
+            <span className="w-fit max-w-[180px] truncate rounded-full bg-violet-600/90 px-2.5 py-1 text-[11px] font-semibold text-white backdrop-blur">
+              {badge}
+            </span>
+          )}
         </div>
 
         <button

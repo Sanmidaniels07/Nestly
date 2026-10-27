@@ -14,6 +14,8 @@ import ProductReviews from "./components/product-reviews";
 import Skeleton from "@/src/components/ui/skeleton";
 import SuspendedNotice from "@/src/components/ui/suspended-notice";
 import { useSession } from "@/src/hooks/use-session";
+import { useRecordProductView } from "@/src/hooks/use-recommendations";
+import ProductSection from "@/src/app/(protected)/marketplace/sections/product-section";
 
 interface Props {
   id: string;
@@ -28,7 +30,8 @@ export default function ProductDetailsPage({ id, initialProduct }: Props) {
   const waiting = !initialProduct && !isHydrated;
   const { data: product, isLoading: isFetching, isError } = useProduct(id, initialProduct, { enabled: !waiting });
   const isLoading = waiting || isFetching;
-  useRelatedProducts(id, 8);
+  const { data: related } = useRelatedProducts(id, 4);
+  useRecordProductView(id);
   const { data: reviewsData } = useProductReviews(id, { limit: 20 });
 
   if (isLoading) {
@@ -102,6 +105,10 @@ export default function ProductDetailsPage({ id, initialProduct }: Props) {
         ratingCount={reviewsData?.ratingCount ?? 0}
         earlierVersionCount={reviewsData?.earlierVersionCount ?? 0}
       />
+
+      <div className="mt-16">
+        <ProductSection title="You may also like" subtitle="Similar products" products={related} />
+      </div>
     </div>
   );
 }

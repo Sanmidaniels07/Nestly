@@ -102,6 +102,15 @@ export interface Product {
   updatedAt: string;
 }
 
+// Products from /recommendations - best sellers carry soldCount, "For you"
+// picks carry why they were chosen.
+export type RecommendationReason = "FOLLOWED_STORE" | "SIMILAR" | "POPULAR" | "NEW";
+
+export interface RecommendedProduct extends Product {
+  soldCount?: number;
+  reason?: RecommendationReason;
+}
+
 export interface CreateProductPayload {
   categoryId: string;
   title: string;
