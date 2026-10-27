@@ -27,6 +27,8 @@ export default function OrderCard({ order }: Props) {
   const { mutate: addToCart } = useAddToCart();
 
   const [added, setAdded] = useState(false);
+  // Payment-link items can only be bought through the seller's link.
+  const canBuyAgain = !order.items.some((item) => item.product.status === "PRIVATE");
 
   const primaryImage =
     firstItem?.product.images.find((image) => image.isPrimary)?.url ??
@@ -113,25 +115,27 @@ export default function OrderCard({ order }: Props) {
           <ChevronRight size={14} />
         </Link>
 
-        <button
-          onClick={handleBuyAgain}
-          className={`
-            flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-[13px] font-semibold transition-colors
-            ${added ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-line text-ink-2 hover:bg-surface-sunken"}
-          `}
-        >
-          {added ? (
-            <>
-              <Check size={14} />
-              Added to cart
-            </>
-          ) : (
-            <>
-              <RotateCcw size={14} />
-              Buy again
-            </>
+        {canBuyAgain && (
+          <button
+            onClick={handleBuyAgain}
+            className={`
+              flex items-center gap-1.5 rounded-xl border px-4 py-2.5 text-[13px] font-semibold transition-colors
+              ${added ? "border-emerald-200 dark:border-emerald-500/30 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300" : "border-line text-ink-2 hover:bg-surface-sunken"}
+            `}
+          >
+            {added ? (
+              <>
+                <Check size={14} />
+                Added to cart
+              </>
+            ) : (
+              <>
+                <RotateCcw size={14} />
+                Buy again
+              </>
           )}
         </button>
+        )}
       </div>
     </article>
   );

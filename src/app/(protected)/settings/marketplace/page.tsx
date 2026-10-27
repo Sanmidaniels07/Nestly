@@ -13,6 +13,7 @@ import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-ba
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
+import PaymentLinksView from "./components/views/payment-links-view";
 import OrdersView from "./components/views/orders-view";
 import CustomersView from "./components/views/customers-view";
 import StoreView from "./components/views/store-view";
@@ -26,6 +27,7 @@ import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleto
 const VALID_TABS: Tab[] = [
   "dashboard",
   "products",
+  "links",
   "orders",
   "customers",
   "returns",
@@ -109,6 +111,7 @@ function MarketplaceSettingsContent() {
   const tabSections: Record<Tab, string> = {
     dashboard: "dashboard",
     products: "products",
+    links: "payment links",
     orders: "orders",
     customers: "customers",
     returns: "return requests",
@@ -120,6 +123,7 @@ function MarketplaceSettingsContent() {
   const tabViews: Partial<Record<Tab, React.ReactNode>> = {
     dashboard: <DashboardView seller={seller} />,
     products: <ProductsView />,
+    links: <PaymentLinksView />,
     orders: <OrdersView />,
     customers: <CustomersView />,
     returns: <ReturnsView />,

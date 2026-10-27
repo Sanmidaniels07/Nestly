@@ -127,12 +127,15 @@ function OrderedProductItem({
           </div>
 
           <div className="flex shrink-0 flex-wrap gap-2.5 sm:flex-col">
-            <Link
-              href={`/marketplace/product/${item.productId}`}
-              className="flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
-            >
-              {item.listingChanged ? "View current listing" : "View product"}
-            </Link>
+            {/* Payment-link items have no product page. */}
+            {item.product.status !== "PRIVATE" && (
+              <Link
+                href={`/marketplace/product/${item.productId}`}
+                className="flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
+              >
+                {item.listingChanged ? "View current listing" : "View product"}
+              </Link>
+            )}
 
             {isDelivered && !item.awaitingConfirmation && !reviewing && (
               <button

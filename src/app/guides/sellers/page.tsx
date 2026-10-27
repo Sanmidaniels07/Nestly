@@ -230,6 +230,26 @@ const parts: GuidePart[] = [
         ),
       },
       {
+        id: "payment-links",
+        title: "Close DM sales with a payment link",
+        where: { label: "Seller Hub → Payment links", href: "/settings/marketplace?tab=links" },
+        body: (
+          <>
+            <p>
+              When a customer on Instagram, WhatsApp or TikTok asks &quot;how do I pay?&quot;, send a <strong>Nestly payment link</strong> instead of
+              your account number. Add the item, the price, and how many. For delivery, let the buyer <strong>choose from your delivery zones</strong>{" "}
+              when they pay (best when you don&apos;t know where they are yet), set a fee you&apos;ve already agreed, or offer pickup. Then tap
+              WhatsApp or copy the link.
+            </p>
+            <p>
+              The buyer pays through Nestly and their money is held until they receive it, so people who are scared to pay a stranger will buy. It
+              becomes a normal order: you&apos;re notified, you deliver, they give you their delivery code, and you get paid - the usual commission
+              applies. Set a quantity above 1 to keep one link in your bio for something you sell often. Pause or edit a link any time.
+            </p>
+          </>
+        ),
+      },
+      {
         id: "orders",
         title: "Handle each new order",
         where: { label: "Seller Hub → Orders", href: "/settings/marketplace?tab=orders" },

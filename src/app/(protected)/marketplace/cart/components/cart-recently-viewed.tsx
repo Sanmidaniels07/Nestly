@@ -1,10 +1,10 @@
 "use client";
 
-import { useFeaturedProducts } from "@/src/hooks/use-featured-products";
+import { useForYou } from "@/src/hooks/use-recommendations";
 import ProductCard from "../../components/product-card";
 
 export default function CartRecentlyViewed() {
-  const { data: products } = useFeaturedProducts(3);
+  const { data: products } = useForYou(3);
 
   if (!products?.length) return null;
 

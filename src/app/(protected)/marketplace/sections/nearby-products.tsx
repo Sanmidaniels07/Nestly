@@ -13,7 +13,7 @@ export default function NearbyProducts() {
     <section className="space-y-6">
       <SectionHeader
         title="Featured products"
-        subtitle="Handpicked for you"
+        subtitle="Handpicked by Nestly"
         action={{
           label: "View all",
           href: "/marketplace/products",
