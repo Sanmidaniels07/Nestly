@@ -46,6 +46,7 @@ function targetHref(notification: Notification): string | null {
     case "CAC_REMINDER":
       return "/settings/marketplace?cac=1";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":
+    case "ADMIN_REFUND_NEEDED":
       return "/admin?tab=payouts";
     case "ORDER":
       return notification.targetId ? `/marketplace/orders/${notification.targetId}` : "/marketplace/orders";

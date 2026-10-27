@@ -105,6 +105,10 @@ export interface Order {
   paymentMethod?: string;
   timeline?: OrderTimelineEntry[];
   events?: OrderEvent[];
+  /** Set when Nestly cancelled a paid order because the item sold out first. */
+  cancelReason?: string | null;
+  /** That order's automatic refund: REQUESTED, or FAILED (the team refunds by hand). */
+  refundStatus?: "REQUESTED" | "FAILED" | null;
   createdAt: string;
   updatedAt: string;
 }

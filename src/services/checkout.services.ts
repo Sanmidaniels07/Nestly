@@ -5,7 +5,6 @@ import {
   ChargeSavedCardPayload,
   InitiateCheckoutPayload,
   InitiateCheckoutResponse,
-  VerifyCheckoutResponse,
 } from "../types/checkout";
 
 export const initiateCheckout = async (data: InitiateCheckoutPayload) => {
@@ -16,8 +15,10 @@ export const initiateCheckout = async (data: InitiateCheckoutPayload) => {
   return response.data;
 };
 
+// Returns the order itself - PAID, or CANCELLED (with cancelReason) when
+// the item sold out before the payment landed and it's being refunded.
 export const verifyCheckout = async (reference: string) => {
-  const response = await api.get<ApiResponse<VerifyCheckoutResponse>>(
+  const response = await api.get<ApiResponse<Order>>(
     `/checkout/verify/${reference}`
   );
   return response.data;

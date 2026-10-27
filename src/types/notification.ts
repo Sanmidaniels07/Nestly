@@ -14,6 +14,8 @@ export type NotificationTargetType =
   | "SELLER_SETUP"
   | "PROFILE_SETUP"
   | "ADMIN_CAC_SUBMITTED"
+  // A sold-out order's automatic refund failed - refund it in Paystack.
+  | "ADMIN_REFUND_NEEDED"
   // Shopping updates for buyers.
   | "PRODUCT_PAGE"
   | "STORE_PAGE"

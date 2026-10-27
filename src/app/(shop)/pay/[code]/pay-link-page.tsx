@@ -26,6 +26,7 @@ import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useRequireLogin, useSession } from "@/src/hooks/use-session";
 import { useCheckoutStore } from "@/src/store/checkout-store";
 import { payWithPaystack } from "@/src/lib/paystack";
+import { afterPaymentPath } from "@/src/lib/order-result";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
@@ -274,8 +275,8 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {
           try {
-            await verifyCheckout(data.reference);
-            if (!isStale()) router.push(`/marketplace/order-success?orderId=${data.orderId}`);
+            const { data: order } = await verifyCheckout(data.reference);
+            if (!isStale()) router.push(afterPaymentPath(order));
           } catch {
             if (!isStale()) {
               setError("Payment was received but we couldn't confirm it yet. Check your orders page.");
