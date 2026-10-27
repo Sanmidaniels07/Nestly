@@ -2,12 +2,14 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { ImagePlus, Loader2, Star, Store, Truck, X } from "lucide-react";
+import { ImagePlus, Loader2, MapPinned, Star, Store, Truck, X } from "lucide-react";
 
 import { useCategories } from "@/src/hooks/use-categories";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useCreatePaymentLink, useUpdatePaymentLink } from "@/src/hooks/use-payment-links";
 import FormSelect from "@/src/components/ui/form-select";
+import VehiclePicker from "@/src/components/ui/vehicle-picker";
+import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 import { PaymentLink, PaymentLinkDelivery, PaymentLinkPayload } from "@/src/types/payment-link";
 
 const MAX_IMAGES = 6;
@@ -35,7 +37,10 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
   const [price, setPrice] = useState(link ? String(link.price) : "");
   const [quantity, setQuantity] = useState(link ? String(link.quantity) : "1");
   const [categoryId, setCategoryId] = useState(link?.category.id ?? "");
-  const [deliveryType, setDeliveryType] = useState<PaymentLinkDelivery>(link?.deliveryType ?? "DELIVERY");
+  // New links default to the store's zones - the seller often doesn't know
+  // where the buyer is yet.
+  const [deliveryType, setDeliveryType] = useState<PaymentLinkDelivery>(link?.deliveryType ?? "STORE_OPTIONS");
+  const [vehicle, setVehicle] = useState<DeliveryVehicle>(link?.deliveryVehicle ?? "BIKE");
   const [deliveryFee, setDeliveryFee] = useState(link ? String(link.deliveryFee) : "");
   const [description, setDescription] = useState(link?.description ?? "");
   const [images, setImages] = useState<string[]>(
@@ -85,6 +90,7 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
       categoryId,
       deliveryType,
       deliveryFee: fee,
+      deliveryVehicle: vehicle,
       images: images.map((url, index) => ({ url, isPrimary: index === 0 })),
     };
 
@@ -203,9 +209,10 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
       {/* Delivery */}
       <div>
         <span className={label}>How does the buyer get it?</span>
-        <div className="grid gap-2.5 sm:grid-cols-2">
+        <div className="grid gap-2.5 sm:grid-cols-3">
           {([
-            { value: "DELIVERY", title: "I'll deliver", hint: "For the fee you agreed", icon: Truck },
+            { value: "STORE_OPTIONS", title: "Buyer chooses", hint: "From your delivery zones and pickup points", icon: MapPinned },
+            { value: "DELIVERY", title: "Fixed delivery fee", hint: "When you've agreed the fee", icon: Truck },
             { value: "PICKUP", title: "Buyer picks up", hint: "From your store's address", icon: Store },
           ] as const).map((option) => (
             <button
@@ -226,6 +233,17 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
             </button>
           ))}
         </div>
+        {deliveryType === "STORE_OPTIONS" && (
+          <div className="mt-3 space-y-2">
+            <p className="text-[12px] text-muted">
+              The buyer picks their area when paying and pays that zone&apos;s fee - the same zones as your store (Store settings → Delivery).
+            </p>
+            <div className="sm:max-w-sm">
+              <span className={label}>Smallest vehicle that can carry it</span>
+              <VehiclePicker value={vehicle} onChange={setVehicle} label="Smallest vehicle that can carry it" />
+            </div>
+          </div>
+        )}
         {deliveryType === "DELIVERY" && (
           <div className="mt-3 sm:max-w-[240px]">
             <label htmlFor="link-fee" className={label}>Delivery fee (₦)</label>

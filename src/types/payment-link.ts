@@ -1,6 +1,10 @@
 import { Category } from "./category";
+import { ShippingOption } from "./store";
+import { DeliveryVehicle } from "../lib/delivery-vehicle";
 
-export type PaymentLinkDelivery = "DELIVERY" | "PICKUP";
+// DELIVERY: the seller delivers for the link's fee. PICKUP: from the store.
+// STORE_OPTIONS: the buyer picks one of the store's zones / pickup points.
+export type PaymentLinkDelivery = "DELIVERY" | "PICKUP" | "STORE_OPTIONS";
 
 export type PaymentLinkAvailability = "AVAILABLE" | "SOLD_OUT" | "PAUSED";
 
@@ -23,6 +27,7 @@ export interface PaymentLink {
   category: Pick<Category, "id" | "name" | "slug">;
   deliveryType: PaymentLinkDelivery;
   deliveryFee: number;
+  deliveryVehicle: DeliveryVehicle;
   isActive: boolean;
   createdAt: string;
   updatedAt: string;
@@ -38,6 +43,7 @@ export interface PaymentLinkPayload {
   images?: { url: string; isPrimary?: boolean }[];
   deliveryType: PaymentLinkDelivery;
   deliveryFee?: number;
+  deliveryVehicle?: DeliveryVehicle;
 }
 
 export type UpdatePaymentLinkPayload = Partial<PaymentLinkPayload> & { isActive?: boolean };
@@ -54,12 +60,16 @@ export interface PublicPaymentLink {
   deliveryType: PaymentLinkDelivery;
   deliveryFee: number;
   pickupAddress: string | null;
+  deliveryVehicle: DeliveryVehicle;
+  // STORE_OPTIONS: the zones / pickup points the buyer chooses from.
+  shippingOptions: Pick<ShippingOption, "id" | "name" | "fee" | "eta" | "type" | "areas" | "state" | "pickupAddress" | "vehicle">[];
   availability: PaymentLinkAvailability;
   isOwner: boolean;
   store: {
     id: string;
     name: string;
     slug: string;
+    address: string | null;
     logo: string | null;
     city: string | null;
     state: string | null;
@@ -73,6 +83,7 @@ export interface PublicPaymentLink {
 export interface PayPaymentLinkPayload {
   quantity: number;
   addressId: string;
+  shippingOptionId?: string;
   deliveryPhone?: string;
   note?: string;
 }

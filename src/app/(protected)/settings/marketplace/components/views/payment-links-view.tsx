@@ -9,6 +9,16 @@ import { useDeletePaymentLink, useMyPaymentLinks, useUpdatePaymentLink } from "@
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
 import { PaymentLink } from "@/src/types/payment-link";
+
+// How the buyer gets it, in a few words.
+const deliveryText = (link: PaymentLink) =>
+  link.deliveryType === "STORE_OPTIONS"
+    ? "Buyer chooses delivery zone"
+    : link.deliveryType === "PICKUP"
+      ? "Pickup"
+      : link.deliveryFee > 0
+        ? `${naira(link.deliveryFee)} delivery`
+        : "Free delivery";
 import LinkForm from "../payment-links/link-form";
 import ShareLink from "../payment-links/share-link";
 
@@ -113,8 +123,7 @@ function Created({ link, onClose }: { link: PaymentLink; onClose: () => void }) 
         <div className="min-w-0 flex-1">
           <p className="text-[14.5px] font-semibold text-ink">Your link is ready - send it to your buyer</p>
           <p className="mt-0.5 text-[12.5px] text-muted">
-            {link.title} · {naira(link.price)}
-            {link.deliveryType === "DELIVERY" ? (link.deliveryFee > 0 ? ` + ${naira(link.deliveryFee)} delivery` : " · free delivery") : " · pickup"}
+            {link.title} · {naira(link.price)} · {deliveryText(link).toLowerCase()}
           </p>
           <div className="mt-3.5">
             <ShareLink link={link} />
@@ -161,8 +170,7 @@ function LinkRow({ link, onEdit }: { link: PaymentLink; onEdit: () => void }) {
           </div>
           <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[14px] font-semibold text-violet-700 dark:text-violet-300">{naira(link.price)}</p>
           <p className="mt-1 text-[12px] text-muted">
-            {link.quantity} left ·{" "}
-            {link.deliveryType === "PICKUP" ? "Pickup" : link.deliveryFee > 0 ? `${naira(link.deliveryFee)} delivery` : "Free delivery"}
+            {link.quantity} left · {deliveryText(link)}
             {link.sales.orders > 0 && (
               <>
                 {" "}· <span className="font-semibold text-ink-2">{link.sales.orders} paid order{link.sales.orders === 1 ? "" : "s"} ({naira(link.sales.revenue)})</span>

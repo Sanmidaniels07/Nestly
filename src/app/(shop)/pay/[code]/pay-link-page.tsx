@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -30,6 +30,7 @@ import { PHONE_PATTERN } from "@/src/lib/phone";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
 import ShippingAddress from "@/src/app/(protected)/marketplace/checkout/components/shipping-address";
+import ZonePicker, { ZoneOption } from "@/src/app/(protected)/marketplace/checkout/components/zone-picker";
 import { ApiResponse } from "@/src/types/api";
 import { PublicPaymentLink } from "@/src/types/payment-link";
 
@@ -210,17 +211,22 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();
 
   const [quantity, setQuantity] = useState(1);
+  const [zone, setZone] = useState<ZoneOption | null>(null);
+  const clearZone = useCallback(() => setZone(null), []);
   const [note, setNote] = useState("");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const attemptRef = useRef(0);
 
   const isPickup = link.deliveryType === "PICKUP";
+  const buyerChooses = link.deliveryType === "STORE_OPTIONS";
   const max = Math.max(1, link.quantityAvailable);
   const qty = Math.min(quantity, max);
   const subtotal = link.price * qty;
-  const deliveryFee = isPickup ? 0 : link.deliveryFee;
-  const total = subtotal + deliveryFee;
+  // Unknown until the buyer picks a zone (buyerChooses).
+  const deliveryFee: number | null = buyerChooses ? zone?.fee ?? null : isPickup ? 0 : link.deliveryFee;
+  const total = subtotal + (deliveryFee ?? 0);
+  const cheapest = buyerChooses && link.shippingOptions.length ? Math.min(...link.shippingOptions.map((o) => o.fee)) : 0;
 
   if (link.isOwner) {
     return (
@@ -252,6 +258,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   const pay = async () => {
     if (!requireLogin("Log in or create a free account to pay safely.")) return;
     if (!addressId) return setError("Add or choose your address first.");
+    if (buyerChooses && !zone) return setError("Choose how you'd like to receive it.");
     if (deliveryPhone && !PHONE_PATTERN.test(deliveryPhone)) return setError("Check the phone number for delivery.");
 
     const attempt = ++attemptRef.current;
@@ -262,7 +269,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     try {
       const { data } = await startPayment({
         code: link.code,
-        data: { quantity: qty, addressId, deliveryPhone, note: note.trim() || undefined },
+        data: { quantity: qty, addressId, shippingOptionId: zone?.id, deliveryPhone, note: note.trim() || undefined },
       });
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {
@@ -312,7 +319,19 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
         <div className="flex items-start gap-2.5 rounded-xl bg-surface-sunken p-3.5 text-[12.5px] text-ink-2">
           {isPickup ? <Store size={16} className="mt-0.5 shrink-0 text-violet-600" /> : <Truck size={16} className="mt-0.5 shrink-0 text-violet-600" />}
           <span>
-            {isPickup ? (
+            {buyerChooses ? (
+              zone ? (
+                <>
+                  <span className="font-semibold">{zone.type === "PICKUP" ? "You'll pick it up" : zone.name}</span>
+                  {zone.type === "PICKUP" ? " - free." : ` - ${zone.fee > 0 ? naira(zone.fee) : "free"} delivery.`}
+                </>
+              ) : (
+                <>
+                  <span className="font-semibold">Choose delivery to your area or pickup</span>
+                  {cheapest > 0 ? ` - delivery from ${naira(cheapest)}.` : "."}
+                </>
+              )
+            ) : isPickup ? (
               <>
                 <span className="font-semibold">Pickup</span>
                 {link.pickupAddress ? ` from ${link.pickupAddress}` : ""}. The seller will tell you when it&apos;s ready.
@@ -320,7 +339,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
             ) : (
               <>
                 <span className="font-semibold">The seller delivers to you</span>
-                {deliveryFee > 0 ? ` for ${naira(deliveryFee)}` : " for free"}, as agreed.
+                {link.deliveryFee > 0 ? ` for ${naira(link.deliveryFee)}` : " for free"}, as agreed.
               </>
             )}
           </span>
@@ -334,7 +353,9 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
           {!isPickup && (
             <div className="flex justify-between">
               <dt className="text-muted">Delivery</dt>
-              <dd className="font-[family-name:var(--font-mono)] text-ink">{deliveryFee > 0 ? naira(deliveryFee) : "Free"}</dd>
+              <dd className="font-[family-name:var(--font-mono)] text-ink">
+                {deliveryFee === null ? "Choose below" : deliveryFee > 0 ? naira(deliveryFee) : "Free"}
+              </dd>
             </div>
           )}
           <div className="flex justify-between border-t border-dashed border-line pt-2.5 text-[15px] font-semibold">
@@ -347,6 +368,22 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
       {isLoggedIn && (
         <>
           <ShippingAddress />
+          {buyerChooses && (
+            <div className="rounded-2xl border border-line bg-surface p-5">
+              <p className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-ink">
+                <Truck size={16} className="text-violet-600 dark:text-violet-400" /> Delivery
+              </p>
+              <ZonePicker
+                storeName={link.store.name}
+                storeAddress={[link.store.address, link.store.city, link.store.state].filter(Boolean).join(", ")}
+                zones={link.shippingOptions}
+                needed={link.deliveryVehicle}
+                selectedId={zone?.id}
+                onSelect={setZone}
+                onClear={clearZone}
+              />
+            </div>
+          )}
           <div className="rounded-2xl border border-line bg-surface p-5">
             <label htmlFor="seller-note" className="text-[13.5px] font-semibold text-ink">
               Note for the seller (optional)
