@@ -4,6 +4,8 @@ import Providers from "./providers";
 import { fraunces, jakarta, jetbrainsMono } from "@/src/lib/fonts";
 import AppToaster from "../components/ui/toaster";
 import SiteAnalytics from "../components/site-analytics";
+import AdTags from "../components/consent/ad-tags";
+import CookieBanner from "../components/consent/cookie-banner";
 import { isStaging } from "../lib/environment";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL, organizationJsonLd } from "../lib/site";
 import type { Metadata, Viewport } from "next";
@@ -72,6 +74,8 @@ export default function RootLayout({
         </Providers>
         <AppToaster />
         <SiteAnalytics />
+        <AdTags />
+        <CookieBanner />
       </body>
     </html>
   );

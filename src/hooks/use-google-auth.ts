@@ -11,6 +11,7 @@ import { useAuthStore } from "../store/auth-store";
 import { getSafeReturnTo, rememberReturnTo, rememberedReturnTo } from "../lib/return-to";
 import { referralCode } from "../lib/referral";
 import { trafficSource } from "../lib/traffic-source";
+import { trackAdSignUp } from "../lib/ad-tags";
 import { ApiErrorResponse, AuthResponse } from "../types/auth";
 
 // Continue with Google on the login and signup pages. New accounts go to the
@@ -36,6 +37,7 @@ export const useGoogleAuth = () => {
       setAuth(user, accessToken);
 
       if (isNewUser) {
+        trackAdSignUp();
         toast.success("Welcome to Nestly!");
         router.push("/welcome");
         return;

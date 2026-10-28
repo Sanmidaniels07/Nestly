@@ -11,6 +11,8 @@ import SettingsPopover from "./settings-popover";
 import LogoutConfirmDialog from "@/src/components/ui/logout-confirm-dialog";
 import { MessageCircle } from "lucide-react";
 import { supportWhatsAppUrl } from "@/src/lib/support";
+import CookieSettingsLink from "@/src/components/consent/cookie-settings-link";
+import { adTagsConfigured } from "@/src/lib/ad-tags";
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -145,6 +147,8 @@ export default function Sidebar() {
           <Link href="/privacy" className="hover:text-violet-600 dark:hover:text-violet-400">Privacy</Link>
           {" · "}
           <Link href="/seller-terms" className="hover:text-violet-600 dark:hover:text-violet-400">Seller Agreement</Link>
+          {adTagsConfigured && " · "}
+          <CookieSettingsLink className="hover:text-violet-600 dark:hover:text-violet-400" />
         </p>
       </div>
 
