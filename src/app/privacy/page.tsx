@@ -77,6 +77,8 @@ const sections: LegalSection[] = [
           <li><strong>Resend</strong> - sending emails.</li>
           <li><strong>Cloudinary</strong> - storing and serving the photos you upload.</li>
           <li><strong>Supabase</strong> - our database; <strong>Render</strong> and <strong>Vercel</strong> - hosting the Nestly app and API.</li>
+          <li><strong>Vercel Web Analytics</strong> - anonymous visit counts (which pages are viewed, the referring site, and country and device type) so we know how people find Nestly. It uses no cookies and doesn&apos;t identify you.</li>
+          <li><strong>Google</strong> - only if you choose Continue with Google: Google confirms your name, email address and profile photo to us.</li>
           <li><strong>OpenStreetMap (Nominatim)</strong> - turning detected coordinates into a state and area name, only when you use location detection.</li>
           <li><strong>Verification</strong> - we may check a seller&apos;s CAC number against the Corporate Affairs Commission&apos;s public register.</li>
         </ul>
@@ -143,7 +145,7 @@ const sections: LegalSection[] = [
     body: (
       <p>
         Nestly uses one essential cookie to keep you signed in securely, and your browser&apos;s local storage for small preferences such as light or dark
-        mode and dismissed prompts. We don&apos;t use advertising or analytics cookies.
+        mode and dismissed prompts. We don&apos;t use advertising or analytics cookies - our visit counts are cookieless and anonymous.
       </p>
     ),
   },

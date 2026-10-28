@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { fraunces, jakarta, jetbrainsMono } from "@/src/lib/fonts";
 import AppToaster from "../components/ui/toaster";
+import SiteAnalytics from "../components/site-analytics";
 import { isStaging } from "../lib/environment";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL, organizationJsonLd } from "../lib/site";
 import type { Metadata, Viewport } from "next";
@@ -70,6 +71,7 @@ export default function RootLayout({
           {children}
         </Providers>
         <AppToaster />
+        <SiteAnalytics />
       </body>
     </html>
   );
