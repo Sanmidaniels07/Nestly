@@ -1,3 +1,5 @@
+import { TrafficSource } from "../lib/traffic-source";
+
 export interface User {
   id: string;
   name: string;
@@ -19,12 +21,16 @@ export interface SignupPayload {
   dateOfBirth?: string;
   /** Seller share link (?ref=) they arrived through, if any. */
   referralCode?: string;
+  /** Where the visitor came from (admin overview). */
+  source?: TrafficSource;
 }
 
 export interface GoogleAuthPayload {
   /** Google's ID token from the sign-in button. */
   credential: string;
   referralCode?: string;
+  /** Where the visitor came from (admin overview). */
+  source?: TrafficSource;
 }
 
 export interface AuthSuccessData {

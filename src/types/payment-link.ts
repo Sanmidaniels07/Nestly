@@ -1,3 +1,5 @@
+import { TrafficSource } from "../lib/traffic-source";
+
 import { Category } from "./category";
 import { ShippingOption } from "./store";
 import { DeliveryVehicle } from "../lib/delivery-vehicle";
@@ -85,6 +87,8 @@ export interface PayPaymentLinkPayload {
   addressId: string;
   shippingOptionId?: string;
   deliveryPhone?: string;
+  /** Where the visitor came from (admin overview). */
+  source?: TrafficSource;
   note?: string;
 }
 

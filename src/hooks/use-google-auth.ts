@@ -10,6 +10,7 @@ import { googleAuth } from "../services/auth.services";
 import { useAuthStore } from "../store/auth-store";
 import { getSafeReturnTo, rememberReturnTo, rememberedReturnTo } from "../lib/return-to";
 import { referralCode } from "../lib/referral";
+import { trafficSource } from "../lib/traffic-source";
 import { ApiErrorResponse, AuthResponse } from "../types/auth";
 
 // Continue with Google on the login and signup pages. New accounts go to the
@@ -26,7 +27,7 @@ export const useGoogleAuth = () => {
   }, [returnTo]);
 
   return useMutation<AuthResponse, AxiosError<ApiErrorResponse>, string>({
-    mutationFn: (credential) => googleAuth({ credential, referralCode: referralCode() }),
+    mutationFn: (credential) => googleAuth({ credential, referralCode: referralCode(), source: trafficSource() }),
 
     onSuccess: (response) => {
       if ("requires2FA" in response.data) return;

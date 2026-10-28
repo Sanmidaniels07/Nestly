@@ -15,6 +15,7 @@ import { Users, Sparkles, User, Mail, Lock, LockKeyhole, Cake } from "lucide-rea
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
 import { referralCode } from "@/src/lib/referral";
+import { trafficSource } from "@/src/lib/traffic-source";
 import GoogleSignIn from "@/src/components/auth/google-sign-in";
 import { TwoFactorChallengeForm } from "@/src/components/auth/LoginForm";
 
@@ -39,6 +40,7 @@ export default function SignupPage() {
       password: data.password,
       dateOfBirth: data.dateOfBirth || undefined,
       referralCode: referralCode(),
+      source: trafficSource(),
     });
   };
 
