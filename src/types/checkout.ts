@@ -1,4 +1,5 @@
 import { Order } from "./order";
+import { TrafficSource } from "../lib/traffic-source";
 
 export interface ShippingSelection {
   storeId: string;
@@ -17,6 +18,8 @@ export interface InitiateCheckoutPayload {
   sellerNotes?: SellerNote[];
   /** Number the seller calls to deliver; defaults to the address's phone. */
   deliveryPhone?: string;
+  /** Where the visitor came from (admin overview). */
+  source?: TrafficSource;
 }
 
 export interface InitiateCheckoutResponse {
@@ -34,4 +37,6 @@ export interface ChargeSavedCardPayload {
   sellerNotes?: SellerNote[];
   /** Number the seller calls to deliver; defaults to the address's phone. */
   deliveryPhone?: string;
+  /** Where the visitor came from (admin overview). */
+  source?: TrafficSource;
 }

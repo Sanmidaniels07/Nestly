@@ -27,6 +27,7 @@ import { useRequireLogin, useSession } from "@/src/hooks/use-session";
 import { useCheckoutStore } from "@/src/store/checkout-store";
 import { payWithPaystack } from "@/src/lib/paystack";
 import { afterPaymentPath } from "@/src/lib/order-result";
+import { trafficSource } from "@/src/lib/traffic-source";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
@@ -270,7 +271,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     try {
       const { data } = await startPayment({
         code: link.code,
-        data: { quantity: qty, addressId, shippingOptionId: zone?.id, deliveryPhone, note: note.trim() || undefined },
+        data: { quantity: qty, addressId, shippingOptionId: zone?.id, deliveryPhone, note: note.trim() || undefined, source: trafficSource() },
       });
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {

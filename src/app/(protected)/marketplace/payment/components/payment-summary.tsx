@@ -13,6 +13,7 @@ import { useSavedCards } from "@/src/hooks/use-saved-cards";
 import { useChargeSavedCard } from "@/src/hooks/use-charge-saved-card";
 import { payWithPaystack } from "@/src/lib/paystack";
 import { afterPaymentPath } from "@/src/lib/order-result";
+import { trafficSource } from "@/src/lib/traffic-source";
 import { Order } from "@/src/types/order";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 
@@ -102,6 +103,7 @@ export default function PaymentSummary() {
           couponCode: appliedCoupon?.code,
           sellerNotes: sellerNotesArray,
           deliveryPhone,
+          source: trafficSource(),
         });
         const order = (response as { data: Order }).data;
         if (isStale()) return;
@@ -121,6 +123,7 @@ export default function PaymentSummary() {
         couponCode: appliedCoupon?.code,
         sellerNotes: sellerNotesArray,
         deliveryPhone,
+        source: trafficSource(),
       });
       const { accessCode, reference } = (response as { data: { accessCode: string; reference: string } }).data;
 

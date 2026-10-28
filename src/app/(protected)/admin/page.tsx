@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { LayoutGrid, Package, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
+import { BarChart3, LayoutGrid, Package, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
@@ -12,12 +12,14 @@ import CategoriesManager from "./categories-manager";
 import UsersManager from "./users-manager";
 import SellersManager from "./sellers-manager";
 import ProductsManager from "./products-manager";
+import OverviewDashboard from "./overview-dashboard";
 
-type Tab = "reports" | "users" | "sellers" | "products" | "coupons" | "payouts" | "categories";
+type Tab = "overview" | "reports" | "users" | "sellers" | "products" | "coupons" | "payouts" | "categories";
 
-const VALID_TABS: Tab[] = ["reports", "users", "sellers", "products", "coupons", "payouts", "categories"];
+const VALID_TABS: Tab[] = ["overview", "reports", "users", "sellers", "products", "coupons", "payouts", "categories"];
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
+  { id: "overview", label: "Overview", icon: BarChart3 },
   { id: "reports", label: "Reports", icon: ShieldAlert },
   { id: "users", label: "Users", icon: Users },
   { id: "sellers", label: "Sellers", icon: Store },
@@ -30,7 +32,7 @@ const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
 function AdminPageContent() {
   const searchParams = useSearchParams();
   const urlTab = searchParams.get("tab") as Tab | null;
-  const [tab, setTab] = useState<Tab>(urlTab && VALID_TABS.includes(urlTab) ? urlTab : "reports");
+  const [tab, setTab] = useState<Tab>(urlTab && VALID_TABS.includes(urlTab) ? urlTab : "overview");
   const role = useAuthStore((state) => state.user?.role);
 
   useEffect(() => {
@@ -49,6 +51,7 @@ function AdminPageContent() {
   }
 
   const tabViews: Record<Tab, React.ReactNode> = {
+    overview: <OverviewDashboard />,
     reports: <ReportsQueue />,
     users: <UsersManager />,
     sellers: <SellersManager />,
@@ -65,7 +68,7 @@ function AdminPageContent() {
           Admin
         </p>
         <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[36px] italic leading-none text-ink">
-          Moderation
+          Dashboard
         </h1>
       </div>
 
