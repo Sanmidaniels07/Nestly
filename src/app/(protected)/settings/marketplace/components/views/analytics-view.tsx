@@ -9,6 +9,7 @@ import SalesChart from "../seller-dashboard/sales-chart";
 import OrderStatusChart from "../seller-dashboard/order-status-chart";
 import CategoryRevenueChart from "../seller-dashboard/category-revenue-chart";
 import TrafficChart from "../seller-dashboard/traffic-chart";
+import CustomerMap from "../seller-dashboard/customer-map";
 
 const PERIODS = [
   { label: "30 days", value: 30 },
@@ -89,6 +90,19 @@ export default function AnalyticsView() {
         </div>
 
         <TrafficChart traffic={traffic} isLoading={isLoadingTraffic} />
+      </section>
+
+      <section className="space-y-4">
+        <div>
+          <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
+            Map
+          </p>
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+            Where your customers are
+          </h2>
+        </div>
+
+        <CustomerMap days={period} />
       </section>
     </div>
   );

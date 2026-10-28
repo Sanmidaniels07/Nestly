@@ -3,6 +3,7 @@ import { ApiResponse, Paginated } from "../types/api";
 import { OrderItem } from "../types/order";
 import { Product } from "../types/product";
 import { Payout, SellerEarnings, StoreTraffic } from "../types/payout";
+import { CustomerMap } from "../types/customer-map";
 
 export interface SellerCustomer {
   user: { id: string; name: string };
@@ -143,6 +144,14 @@ export const getSellerPayouts = async (params: { page?: number; limit?: number }
   const response = await api.get<ApiResponse<Paginated<"payouts", Payout>>>(
     "/seller/dashboard/payouts",
     { params }
+  );
+  return response.data;
+};
+
+export const getCustomerMap = async (days?: number) => {
+  const response = await api.get<ApiResponse<CustomerMap>>(
+    "/seller/dashboard/customer-map",
+    { params: { days } }
   );
   return response.data;
 };

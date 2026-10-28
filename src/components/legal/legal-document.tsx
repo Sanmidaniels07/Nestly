@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import NestlyMark from "@/src/components/ui/nestly-mark";
 import LegalBackLink from "./legal-back-link";
+import CookieSettingsLink from "../consent/cookie-settings-link";
 import { LEGAL_LAST_UPDATED } from "@/src/lib/legal";
 
 export interface LegalSection {
@@ -76,6 +77,7 @@ export default function LegalDocument({ eyebrow, title, intro, sections }: Props
               {doc.label}
             </Link>
           ))}
+          <CookieSettingsLink className="text-muted hover:text-violet-600 dark:hover:text-violet-400" />
         </footer>
       </article>
     </main>

@@ -3,7 +3,8 @@ import type { MetadataRoute } from "next";
 import { isStaging } from "../lib/environment";
 import { serverGet } from "../lib/server-api";
 import { PUBLIC_ROUTES, SITE_URL } from "../lib/site";
-import { stateSlug } from "../lib/locations";
+import { areaSlug, stateSlug } from "../lib/locations";
+import { AreaIndex } from "../types/areas";
 import { Catalogue } from "../types/catalogue";
 
 const PRIORITY: Record<string, number> = {
@@ -41,9 +42,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // If the API can't be reached the sitemap still lists the main pages.
-  const [entries, catalogue] = await Promise.all([
+  const [entries, catalogue, areas] = await Promise.all([
     serverGet<SitemapEntries>("/seo/sitemap", revalidate).then((r) => r?.data).catch(() => undefined),
     serverGet<Catalogue>("/seo/catalogue", revalidate).then((r) => r?.data).catch(() => undefined),
+    serverGet<AreaIndex>("/seo/areas", revalidate).then((r) => r?.data).catch(() => undefined),
   ]);
 
   // Category pages with listings: across Nigeria and per state.
@@ -65,12 +67,34 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ]);
   const hub = catalogue ? [{ url: `${SITE_URL}/marketplace/categories`, changeFrequency: "daily" as const, priority: 0.8 }] : [];
 
-  if (!entries) return [...pages, ...hub, ...categoryPages];
+  // Area pages ("Shop in Festac, Lagos") and each category in each area.
+  const known = new Set((catalogue?.categories ?? []).map((category) => category.slug));
+  const areaPages: MetadataRoute.Sitemap = (areas?.states ?? []).flatMap((state) =>
+    state.areas.flatMap((area) => {
+      const base = `${SITE_URL}/marketplace/locations/${stateSlug(state.name)}/${areaSlug(area.name)}`;
+      const lastModified = new Date(area.updatedAt);
+      return [
+        { url: base, lastModified, changeFrequency: "daily" as const, priority: 0.7 },
+        ...area.categories
+          .filter((category) => known.has(category.slug))
+          .map((category) => ({
+            url: `${SITE_URL}/marketplace/categories/${category.slug}/${stateSlug(state.name)}/${areaSlug(area.name)}`,
+            lastModified,
+            changeFrequency: "daily" as const,
+            priority: 0.7,
+          })),
+      ];
+    })
+  );
+  if (areaPages.length) areaPages.unshift({ url: `${SITE_URL}/marketplace/locations`, changeFrequency: "daily", priority: 0.7 });
+
+  if (!entries) return [...pages, ...hub, ...categoryPages, ...areaPages];
 
   return [
     ...pages,
     ...hub,
     ...categoryPages,
+    ...areaPages,
     ...entries.stores.map((store) => ({
       url: `${SITE_URL}/marketplace/seller/${encodeURIComponent(store.slug)}`,
       lastModified: new Date(store.updatedAt),

@@ -69,7 +69,12 @@ export default async function CategoriesPage() {
 
       {states.length > 0 && (
         <section className="space-y-4">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">Shop by state</h2>
+          <div className="flex flex-wrap items-end justify-between gap-2">
+            <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">Shop by state</h2>
+            <Link href="/marketplace/locations" className="text-[13px] font-medium text-violet-700 hover:underline dark:text-violet-300">
+              Shop by area (Lekki, Ikeja, Wuse…) →
+            </Link>
+          </div>
           <div className="grid gap-4 md:grid-cols-2">
             {states.map((state) => (
               <div key={state.name} className="rounded-2xl border border-line bg-surface p-5">

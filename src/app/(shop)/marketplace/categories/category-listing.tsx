@@ -1,60 +1,86 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronRight, KeyRound, MapPin, ShieldCheck, ShoppingBag, SlidersHorizontal } from "lucide-react";
+import { KeyRound, MapPin, ShieldCheck, ShoppingBag, SlidersHorizontal } from "lucide-react";
 
 import ProductCard from "@/src/app/(protected)/marketplace/components/product-card";
 import { jsonLd, serverGet } from "@/src/lib/server-api";
-import { stateFromSlug, stateLabel, stateSlug } from "@/src/lib/locations";
+import { areaLabel, areaSlug, stateFromSlug, stateLabel, stateSlug } from "@/src/lib/locations";
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/src/lib/site";
 import { Paginated } from "@/src/types/api";
+import { AreaIndex } from "@/src/types/areas";
 import { Catalogue, CatalogueCategory } from "@/src/types/catalogue";
 import { Product } from "@/src/types/product";
+import { Breadcrumbs, FaqSection, SellerCards, areaFaq, faqJsonLd, findAreaInIndex, loadAreaIndex, loadAreaSellers } from "../locations/area-parts";
 
-// Public category pages: "Cakes & Pastries" across Nigeria, or in one state
-// ("Cakes & Pastries in Lagos"). Rendered on the server so search engines
-// see the listings, with links between states and categories.
+// Public category pages: "Cakes & Pastries" across Nigeria, in one state
+// ("Cakes & Pastries in Lagos") or in one area ("Cakes & Pastries in
+// Festac, Lagos" - sellers based in or delivering to Festac). Rendered on
+// the server so search engines see the listings, with links between
+// states, areas and categories.
 
 export const PAGE_SIZE = 24;
 
-export const categoryPath = (slug: string, state?: string | null) =>
-  `/marketplace/categories/${slug}${state ? `/${stateSlug(state)}` : ""}`;
+export const categoryPath = (slug: string, state?: string | null, area?: string | null) =>
+  `/marketplace/categories/${slug}${state ? `/${stateSlug(state)}` : ""}${state && area ? `/${areaSlug(area)}` : ""}`;
 
 interface Resolved {
   catalogue: Catalogue;
   category: CatalogueCategory;
   state: string | null;
+  area: string | null;
+  areas: AreaIndex | null;
 }
 
-// The catalogue, the category and (optionally) the state a URL points at.
-// Unknown category or state -> 404.
-export const resolveListing = async (slug: string, locationSlug?: string): Promise<Resolved> => {
-  const response = await serverGet<Catalogue>("/seo/catalogue", 900).catch(() => null);
+// The catalogue, the category and (optionally) the state and area a URL
+// points at. Unknown category, state or area -> 404; so is an area with no
+// listings in the category.
+export const resolveListing = async (slug: string, locationSlug?: string, areaParam?: string): Promise<Resolved> => {
+  const [response, areas] = await Promise.all([serverGet<Catalogue>("/seo/catalogue", 900).catch(() => null), loadAreaIndex()]);
   const catalogue = response?.data;
   if (!catalogue) throw new Error("Catalogue unavailable");
 
   const category = catalogue.categories.find((c) => c.slug === slug);
   if (!category) notFound();
 
-  if (!locationSlug) return { catalogue, category, state: null };
+  if (!locationSlug) return { catalogue, category, state: null, area: null, areas };
+
+  if (areaParam) {
+    // Sellers delivering into an area may be based in another state, so the
+    // area list (not the category's states) decides.
+    const found = findAreaInIndex(areas, locationSlug, areaParam);
+    if (!found || !found.area.categories.some((c) => c.slug === slug)) notFound();
+    return { catalogue, category, state: found.state, area: found.area.name, areas };
+  }
+
   const state = stateFromSlug(locationSlug, category.states.map((s) => s.name));
   if (!state) notFound();
-  return { catalogue, category, state };
+  return { catalogue, category, state, area: null, areas };
 };
 
-const place = (state: string | null) => (state ? stateLabel(state) : "Nigeria");
+const place = (state: string | null, area: string | null) => (state && area ? areaLabel(area, state) : state ? stateLabel(state) : "Nigeria");
 
-const countIn = (category: CatalogueCategory, state: string | null) =>
-  state ? category.states.find((s) => s.name === state)?.productCount ?? 0 : category.productCount;
+// Areas of a state with listings in a category, most first.
+const areasWith = (areas: AreaIndex | null, state: string | null, slug: string) =>
+  (areas?.states.find((s) => s.name === state)?.areas ?? [])
+    .map((area) => ({ name: area.name, count: area.categories.find((c) => c.slug === slug)?.productCount ?? 0 }))
+    .filter((area) => area.count > 0);
 
-export const listingMetadata = ({ category, state }: Resolved, page: number): Metadata => {
-  const count = countIn(category, state);
-  const where = place(state);
+const countIn = (category: CatalogueCategory, state: string | null, area: string | null = null, areas: AreaIndex | null = null) =>
+  area
+    ? areasWith(areas, state, category.slug).find((a) => a.name === area)?.count ?? 0
+    : state
+      ? category.states.find((s) => s.name === state)?.productCount ?? 0
+      : category.productCount;
+
+export const listingMetadata = ({ category, state, area, areas }: Resolved, page: number): Metadata => {
+  const count = countIn(category, state, area, areas);
+  const where = place(state, area);
   const title = `${category.name} in ${where}${page > 1 ? ` – page ${page}` : ""} – buy from trusted sellers`;
   const description = count
-    ? `Shop ${count} ${category.name.toLowerCase()} ${count === 1 ? "listing" : "listings"} from sellers in ${where} on ${SITE_NAME}. Secure Paystack checkout, local delivery or pickup, and delivery-code protection.`
+    ? `Shop ${count} ${category.name.toLowerCase()} ${count === 1 ? "listing" : "listings"} from sellers ${area ? "based in or delivering to" : "in"} ${where} on ${SITE_NAME}. Secure Paystack checkout, local delivery or pickup, and delivery-code protection.`
     : `${category.name} from sellers in ${where} on ${SITE_NAME} - new listings are on the way.`;
-  const url = `${categoryPath(category.slug, state)}${page > 1 ? `?page=${page}` : ""}`;
+  const url = `${categoryPath(category.slug, state, area)}${page > 1 ? `?page=${page}` : ""}`;
 
   return {
     title,
@@ -68,27 +94,40 @@ export const listingMetadata = ({ category, state }: Resolved, page: number): Me
 };
 
 export default async function CategoryListing({ resolved, page }: { resolved: Resolved; page: number }) {
-  const { catalogue, category, state } = resolved;
-  const where = place(state);
-  const count = countIn(category, state);
+  const { catalogue, category, state, area, areas } = resolved;
+  const where = place(state, area);
+  const count = countIn(category, state, area, areas);
+  const path = categoryPath(category.slug, state, area);
 
   const query = new URLSearchParams({ category: category.slug, page: String(page), limit: String(PAGE_SIZE), sort: "newest" });
   if (state) query.set("state", state);
-  const products = (await serverGet<Paginated<"products", Product>>(`/products?${query}`).catch(() => null))?.data;
+  if (area) query.set("area", area);
+  const [products, sellers] = await Promise.all([
+    serverGet<Paginated<"products", Product>>(`/products?${query}`)
+      .catch(() => null)
+      .then((r) => r?.data),
+    state && area ? loadAreaSellers(state, area, category.slug) : null,
+  ]);
   const items = products?.products ?? [];
   const totalPages = products?.totalPages ?? 1;
 
   // Other categories with listings in the same place.
+  const countHere = (c: CatalogueCategory) => countIn(c, state, area, areas);
   const nearby = catalogue.categories
-    .filter((c) => c.slug !== category.slug && countIn(c, state) > 0)
-    .sort((a, b) => countIn(b, state) - countIn(a, state))
+    .filter((c) => c.slug !== category.slug && countHere(c) > 0)
+    .sort((a, b) => countHere(b) - countHere(a))
     .slice(0, 12);
 
   const crumbs = [
     { name: "Categories", url: "/marketplace/categories" },
     { name: category.name, url: categoryPath(category.slug) },
     ...(state ? [{ name: stateLabel(state), url: categoryPath(category.slug, state) }] : []),
+    ...(state && area ? [{ name: area, url: path }] : []),
   ];
+
+  // Areas of this state to drill into (on an area page: its neighbours).
+  const stateAreas = areasWith(areas, state, category.slug).slice(0, 30);
+  const faq = area ? areaFaq({ place: where, what: category.name.toLowerCase(), sellers }) : null;
 
   const structuredData = [
     {
@@ -108,26 +147,14 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
         name: product.title,
       })),
     },
+    ...(faq ? [faqJsonLd(faq)] : []),
   ];
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-8 px-1 py-6 sm:px-3 lg:px-4">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLd(structuredData) }} />
 
-      <nav aria-label="Breadcrumb" className="flex items-center gap-1 overflow-x-auto whitespace-nowrap text-[13px] scrollbar-hide">
-        {crumbs.map((crumb, index) => (
-          <span key={crumb.url} className="flex items-center gap-1">
-            {index > 0 && <ChevronRight size={13} className="shrink-0 text-faint" />}
-            {index === crumbs.length - 1 ? (
-              <span className="font-medium text-ink">{crumb.name}</span>
-            ) : (
-              <Link href={crumb.url} className="text-muted hover:text-violet-700 dark:hover:text-violet-300">
-                {crumb.name}
-              </Link>
-            )}
-          </span>
-        ))}
-      </nav>
+      <Breadcrumbs crumbs={crumbs} />
 
       <header className="space-y-3">
         <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
@@ -139,10 +166,12 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
         </h1>
         <p className="max-w-3xl text-[14.5px] leading-relaxed text-muted">
           {count > 0
-            ? `${count} ${count === 1 ? "listing" : "listings"} from sellers ${state ? `in ${where}` : "across Nigeria"}. Pay securely with Paystack, choose delivery or pickup, and confirm with your delivery code when your order arrives.`
+            ? `${count} ${count === 1 ? "listing" : "listings"} from sellers ${area ? `based in or delivering to ${where}` : state ? `in ${where}` : "across Nigeria"}. Pay securely with Paystack, choose delivery or pickup, and confirm with your delivery code when your order arrives.`
             : `No ${category.name.toLowerCase()} listed ${state ? `in ${where}` : "yet"} - check back soon, or be the first to sell here.`}
         </p>
       </header>
+
+      {sellers && <SellerCards sellers={sellers} title={`Sellers serving ${area}`} />}
 
       {/* Same category elsewhere */}
       {category.states.length > 0 && (
@@ -150,7 +179,7 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
           <MapPin size={15} className="text-violet-600 dark:text-violet-400" />
           <LocationChip href={categoryPath(category.slug)} label="All Nigeria" count={category.productCount} active={!state} />
           {category.states.map((s) => (
-            <LocationChip key={s.name} href={categoryPath(category.slug, s.name)} label={stateLabel(s.name)} count={s.productCount} active={s.name === state} />
+            <LocationChip key={s.name} href={categoryPath(category.slug, s.name)} label={stateLabel(s.name)} count={s.productCount} active={s.name === state && !area} />
           ))}
           <Link
             href={`/marketplace/products?category=${category.slug}`}
@@ -158,6 +187,15 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
           >
             <SlidersHorizontal size={13} /> Filter &amp; sort
           </Link>
+        </div>
+      )}
+
+      {state && stateAreas.length > 0 && (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[12.5px] font-medium text-muted">Areas in {stateLabel(state)}:</span>
+          {stateAreas.map((a) => (
+            <LocationChip key={a.name} href={categoryPath(category.slug, state, a.name)} label={a.name} count={a.count} active={a.name === area} />
+          ))}
         </div>
       )}
 
@@ -180,11 +218,11 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
 
       {totalPages > 1 && (
         <nav aria-label="Pages" className="flex items-center justify-center gap-2">
-          {page > 1 && <PageLink href={`${categoryPath(category.slug, state)}${page > 2 ? `?page=${page - 1}` : ""}`} label="Previous" />}
+          {page > 1 && <PageLink href={`${path}${page > 2 ? `?page=${page - 1}` : ""}`} label="Previous" />}
           <span className="px-3 text-[13px] text-muted">
             Page {page} of {totalPages}
           </span>
-          {page < totalPages && <PageLink href={`${categoryPath(category.slug, state)}?page=${page + 1}`} label="Next" />}
+          {page < totalPages && <PageLink href={`${path}?page=${page + 1}`} label="Next" />}
         </nav>
       )}
 
@@ -195,16 +233,18 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
             {nearby.map((c) => (
               <Link
                 key={c.slug}
-                href={categoryPath(c.slug, state && c.states.some((s) => s.name === state) ? state : null)}
+                href={area ? categoryPath(c.slug, state, area) : categoryPath(c.slug, state && c.states.some((s) => s.name === state) ? state : null)}
                 className="rounded-full border border-line px-3.5 py-1.5 text-[13px] text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 dark:hover:text-violet-300"
               >
                 {c.icon && <span className="mr-1">{c.icon}</span>}
-                {c.name} <span className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">{countIn(c, state)}</span>
+                {c.name} <span className="font-[family-name:var(--font-mono)] text-[11.5px] text-subtle">{countHere(c)}</span>
               </Link>
             ))}
           </div>
         </section>
       )}
+
+      {faq && <FaqSection faq={faq} />}
 
       <section className="grid gap-3 sm:grid-cols-3">
         {[

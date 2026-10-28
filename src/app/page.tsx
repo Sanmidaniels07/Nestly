@@ -6,6 +6,7 @@ import Button from "../components/ui/button";
 import Card from "../components/ui/card";
 import NestlyMark from "../components/ui/nestly-mark";
 import { supportWhatsAppUrl } from "../lib/support";
+import CookieSettingsLink from "../components/consent/cookie-settings-link";
 
 export default function Home() {
   return (
@@ -500,6 +501,7 @@ function Footer() {
           <Link href="/terms" className="hover:text-white">Terms of Service</Link>
           <Link href="/privacy" className="hover:text-white">Privacy Policy</Link>
           <Link href="/seller-terms" className="hover:text-white">Seller Agreement</Link>
+          <CookieSettingsLink className="hover:text-white" />
           <a href={supportWhatsAppUrl("Hi Nestly Support, ")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
             Support
           </a>

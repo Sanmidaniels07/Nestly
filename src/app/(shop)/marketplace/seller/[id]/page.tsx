@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { NotFoundError, jsonLd, serverGet } from "@/src/lib/server-api";
+import { stateLabel } from "@/src/lib/locations";
 import { OG_IMAGE, SITE_NAME, SITE_URL } from "@/src/lib/site";
 import { Paginated } from "@/src/types/api";
 import { Product } from "@/src/types/product";
@@ -60,7 +61,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-// schema.org Store so search engines know what and where it is.
+// Where the store delivers: all of Nigeria (a flat-rate zone with no areas
+// or state), or each named area / whole state from its delivery zones.
+const areaServed = (store: Store) => {
+  const zones = (store.shippingOptions ?? []).filter((zone) => zone.type === "DELIVERY" && !zone.isArchived);
+  if (zones.some((zone) => zone.areas.length === 0 && !zone.state)) return { "@type": "Country", name: "Nigeria" };
+  const places = zones.flatMap((zone) => {
+    const state = zone.state || store.state;
+    if (zone.areas.length === 0) return state ? [stateLabel(state)] : [];
+    return zone.areas.map((area) => (state ? `${area}, ${stateLabel(state)}` : area));
+  });
+  const unique = [...new Set(places)].slice(0, 100);
+  return unique.length ? unique.map((name) => ({ "@type": "Place", name })) : undefined;
+};
+
+// schema.org Store so search engines and AI assistants know what it is,
+// where it's based and where it delivers.
 const storeJsonLd = (store: Store) => ({
   "@context": "https://schema.org",
   "@type": "Store",
@@ -73,6 +89,9 @@ const storeJsonLd = (store: Store) => ({
     store.city || store.state
       ? { "@type": "PostalAddress", addressLocality: store.city || undefined, addressRegion: store.state || undefined, addressCountry: "NG" }
       : undefined,
+  areaServed: areaServed(store),
+  paymentAccepted: "Card, Bank transfer, USSD (Paystack)",
+  currenciesAccepted: "NGN",
   aggregateRating:
     store.rating && store.reviewCount
       ? { "@type": "AggregateRating", ratingValue: Math.round(store.rating * 10) / 10, reviewCount: store.reviewCount }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { signup } from "../services/auth.services";
+import { trackAdSignUp } from "../lib/ad-tags";
 
 export const useSignup = () => {
   const router = useRouter();
@@ -13,6 +14,8 @@ export const useSignup = () => {
     mutationFn: signup,
 
     onSuccess: (_, variables) => {
+      // Before leaving: the next address carries the email.
+      trackAdSignUp();
       router.push(
         `/verify-email/sent?email=${encodeURIComponent(variables.email)}`,
       );
