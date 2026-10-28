@@ -24,6 +24,7 @@ import DashboardSkeleton from "./dashboard-skeleton";
 import CacReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/cac-reminder-banner";
 import SetupReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/setup-reminder-banner";
 import ProfileChecklist from "./profile-checklist";
+import PushPrompt from "@/src/components/push/push-prompt";
 
 export default function DashboardPage() {
   const user = useAuthStore((state) => state.user);
@@ -46,6 +47,8 @@ export default function DashboardPage() {
       {!!dashboard?.seller?.missingSetup?.length && <SetupReminderBanner />}
 
       {dashboard?.seller?.needsCacNumber && <CacReminderBanner />}
+
+      <PushPrompt />
 
       {/* Only once the profile has loaded, so it doesn't flash for people who are done. */}
       {profile?.setupSteps && (

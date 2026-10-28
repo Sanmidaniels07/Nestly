@@ -7,6 +7,7 @@ import { useNotificationPreferences } from "@/src/hooks/use-notification-prefere
 import { useUpdateNotificationPreference } from "@/src/hooks/use-update-notification-preference";
 import { NotificationPreferenceType } from "@/src/types/notification";
 import CheckboxRow from "@/src/components/ui/checkbox-row";
+import PushSettings from "@/src/components/push/push-settings";
 
 const PREFERENCE_META: Record<
   NotificationPreferenceType,
@@ -67,6 +68,8 @@ export default function SettingsNotificationsPage() {
         </div>
         <ArrowRight size={17} className="text-faint transition-all group-hover:translate-x-0.5 group-hover:text-violet-600 dark:group-hover:text-violet-400" />
       </Link>
+
+      <PushSettings />
 
       <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
         <div>

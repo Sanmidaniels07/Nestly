@@ -6,6 +6,7 @@ import { queryClient } from "../lib/query-client";
 import { ThemeProvider } from "../providers/theme-provider";
 import AuthInitializer from "../components/auth/auth-initializer";
 import RouteMemory from "../components/navigation/route-memory";
+import PushSync from "../components/push/push-sync";
 
 
 
@@ -21,6 +22,7 @@ export default function Providers({
       <QueryClientProvider client={queryClient}>
         <AuthInitializer />
         <RouteMemory />
+        <PushSync />
         {children}
 
         <ReactQueryDevtools
