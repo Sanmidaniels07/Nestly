@@ -1,5 +1,5 @@
 // Nestly service worker: shows push notifications (messages, orders, likes
-// and every other alert) when Nestly isn't open, and opens the right page
+// and every other alert) - even while Nestly is open - and opens the right page
 // when one is tapped. Pushes come from the API (utils/webPush) as
 // { title, body, url, tag }. No caching or offline behaviour.
 
