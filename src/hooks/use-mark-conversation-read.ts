@@ -12,6 +12,8 @@ export const useMarkConversationRead = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      // The chat's "New Message" notifications were marked read with it.
+      queryClient.invalidateQueries({ queryKey: ["notifications"] });
     },
   });
 };

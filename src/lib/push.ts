@@ -49,7 +49,9 @@ const sameKey = (subscription: PushSubscription, key: Uint8Array) => {
   return bytes.length === key.length && bytes.every((byte, i) => byte === key[i]);
 };
 
-const registration = () => navigator.serviceWorker.register("/sw.js");
+// The API address lets the alert's "Mark as read" button reach the server.
+const registration = () =>
+  navigator.serviceWorker.register(`/sw.js?api=${encodeURIComponent(process.env.NEXT_PUBLIC_API_URL ?? "")}`);
 
 const existingSubscription = async () => {
   const reg = await navigator.serviceWorker.getRegistration("/");
@@ -118,3 +120,9 @@ export const syncPush = async () => {
 };
 
 export const sendTestPush = () => api.post("/push/test");
+
+/** The unread number on the installed app's icon; 0 clears it. */
+export const setAppIconBadge = (count: number) => {
+  if (typeof navigator === "undefined" || !("setAppBadge" in navigator)) return;
+  (count > 0 ? navigator.setAppBadge(count) : navigator.clearAppBadge()).catch(() => {});
+};
