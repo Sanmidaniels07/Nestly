@@ -31,6 +31,11 @@ export default function AddressCard({ address, selected, onSelect, onDelete }: P
                 Default
               </span>
             )}
+            {address.latitude != null && (
+              <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[10.5px] font-medium text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-300">
+                Pinned on map
+              </span>
+            )}
           </div>
 
           <p className="mt-2 text-[13px] text-muted">{address.phone}</p>

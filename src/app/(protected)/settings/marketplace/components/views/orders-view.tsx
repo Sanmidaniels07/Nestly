@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import { CheckCircle2, Clock, KeyRound, Link2, MapPin, MessageCircle, MessageSquareText, Phone, Store, Truck } from "lucide-react";
+import { CheckCircle2, Clock, KeyRound, Link2, MapPin, MessageCircle, MessageSquareText, Navigation, Phone, Store, Truck } from "lucide-react";
 
 import { useSellerOrders } from "@/src/hooks/use-seller-orders";
 import { useUpdateOrderItemStatus } from "@/src/hooks/use-update-order-item-status";
@@ -12,6 +12,7 @@ import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { Order, OrderItem } from "@/src/types/order";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { mapsLink } from "@/src/lib/google-maps";
 import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
 
 const STATUS_OPTIONS = ["PENDING", "PROCESSING", "SHIPPED", "DELIVERED", "CANCELLED"];
@@ -162,6 +163,16 @@ function BuyerContact({ order, isPickup }: { order: Order; isPickup: boolean }) 
           <p className="[overflow-wrap:anywhere]">
             {[address.address, address.city, address.state, address.postalCode].filter(Boolean).join(", ")}
           </p>
+        )}
+        {!isPickup && address?.latitude != null && address.longitude != null && (
+          <a
+            href={mapsLink(address.latitude, address.longitude)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-1 inline-flex items-center gap-1.5 font-semibold text-violet-700 hover:underline dark:text-violet-300"
+          >
+            <Navigation size={13} /> Open the exact spot in Google Maps
+          </a>
         )}
         {!isPickup && order.deliveryPhone && (
           <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
