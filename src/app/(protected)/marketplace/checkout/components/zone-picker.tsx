@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { CheckCircle2, MapPin, Search, Store } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { AlertTriangle, CheckCircle2, MapPin, Search, Store } from "lucide-react";
 
 import { useAddresses } from "@/src/hooks/use-addresses";
 import { useCheckoutStore } from "@/src/store/checkout-store";
@@ -25,12 +25,14 @@ export type ZoneOption = Pick<ShippingOption, "id" | "name" | "fee" | "eta" | "t
 
 // A zone matches when one of its areas appears in the buyer's street
 // address, city or state (e.g. "Festac" in "12 3rd Avenue, Festac Town").
-const zoneMatchesAddress = (zone: ZoneOption, addressText: string) =>
-  !!addressText &&
-  zone.areas.some((area) => {
-    const needle = normalise(area);
-    return needle.length > 1 && ` ${addressText} `.includes(` ${needle} `);
-  });
+// Returns that area, or null.
+const matchedArea = (zone: ZoneOption, addressText: string) =>
+  (addressText &&
+    zone.areas.find((area) => {
+      const needle = normalise(area);
+      return needle.length > 1 && ` ${addressText} `.includes(` ${needle} `);
+    })) ||
+  null;
 
 interface Props {
   storeName: string;
@@ -49,6 +51,12 @@ export default function ZonePicker({ storeName, storeAddress, zones, needed, sel
   const { data: addresses } = useAddresses();
   const addressId = useCheckoutStore((state) => state.addressId);
   const [query, setQuery] = useState("");
+  // A zone that doesn't cover the address, waiting for the buyer to confirm.
+  const [pending, setPending] = useState<ZoneOption | null>(null);
+  // Zones the buyer already confirmed despite the warning - not asked twice.
+  const [confirmed, setConfirmed] = useState<Set<string>>(() => new Set());
+  // The zone we picked for them, and for which address.
+  const autoPick = useRef<{ zoneId: string; address: string } | null>(null);
 
   const address = addresses?.find((item) => item.id === addressId);
   const addressText = address ? normalise(`${address.address} ${address.city} ${address.state}`) : "";
@@ -60,9 +68,55 @@ export default function ZonePicker({ storeName, storeAddress, zones, needed, sel
     const rank = (option: { zone: ZoneOption; matches: boolean }) =>
       option.matches ? 0 : option.zone.type === "PICKUP" ? 1 : 2;
     return usable
-      .map((zone) => ({ zone, matches: zone.type !== "PICKUP" && zoneMatchesAddress(zone, addressText) }))
+      .map((zone) => {
+        const area = zone.type === "PICKUP" ? null : matchedArea(zone, addressText);
+        return { zone, matches: !!area, area };
+      })
       .sort((a, b) => rank(a) - rank(b) || a.zone.fee - b.zone.fee);
   }, [zones, addressText, needed]);
+
+  const matching = useMemo(() => options.filter((option) => option.matches), [options]);
+
+  // Exactly one zone covers the address: pick it for them (they can still
+  // change it). Re-picks when the address changes, unless they chose
+  // something themselves.
+  useEffect(() => {
+    const ours = !!selectedId && autoPick.current?.zoneId === selectedId;
+    const addressChanged = ours && autoPick.current?.address !== addressText;
+
+    if (addressText && matching.length === 1) {
+      const only = matching[0].zone;
+      if ((!selectedId || addressChanged) && selectedId !== only.id) {
+        autoPick.current = { zoneId: only.id, address: addressText };
+        onSelect(only);
+      }
+      return;
+    }
+
+    // New address, and the zone we picked doesn't cover it - let them choose.
+    if (addressChanged && !matching.some(({ zone }) => zone.id === selectedId)) {
+      autoPick.current = null;
+      onClear();
+    }
+  }, [addressText, matching, selectedId, onSelect, onClear]);
+
+  const choose = (zone: ZoneOption, matches: boolean) => {
+    // A delivery zone that doesn't cover the address while one that does
+    // exists: check with them first. Pickup is always fine.
+    if (zone.type !== "PICKUP" && !matches && matching.length > 0 && !confirmed.has(zone.id)) {
+      setPending(zone);
+      return;
+    }
+    setPending(null);
+    onSelect(zone);
+  };
+
+  const confirmPending = () => {
+    if (!pending) return;
+    setConfirmed((current) => new Set(current).add(pending.id));
+    onSelect(pending);
+    setPending(null);
+  };
 
   // A choice made before a bigger item was added may no longer fit - drop it
   // so the total and the payment step don't use it.
@@ -90,7 +144,9 @@ export default function ZonePicker({ storeName, storeAddress, zones, needed, sel
         ({ zone }) => zone.type === "PICKUP" || normalise(`${zone.name} ${zone.areas.join(" ")}`).includes(search)
       )
     : options;
-  const hasMatch = options.some((option) => option.matches);
+  const hasMatch = matching.length > 0;
+  // Only while it still clashes (the address may have changed since).
+  const warning = pending && hasMatch && !matching.some(({ zone }) => zone.id === pending.id) ? pending : null;
 
   return (
     <div>
@@ -127,12 +183,14 @@ export default function ZonePicker({ storeName, storeAddress, zones, needed, sel
             <button
               key={zone.id}
               type="button"
-              onClick={() => onSelect(zone)}
+              onClick={() => choose(zone, matches)}
               aria-pressed={selected}
               className={`flex items-start justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors ${
                 selected
                   ? "border-violet-600 bg-violet-50 dark:bg-violet-500/10"
-                  : "border-line hover:border-violet-300 dark:hover:border-violet-500/40"
+                  : warning?.id === zone.id
+                    ? "border-amber-400 dark:border-amber-500/60"
+                    : "border-line hover:border-violet-300 dark:hover:border-violet-500/40"
               }`}
             >
               {zone.type === "PICKUP" ? (
@@ -175,6 +233,37 @@ export default function ZonePicker({ storeName, storeAddress, zones, needed, sel
           );
         })}
       </div>
+
+      {warning && (
+        <div
+          role="alert"
+          className="mt-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[12.5px] leading-relaxed text-amber-900 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-100"
+        >
+          <p className="flex items-start gap-2">
+            <AlertTriangle size={15} className="mt-0.5 shrink-0" />
+            <span>
+              Your address is in <strong>{matching[0].area}</strong>, but &quot;{warning.name}&quot; doesn&apos;t cover it. The seller may not
+              deliver to your address at this price. Choose it only if you want delivery somewhere in this zone.
+            </span>
+          </p>
+          <div className="mt-2.5 flex flex-wrap gap-2 pl-[23px]">
+            <button
+              type="button"
+              onClick={() => choose(matching[0].zone, true)}
+              className="rounded-lg bg-violet-600 px-3 py-1.5 text-[12.5px] font-semibold text-white hover:bg-violet-700"
+            >
+              Use &quot;{matching[0].zone.name}&quot;
+            </button>
+            <button
+              type="button"
+              onClick={confirmPending}
+              className="rounded-lg border border-amber-300 px-3 py-1.5 text-[12.5px] font-semibold text-amber-900 hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-100 dark:hover:bg-amber-500/15"
+            >
+              Choose &quot;{warning.name}&quot; anyway
+            </button>
+          </div>
+        </div>
+      )}
 
       {visible.length === 0 && (
         <p className="mt-2.5 text-[12.5px] text-subtle">No zone matches &quot;{query}&quot;. Try a nearby area.</p>
