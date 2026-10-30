@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useCart } from "@/src/hooks/use-cart";
-import { useCheckoutStore } from "@/src/store/checkout-store";
+import { listSellerNames, sellersMissingDelivery, useCheckoutStore } from "@/src/store/checkout-store";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -30,7 +30,9 @@ export default function CheckoutSummary() {
 
   // A store with no delivery zone or pickup point can't be ordered from.
   const undeliverable = items?.filter((item) => item.product.store?.canDeliver === false) ?? [];
-  const canProceed = !!addressId && totalItems > 0 && undeliverable.length === 0;
+  // Every seller needs a delivery zone or pickup picked.
+  const needDelivery = undeliverable.length > 0 ? [] : sellersMissingDelivery(items, shippingSelections);
+  const canProceed = !!addressId && totalItems > 0 && undeliverable.length === 0 && needDelivery.length === 0;
 
   return (
     <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-6">
@@ -66,9 +68,11 @@ export default function CheckoutSummary() {
         <p className="mt-2.5 text-center text-[12px] text-subtle">
           {undeliverable.length > 0
             ? `Remove ${undeliverable.length === 1 ? "the item" : "items"} from sellers who haven't set up delivery or pickup yet.`
-            : !addressId
-              ? "Select a delivery address."
-              : "Your cart is empty."}
+            : totalItems === 0
+              ? "Your cart is empty."
+              : !addressId
+                ? "Select a delivery address."
+                : `Choose delivery for ${listSellerNames(needDelivery)} to continue.`}
         </p>
       )}
     </aside>

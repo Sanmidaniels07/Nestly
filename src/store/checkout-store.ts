@@ -118,3 +118,22 @@ export const useCheckoutStore = create<CheckoutStore>((set) => ({
       orderNote: "",
     }),
 }));
+
+/**
+ * Sellers in the cart with no delivery zone or pickup picked yet, by name.
+ * Payment needs one for every seller (the API refuses the order otherwise).
+ */
+export const sellersMissingDelivery = (
+  items: { product: { storeId: string; store?: { name?: string } | null } }[] | undefined,
+  selections: Record<string, ShippingSelection>
+) => {
+  const names = new Map<string, string>();
+  for (const item of items ?? []) {
+    if (!selections[item.product.storeId]) names.set(item.product.storeId, item.product.store?.name ?? "a seller");
+  }
+  return [...names.values()];
+};
+
+/** "Raycakes", "Raycakes and Ola's Kitchen", "Raycakes, Ola's Kitchen and 2 more" */
+export const listSellerNames = (names: string[]) =>
+  names.length <= 2 ? names.join(" and ") : `${names.slice(0, 2).join(", ")} and ${names.length - 2} more`;
