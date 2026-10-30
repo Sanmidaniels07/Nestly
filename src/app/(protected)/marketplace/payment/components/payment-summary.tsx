@@ -6,7 +6,7 @@ import Link from "next/link";
 import { AlertCircle, CreditCard, Loader2 } from "lucide-react";
 import SummaryRow from "./summary-row";
 import { useCart } from "@/src/hooks/use-cart";
-import { useCheckoutStore } from "@/src/store/checkout-store";
+import { sellersMissingDelivery, useCheckoutStore } from "@/src/store/checkout-store";
 import { useInitiateCheckout } from "@/src/hooks/use-initiate-checkout";
 import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useSavedCards } from "@/src/hooks/use-saved-cards";
@@ -73,6 +73,14 @@ export default function PaymentSummary() {
   const shippingSelectionsArray = Object.entries(shippingSelections).map(
     ([storeId, selection]) => ({ storeId, shippingOptionId: selection.shippingOptionId })
   );
+  // Arrived without an address or a delivery choice for every seller (e.g.
+  // typed the URL, or reloaded and lost the choices) - the total here would
+  // leave out delivery, so go back and finish checkout first.
+  const incomplete = !!items && items.length > 0 && (!addressId || sellersMissingDelivery(items, shippingSelections).length > 0);
+  useEffect(() => {
+    if (incomplete && !confirmedOrder && !processing) router.replace("/marketplace/checkout");
+  }, [incomplete, confirmedOrder, processing, router]);
+
   const sellerNotesArray = Object.entries(sellerNotes)
     .map(([storeId, note]) => ({ storeId, note: note.trim() }))
     .filter((entry) => entry.note);
