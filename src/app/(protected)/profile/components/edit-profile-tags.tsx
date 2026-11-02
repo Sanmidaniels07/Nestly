@@ -2,6 +2,7 @@
 
 import { X } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
+import FormSelect from "@/src/components/ui/form-select";
 
 interface EditProfileTagsProps {
   title: string;
@@ -10,6 +11,8 @@ interface EditProfileTagsProps {
   onChange: (values: string[]) => void;
   placeholder: string;
   maxTags?: number;
+  /** Pick from a list (grouped) instead of typing. */
+  optionGroups?: { label: string; options: string[] }[];
 }
 
 export default function EditProfileTags({
@@ -19,6 +22,7 @@ export default function EditProfileTags({
   onChange,
   placeholder,
   maxTags,
+  optionGroups,
 }: EditProfileTagsProps) {
   const [value, setValue] = useState("");
   const [shake, setShake] = useState(false);
@@ -73,6 +77,28 @@ export default function EditProfileTags({
     }
   };
 
+  const renderChips = (className = "") =>
+    values.length > 0 && (
+      <div className={`flex flex-wrap gap-1.5 ${className}`}>
+        {values.map((tag) => (
+          <span
+            key={tag}
+            className="group flex items-center gap-1.5 rounded-full bg-violet-50 dark:bg-violet-500/10 py-1.5 pl-3.5 pr-2 text-[13px] font-medium text-violet-700 dark:text-violet-300"
+          >
+            {tag}
+            <button
+              type="button"
+              onClick={() => removeTag(tag)}
+              aria-label={`Remove ${tag}`}
+              className="rounded-full p-0.5 text-violet-400 transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300 hover:!bg-violet-100"
+            >
+              <X size={13} />
+            </button>
+          </span>
+        ))}
+      </div>
+    );
+
   return (
     <section className="space-y-4">
       <div className="flex items-baseline justify-between">
@@ -90,45 +116,44 @@ export default function EditProfileTags({
         )}
       </div>
 
-      <div
-        className={`
-          rounded-2xl border bg-surface-sunken p-3.5 transition-colors
-          focus-within:border-violet-400 focus-within:bg-surface
-          ${shake ? "border-red-300 dark:border-red-500/40" : "border-line-strong"}
-        `}
-      >
-        {values.length > 0 && (
-          <div className="mb-3 flex flex-wrap gap-1.5">
-            {values.map((tag) => (
-              <span
-                key={tag}
-                className="group flex items-center gap-1.5 rounded-full bg-violet-50 dark:bg-violet-500/10 py-1.5 pl-3.5 pr-2 text-[13px] font-medium text-violet-700 dark:text-violet-300"
-              >
-                {tag}
-                <button
-                  type="button"
-                  onClick={() => removeTag(tag)}
-                  aria-label={`Remove ${tag}`}
-                  className="rounded-full p-0.5 text-violet-400 transition-colors group-hover:text-violet-700 dark:group-hover:text-violet-300 hover:!bg-violet-100"
-                >
-                  <X size={13} />
-                </button>
-              </span>
-            ))}
-          </div>
-        )}
-
-        <input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={onKeyDown}
-          onPaste={onPaste}
-          onBlur={() => addTag(value)}
-          disabled={limitReached}
-          placeholder={limitReached ? "Limit reached" : placeholder}
-          className="w-full bg-transparent px-1 py-1 text-[14px] text-ink outline-none placeholder:text-subtle disabled:cursor-not-allowed"
-        />
-      </div>
+      {optionGroups ? (
+        // Pick from the app's own dropdown; choices show as chips below it.
+        <div className="space-y-3">
+          <FormSelect
+            ariaLabel={title}
+            value=""
+            onChange={addTag}
+            disabled={limitReached}
+            placeholder={limitReached ? "Limit reached" : placeholder}
+            options={optionGroups.flatMap((group) =>
+              group.options
+                .filter((option) => !values.some((v) => v.toLowerCase() === option.toLowerCase()))
+                .map((option) => ({ label: option, value: option, group: group.label }))
+            )}
+          />
+          {renderChips()}
+        </div>
+      ) : (
+        <div
+          className={`
+            rounded-2xl border bg-surface-sunken p-3.5 transition-colors
+            focus-within:border-violet-400 focus-within:bg-surface
+            ${shake ? "border-red-300 dark:border-red-500/40" : "border-line-strong"}
+          `}
+        >
+          {renderChips("mb-3")}
+          <input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={onKeyDown}
+            onPaste={onPaste}
+            onBlur={() => addTag(value)}
+            disabled={limitReached}
+            placeholder={limitReached ? "Limit reached" : placeholder}
+            className="w-full bg-transparent px-1 py-1 text-[14px] text-ink outline-none placeholder:text-subtle disabled:cursor-not-allowed"
+          />
+        </div>
+      )}
     </section>
   );
 }

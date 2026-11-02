@@ -308,6 +308,54 @@ body {
   }
 }
 
+/* App splash (components/ui/app-splash.tsx): the mark's rings turn in
+   opposite directions, the dot breathes, a bar sweeps underneath. */
+.splash-pop {
+  animation: splash-pop 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+.splash-ring-outer {
+  animation: spinner-spin 7s linear infinite;
+}
+.splash-ring-inner {
+  animation: spinner-spin 4.5s linear infinite reverse;
+}
+.splash-dot {
+  animation: splash-breathe 1.6s ease-in-out infinite;
+}
+.splash-bar {
+  animation: splash-sweep 1.4s ease-in-out infinite;
+}
+@keyframes splash-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+@keyframes splash-breathe {
+  50% {
+    transform: scale(0.78);
+  }
+}
+@keyframes splash-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(330%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash-pop,
+  .splash-ring-outer,
+  .splash-ring-inner,
+  .splash-dot {
+    animation: none;
+  }
+  .splash-bar {
+    animation-duration: 3s;
+  }
+}
+
 /* Legal pages (Terms, Privacy, Seller Agreement): Tailwind's reset strips
    list bullets and link styling, so restore them inside the document body. */
 .legal-body ul,

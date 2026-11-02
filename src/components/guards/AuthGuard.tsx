@@ -6,6 +6,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/src/store/auth-store";
+import AppSplash from "@/src/components/ui/app-splash";
 
 interface Props {
   children: ReactNode;
@@ -30,9 +31,10 @@ export default function AuthGuard({
 
   // AuthInitializer (mounted once at the app root) owns the actual session
   // check now — this guard just waits on its result, so it never has to
-  // guess at auth state before it's known.
+  // guess at auth state before it's known. The splash covers that wait
+  // (long when the API is waking up) and the redirect to login.
   if (!isHydrated || !hasSession) {
-    return null;
+    return <AppSplash />;
   }
 
   return <>{children}</>;

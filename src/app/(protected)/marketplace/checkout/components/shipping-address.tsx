@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Phone, Plus, X } from "lucide-react";
+import dynamic from "next/dynamic";
+import { MapPin, Phone, Plus, X } from "lucide-react";
 
 import { useAddresses } from "@/src/hooks/use-addresses";
 import { useCreateAddress } from "@/src/hooks/use-create-address";
@@ -12,6 +13,13 @@ import Button from "@/src/components/ui/button";
 import Skeleton from "@/src/components/ui/skeleton";
 import AddressCard from "./address-card";
 import { PHONE_PATTERN } from "@/src/lib/phone";
+import { PickedAddress, mapsConfigured } from "@/src/lib/google-maps";
+
+// Loaded only when the form opens - keeps Google Maps out of the page bundle.
+const AddressMapPicker = dynamic(() => import("@/src/components/address/address-map-picker"), {
+  ssr: false,
+  loading: () => <div className="h-[300px] animate-pulse rounded-2xl bg-surface-2 sm:h-[360px]" />,
+});
 
 const emptyForm = {
   fullName: "",
@@ -21,6 +29,8 @@ const emptyForm = {
   state: "",
   country: "",
   postalCode: "",
+  latitude: null as number | null,
+  longitude: null as number | null,
 };
 
 // "select" picks the delivery address at checkout / on a payment link;
@@ -34,8 +44,33 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
   const addressId = useCheckoutStore((state) => state.addressId);
   const setAddressId = useCheckoutStore((state) => state.setAddressId);
 
-  const [showForm, setShowForm] = useState(false);
+  // null = not chosen yet: at checkout the form opens by itself when there's
+  // no saved address.
+  const [showForm, setShowForm] = useState<boolean | null>(null);
   const [form, setForm] = useState(emptyForm);
+  // The map is the default way in; typing stays available.
+  const [entry, setEntry] = useState<"map" | "manual">(mapsConfigured ? "map" : "manual");
+  const formOpen = showForm ?? (!manage && !isLoading && addresses?.length === 0);
+  const pinned = form.latitude !== null && form.longitude !== null;
+
+  const openForm = (open: boolean) => {
+    setShowForm(open);
+    if (open) setEntry(mapsConfigured ? "map" : "manual");
+  };
+
+  const usePickedAddress = (picked: PickedAddress) => {
+    setForm((prev) => ({
+      ...prev,
+      address: picked.address,
+      city: picked.city,
+      state: picked.state,
+      country: picked.country,
+      postalCode: picked.postalCode || prev.postalCode,
+      latitude: picked.latitude,
+      longitude: picked.longitude,
+    }));
+    setEntry("manual");
+  };
 
   useEffect(() => {
     if (!manage && !addressId && addresses && addresses.length > 0) {
@@ -68,6 +103,7 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
         country: form.country.trim(),
         postalCode: form.postalCode.trim() || undefined,
         isDefault: !addresses || addresses.length === 0,
+        ...(pinned ? { latitude: form.latitude, longitude: form.longitude } : {}),
       },
       {
         onSuccess: () => {
@@ -93,16 +129,57 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
         </div>
 
         <button
-          onClick={() => setShowForm((prev) => !prev)}
+          onClick={() => openForm(!formOpen)}
           className="flex h-10 items-center gap-1.5 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-violet-700"
         >
-          {showForm ? <X size={15} /> : <Plus size={15} />}
-          {showForm ? "Cancel" : "Add address"}
+          {formOpen ? <X size={15} /> : <Plus size={15} />}
+          {formOpen ? "Cancel" : "Add address"}
         </button>
       </div>
 
-      {showForm && (
+      {formOpen && entry === "map" && (
+        <div className="mb-5 rounded-2xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface-sunken p-4 sm:p-5">
+          <p className="mb-3 text-[13.5px] font-semibold text-ink">Where should we deliver?</p>
+          <AddressMapPicker
+            initial={pinned ? { lat: form.latitude!, lng: form.longitude! } : null}
+            onConfirm={usePickedAddress}
+            onManual={() => setEntry("manual")}
+          />
+        </div>
+      )}
+
+      {formOpen && entry === "manual" && (
         <div className="mb-5 space-y-4 rounded-2xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface-sunken p-5">
+          {pinned ? (
+            <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-emerald-50 px-3.5 py-2.5 text-[12.5px] text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-200">
+              <span className="flex items-center gap-1.5 font-medium">
+                <MapPin size={14} /> Pinned on the map - add your house number or a landmark if it&apos;s missing.
+              </span>
+              <span className="flex gap-3">
+                <button type="button" onClick={() => setEntry("map")} className="font-semibold underline underline-offset-2">
+                  Move pin
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setForm((prev) => ({ ...prev, latitude: null, longitude: null }))}
+                  className="font-semibold underline underline-offset-2"
+                >
+                  Remove pin
+                </button>
+              </span>
+            </div>
+          ) : (
+            mapsConfigured && (
+              <button
+                type="button"
+                onClick={() => setEntry("map")}
+                className="flex items-center gap-1.5 text-[13px] font-medium text-violet-700 hover:underline dark:text-violet-300"
+              >
+                <MapPin size={14} /> Use the map instead
+              </button>
+            )
+          )}
+
           <div className="grid gap-4 sm:grid-cols-2">
             <Input label="Full name" value={form.fullName} onChange={update("fullName")} />
             <Input label="Phone" value={form.phone} onChange={update("phone")} />
@@ -141,7 +218,7 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
         </div>
       )}
 
-      {!isLoading && addresses?.length === 0 && !showForm && (
+      {!isLoading && addresses?.length === 0 && !formOpen && (
         <p className="text-[13px] text-subtle">
           {manage ? "No saved addresses yet." : "No saved addresses yet. Add one to continue."}
         </p>
