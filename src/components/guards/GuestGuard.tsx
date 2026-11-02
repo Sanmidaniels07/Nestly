@@ -6,7 +6,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/hooks/use-auth";
-import Spinner from "@/src/components/ui/loader";
+import AppSplash from "@/src/components/ui/app-splash";
 import { getSafeReturnTo, rememberedReturnTo } from "@/src/lib/return-to";
 
 interface Props {
@@ -63,15 +63,11 @@ export default function GuestGuard({
     router,
   ]);
 
-  // Same dotted loader as the app-wide loading screen, so pages behind this
-  // guard (login, signup, features, preview...) don't sit blank while the
-  // session check runs or the redirect to the dashboard happens.
+  // The Nestly splash, so pages behind this guard (login, signup...) don't
+  // sit blank while the session check runs (long when the API is waking
+  // up) or the redirect to the dashboard happens.
   if (!isHydrated || isAuthenticated) {
-    return (
-      <div className="flex min-h-screen w-full items-center justify-center bg-canvas">
-        <Spinner size={32} />
-      </div>
-    );
+    return <AppSplash />;
   }
 
   return children;
