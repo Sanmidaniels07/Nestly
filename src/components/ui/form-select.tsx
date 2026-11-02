@@ -7,6 +7,8 @@ import { cn } from "@/src/lib/utils";
 interface Option<T extends string> {
   label: string;
   value: T;
+  /** Options sharing a group are listed under that heading. */
+  group?: string;
 }
 
 interface FormSelectProps<T extends string> {
@@ -18,6 +20,8 @@ interface FormSelectProps<T extends string> {
   placeholder?: string;
   fullWidth?: boolean;
   disabled?: boolean;
+  /** Accessible name when there's no visible label. */
+  ariaLabel?: string;
 }
 
 export default function FormSelect<T extends string>({
@@ -29,6 +33,7 @@ export default function FormSelect<T extends string>({
   placeholder = "Select an option",
   fullWidth = true,
   disabled = false,
+  ariaLabel,
 }: FormSelectProps<T>) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -67,6 +72,9 @@ export default function FormSelect<T extends string>({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((prev) => !prev)}
+        aria-label={ariaLabel}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         className={cn(
           `
           relative flex h-14 w-full items-center justify-between rounded-3xl border
@@ -93,35 +101,45 @@ export default function FormSelect<T extends string>({
 
       {open && (
         <div
+          role="listbox"
           className="
             absolute left-0 right-0 top-full z-50 mt-2 max-h-64 overflow-y-auto
             rounded-2xl border border-line bg-surface p-1.5 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]
           "
         >
-          {options.map((option) => {
+          {options.map((option, i) => {
             const isSelected = option.value === value;
+            const startsGroup = option.group && option.group !== options[i - 1]?.group;
 
             return (
-              <button
-                key={option.value}
-                type="button"
-                onClick={() => {
-                  onChange(option.value);
-                  setOpen(false);
-                }}
-                className={cn(
-                  `
-                  flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-left text-[14px]
-                  transition-colors
-                  `,
-                  isSelected
-                    ? "bg-violet-50 font-medium text-violet-700 dark:bg-violet-500/10 dark:text-violet-300"
-                    : "text-ink-2 hover:bg-surface-2"
+              <div key={option.value}>
+                {startsGroup && (
+                  <p className={cn("px-4 pb-1 text-[11px] font-semibold uppercase tracking-wider text-subtle", i === 0 ? "pt-1.5" : "pt-3")}>
+                    {option.group}
+                  </p>
                 )}
-              >
-                {option.label}
-                {isSelected && <Check size={16} className="text-violet-600 dark:text-violet-400" />}
-              </button>
+                <button
+                  type="button"
+                  role="option"
+                  aria-selected={isSelected}
+                  onClick={() => {
+                    onChange(option.value);
+                    setOpen(false);
+                  }}
+                  className={cn(
+                    `
+                    flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-left text-[14px]
+                    transition-colors
+                    `,
+                    isSelected
+                      ? "bg-violet-50 font-medium text-violet-700 dark:bg-violet-500/10 dark:text-violet-300"
+                      : "text-ink-2 hover:bg-surface-2"
+                  )}
+                >
+                  {option.label}
+                  {isSelected && <Check size={16} className="text-violet-600 dark:text-violet-400" />}
+                </button>
+              </div>
             );
           })}
         </div>
