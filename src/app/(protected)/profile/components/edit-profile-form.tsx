@@ -18,6 +18,7 @@ import EditProfileSocial from "./edit-profile-social";
 import { useProfile } from "@/src/hooks/use-profile";
 import { useUpdateProfile } from "@/src/hooks/use-update-profile";
 import { useUploadFiles } from "@/src/hooks/use-upload-files";
+import { LANGUAGE_GROUPS } from "@/src/lib/languages";
 
 interface Props {
   onClose: () => void;
@@ -190,8 +191,9 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
               description="Languages you speak"
               values={languages}
               onChange={(v) => setValue("languages", v, { shouldDirty: true })}
-              placeholder="Add a language"
+              placeholder="Choose a language"
               maxTags={6}
+              optionGroups={LANGUAGE_GROUPS}
             />
             <EditProfileSocial />
           </div>

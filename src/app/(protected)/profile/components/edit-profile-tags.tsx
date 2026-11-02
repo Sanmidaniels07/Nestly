@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { ChevronDown, X } from "lucide-react";
 import { KeyboardEvent, useState } from "react";
 
 interface EditProfileTagsProps {
@@ -10,6 +10,8 @@ interface EditProfileTagsProps {
   onChange: (values: string[]) => void;
   placeholder: string;
   maxTags?: number;
+  /** Pick from a list (grouped) instead of typing. */
+  optionGroups?: { label: string; options: string[] }[];
 }
 
 export default function EditProfileTags({
@@ -19,6 +21,7 @@ export default function EditProfileTags({
   onChange,
   placeholder,
   maxTags,
+  optionGroups,
 }: EditProfileTagsProps) {
   const [value, setValue] = useState("");
   const [shake, setShake] = useState(false);
@@ -118,16 +121,42 @@ export default function EditProfileTags({
           </div>
         )}
 
-        <input
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={onKeyDown}
-          onPaste={onPaste}
-          onBlur={() => addTag(value)}
-          disabled={limitReached}
-          placeholder={limitReached ? "Limit reached" : placeholder}
-          className="w-full bg-transparent px-1 py-1 text-[14px] text-ink outline-none placeholder:text-subtle disabled:cursor-not-allowed"
-        />
+        {optionGroups ? (
+          <div className="relative">
+            <select
+              value=""
+              onChange={(e) => addTag(e.target.value)}
+              disabled={limitReached}
+              aria-label={title}
+              className="w-full cursor-pointer appearance-none bg-transparent px-1 py-1 pr-7 text-[14px] text-muted outline-none disabled:cursor-not-allowed"
+            >
+              <option value="">{limitReached ? "Limit reached" : placeholder}</option>
+              {optionGroups.map((group) => (
+                <optgroup key={group.label} label={group.label}>
+                  {group.options
+                    .filter((option) => !values.some((v) => v.toLowerCase() === option.toLowerCase()))
+                    .map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                </optgroup>
+              ))}
+            </select>
+            <ChevronDown size={16} className="pointer-events-none absolute right-1 top-1/2 -translate-y-1/2 text-subtle" />
+          </div>
+        ) : (
+          <input
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyDown={onKeyDown}
+            onPaste={onPaste}
+            onBlur={() => addTag(value)}
+            disabled={limitReached}
+            placeholder={limitReached ? "Limit reached" : placeholder}
+            className="w-full bg-transparent px-1 py-1 text-[14px] text-ink outline-none placeholder:text-subtle disabled:cursor-not-allowed"
+          />
+        )}
       </div>
     </section>
   );
