@@ -17,6 +17,21 @@ export const OG_IMAGE = { url: "/og.png", width: 1200, height: 630, alt: `${SITE
 /** Public, indexable pages - everything else needs an account. */
 export const PUBLIC_ROUTES = ["/", "/features", "/preview", "/signup", "/login", "/terms", "/privacy", "/seller-terms", "/guides", "/guides/sellers", "/guides/buyers", "/guides/community"] as const;
 
+/** Public but not worth Google's attention: kept out of the sitemap. */
+export const NOT_IN_SITEMAP = new Set<string>(["/login", "/signup", "/preview"]);
+
+/**
+ * Nestly's own accounts (full URLs) - tells Google they belong to the same
+ * brand (schema.org sameAs). Add each one when it exists.
+ */
+export const SOCIAL_PROFILES: string[] = [
+  // "https://www.instagram.com/nestlyapp",
+  // "https://www.tiktok.com/@nestlyapp",
+  // "https://x.com/nestlyapp",
+  // "https://www.facebook.com/nestlyapp",
+  // "https://www.linkedin.com/company/nestlyapp",
+];
+
 // schema.org data so search engines know who's behind the site.
 export const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -28,6 +43,7 @@ export const organizationJsonLd = {
       url: SITE_URL,
       logo: `${SITE_URL}/icon.png`,
       description: SITE_DESCRIPTION,
+      ...(SOCIAL_PROFILES.length ? { sameAs: SOCIAL_PROFILES } : {}),
       contactPoint: {
         "@type": "ContactPoint",
         contactType: "customer support",
