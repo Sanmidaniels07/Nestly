@@ -7,7 +7,7 @@ import SiteAnalytics from "../components/site-analytics";
 import AdTags from "../components/consent/ad-tags";
 import CookieBanner from "../components/consent/cookie-banner";
 import { isStaging } from "../lib/environment";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE, SITE_URL, organizationJsonLd } from "../lib/site";
+import { SITE_DESCRIPTION, SITE_HOME_TITLE, SITE_NAME, SITE_URL, organizationJsonLd } from "../lib/site";
 import type { Metadata, Viewport } from "next";
 
 // Site-wide SEO defaults. Pages override the title (template adds
@@ -15,14 +15,19 @@ import type { Metadata, Viewport } from "next";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} – ${SITE_TAGLINE}`,
+    default: SITE_HOME_TITLE,
     template: `%s · ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
   applicationName: SITE_NAME,
   keywords: [
     "Nestly",
+    "Nestly app",
+    "Nestly Nigeria",
     "social marketplace",
+    "social marketplace Nigeria",
+    "social marketplace app",
+    "buy from trusted sellers Lagos",
     "Nigeria marketplace",
     "buy and sell online Nigeria",
     "sell on WhatsApp alternative",
@@ -37,13 +42,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     url: SITE_URL,
     locale: "en_NG",
-    title: `${SITE_NAME} – ${SITE_TAGLINE}`,
+    title: SITE_HOME_TITLE,
     description: SITE_DESCRIPTION,
-    images: [{ url: "/og.png", width: 1200, height: 630, alt: `${SITE_NAME} – ${SITE_TAGLINE}` }],
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: SITE_HOME_TITLE }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} – ${SITE_TAGLINE}`,
+    title: SITE_HOME_TITLE,
     description: SITE_DESCRIPTION,
     images: ["/og.png"],
   },

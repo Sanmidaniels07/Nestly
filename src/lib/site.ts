@@ -8,8 +8,18 @@ export const SITE_NAME = "Nestly";
 
 export const SITE_TAGLINE = "Connect, celebrate and shop together";
 
+/**
+ * Other names "Nestly" is searched by. Many brands worldwide are called
+ * Nestly, so "Nestly app" / "Nestly Nigeria" is how people (and Google) tell
+ * this one apart - used in titles, descriptions and structured data.
+ */
+export const SITE_ALT_NAMES = ["Nestly app", "Nestly Nigeria", "NestlyApp", "nestlyapp.site"];
+
+/** The homepage title: brand + what it is + where, in the words people search. */
+export const SITE_HOME_TITLE = "Nestly – Social Marketplace App in Nigeria";
+
 export const SITE_DESCRIPTION =
-  "Nestly is the social marketplace for your people, your moments and sellers you trust. Follow friends, never miss a birthday, join communities, and shop from local sellers with secure Paystack checkout and delivery-code protection.";
+  "Nestly is a social marketplace app in Nigeria: buy and sell online from trusted sellers, shop with friends, never miss a birthday and join communities - with secure Paystack checkout and delivery-code protection.";
 
 /** Link-preview image. Page-level openGraph replaces (not merges) the root's, so pages re-use this. */
 export const OG_IMAGE = { url: "/og.png", width: 1200, height: 630, alt: `${SITE_NAME} – ${SITE_TAGLINE}` };
@@ -40,6 +50,7 @@ export const organizationJsonLd = {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
+      alternateName: SITE_ALT_NAMES,
       url: SITE_URL,
       logo: `${SITE_URL}/icon.png`,
       description: SITE_DESCRIPTION,
@@ -56,6 +67,8 @@ export const organizationJsonLd = {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       name: SITE_NAME,
+      alternateName: SITE_ALT_NAMES,
+      description: SITE_DESCRIPTION,
       url: SITE_URL,
       publisher: { "@id": `${SITE_URL}/#organization` },
       inLanguage: "en-NG",
