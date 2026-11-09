@@ -245,7 +245,7 @@ function Features() {
       icon: <ShoppingBag className="w-8 h-8" />,
       color: "bg-tint-orange text-[#FF7A45]",
       title: "Marketplace",
-      desc: "Shop from sellers you know with secure Paystack checkout, delivery or free pickup, and a code to confirm your order arrived.",
+      desc: "Shop from sellers you trust - people you know or new stores near you - with secure Paystack checkout, delivery or free pickup, and a code to confirm your order arrived.",
     },
   ];
 
