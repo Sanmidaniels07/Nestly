@@ -35,7 +35,7 @@ export const NOT_IN_SITEMAP = new Set<string>(["/login", "/signup", "/preview"])
  * brand (schema.org sameAs). Add each one when it exists.
  */
 export const SOCIAL_PROFILES: string[] = [
-  // "https://www.instagram.com/nestlyapp",
+  "https://www.instagram.com/thenestlyapp",
   // "https://www.tiktok.com/@nestlyapp",
   // "https://x.com/nestlyapp",
   // "https://www.facebook.com/nestlyapp",

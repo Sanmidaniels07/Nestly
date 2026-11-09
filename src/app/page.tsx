@@ -566,6 +566,9 @@ function Footer() {
           <a href={supportWhatsAppUrl("Hi Nestly Support, ")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
             Support
           </a>
+          <a href="https://www.instagram.com/thenestlyapp" target="_blank" rel="me noopener noreferrer" className="hover:text-white">
+            Instagram
+          </a>
         </nav>
         <div className="mt-8 text-xs text-white/40">
           © 2026 Nestly. All rights reserved.
