@@ -9,9 +9,8 @@ import {
   MessageCircle,
   ShoppingBag,
   Truck,
-  Heart,
-  MessageSquare,
-  Check,
+  Gift,
+  Store,
   ArrowRight,
 } from "lucide-react";
 
@@ -19,6 +18,18 @@ import Button from "@/src/components/ui/button";
 import Card from "@/src/components/ui/card";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import SiteFooter from "@/src/components/layout/site-footer";
+import {
+  BirthdayDemo,
+  ChatDemo,
+  CommunityDemo,
+  EventDemo,
+  FeedDemo,
+  HeroChips,
+  HeroGlow,
+  MarketDemo,
+  SellerDemo,
+  TrackingDemo,
+} from "@/src/components/marketing/demos";
 
 function MockCard({
   icon: Icon,
@@ -34,230 +45,81 @@ function MockCard({
   className?: string;
 }) {
   return (
-    <Card className={`overflow-hidden border-line-strong ${className}`}>
+    <Card className={`h-full overflow-hidden border-line-strong transition-shadow duration-300 hover:shadow-2xl ${className}`}>
       <div className="flex items-center gap-2.5 border-b border-line-soft bg-surface px-5 py-4">
         <Icon size={17} style={{ color }} />
         <span className="text-[13.5px] font-semibold text-ink">{label}</span>
+        <span className="ml-auto flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider" style={{ color }}>
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ backgroundColor: color }} /> Live
+        </span>
       </div>
-      <div className="p-6">{children}</div>
+      <div className="@container bg-canvas/50 p-5">{children}</div>
     </Card>
   );
 }
+
+const CARDS = [
+  { icon: Users, color: "#2B7FFF", label: "Social Feed", demo: FeedDemo },
+  { icon: Gift, color: "#F43F5E", label: "Birthdays", demo: BirthdayDemo },
+  { icon: Users2, color: "#8B5CF6", label: "Communities", demo: CommunityDemo },
+  { icon: CalendarDays, color: "#EC4899", label: "Events", demo: EventDemo },
+  { icon: MessageCircle, color: "#10B981", label: "Real-time Messaging", demo: ChatDemo },
+  { icon: Store, color: "#7C3AED", label: "Seller Dashboard", demo: SellerDemo },
+  { icon: ShoppingBag, color: "#FF7A45", label: "Marketplace", demo: MarketDemo, wide: true },
+  { icon: Truck, color: "#0EA5E9", label: "Order Tracking", demo: TrackingDemo, wide: true },
+];
 
 export default function PreviewPage() {
   return (
     <GuestGuard>
       <main className="min-h-screen overflow-x-hidden bg-canvas pb-24 pt-32 text-ink">
-        <section className="mx-auto max-w-3xl px-6 text-center">
+        <section className="relative isolate mx-auto max-w-6xl px-6 py-6 text-center">
+          <HeroGlow />
+          <HeroChips />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
+            className="mx-auto max-w-3xl"
           >
             <span className="inline-flex items-center gap-2 rounded-full bg-tint-blue px-4 py-1.5 text-[13px] font-semibold text-[#2B7FFF]">
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2B7FFF] opacity-60" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2B7FFF]" />
+              </span>
               A closer look
             </span>
             <h1 className="mt-6 text-4xl font-bold leading-[1.1] tracking-tighter md:text-6xl">
               See Nestly
               <br />
-              in action
+              <span className="bg-gradient-to-r from-blue-500 via-violet-600 to-fuchsia-500 bg-clip-text text-transparent">in action</span>
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg text-muted md:text-xl">
-              A quick look at what&apos;s waiting for you inside — feed, communities,
-              messaging, and a full marketplace.
+              Watch what&apos;s waiting for you inside — your feed, birthdays, communities, messages, and a marketplace of
+              trusted sellers.
             </p>
           </motion.div>
         </section>
 
         <section className="mx-auto mt-20 grid max-w-6xl gap-6 px-6 md:grid-cols-2">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <MockCard icon={Users} color="#2B7FFF" label="Social Feed">
-              <div className="space-y-5">
-                <div className="flex gap-3.5">
-                  <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-blue-400 to-blue-600" />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13.5px] font-semibold">
-                      John Doe <span className="font-normal text-subtle">· 2h</span>
-                    </div>
-                    <p className="mt-1 text-[13.5px] text-muted">
-                      Weekend vibes with the crew! 🎉
-                    </p>
-                    <div className="mt-3 flex items-center gap-5 text-subtle">
-                      <span className="flex items-center gap-1.5 text-[12.5px]">
-                        <Heart size={14} className="fill-red-500 text-red-500" /> 24
-                      </span>
-                      <span className="flex items-center gap-1.5 text-[12.5px]">
-                        <MessageSquare size={14} /> 6
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="flex gap-3.5">
-                  <div className="h-10 w-10 shrink-0 rounded-full bg-gradient-to-br from-violet-400 to-violet-600" />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[13.5px] font-semibold">
-                      Alice Smith <span className="font-normal text-subtle">· 4h</span>
-                    </div>
-                    <p className="mt-1 text-[13.5px] text-muted">
-                      New recipe turned out amazing 🍜
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </MockCard>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.08 }}
-          >
-            <MockCard icon={Users2} color="#8B5CF6" label="Communities">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-tint text-[28px]">
-                  🎨
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14.5px] font-semibold">Indie Makers</p>
-                  <p className="mt-0.5 text-[12.5px] text-subtle">3.2K members · 48 posts today</p>
-                  <div className="mt-2.5 flex -space-x-2">
-                    {["#F87171", "#FBBF24", "#34D399", "#60A5FA"].map((c) => (
-                      <div
-                        key={c}
-                        className="h-6 w-6 rounded-full border-2 border-white"
-                        style={{ backgroundColor: c }}
-                      />
-                    ))}
-                  </div>
-                </div>
-                <span className="shrink-0 rounded-full border border-violet-200 dark:border-violet-500/30 px-3.5 py-1.5 text-[12px] font-semibold text-violet-600 dark:text-violet-400">
-                  Joined
-                </span>
-              </div>
-            </MockCard>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.16 }}
-          >
-            <MockCard icon={CalendarDays} color="#EC4899" label="Events">
-              <div className="flex items-center gap-4">
-                <div className="flex h-16 w-14 shrink-0 flex-col items-center justify-center rounded-2xl bg-[#FCE7F3] dark:bg-pink-500/15">
-                  <span className="text-[11px] font-bold uppercase text-[#EC4899]">Aug</span>
-                  <span className="text-[20px] font-bold text-[#EC4899]">15</span>
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate text-[14.5px] font-semibold">Rooftop Sunset Mixer</p>
-                  <p className="mt-0.5 text-[12.5px] text-subtle">6:00 PM · 128 going</p>
-                </div>
-                <span className="flex shrink-0 items-center gap-1 rounded-full bg-[#EC4899] px-3.5 py-1.5 text-[12px] font-semibold text-white">
-                  <Check size={12} strokeWidth={3} /> Going
-                </span>
-              </div>
-            </MockCard>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.24 }}
-          >
-            <MockCard icon={MessageCircle} color="#10B981" label="Real-time Messaging">
-              <div className="space-y-3">
-                <div className="flex justify-start">
-                  <div className="max-w-[75%] rounded-2xl rounded-bl-sm bg-surface-muted px-4 py-2.5 text-[13.5px]">
-                    Hey! Are we still on for tomorrow?
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <div className="max-w-[75%] rounded-2xl rounded-br-sm bg-emerald-500 px-4 py-2.5 text-[13.5px] text-white">
-                    Wouldn&apos;t miss it 🙌
-                  </div>
-                </div>
-                <div className="flex items-center gap-1.5 pl-1 text-subtle">
-                  <span className="text-[12px]">Alex is typing</span>
-                  <div className="flex gap-1">
-                    {[0, 150, 300].map((delay) => (
-                      <div
-                        key={delay}
-                        className="h-1.5 w-1.5 animate-bounce rounded-full bg-[#9CA3AF]"
-                        style={{ animationDelay: `${delay}ms` }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </MockCard>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.32 }}
-            className="md:col-span-2"
-          >
-            <MockCard icon={ShoppingBag} color="#FF7A45" label="Marketplace">
-              <div className="grid grid-cols-2 gap-6 sm:grid-cols-4">
-                {[
-                  { emoji: "👟", name: "Running Shoes", price: "₦48,000" },
-                  { emoji: "⌚", name: "Smart Watch", price: "₦95,000" },
-                  { emoji: "🎧", name: "Headphones", price: "₦34,000" },
-                  { emoji: "🧴", name: "Skincare Set", price: "₦18,500" },
-                ].map((product) => (
-                  <div key={product.name}>
-                    <div className="flex h-20 items-center justify-center rounded-2xl bg-canvas text-4xl">
-                      {product.emoji}
-                    </div>
-                    <p className="mt-2.5 truncate text-[13px] font-medium">{product.name}</p>
-                    <p className="text-[13px] font-bold text-[#FF7A45]">{product.price}</p>
-                  </div>
-                ))}
-              </div>
-            </MockCard>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="md:col-span-2"
-          >
-            <MockCard icon={Truck} color="#0EA5E9" label="Order Tracking">
-              <div className="flex items-center justify-between px-2">
-                {["Placed", "Paid", "Shipped", "Delivered"].map((step, i) => (
-                  <div key={step} className="flex flex-1 flex-col items-center">
-                    <div className="flex w-full items-center">
-                      {i > 0 && <div className="h-0.5 flex-1 bg-emerald-400" />}
-                      <div
-                        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white ${
-                          i < 3 ? "bg-emerald-500" : "bg-emerald-500"
-                        }`}
-                      >
-                        <Check size={14} strokeWidth={3} />
-                      </div>
-                      {i < 3 && <div className="h-0.5 flex-1 bg-emerald-400" />}
-                    </div>
-                    <span className="mt-2 text-[11.5px] font-medium text-muted">{step}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-5 text-center text-[13px] text-emerald-600 dark:text-emerald-400">
-                Arrived today · Order #NESTLY_8F2A91
-              </p>
-            </MockCard>
-          </motion.div>
+          {CARDS.map((card, i) => {
+            const Demo = card.demo;
+            return (
+              <motion.div
+                key={card.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, delay: (i % 2) * 0.08 }}
+                whileHover={{ y: -4 }}
+                className={card.wide ? "md:col-span-2" : ""}
+              >
+                <MockCard icon={card.icon} color={card.color} label={card.label}>
+                  <Demo />
+                </MockCard>
+              </motion.div>
+            );
+          })}
         </section>
 
         <section className="mx-auto mt-24 max-w-5xl px-6">
@@ -268,8 +130,16 @@ export default function PreviewPage() {
             transition={{ duration: 0.6 }}
             className="relative overflow-hidden rounded-[36px] bg-gradient-to-br from-violet-600 via-indigo-600 to-purple-700 px-8 py-16 text-center text-white sm:px-16"
           >
-            <div className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
-            <div className="pointer-events-none absolute -bottom-20 -left-16 h-72 w-72 rounded-full bg-white/10 blur-3xl" />
+            <motion.div
+              className="pointer-events-none absolute -right-16 -top-16 h-72 w-72 rounded-full bg-white/10 blur-3xl"
+              animate={{ scale: [1, 1.15, 1] }}
+              transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+            />
+            <motion.div
+              className="pointer-events-none absolute -bottom-20 -left-16 h-72 w-72 rounded-full bg-white/10 blur-3xl"
+              animate={{ scale: [1.1, 1, 1.1] }}
+              transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
+            />
 
             <h2 className="relative text-3xl font-bold tracking-tight sm:text-4xl">
               This could be your feed.
@@ -282,7 +152,7 @@ export default function PreviewPage() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="rounded-2xl bg-white px-9 py-6 text-base font-semibold text-[#2A1B4D] shadow-lg hover:bg-white/90"
+                  className="rounded-2xl bg-white px-9 py-6 text-base font-semibold text-[#2A1B4D] shadow-lg transition-transform hover:-translate-y-0.5 hover:bg-white/90"
                 >
                   Join free
                 </Button>
