@@ -3,7 +3,6 @@ import Link from "next/link";
 import { ArrowRight, ShoppingBag, Store, Users } from "lucide-react";
 
 import NestlyMark from "@/src/components/ui/nestly-mark";
-import LegalBackLink from "@/src/components/legal/legal-back-link";
 import { GUIDES } from "@/src/components/guides/guide-document";
 import { OG_IMAGE } from "@/src/lib/site";
 
@@ -20,8 +19,7 @@ export default function GuidesPage() {
   return (
     <main className="min-h-screen bg-canvas px-4 pb-24 pt-24 sm:pt-28">
       <div className="mx-auto max-w-3xl">
-        <div className="flex items-center justify-between gap-3">
-          <LegalBackLink />
+        <div className="flex items-center justify-end gap-3">
           <Link href="/" className="inline-flex items-center gap-2 text-[13px] font-semibold text-ink">
             <NestlyMark size={26} /> Nestly
           </Link>
