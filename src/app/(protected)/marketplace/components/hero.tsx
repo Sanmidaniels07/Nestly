@@ -84,7 +84,7 @@ export default function MarketplaceHero() {
           </h1>
 
           <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-violet-100/90">
-            Buy from people you know or discover new stores near you — pay securely, track every order and confirm delivery with your own code.
+            Discover trusted stores near you — pay securely, track every order and confirm delivery with your own code.
           </p>
 
           <form
