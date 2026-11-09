@@ -32,7 +32,7 @@ export default function SellCta() {
             {hasStore ? (
               <>Keep your store <em className="text-violet-300">growing.</em></>
             ) : (
-              <>Turn your followers into <em className="text-violet-300">customers.</em></>
+              <>Turn every visit into a <em className="text-violet-300">sale.</em></>
             )}
           </h2>
           <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#C9C5DC]">

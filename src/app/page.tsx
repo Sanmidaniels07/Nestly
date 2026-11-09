@@ -17,6 +17,8 @@ export default function Home() {
 
       <Guides />
 
+      <About />
+
       <Preview />
 
       <Footer />
@@ -35,7 +37,11 @@ function Hero() {
           className="space-y-8"
         >
           <div>
+            {/* The first line is what Google reads as "what this site is". */}
             <h1 className="text-5xl md:text-6xl font-bold leading-[1.1] tracking-tighter">
+              <span className="mb-5 block text-base font-semibold tracking-normal text-violet-700 dark:text-violet-300 md:text-lg">
+                Nestly — the social marketplace app in Nigeria
+              </span>
               Connect, <span className="text-[#2B7FFF]">Celebrate</span>,<br />
               and Shop Together
             </h1>
@@ -239,7 +245,7 @@ function Features() {
       icon: <ShoppingBag className="w-8 h-8" />,
       color: "bg-tint-orange text-[#FF7A45]",
       title: "Marketplace",
-      desc: "Shop from sellers you know with secure Paystack checkout, delivery or free pickup, and a code to confirm your order arrived.",
+      desc: "Shop from trusted sellers with secure Paystack checkout, delivery or free pickup, and a code to confirm your order arrived.",
     },
   ];
 
@@ -350,6 +356,61 @@ function Guides() {
             </motion.div>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ==================== WHAT IS NESTLY ==================== */
+// Plain answers to what people type into Google about Nestly.
+const ABOUT_QA = [
+  {
+    q: "What is Nestly?",
+    a: "Nestly (also called the Nestly app) is a social marketplace app made in Nigeria. It brings shopping and your social life together: you can buy and sell online from trusted sellers, follow friends and stores, join communities, and get reminded of birthdays so you never miss a celebration - all in one app.",
+  },
+  {
+    q: "How is Nestly different from shopping on Instagram or WhatsApp?",
+    a: "On Nestly every order goes through secure Paystack checkout, delivery is confirmed with a delivery code, and you can request a return within 7 days if an item arrives faulty, damaged or wrong. You see real reviews and the seller's delivery areas and prices before you pay - no more sending money to strangers in DMs.",
+  },
+  {
+    q: "Can I sell on Nestly?",
+    a: "Yes. Small businesses, home bakers, fashion brands and gadget sellers in Lagos and across Nigeria can open a free online store on Nestly, list products, set delivery zones, share payment links and get paid through Paystack.",
+  },
+  {
+    q: "Where does Nestly work?",
+    a: "Nestly is for buyers and sellers across Nigeria, starting in Lagos. Browse by area - Lekki, Ikeja, Surulere, Yaba, Festac, Ajah and more - to find sellers who deliver to you.",
+  },
+];
+
+function About() {
+  return (
+    <section id="about" className="py-20 bg-surface border-y border-line">
+      <div className="max-w-4xl mx-auto px-6">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl md:text-5xl font-bold tracking-tight">What is Nestly?</h2>
+          <p className="mt-4 text-xl text-muted max-w-2xl mx-auto">
+            The social marketplace app in Nigeria where you shop from sellers you trust - and the people you love.
+          </p>
+        </div>
+        <div className="space-y-4">
+          {ABOUT_QA.map(({ q, a }) => (
+            <div key={q} className="rounded-3xl border border-line-strong bg-canvas p-6 md:p-8">
+              <h3 className="text-xl font-semibold">{q}</h3>
+              <p className="mt-3 leading-relaxed text-muted">{a}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-8 text-center text-muted">
+          Ready to start?{" "}
+          <Link href="/signup" className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
+            Join Nestly free
+          </Link>{" "}
+          or{" "}
+          <Link href="/marketplace/categories" className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
+            browse the marketplace
+          </Link>
+          .
+        </p>
       </div>
     </section>
   );
@@ -504,6 +565,9 @@ function Footer() {
           <CookieSettingsLink className="hover:text-white" />
           <a href={supportWhatsAppUrl("Hi Nestly Support, ")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
             Support
+          </a>
+          <a href="https://www.instagram.com/thenestlyapp" target="_blank" rel="me noopener noreferrer" className="hover:text-white">
+            Instagram
           </a>
         </nav>
         <div className="mt-8 text-xs text-white/40">

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ArrowLeft, MapPin } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 
 import { useNearbyProducts } from "@/src/hooks/use-nearby-products";
 import Input from "@/src/components/ui/input";
@@ -11,6 +11,8 @@ import ProductCard from "../components/product-card";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 
 export default function NearbyPage() {
+  // Back to wherever the user came from; /marketplace if they landed here directly.
+  const goBack = useGoBack("/marketplace");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
   const [page, setPage] = useState(1);
@@ -27,13 +29,14 @@ export default function NearbyPage() {
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 lg:px-8">
       <div className="space-y-4">
-        <Link
-          href="/marketplace"
+        <button
+          type="button"
+          onClick={() => goBack()}
           className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
         >
           <ArrowLeft size={15} />
-          Back to marketplace
-        </Link>
+          Back
+        </button>
 
         <div>
           <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">

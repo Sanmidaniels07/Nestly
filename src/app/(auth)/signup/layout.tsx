@@ -5,7 +5,7 @@ import { OG_IMAGE } from "@/src/lib/site";
 export const metadata: Metadata = {
   title: "Create your free account",
   description:
-    "Join Nestly free: connect with friends, never miss a birthday, join communities, and shop from or sell to people you know.",
+    "Join Nestly free: connect with friends, never miss a birthday, join communities, and shop from trusted sellers or open your own store.",
   alternates: { canonical: "/signup" },
   openGraph: { title: "Join Nestly – it's free", url: "/signup", images: [OG_IMAGE] },
 };

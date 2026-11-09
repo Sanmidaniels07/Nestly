@@ -1,8 +1,8 @@
 "use client";
 
 import { use } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, FileX } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 
 import { usePost } from "@/src/hooks/use-post";
 import PostCard from "../../feed/main-feed/post-card";
@@ -14,13 +14,13 @@ export default function PostDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const router = useRouter();
+  const goBack = useGoBack("/feed");
   const { data: post, isLoading, isError } = usePost(id);
 
   return (
     <div className="mx-auto max-w-2xl space-y-5 pb-20 pt-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => goBack()}
         className="flex items-center gap-1.5 text-[13.5px] font-medium text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
       >
         <ArrowLeft size={16} />

@@ -11,6 +11,8 @@ import SellerSummary from "./components/seller-summary";
 import ProductSpecifications from "./components/product-specifications";
 import ProductDescription from "./components/product-description";
 import ProductReviews from "./components/product-reviews";
+import DeliveryReturns from "./components/delivery-returns";
+import type { ProductDelivery } from "@/src/lib/product-delivery";
 import Skeleton from "@/src/components/ui/skeleton";
 import SuspendedNotice from "@/src/components/ui/suspended-notice";
 import { useSession } from "@/src/hooks/use-session";
@@ -21,9 +23,11 @@ interface Props {
   id: string;
   // Fetched by the server page so the content is in the HTML (search, link previews).
   initialProduct?: Parameters<typeof useProduct>[1];
+  // The store's delivery zones and policies, summarised on the server.
+  delivery?: ProductDelivery | null;
 }
 
-export default function ProductDetailsPage({ id, initialProduct }: Props) {
+export default function ProductDetailsPage({ id, initialProduct, delivery }: Props) {
   // No server data means it wasn't public (e.g. a suspended store's product
   // an admin may open) - wait for the session so the request carries their login.
   const { isHydrated } = useSession();
@@ -98,6 +102,7 @@ export default function ProductDetailsPage({ id, initialProduct }: Props) {
 
       <ProductDescription product={product} />
       <ProductSpecifications product={product} />
+      {delivery && <DeliveryReturns delivery={delivery} />}
       <ProductReviews
         reviews={reviewsData?.reviews ?? []}
         total={reviewsData?.total ?? 0}

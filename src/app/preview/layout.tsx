@@ -6,7 +6,7 @@ import { OG_IMAGE } from "@/src/lib/site";
 export const metadata: Metadata = {
   title: "See how Nestly works",
   description:
-    "A quick look inside Nestly: share moments with friends, join communities, celebrate birthdays, and buy from sellers you know with tracked delivery.",
+    "A quick look inside Nestly: share moments with friends, join communities, celebrate birthdays, and buy from trusted sellers with tracked delivery.",
   alternates: { canonical: "/preview" },
   openGraph: { title: "See how Nestly works", url: "/preview", images: [OG_IMAGE] },
 };

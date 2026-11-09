@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 
 import { isStaging } from "../lib/environment";
 import { serverGet } from "../lib/server-api";
-import { PUBLIC_ROUTES, SITE_URL } from "../lib/site";
+import { NOT_IN_SITEMAP, PUBLIC_ROUTES, SITE_URL } from "../lib/site";
 import { areaSlug, stateSlug } from "../lib/locations";
 import { AreaIndex } from "../types/areas";
 import { Catalogue } from "../types/catalogue";
@@ -10,15 +10,12 @@ import { Catalogue } from "../types/catalogue";
 const PRIORITY: Record<string, number> = {
   "/": 1,
   "/features": 0.8,
-  "/preview": 0.7,
-  "/signup": 0.6,
   "/seller-terms": 0.4,
   "/guides/sellers": 0.6,
   "/guides/buyers": 0.6,
   "/guides/community": 0.5,
   "/terms": 0.3,
   "/privacy": 0.3,
-  "/login": 0.3,
 };
 
 // New products show up within the hour.
@@ -34,7 +31,7 @@ interface SitemapEntries {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   if (isStaging) return [];
 
-  const pages: MetadataRoute.Sitemap = PUBLIC_ROUTES.map((path) => ({
+  const pages: MetadataRoute.Sitemap = PUBLIC_ROUTES.filter((path) => !NOT_IN_SITEMAP.has(path)).map((path) => ({
     url: `${SITE_URL}${path === "/" ? "" : path}`,
     lastModified: new Date(),
     changeFrequency: path === "/" ? "weekly" : "monthly",

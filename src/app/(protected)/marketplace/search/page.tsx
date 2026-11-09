@@ -1,9 +1,9 @@
 "use client";
 
 import { Suspense, useState } from "react";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { ArrowLeft, Search } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 
 import { useProducts } from "@/src/hooks/use-products";
 import Input from "@/src/components/ui/input";
@@ -12,6 +12,8 @@ import ProductCard from "../components/product-card";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 
 function SearchPageContent() {
+  // Back to wherever the user came from; /marketplace if they landed here directly.
+  const goBack = useGoBack("/marketplace");
   const searchParams = useSearchParams();
   const [search, setSearch] = useState(searchParams.get("q") ?? "");
   const [page, setPage] = useState(1);
@@ -25,13 +27,14 @@ function SearchPageContent() {
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 lg:px-8">
       <div className="space-y-4">
-        <Link
-          href="/marketplace"
+        <button
+          type="button"
+          onClick={() => goBack()}
           className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
         >
           <ArrowLeft size={15} />
-          Back to marketplace
-        </Link>
+          Back
+        </button>
 
         <h1 className="font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
           Search products

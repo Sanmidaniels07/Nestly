@@ -78,13 +78,13 @@ export default function MarketplaceHero() {
           </span>
 
           <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[40px] leading-[1.05] sm:text-[54px]">
-            Shop from people
+            Shop with sellers
             <br />
-            <em className="text-violet-200">you know.</em>
+            <em className="text-violet-200">you can trust.</em>
           </h1>
 
           <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-violet-100/90">
-            Discover stores run by people in your circle and around you — pay securely, track every order and confirm delivery with your own code.
+            Discover trusted stores near you — pay securely, track every order and confirm delivery with your own code.
           </p>
 
           <form
