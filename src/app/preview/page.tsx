@@ -18,6 +18,7 @@ import {
 import Button from "@/src/components/ui/button";
 import Card from "@/src/components/ui/card";
 import GuestGuard from "@/src/components/guards/GuestGuard";
+import SiteFooter from "@/src/components/layout/site-footer";
 
 function MockCard({
   icon: Icon,
@@ -297,6 +298,7 @@ export default function PreviewPage() {
           </motion.div>
         </section>
       </main>
+      <SiteFooter />
     </GuestGuard>
   );
 }

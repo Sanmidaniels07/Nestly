@@ -15,6 +15,7 @@ import {
 
 import Button from "@/src/components/ui/button";
 import GuestGuard from "@/src/components/guards/GuestGuard";
+import SiteFooter from "@/src/components/layout/site-footer";
 
 interface Feature {
   icon: typeof Users;
@@ -158,6 +159,7 @@ export default function FeaturesPage() {
           </motion.div>
         </section>
       </main>
+      <SiteFooter />
     </GuestGuard>
   );
 }
