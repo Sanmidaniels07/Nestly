@@ -18,6 +18,7 @@ import Button from "@/src/components/ui/button";
 import Card from "@/src/components/ui/card";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import SiteFooter from "@/src/components/layout/site-footer";
+import TourVideo from "@/src/components/marketing/tour-video";
 import {
   BirthdayDemo,
   ChatDemo,
@@ -99,6 +100,10 @@ export default function PreviewPage() {
               trusted sellers.
             </p>
           </motion.div>
+        </section>
+
+        <section className="mx-auto mt-14 max-w-6xl px-6">
+          <TourVideo />
         </section>
 
         <section className="mx-auto mt-20 grid max-w-6xl gap-6 px-6 md:grid-cols-2">
