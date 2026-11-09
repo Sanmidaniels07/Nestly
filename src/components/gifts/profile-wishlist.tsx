@@ -2,9 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Gift, Heart, Lock, Settings2 } from "lucide-react";
+import { ArrowLeft, Eye, Gift, Heart, Lock, Settings2 } from "lucide-react";
 
 import { useUserWishlist } from "@/src/hooks/use-wishlist";
+import { useGoBack } from "@/src/hooks/use-go-back";
 import Skeleton from "@/src/components/ui/skeleton";
 
 const naira = (value: number) =>
@@ -26,6 +27,8 @@ export default function ProfileWishlist({
   isSelf: boolean;
 }) {
   const { data, isLoading, isError } = useUserWishlist(userId, true);
+  // Back to wherever they opened the preview from (usually Saved).
+  const goBack = useGoBack("/marketplace/saved");
   const items = data?.items ?? [];
   const first = firstName(name);
 
@@ -50,6 +53,21 @@ export default function ProfileWishlist({
 
   return (
     <div className="space-y-4">
+      {isSelf && (
+        // Previewing your own wishlist: a way back that stays in view while scrolling.
+        <div className="sticky top-[72px] z-20 flex items-center justify-between gap-3 rounded-2xl border border-line bg-surface/95 px-3 py-2.5 shadow-lg backdrop-blur">
+          <button
+            type="button"
+            onClick={() => goBack()}
+            className="flex items-center gap-1.5 rounded-xl bg-violet-600 px-3.5 py-2 text-[13px] font-semibold text-white transition hover:brightness-110"
+          >
+            <ArrowLeft size={15} /> Back
+          </button>
+          <span className="flex items-center gap-1.5 text-[12.5px] text-muted">
+            <Eye size={14} className="text-violet-600 dark:text-violet-300" /> Preview - what others see
+          </span>
+        </div>
+      )}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-violet-200 bg-violet-50/70 px-4 py-3 dark:border-violet-500/25 dark:bg-violet-500/10">
         <p className="flex items-center gap-2 text-[13px] text-ink-2">
           <Gift size={16} className="shrink-0 text-violet-600 dark:text-violet-300" />

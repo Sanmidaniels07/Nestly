@@ -6,6 +6,7 @@ import SavedToolbar from "./components/saved-toolbar";
 import SavedGrid from "./components/saved-grid";
 import WishlistSharing from "./components/wishlist-sharing";
 import { useWishlist } from "@/src/hooks/use-wishlist";
+import BackButton from "@/src/components/ui/back-button";
 
 export default function SavedProductsPage() {
   const [search, setSearch] = useState("");
@@ -13,6 +14,8 @@ export default function SavedProductsPage() {
 
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+      <BackButton fallbackHref="/marketplace" />
+
       <SavedHeader count={wishlist?.length} />
 
       <WishlistSharing />
