@@ -4,6 +4,7 @@ import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { ArrowDown, ArrowLeft, Loader2, Store } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 import toast from "react-hot-toast";
 
 import { useConversations } from "@/src/hooks/use-conversations";
@@ -69,6 +70,7 @@ export default function ConversationThreadPage({ params }: { params: Promise<{ i
 
 function ConversationThread({ id }: { id: string }) {
   const router = useRouter();
+  const goBack = useGoBack("/messages");
   const searchParams = useSearchParams();
   const currentUserId = useAuthStore((state) => state.user?.id);
 
@@ -175,9 +177,9 @@ function ConversationThread({ id }: { id: string }) {
       <div className="flex items-center gap-2 border-b border-line bg-surface/90 px-2 py-2.5 backdrop-blur sm:px-4">
         <button
           type="button"
-          onClick={() => router.push("/messages")}
+          onClick={() => goBack()}
           className="rounded-full p-2 text-muted transition-colors hover:bg-surface-sunken lg:hidden"
-          aria-label="Back to chats"
+          aria-label="Back"
         >
           <ArrowLeft size={19} />
         </button>

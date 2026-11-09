@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowLeft, Camera, BadgeCheck } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 import { motion } from "framer-motion";
 import { Profile } from "@/src/types/profile";
 import ImageLightbox from "@/src/components/ui/image-lightbox";
@@ -13,7 +13,7 @@ interface Props {
 }
 
 export default function ProfileCover({ profile, onEditCover }: Props) {
-  const router = useRouter();
+  const goBack = useGoBack("/feed");
   const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
 
   return (
@@ -37,7 +37,7 @@ export default function ProfileCover({ profile, onEditCover }: Props) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent" />
 
         <button
-          onClick={() => router.back()}
+          onClick={() => goBack()}
           aria-label="Go back"
           className="
             absolute left-5 top-5 flex h-10 w-10 items-center justify-center

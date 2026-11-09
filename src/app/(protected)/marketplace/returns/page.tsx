@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { ArrowLeft, RotateCcw } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 
 import { useReturnRequests } from "@/src/hooks/use-return-requests";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -17,6 +17,8 @@ const statusTone: Record<string, string> = {
 };
 
 export default function MyReturnsPage() {
+  // Back to wherever the user came from; /marketplace/orders if they landed here directly.
+  const goBack = useGoBack("/marketplace/orders");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useReturnRequests({ page, limit: 10 });
   const returns = data?.returns ?? [];
@@ -24,13 +26,14 @@ export default function MyReturnsPage() {
   return (
     <div className="mx-auto max-w-5xl space-y-6 px-4 py-8 sm:px-6">
       <div>
-        <Link
-          href="/marketplace/orders"
+        <button
+          type="button"
+          onClick={() => goBack()}
           className="inline-flex items-center gap-1.5 text-[13px] font-medium text-muted transition-colors hover:text-violet-600 dark:hover:text-violet-400"
         >
           <ArrowLeft size={15} />
-          Back to orders
-        </Link>
+          Back
+        </button>
 
         <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[30px] italic text-ink sm:text-[34px]">
           My returns

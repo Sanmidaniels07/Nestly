@@ -1,9 +1,6 @@
-import { Suspense } from "react";
-
 import AppShell
 from "@/src/components/layout/app-shell";
 import AuthGuard from "@/src/components/guards/AuthGuard";
-import { NavigationTracker } from "@/src/hooks/use-go-back";
 import type { Metadata } from "next";
 
 // Everything in here needs an account - crawlers only ever see a login
@@ -22,9 +19,6 @@ export default function ProtectedLayout({
 }) {
   return (
     <AuthGuard>
-      <Suspense fallback={null}>
-        <NavigationTracker />
-      </Suspense>
       <AppShell>
         {children}
       </AppShell>

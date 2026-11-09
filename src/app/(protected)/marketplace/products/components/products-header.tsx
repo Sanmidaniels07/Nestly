@@ -1,18 +1,21 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowLeft, MapPin } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 
 export default function ProductsHeader() {
+  // Back to wherever the user came from; /marketplace if they landed here directly.
+  const goBack = useGoBack("/marketplace");
   return (
     <section className="space-y-4">
-      <Link
-        href="/marketplace"
+      <button
+        type="button"
+        onClick={() => goBack()}
         className="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 hover:underline"
       >
         <ArrowLeft size={15} />
-        Back to marketplace
-      </Link>
+        Back
+      </button>
 
       <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
         <div>

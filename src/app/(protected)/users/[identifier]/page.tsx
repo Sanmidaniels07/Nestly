@@ -4,6 +4,7 @@ import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Ban, CalendarDays, Globe, MapPin, MessageCircle, ShieldOff, Users } from "lucide-react";
+import { useGoBack } from "@/src/hooks/use-go-back";
 import {
   FaLinkedin,
   FaInstagram,
@@ -52,6 +53,7 @@ export default function UserProfilePage({
 }) {
   const { identifier } = use(params);
   const router = useRouter();
+  const goBack = useGoBack("/feed");
   const authUser = useAuthStore((state) => state.user);
   const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
 
@@ -107,7 +109,7 @@ export default function UserProfilePage({
   return (
     <div className="mx-auto max-w-3xl space-y-8 pb-20 pt-6">
       <button
-        onClick={() => router.back()}
+        onClick={() => goBack()}
         className="flex items-center gap-1.5 text-[13px] font-medium text-muted transition-colors hover:text-violet-700 dark:hover:text-violet-300"
       >
         <ArrowLeft size={14} />

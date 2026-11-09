@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 
 import ShopShell from "@/src/components/layout/shop-shell";
-import { NavigationTracker } from "@/src/hooks/use-go-back";
 import { isStaging } from "@/src/lib/environment";
 
 // Product and store pages: open to everyone (buying still needs an
@@ -15,9 +13,6 @@ export const metadata: Metadata = {
 export default function ShopLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <Suspense fallback={null}>
-        <NavigationTracker />
-      </Suspense>
       <ShopShell>{children}</ShopShell>
     </>
   );

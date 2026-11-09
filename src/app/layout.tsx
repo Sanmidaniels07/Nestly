@@ -7,6 +7,7 @@ import SiteAnalytics from "../components/site-analytics";
 import AdTags from "../components/consent/ad-tags";
 import CookieBanner from "../components/consent/cookie-banner";
 import { isStaging } from "../lib/environment";
+import { NavigationTracker } from "../hooks/use-go-back";
 import { SITE_DESCRIPTION, SITE_HOME_TITLE, SITE_NAME, SITE_URL, organizationJsonLd } from "../lib/site";
 import type { Metadata, Viewport } from "next";
 
@@ -74,6 +75,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
         <Providers>
+          <NavigationTracker />
           <Navbar/>
           {children}
         </Providers>
