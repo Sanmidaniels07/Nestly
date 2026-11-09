@@ -27,7 +27,7 @@ const TRUST = [
   { icon: ShieldCheck, title: "Secure checkout", body: "Card or transfer via Paystack" },
   { icon: KeyRound, title: "Delivery code", body: "Confirm your order arrived" },
   { icon: Truck, title: "Delivery or pickup", body: "Zones set by each seller" },
-  { icon: RotateCcw, title: "7-day returns", body: "After delivery is confirmed" },
+  { icon: RotateCcw, title: "3-day returns", body: "If it's damaged or wrong" },
 ];
 
 // Rotations for the floating product cards on the right.

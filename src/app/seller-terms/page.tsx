@@ -10,6 +10,8 @@ import {
   LEGAL_WHATSAPP_URL,
   PAYOUT_HOLD_HOURS,
   RETURN_WINDOW_DAYS,
+  PERISHABLE_REPORT_HOURS,
+  RETURN_POLICY_EFFECTIVE,
 } from "@/src/lib/legal";
 import { OG_IMAGE } from "@/src/lib/site";
 
@@ -177,9 +179,15 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          You must honour the buyer protections in the <Link href="/terms#returns">Terms of Service</Link>, including returns requested within{" "}
-          {RETURN_WINDOW_DAYS} days of delivery for faulty, damaged, wrong or significantly not-as-described items. Respond to return requests promptly in
-          your dashboard.
+          Nestly&apos;s returns policy in the <Link href="/terms#returns">Terms of Service</Link> applies to every order and replaces any return policy
+          of your own (stores no longer set one). Buyers may report an item that is damaged, spoiled or expired, faulty, the wrong item, or
+          significantly not as described within <strong>{RETURN_WINDOW_DAYS} days</strong> of delivery being confirmed - or within{" "}
+          <strong>{PERISHABLE_REPORT_HOURS} hours</strong> for perishable categories such as food, cakes and groceries, where the buyer sends a photo
+          instead of returning the item. There are no change-of-mind returns. You may not refuse a valid report, and you must respond to reports
+          promptly in your dashboard.
+        </p>
+        <p>
+          This policy applies to items delivered from {RETURN_POLICY_EFFECTIVE}. By continuing to sell on Nestly after that date you accept it.
         </p>
         <p>
           If an order is cancelled before fulfilment or a return is approved, the buyer is refunded. Where you have already been paid for that order,

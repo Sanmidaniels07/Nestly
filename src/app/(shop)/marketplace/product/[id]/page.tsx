@@ -98,13 +98,14 @@ const breadcrumbJsonLd = (product: Product) => {
   };
 };
 
-// Nestly's return rule (faulty, damaged, not as described or wrong item).
-const returnPolicyJsonLd = {
+// Nestly's returns policy (damaged, faulty, wrong or not as described):
+// 3 days, or 1 day (24 hours) for perishables.
+const returnPolicyJsonLd = (perishable: boolean) => ({
   "@type": "MerchantReturnPolicy",
   applicableCountry: "NG",
   returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-  merchantReturnDays: RETURN_WINDOW_DAYS,
-};
+  merchantReturnDays: perishable ? 1 : RETURN_WINDOW_DAYS,
+});
 
 // One entry per state the seller delivers to (with that state's cheapest
 // fee), plus "anywhere in Nigeria" for a flat rate.
@@ -135,7 +136,7 @@ const productJsonLd = (product: Product, reviews: ReviewsPage | null, delivery: 
   const high = Math.max(...prices);
   const availability = product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock";
   const seller = product.store ? { "@type": "Organization", name: product.store.name, url: `${SITE_URL}/marketplace/seller/${product.store.slug}` } : undefined;
-  const offerExtras = { shippingDetails: shippingJsonLd(delivery), hasMerchantReturnPolicy: returnPolicyJsonLd };
+  const offerExtras = { shippingDetails: shippingJsonLd(delivery), hasMerchantReturnPolicy: returnPolicyJsonLd(!!product.category?.isPerishable) };
 
   // Real buyers' reviews of this version of the product, as shown on the page.
   const shown = (reviews?.reviews ?? []).filter((r) => !r.earlierVersion && r.user?.name).slice(0, 5);

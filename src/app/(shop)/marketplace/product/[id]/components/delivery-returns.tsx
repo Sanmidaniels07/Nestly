@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { MapPin, RotateCcw, Store as StoreIcon, Truck } from "lucide-react";
-import { RETURN_WINDOW_DAYS } from "@/src/lib/legal";
+import { PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
 import { ProductDelivery, regionLabel } from "@/src/lib/product-delivery";
 
 const naira = (value: number) =>
@@ -81,22 +81,18 @@ export default function DeliveryReturns({ delivery }: { delivery: ProductDeliver
 
         <div>
           <h3 className="flex items-center gap-2 text-[14px] font-semibold text-ink">
-            <RotateCcw size={16} className="text-violet-600 dark:text-violet-400" /> {RETURN_WINDOW_DAYS}-day returns
+            <RotateCcw size={16} className="text-violet-600 dark:text-violet-400" />{" "}
+            {delivery.perishable ? `Report a problem within ${PERISHABLE_REPORT_HOURS} hours` : `${RETURN_WINDOW_DAYS}-day returns`}
           </h3>
           <p className="mt-2 text-[14px] leading-relaxed text-ink-3">
-            Request a return within {RETURN_WINDOW_DAYS} days of delivery if the item is faulty, damaged, significantly not as
-            described, or the wrong item. Food, cakes and custom-made goods can usually only be returned if they arrive damaged,
-            spoiled or wrong.
+            {delivery.perishable
+              ? `If it arrives damaged, spoiled, wrong or not as described, report it within ${PERISHABLE_REPORT_HOURS} hours of delivery with a photo - you don't send it back, and you're refunded or sent a replacement.`
+              : `If it arrives damaged, faulty, wrong or significantly not as described, report it within ${RETURN_WINDOW_DAYS} days of delivery for a refund.`}{" "}
+            No change-of-mind returns. Nestly&apos;s policy covers every store.
           </p>
           <p className="mt-2 text-[14px] leading-relaxed text-ink-3">
             Pay securely with Paystack checkout, then confirm delivery with your delivery code when the item arrives.
           </p>
-          {delivery.returnPolicy && (
-            <div className="mt-3 rounded-xl bg-surface-2 p-3">
-              <p className="text-[12px] font-semibold uppercase tracking-wide text-muted">This seller&apos;s policy</p>
-              <p className="mt-1 whitespace-pre-line text-[13px] leading-relaxed text-ink-3">{delivery.returnPolicy}</p>
-            </div>
-          )}
           <Link href="/guides/buyers" className="mt-3 inline-block text-[13px] font-semibold text-violet-600 hover:underline dark:text-violet-400">
             How returns and refunds work
           </Link>

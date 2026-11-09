@@ -11,6 +11,7 @@ export type NotificationTargetType =
   | "BIRTHDAY"
   | "BIRTHDAY_SOON"
   | "GIFT"
+  | "SELLER_AGREEMENT"
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
   | "SELLER_SETUP"

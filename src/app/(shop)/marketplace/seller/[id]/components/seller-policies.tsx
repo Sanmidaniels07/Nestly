@@ -2,6 +2,7 @@
 
 import { RotateCcw, Truck, ShieldCheck, CheckCircle2 } from "lucide-react";
 import { Store } from "@/src/types/store";
+import { PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
 
 interface Props {
   store: Store;
@@ -12,7 +13,8 @@ export default function SellerPolicies({ store }: Props) {
     {
       icon: RotateCcw,
       title: "Returns",
-      value: store.returnPolicy ?? "Not specified by this seller.",
+      // One Nestly policy for every store.
+      value: `Nestly's returns policy: report a damaged, faulty, wrong or not-as-described item within ${RETURN_WINDOW_DAYS} days of delivery (${PERISHABLE_REPORT_HOURS} hours for food and cakes).`,
     },
     {
       icon: Truck,

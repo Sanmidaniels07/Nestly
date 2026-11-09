@@ -200,7 +200,7 @@ function OrderedProductItem({
         )}
 
         {returnMode && (
-          <RequestReturnForm orderItemId={item.id} mode={returnMode} onDone={() => setReturnMode(null)} />
+          <RequestReturnForm orderItemId={item.id} mode={returnMode} perishable={item.perishable} onDone={() => setReturnMode(null)} />
         )}
       </div>
     </article>

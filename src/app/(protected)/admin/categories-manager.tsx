@@ -62,6 +62,12 @@ export default function CategoriesManager() {
                 <th className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle">
                   Featured
                 </th>
+                <th
+                  className="px-5 py-3 text-[12px] font-medium uppercase tracking-wide text-subtle"
+                  title="Perishable: buyers have 24 hours (with a photo) to report a problem instead of 3 days"
+                >
+                  Perishable
+                </th>
                 <th className="px-5 py-3" />
               </tr>
             </thead>
@@ -157,6 +163,22 @@ function CategoryRow({ category }: { category: Category }) {
           aria-label={category.isFeatured ? "Unfeature category" : "Feature category"}
         >
           <Star size={13} className={category.isFeatured ? "fill-violet-600" : ""} />
+        </button>
+      </td>
+      <td className="px-5 py-3.5">
+        {/* Food, cakes, groceries: 24 hours to report a problem, with a photo. */}
+        <button
+          onClick={() => updateCategory({ id: category.id, data: { isPerishable: !category.isPerishable } })}
+          disabled={isUpdating}
+          aria-pressed={!!category.isPerishable}
+          title={category.isPerishable ? "24-hour reporting window (tap to change to 3 days)" : "3-day window (tap to make perishable - 24 hours)"}
+          className={`rounded-full border px-2.5 py-1 text-[11.5px] font-semibold transition-colors disabled:opacity-50 ${
+            category.isPerishable
+              ? "border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300"
+              : "border-line-strong text-subtle hover:text-amber-600"
+          }`}
+        >
+          {category.isPerishable ? "24 hours" : "3 days"}
         </button>
       </td>
       <td className="px-5 py-3.5 text-right">

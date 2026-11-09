@@ -22,6 +22,8 @@ export interface OrderItem {
   awaitingConfirmation?: boolean;
   returnWindowEndsAt?: string | null;
   returnWindowOpen?: boolean;
+  /** Food, cakes, groceries: 24 hours to report a problem, photo required. */
+  perishable?: boolean;
   // The listing as it was when ordered (product.title/images already show it).
   productTitle?: string | null;
   productImage?: string | null;

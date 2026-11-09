@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import GuideDocument, { GuidePart } from "@/src/components/guides/guide-document";
-import { AUTO_CONFIRM_DAYS, PAYOUT_HOLD_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
+import { AUTO_CONFIRM_DAYS, PAYOUT_HOLD_HOURS, PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
 import { OG_IMAGE } from "@/src/lib/site";
 
 export const metadata: Metadata = {
@@ -308,7 +308,9 @@ const parts: GuidePart[] = [
         where: { label: "Seller Hub → Returns", href: "/settings/marketplace?tab=returns" },
         body: (
           <p>
-            Buyers can ask for a return within {RETURN_WINDOW_DAYS} days of delivery. Review each request and tap <strong>Approve</strong> or{" "}
+            Nestly&apos;s returns policy covers every store: buyers can report an item that&apos;s damaged, spoiled, faulty, wrong or not as described
+            within {RETURN_WINDOW_DAYS} days of delivery ({PERISHABLE_REPORT_HOURS} hours, with a photo, for food, cakes and groceries) - no
+            change-of-mind returns. Review each request and tap <strong>Approve</strong> or{" "}
             <strong>Reject</strong>, then <strong>Mark as refunded</strong> once the refund is done. You can reply once to each review on your store
             page - a polite reply wins future buyers.
           </p>
