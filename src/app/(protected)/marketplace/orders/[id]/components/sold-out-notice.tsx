@@ -9,7 +9,8 @@ function money(value: number) {
 // Nestly cancelled this paid order because the item sold out to someone
 // else just before the payment landed - say so, and where the money is.
 export default function SoldOutNotice({ order }: { order: Order }) {
-  if (!order.cancelReason) return null;
+  // Gifts have their own notice (GiftNotice).
+  if (!order.cancelReason || order.gift) return null;
 
   return (
     <section className="flex gap-3.5 rounded-2xl border border-amber-200 bg-amber-50 p-5 dark:border-amber-500/30 dark:bg-amber-500/10">

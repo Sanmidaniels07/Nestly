@@ -109,6 +109,15 @@ export interface Order {
   cancelReason?: string | null;
   /** That order's automatic refund: REQUESTED, or FAILED (the team refunds by hand). */
   refundStatus?: "REQUESTED" | "FAILED" | null;
+  /** Set when the order is a gift sent through a gift link (buyer view). */
+  gift?: {
+    code: string;
+    status: "UNPAID" | "SENT" | "CLAIMED" | "DECLINED" | "EXPIRED" | "CANCELLED";
+    recipientName: string;
+    recipientId: string | null;
+    expiresAt: string | null;
+    claimedAt: string | null;
+  } | null;
   createdAt: string;
   updatedAt: string;
 }

@@ -9,6 +9,11 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
     case "USER":
     case "BIRTHDAY":
       return notification.targetId ? `/users/${notification.targetId}` : null;
+    // A day before: straight to their wishlist for gift ideas.
+    case "BIRTHDAY_SOON":
+      return notification.targetId ? `/users/${notification.targetId}?tab=wishlist` : null;
+    case "GIFT":
+      return notification.targetId ? `/gift/${notification.targetId}` : null;
     case "CONVERSATION":
       return notification.targetId ? `/messages/${notification.targetId}` : null;
     case "PRODUCT":

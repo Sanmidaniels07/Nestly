@@ -4,6 +4,7 @@ import { useState } from "react";
 import SavedHeader from "./components/saved-header";
 import SavedToolbar from "./components/saved-toolbar";
 import SavedGrid from "./components/saved-grid";
+import WishlistSharing from "./components/wishlist-sharing";
 import { useWishlist } from "@/src/hooks/use-wishlist";
 
 export default function SavedProductsPage() {
@@ -13,6 +14,8 @@ export default function SavedProductsPage() {
   return (
     <div className="mx-auto max-w-[1600px] space-y-6 px-4 py-8 sm:px-6 lg:px-8">
       <SavedHeader count={wishlist?.length} />
+
+      <WishlistSharing />
 
       <SavedToolbar search={search} onSearchChange={setSearch} />
 

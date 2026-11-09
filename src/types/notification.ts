@@ -9,6 +9,8 @@ export type NotificationTargetType =
   | "ORDER"
   | "SELLER_ORDER"
   | "BIRTHDAY"
+  | "BIRTHDAY_SOON"
+  | "GIFT"
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
   | "SELLER_SETUP"

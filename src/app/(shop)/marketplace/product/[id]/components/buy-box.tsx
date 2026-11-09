@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, ShieldCheck, Check } from "lucide-react";
+import { Heart, ShieldCheck, Check, Gift } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { Product } from "@/src/types/product";
@@ -86,6 +86,15 @@ export default function BuyBox({ product }: Props) {
         },
       }
     );
+  };
+
+  // Gift it: the recipient adds their own address when they accept it.
+  const handleSendGift = () => {
+    if (outOfStock || !choiceMade) return;
+    if (!requireLogin("Log in or create a free account to send a gift.")) return;
+    const params = new URLSearchParams({ product: product.id, qty: String(quantity) });
+    if (match?.id) params.set("variation", match.id);
+    router.push(`/marketplace/send-gift?${params}`);
   };
 
   const handleBuyNow = () => {
@@ -184,6 +193,17 @@ export default function BuyBox({ product }: Props) {
           className="w-full rounded-xl border border-violet-600 py-3.5 text-[14px] font-semibold text-violet-700 dark:text-violet-300 transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10 disabled:cursor-not-allowed disabled:border-line-strong disabled:text-subtle disabled:hover:bg-transparent"
         >
           Buy now
+        </button>
+        )}
+
+        {!soldOut && (
+        <button
+          onClick={handleSendGift}
+          disabled={outOfStock || !choiceMade}
+          className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-[13.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 disabled:cursor-not-allowed disabled:text-subtle disabled:hover:bg-transparent dark:text-violet-300 dark:hover:bg-violet-500/10"
+        >
+          <Gift size={16} /> Send as a gift
+          <span className="text-[11.5px] font-normal text-muted">- no address needed</span>
         </button>
         )}
       </div>
