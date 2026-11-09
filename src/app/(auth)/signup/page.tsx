@@ -11,7 +11,7 @@ import PasswordInput from "@/src/components/ui/password-input";
 import Button from "@/src/components/ui/button";
 import DateOfBirthPicker from "@/src/components/ui/date-picker";
 import { motion } from "framer-motion";
-import { Users, Sparkles, User, Mail, Lock, LockKeyhole, Cake } from "lucide-react";
+import { Users, User, Mail, Lock, LockKeyhole, Cake, Gift, ShoppingBag } from "lucide-react";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
 import { referralCode } from "@/src/lib/referral";
@@ -47,11 +47,11 @@ export default function SignupPage() {
   return (
     <GuestGuard>
       <div className="min-h-screen bg-gradient-to-br from-canvas via-canvas-via to-canvas-to flex items-center justify-center pt-20 pb-12 px-3 sm:px-6">
-        <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-center">
+        <div className="max-w-5xl w-full grid md:grid-cols-2 gap-12 items-start">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="hidden md:flex flex-col justify-center"
+            className="hidden md:flex md:sticky md:top-28 flex-col justify-center pt-6"
           >
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-6">
@@ -61,27 +61,45 @@ export default function SignupPage() {
                   Nestly
                 </div>
               </div>
-              <h1 className="text-5xl font-bold leading-tight text-ink">
-                Join the
+              <h1 className="font-[family-name:var(--font-fraunces)] text-5xl leading-[1.05] tracking-tight text-ink">
+                Come build
                 <br />
-                nest
+                <em className="text-violet-600 dark:text-violet-400">your nest.</em>
               </h1>
-              <p className="mt-6 text-xl text-muted max-w-md">
-                Connect with like-minded people, discover communities, and grow
-                together.
+              <p className="mt-6 text-lg text-muted max-w-md">
+                Your friends, your celebrations and trusted sellers, together in one app.
               </p>
             </div>
 
-            <div className="flex items-center gap-4 text-sm text-muted">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-violet-500" />
-                <span>Meaningful connections</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-violet-500" />
-                <span>Real communities</span>
-              </div>
-            </div>
+            <ul className="space-y-4 max-w-md">
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                  <Gift className="h-[18px] w-[18px]" />
+                </span>
+                <span>
+                  <span className="block font-semibold text-ink">Never miss a birthday</span>
+                  <span className="block text-sm text-muted">Get reminded, send wishes and gifts from their wishlist.</span>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                  <ShoppingBag className="h-[18px] w-[18px]" />
+                </span>
+                <span>
+                  <span className="block font-semibold text-ink">Shop from trusted sellers</span>
+                  <span className="block text-sm text-muted">Secure checkout, and a code that confirms your order arrived.</span>
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                  <Users className="h-[18px] w-[18px]" />
+                </span>
+                <span>
+                  <span className="block font-semibold text-ink">Find your people</span>
+                  <span className="block text-sm text-muted">Follow friends, join communities and RSVP to events.</span>
+                </span>
+              </li>
+            </ul>
           </motion.div>
 
           {/* Signup Form */}
@@ -99,7 +117,7 @@ export default function SignupPage() {
                   Create your account
                 </h2>
                 <p className="text-muted mt-2">
-                  Your people, your moments, one nest
+                  Free to join. Takes less than a minute.
                 </p>
               </div>
 
