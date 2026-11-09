@@ -96,7 +96,7 @@ export default function ShareStoreCard() {
         <div className="min-w-0">
           <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic leading-tight text-ink">Share your store</h2>
           <p className="mt-1 text-[13px] leading-relaxed text-muted">
-            Your followers already trust you - send them to your Nestly store. Post it on your status, stories and bio.
+            Share your store link on your status, stories and bio so more people can find you and buy.
           </p>
         </div>
       </div>
