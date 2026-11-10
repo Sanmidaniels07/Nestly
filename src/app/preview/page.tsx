@@ -46,15 +46,16 @@ function MockCard({
   className?: string;
 }) {
   return (
-    <Card className={`h-full overflow-hidden border-line-strong transition-shadow duration-300 hover:shadow-2xl ${className}`}>
-      <div className="flex items-center gap-2.5 border-b border-line-soft bg-surface px-5 py-4">
+    <Card className={`h-full overflow-hidden rounded-3xl border-line-strong p-0 transition-shadow duration-300 hover:shadow-2xl sm:rounded-[28px] ${className}`}>
+      <div className="flex items-center gap-2.5 border-b border-line-soft bg-surface px-4 py-3.5 sm:px-5 sm:py-4">
         <Icon size={17} style={{ color }} />
         <span className="text-[13.5px] font-semibold text-ink">{label}</span>
         <span className="ml-auto flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider" style={{ color }}>
           <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ backgroundColor: color }} /> Live
         </span>
       </div>
-      <div className="@container bg-canvas/50 p-5">{children}</div>
+      {/* Tighter on phones so the demo gets the width. */}
+      <div className="@container bg-canvas/50 p-3 sm:p-5">{children}</div>
     </Card>
   );
 }
@@ -106,7 +107,7 @@ export default function PreviewPage() {
           <TourVideo />
         </section>
 
-        <section className="mx-auto mt-20 grid max-w-6xl gap-6 px-6 md:grid-cols-2">
+        <section className="mx-auto mt-20 grid max-w-6xl gap-4 px-4 sm:gap-6 sm:px-6 md:grid-cols-2">
           {CARDS.map((card, i) => {
             const Demo = card.demo;
             return (

@@ -161,7 +161,7 @@ export default function FeaturesPage() {
           </motion.div>
         </section>
 
-        <section className="mx-auto mt-24 max-w-6xl space-y-28 px-6">
+        <section className="mx-auto mt-24 max-w-6xl space-y-20 px-4 sm:space-y-28 sm:px-6">
           {features.map((feature, i) => (
             <FeatureRow key={feature.title} feature={feature} reversed={i % 2 === 1} />
           ))}
@@ -301,7 +301,7 @@ function FeatureVisual({ feature }: { feature: Feature }) {
 
   return (
     <div
-      className="relative overflow-hidden rounded-[32px] border border-line-strong bg-surface p-5 shadow-xl sm:p-8"
+      className="relative overflow-hidden rounded-3xl border border-line-strong bg-surface p-3 shadow-xl sm:rounded-[32px] sm:p-8"
       style={{
         backgroundImage: `radial-gradient(circle at 20% 10%, ${feature.bg} 0%, transparent 55%), radial-gradient(circle at 90% 100%, ${feature.bg} 0%, transparent 45%)`,
       }}
@@ -316,7 +316,7 @@ function FeatureVisual({ feature }: { feature: Feature }) {
             <span className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ backgroundColor: feature.color }} /> Live
           </span>
         </div>
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <Demo />
         </div>
       </div>
