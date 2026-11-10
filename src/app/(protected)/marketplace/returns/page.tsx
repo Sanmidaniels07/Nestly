@@ -8,6 +8,7 @@ import { useReturnRequests } from "@/src/hooks/use-return-requests";
 import { formatRelativeTime } from "@/src/lib/date";
 import Pagination from "@/src/components/ui/pagination";
 import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
+import ReturnEvidence from "@/src/components/returns/return-evidence";
 
 const statusTone: Record<string, string> = {
   REQUESTED: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
@@ -65,7 +66,7 @@ export default function MyReturnsPage() {
                   <p className="text-[14.5px] font-semibold text-ink">
                     {request.orderItem?.product.title ?? "Order item"}
                   </p>
-                  <p className="mt-1 text-[13px] text-muted">{request.reason}</p>
+                  <ReturnEvidence request={request} />
                   <p className="mt-1.5 text-[12px] text-subtle">
                     Requested {formatRelativeTime(request.createdAt)}
                   </p>

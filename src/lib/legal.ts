@@ -5,13 +5,18 @@ import { SUPPORT_WHATSAPP } from "./support";
 export const LEGAL_ENTITY = "Nestly";
 /** ", operated by X" once a registered company name is set; empty until then. */
 export const OPERATED_BY = LEGAL_ENTITY === "Nestly" ? "" : `, operated by ${LEGAL_ENTITY}`;
-export const LEGAL_LAST_UPDATED = "28 October 2026";
+export const LEGAL_LAST_UPDATED = "10 November 2026";
 export const LEGAL_EMAIL = "hello@nestlyapp.site";
 export const LEGAL_WHATSAPP_DISPLAY = `+${SUPPORT_WHATSAPP.slice(0, 3)} ${SUPPORT_WHATSAPP.slice(3, 6)} ${SUPPORT_WHATSAPP.slice(6, 9)} ${SUPPORT_WHATSAPP.slice(9)}`;
 export const LEGAL_WHATSAPP_URL = `https://wa.me/${SUPPORT_WHATSAPP}`;
 
 // Mirrors the backend so the documents say what the app actually does.
-export const RETURN_WINDOW_DAYS = 7;
+// Nestly's returns policy (from RETURN_POLICY_EFFECTIVE): report a problem
+// within 3 days of delivery being confirmed, 24 hours for perishables.
+export const RETURN_WINDOW_DAYS = 3;
+export const PERISHABLE_REPORT_HOURS = 24;
+export const PREVIOUS_RETURN_WINDOW_DAYS = 7;
+export const RETURN_POLICY_EFFECTIVE = "10 November 2026";
 export const AUTO_CONFIRM_DAYS = 5;
 export const PAYOUT_HOLD_HOURS = 48;
 export const MIN_AGE = 13;

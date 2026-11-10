@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import {
   Bell,
   Cake,
+  Gift,
   CheckCheck,
   Heart,
   MailIcon,
@@ -122,7 +123,7 @@ function NotificationRow({
 }) {
   const iconKey = iconKeyFor(notification.type);
   // Birthday reminders are SYSTEM-type, so pick their icon by target.
-  const Icon = notification.targetType === "BIRTHDAY" ? Cake : iconKey ? ICON_MAP[iconKey] : Bell;
+  const Icon = notification.targetType === "BIRTHDAY" || notification.targetType === "BIRTHDAY_SOON" ? Cake : notification.targetType === "GIFT" ? Gift : iconKey ? ICON_MAP[iconKey] : Bell;
 
   return (
     <button

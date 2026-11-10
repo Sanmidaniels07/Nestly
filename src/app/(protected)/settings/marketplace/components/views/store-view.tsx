@@ -1,5 +1,7 @@
 "use client";
 
+import { PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
+
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
@@ -358,7 +360,6 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
   const { mutate: updateStore, isPending } = useUpdateStore();
 
   const [form, setForm] = useState({
-    returnPolicy: "",
     shippingPolicy: "",
     warrantyPolicy: "",
   });
@@ -366,7 +367,6 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
   useEffect(() => {
     if (!store) return;
     setForm({
-      returnPolicy: store.returnPolicy ?? "",
       shippingPolicy: store.shippingPolicy ?? "",
       warrantyPolicy: store.warrantyPolicy ?? "",
     });
@@ -380,7 +380,6 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
     updateStore({
       id: storeId,
       data: {
-        returnPolicy: form.returnPolicy.trim() || undefined,
         shippingPolicy: form.shippingPolicy.trim() || undefined,
         warrantyPolicy: form.warrantyPolicy.trim() || undefined,
       },
@@ -395,11 +394,18 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
       <p className="mt-1 text-[13px] text-muted">
         Shown on your public store page to help buyers shop with confidence.
       </p>
+      <p className="mt-3 rounded-xl bg-violet-50 px-4 py-3 text-[12.5px] leading-relaxed text-ink-2 dark:bg-violet-500/10">
+        Returns follow <strong>Nestly&apos;s returns policy</strong> for every store: buyers can report an item that&apos;s damaged, spoiled,
+        faulty, wrong or not as described within {RETURN_WINDOW_DAYS} days of delivery ({PERISHABLE_REPORT_HOURS} hours, with a photo, for food,
+        cakes and groceries). No change-of-mind returns.{" "}
+        <a href="/seller-terms#returns" className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
+          Seller Agreement
+        </a>
+      </p>
 
       <div className="mt-6 space-y-4">
         {(
           [
-            ["returnPolicy", "Return policy"],
             ["shippingPolicy", "Shipping policy"],
             ["warrantyPolicy", "Warranty policy"],
           ] as const

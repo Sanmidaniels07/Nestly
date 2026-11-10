@@ -29,6 +29,8 @@ export interface UserProfile extends PublicUser {
   followingCount: number;
   postsCount: number;
   profileViews: number;
+  /** Whether this viewer may see their wishlist (gift ideas); count is null if not. */
+  wishlist?: { visibility: "PRIVATE" | "FOLLOWERS" | "EVERYONE"; canView: boolean; count: number | null };
 }
 
 export interface UserListParams {

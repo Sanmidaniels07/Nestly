@@ -10,6 +10,9 @@ import {
   LEGAL_WHATSAPP_URL,
   MIN_AGE,
   RETURN_WINDOW_DAYS,
+  PERISHABLE_REPORT_HOURS,
+  PREVIOUS_RETURN_WINDOW_DAYS,
+  RETURN_POLICY_EFFECTIVE,
 } from "@/src/lib/legal";
 import { OG_IMAGE } from "@/src/lib/site";
 
@@ -163,13 +166,24 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          You can request a return for a delivered item from <strong>My orders</strong> within {RETURN_WINDOW_DAYS} days of delivery being confirmed,
-          giving the reason. You can also report an item that was marked delivered but never reached you.
+          One returns policy - Nestly&apos;s - applies to every order, whichever store you buy from. If something is wrong with what you received, report
+          it from <strong>My orders</strong> within <strong>{RETURN_WINDOW_DAYS} days</strong> of delivery being confirmed, or within{" "}
+          <strong>{PERISHABLE_REPORT_HOURS} hours</strong> for perishable items such as food, cakes and groceries. You can also report an item that was
+          marked delivered but never reached you.
         </p>
         <p>
-          Returns are accepted where an item is faulty, damaged, significantly not as described, or the wrong item. Perishable or personalised items
-          (for example food, cakes or custom-made goods) can usually only be returned if they arrive damaged, spoiled or wrong. Sellers may offer a
-          more generous return policy on their store page. If you and the seller can&apos;t agree, Nestly Support will review the case and decide.
+          You can report an item that arrived <strong>damaged</strong>, <strong>spoiled or expired</strong>, <strong>faulty</strong>, the{" "}
+          <strong>wrong item</strong>, or <strong>significantly different from its description</strong>. Returns because you changed your mind are not
+          accepted.
+        </p>
+        <p>
+          For perishable items, add a photo of the problem - you don&apos;t send the item back, and you&apos;re refunded or sent a replacement once the
+          report is approved. For other items, the seller or Nestly may ask for photos or for the item to be returned before you&apos;re refunded. If you
+          and the seller can&apos;t agree, Nestly Support will review the evidence and decide.
+        </p>
+        <p>
+          Items whose delivery was confirmed before {RETURN_POLICY_EFFECTIVE} keep the {PREVIOUS_RETURN_WINDOW_DAYS}-day window that applied then.
+          Nothing in this policy takes away rights you have under Nigerian consumer protection law.
         </p>
       </>
     ),

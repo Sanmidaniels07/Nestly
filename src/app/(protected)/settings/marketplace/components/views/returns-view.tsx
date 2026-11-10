@@ -9,6 +9,7 @@ import { ReturnRequest } from "@/src/types/return-request";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
 import { ListSkeleton } from "@/src/components/skeletons/list-row-skeleton";
+import ReturnEvidence from "@/src/components/returns/return-evidence";
 
 const statusTone: Record<string, string> = {
   REQUESTED: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
@@ -61,7 +62,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
           <p className="mt-0.5 text-[12.5px] text-muted">
             {request.user?.name}
           </p>
-          <p className="mt-2 text-[13px] text-ink-2">{request.reason}</p>
+          <ReturnEvidence request={request} />
           <p className="mt-1.5 text-[12px] text-subtle">
             Requested {formatRelativeTime(request.createdAt)}
           </p>

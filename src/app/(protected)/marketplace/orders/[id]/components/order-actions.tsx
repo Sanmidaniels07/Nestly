@@ -45,7 +45,8 @@ export default function OrderActions({ order }: Props) {
           {added ? "Added to cart" : "Buy again"}
         </button>
 
-        {canCancel && (
+        {/* Gifts are cancelled (and refunded) from the gift page. */}
+        {canCancel && !order.gift && (
           <button
             onClick={() => cancelOrder(order.id)}
             disabled={isCancelling}

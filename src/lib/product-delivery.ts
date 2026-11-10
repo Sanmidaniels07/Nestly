@@ -20,14 +20,18 @@ export interface ProductDelivery {
   minFee: number | null;
   maxFee: number | null;
   shippingPolicy: string | null;
-  returnPolicy: string | null;
+  /** Food, cakes, groceries: 24 hours to report a problem instead of 3 days. */
+  perishable: boolean;
 }
 
 /**
  * Delivery for one product from its store's public zones: only zones whose
  * vehicle can carry it (same rule as checkout), grouped by state.
  */
-export const summarizeDelivery = (store: Pick<Store, "city" | "shippingOptions" | "shippingPolicy" | "returnPolicy">, product: Pick<Product, "deliveryVehicle">): ProductDelivery => {
+export const summarizeDelivery = (
+  store: Pick<Store, "city" | "shippingOptions" | "shippingPolicy">,
+  product: Pick<Product, "deliveryVehicle" | "category">
+): ProductDelivery => {
   const needed = product.deliveryVehicle ?? "BIKE";
   const zones = (store.shippingOptions ?? []).filter((zone: ShippingOption) => !zone.isArchived && canCarry(zone, needed));
   const delivery = zones.filter((zone) => zone.type === "DELIVERY");
@@ -56,7 +60,7 @@ export const summarizeDelivery = (store: Pick<Store, "city" | "shippingOptions" 
     minFee: fees.length ? Math.min(...fees) : null,
     maxFee: fees.length ? Math.max(...fees) : null,
     shippingPolicy: store.shippingPolicy?.trim() || null,
-    returnPolicy: store.returnPolicy?.trim() || null,
+    perishable: !!product.category?.isPerishable,
   };
 };
 

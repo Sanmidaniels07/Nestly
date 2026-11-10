@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Package, RotateCcw } from "lucide-react";
+import { Package, RotateCcw, Gift } from "lucide-react";
 
 export default function OrdersHeader() {
   return (
@@ -21,6 +21,14 @@ export default function OrdersHeader() {
         </div>
       </div>
 
+      <div className="flex flex-wrap gap-2">
+      <Link
+        href="/marketplace/gifts"
+        className="flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400"
+      >
+        <Gift size={14} />
+        My gifts
+      </Link>
       <Link
         href="/marketplace/returns"
         className="flex items-center gap-1.5 rounded-xl border border-line px-4 py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400"
@@ -28,6 +36,7 @@ export default function OrdersHeader() {
         <RotateCcw size={14} />
         My returns
       </Link>
+      </div>
     </section>
   );
 }

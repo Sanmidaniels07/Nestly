@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import GuideDocument, { GuidePart } from "@/src/components/guides/guide-document";
-import { AUTO_CONFIRM_DAYS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
+import { AUTO_CONFIRM_DAYS, PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
 import { OG_IMAGE } from "@/src/lib/site";
 
 export const metadata: Metadata = {
@@ -159,12 +159,14 @@ const parts: GuidePart[] = [
       },
       {
         id: "returns",
-        title: `Return an item within ${RETURN_WINDOW_DAYS} days`,
+        title: `Report a problem within ${RETURN_WINDOW_DAYS} days`,
         where: { label: "Order page → Request return", href: "/marketplace/orders" },
         body: (
           <p>
-            Tap <strong>Request return</strong> within {RETURN_WINDOW_DAYS} days of delivery and tell the seller what&apos;s wrong. Follow your requests
-            under <Link href="/marketplace/returns">Returns</Link>. Approved refunds are made within 7 business days to your original payment method.
+            If an item arrives damaged, faulty, the wrong item or significantly not as described, tap <strong>Request return</strong> within{" "}
+            {RETURN_WINDOW_DAYS} days of delivery and choose what&apos;s wrong. For food, cakes and groceries you have {PERISHABLE_REPORT_HOURS} hours -
+            add a photo and you don&apos;t need to send it back. There are no change-of-mind returns. Follow your requests under{" "}
+            <Link href="/marketplace/returns">Returns</Link>. Approved refunds are made within 7 business days to your original payment method.
           </p>
         ),
       },

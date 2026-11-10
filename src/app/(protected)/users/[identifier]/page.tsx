@@ -1,9 +1,9 @@
 "use client";
 
 import { use, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Ban, CalendarDays, Globe, MapPin, MessageCircle, ShieldOff, Users } from "lucide-react";
+import { ArrowLeft, Ban, CalendarDays, Gift, Globe, MapPin, MessageCircle, ShieldOff, Users } from "lucide-react";
 import { useGoBack } from "@/src/hooks/use-go-back";
 import {
   FaLinkedin,
@@ -31,6 +31,7 @@ import { useBlockedUsers } from "@/src/hooks/use-blocked-users";
 import { useBlockUser } from "@/src/hooks/use-block-user";
 import { useUnblockUser } from "@/src/hooks/use-unblock-user";
 import ImageLightbox from "@/src/components/ui/image-lightbox";
+import ProfileWishlist from "@/src/components/gifts/profile-wishlist";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -56,6 +57,9 @@ export default function UserProfilePage({
   const goBack = useGoBack("/feed");
   const authUser = useAuthStore((state) => state.user);
   const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
+  // ?tab=wishlist - e.g. from a "birthday is tomorrow" reminder.
+  const searchParams = useSearchParams();
+  const [tab, setTab] = useState<"posts" | "wishlist">(searchParams.get("tab") === "wishlist" ? "wishlist" : "posts");
 
   const { data: user, isLoading } = useUserProfile(identifier);
   const isSelf = !!user && user.id === authUser?.id;
@@ -266,6 +270,31 @@ export default function UserProfilePage({
         </div>
       </div>
 
+      {user.wishlist?.canView && (
+        <div role="tablist" className="flex gap-1 rounded-2xl border border-line bg-surface p-1">
+          {([
+            { key: "posts", label: "Posts", icon: Users },
+            { key: "wishlist", label: user.wishlist.count ? `Wishlist · ${user.wishlist.count}` : "Wishlist", icon: Gift },
+          ] as const).map(({ key, label, icon: Icon }) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={tab === key}
+              onClick={() => setTab(key)}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-xl py-2.5 text-[13.5px] font-semibold transition-colors ${
+                tab === key ? "bg-violet-600 text-white shadow-sm" : "text-muted hover:bg-surface-2 hover:text-ink"
+              }`}
+            >
+              <Icon size={15} /> {label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {tab === "wishlist" && user.wishlist?.canView ? (
+        <ProfileWishlist userId={user.id} name={user.name} isSelf={isSelf} />
+      ) : (
       <div className="space-y-6">
         {posts.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-line-strong bg-surface/60 px-8 py-16 text-center">
@@ -278,6 +307,7 @@ export default function UserProfilePage({
           posts.map((post) => <PostCard key={post.id} post={post} />)
         )}
       </div>
+      )}
 
       {lightbox === "cover" && user.cover && (
         <ImageLightbox
