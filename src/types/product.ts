@@ -148,10 +148,34 @@ export interface ProductListParams {
 }
 
 export interface NearbyProductParams {
-  city?: string;
   state?: string;
+  city?: string;
+  area?: string;
+  category?: string;
   page?: number;
   limit?: number;
+}
+
+// How close a product's seller is to the buyer's place, closest first:
+// based in the area, delivers there, elsewhere in the city, elsewhere in the state.
+export type NearbyTier = "AREA" | "DELIVERS" | "CITY" | "STATE";
+
+export interface NearbyProduct extends Product {
+  nearby: {
+    tier: NearbyTier;
+    // Cheapest delivery to the buyer's area that can carry it; null if the seller has no zone there.
+    deliveryFee: number | null;
+  };
+}
+
+export interface NearbyProductsResult {
+  products: NearbyProduct[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  location: { state: string; city: string | null; area: string | null; label: string };
+  tierCounts: Partial<Record<NearbyTier, number>>;
 }
 
 export interface MyProductParams {

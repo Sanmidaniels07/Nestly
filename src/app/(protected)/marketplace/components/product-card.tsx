@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, MapPin, Star } from "lucide-react";
+import { Heart, MapPin, Star, Truck } from "lucide-react";
 import { useToggleWishlist } from "@/src/hooks/use-toggle-wishlist";
 import { formatConditionLabel } from "@/src/lib/utils";
 
@@ -13,6 +13,8 @@ interface Props {
   compact?: boolean;
   // Short note on the photo, e.g. "120 sold" or "Trending".
   badge?: string;
+  // Delivery note under the store name, e.g. "Delivers to Festac · ₦2,500".
+  deliveryNote?: string;
 }
 
 function formatPrice(price: number) {
@@ -23,7 +25,7 @@ function formatPrice(price: number) {
   }).format(price);
 }
 
-export default function ProductCard({ product, compact = false, badge }: Props) {
+export default function ProductCard({ product, compact = false, badge, deliveryNote }: Props) {
   const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
 
   const primaryImage =
@@ -90,6 +92,13 @@ export default function ProductCard({ product, compact = false, badge }: Props) 
           <span className="truncate text-[12px] text-muted">
             {product.store.name}
           </span>
+        )}
+
+        {deliveryNote && (
+          <p className="flex items-start gap-1.5 text-[12px] font-medium leading-snug text-emerald-700 dark:text-emerald-400">
+            <Truck size={13} className="mt-[1px] shrink-0" />
+            <span>{deliveryNote}</span>
+          </p>
         )}
 
         <h3

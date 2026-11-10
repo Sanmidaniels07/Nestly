@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import { getNearbyProducts } from "../services/product.services";
 import { NearbyProductParams } from "../types/product";
@@ -10,6 +10,7 @@ export const useNearbyProducts = (params: NearbyProductParams) => {
     queryKey: ["products", "nearby", params],
     queryFn: () => getNearbyProducts(params),
     select: (response) => response.data,
-    enabled: !!(params.city || params.state),
+    enabled: !!(params.area || params.city || params.state),
+    placeholderData: keepPreviousData,
   });
 };
