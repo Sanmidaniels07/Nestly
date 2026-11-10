@@ -1,8 +1,8 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 
-import { detectStateFromCoords, getNigerianStates, getStateLocations } from "../services/location.services";
+import { detectStateFromCoords, getNigerianStates, getStateLocations, searchPlaces } from "../services/location.services";
 
 // Static reference data - cache it for the session.
 const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -25,6 +25,18 @@ export const useStateLocations = (state?: string | null) =>
     retry: false,
   });
 
+// Areas, cities and states matching what the buyer typed ("Shop near you").
+// Empty text gives the places with the most sellers.
+export const usePlaceSearch = (q: string, enabled = true) =>
+  useQuery({
+    queryKey: ["locations", "search", q],
+    queryFn: () => searchPlaces(q),
+    select: (response) => response.data,
+    enabled,
+    staleTime: 60 * 1000,
+    placeholderData: keepPreviousData,
+  });
+
 const getBrowserPosition = () =>
   new Promise<GeolocationPosition>((resolve, reject) => {
     if (!("geolocation" in navigator)) {
@@ -42,7 +54,7 @@ const getBrowserPosition = () =>
     }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 10 * 60 * 1000 });
   });
 
-// Browser location -> Nigerian state (looked up by the backend).
+// Browser location -> Nigerian state, plus the area and city when known (looked up by the backend).
 export const useDetectState = () =>
   useMutation({
     mutationFn: async () => {

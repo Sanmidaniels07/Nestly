@@ -6,6 +6,7 @@ import {
   CreateProductPayload,
   MyProductParams,
   NearbyProductParams,
+  NearbyProductsResult,
   Product,
   ProductListParams,
   UpdateProductPayload,
@@ -34,7 +35,7 @@ export const getFeaturedProducts = async (limit?: number) => {
 };
 
 export const getNearbyProducts = async (params: NearbyProductParams) => {
-  const response = await api.get<ApiResponse<Paginated<"products", Product>>>(
+  const response = await api.get<ApiResponse<NearbyProductsResult>>(
     "/products/nearby",
     { params }
   );
