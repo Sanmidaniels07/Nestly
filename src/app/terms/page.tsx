@@ -177,9 +177,11 @@ const sections: LegalSection[] = [
           accepted.
         </p>
         <p>
-          For perishable items, add a photo of the problem - you don&apos;t send the item back, and you&apos;re refunded or sent a replacement once the
-          report is approved. For other items, the seller or Nestly may ask for photos or for the item to be returned before you&apos;re refunded. If you
-          and the seller can&apos;t agree, Nestly Support will review the evidence and decide.
+          For perishable items, add a photo of the problem - you don&apos;t send the item back. The seller has 48 hours (24 for perishables) to refund
+          you or send a replacement; if they don&apos;t answer in time or disagree, Nestly reviews the evidence and decides. For non-perishable items
+          the seller may ask for the item back as part of a refund or replacement. A refund is the full price you paid for the item - there are no
+          partial refunds. You can choose to keep the item at any time, which closes your report. Nestly holds the seller&apos;s payment until
+          reports are settled, so approved refunds are paid from it.
         </p>
         <p>
           Items whose delivery was confirmed before {RETURN_POLICY_EFFECTIVE} keep the {PREVIOUS_RETURN_WINDOW_DAYS}-day window that applied then.
@@ -194,9 +196,9 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          When a cancellation or return is approved, the refund is arranged by Nestly and the seller back to your original payment method or to a bank
-          account in your name. We aim to complete refunds within 7 business days of approval; bank processing can add a few days. Delivery fees are
-          refunded when the order is cancelled or the item was faulty or wrong.
+          When a cancellation or refund is approved, Nestly sends it back to your original payment method (or, if that isn&apos;t possible, to a bank
+          account in your name). Refunds usually arrive within 5-10 business days, depending on your bank. The delivery fee is refunded too when the
+          order is cancelled or when nothing you bought from that seller is kept.
         </p>
         <p>
           If you haven&apos;t received an approved refund in that time, contact Nestly Support with your order number. Contacting your bank to reverse a

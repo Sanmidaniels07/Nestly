@@ -19,6 +19,14 @@ export type NotificationTargetType =
   | "ADMIN_CAC_SUBMITTED"
   // A sold-out order's automatic refund failed - refund it in Paystack.
   | "ADMIN_REFUND_NEEDED"
+  // Returns: a dispute for Nestly to decide, or a refund to send by hand.
+  | "ADMIN_DISPUTE"
+  // An automatic seller payout (Paystack transfer) failed.
+  | "ADMIN_PAYOUT_FAILED"
+  // A problem report on the seller's order, the seller's payouts, the buyer's reports.
+  | "SELLER_RETURNS"
+  | "SELLER_EARNINGS"
+  | "MY_RETURNS"
   // Shopping updates for buyers.
   | "PRODUCT_PAGE"
   | "STORE_PAGE"

@@ -12,6 +12,7 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import HeldPayoutsPanel from "./held-payouts-panel";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -30,6 +31,8 @@ export default function PayoutsManager() {
 
   return (
     <div className="space-y-5">
+      <HeldPayoutsPanel />
+
       <div className="flex justify-end">
         <button
           onClick={() => setCreateOpen((prev) => !prev)}
@@ -81,7 +84,20 @@ export default function PayoutsManager() {
                   <td className="px-5 py-3.5 font-[family-name:var(--font-mono)] text-[13px] font-semibold text-violet-700 dark:text-violet-300">
                     {money(payout.amount)}
                   </td>
-                  <td className="max-w-[240px] truncate px-5 py-3.5 text-[12.5px] text-muted">
+                  <td className="max-w-[260px] truncate px-5 py-3.5 text-[12.5px] text-muted">
+                    {payout.status && payout.status !== "PAID" && (
+                      <span
+                        className={`mr-1.5 rounded-full px-2 py-0.5 text-[11px] font-semibold ${
+                          payout.status === "FAILED"
+                            ? "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300"
+                            : "bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-300"
+                        }`}
+                        title={payout.failureReason ?? undefined}
+                      >
+                        {payout.status === "FAILED" ? "Failed" : "Sending"}
+                      </span>
+                    )}
+                    {payout.method === "TRANSFER" ? "Paystack transfer · " : ""}
                     {payout.note ?? "—"}
                   </td>
                   <td className="whitespace-nowrap px-5 py-3.5 text-[12px] text-subtle">

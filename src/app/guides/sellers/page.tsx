@@ -292,12 +292,15 @@ const parts: GuidePart[] = [
         body: (
           <>
             <p>
-              When a buyer pays, your share - <strong>item price minus commission, plus your full delivery fee</strong> - is sent automatically to your
-              payout account through Paystack, usually the next business day.
+              Your share of each order - <strong>item price minus commission, plus your full delivery fee</strong> - is held by Nestly until the buyer
+              has it and the return window has closed: {RETURN_WINDOW_DAYS} days after they confirm delivery, or {PERISHABLE_REPORT_HOURS} hours for
+              food, cakes and groceries. Then it&apos;s paid to your bank account, usually within a day. Earnings shows every order, what it&apos;s
+              worth and when it pays.
             </p>
             <p>
-              If automatic payouts are paused (for example right after you change bank details), the money is kept in your Earnings balance and paid
-              out to you by Nestly. Nestly pays Paystack&apos;s transaction fee out of its commission, so you receive your full share.
+              If a buyer reports a problem, answer it in <strong>Returns</strong> within 48 hours (24 for perishables) - refund, send a replacement, or
+              tell us why you disagree. That order&apos;s payout waits until it&apos;s sorted. Nestly pays Paystack&apos;s fees out of its commission,
+              so you receive your full share.
             </p>
           </>
         ),
@@ -310,9 +313,9 @@ const parts: GuidePart[] = [
           <p>
             Nestly&apos;s returns policy covers every store: buyers can report an item that&apos;s damaged, spoiled, faulty, wrong or not as described
             within {RETURN_WINDOW_DAYS} days of delivery ({PERISHABLE_REPORT_HOURS} hours, with a photo, for food, cakes and groceries) - no
-            change-of-mind returns. Review each request and tap <strong>Approve</strong> or{" "}
-            <strong>Reject</strong>, then <strong>Mark as refunded</strong> once the refund is done. You can reply once to each review on your store
-            page - a polite reply wins future buyers.
+            change-of-mind returns. Answer each report within 48 hours (24 for perishables): tap <strong>Refund buyer</strong> (the refund goes
+            out straight away), <strong>Send a replacement</strong>, or <strong>I disagree</strong> and tell us why - Nestly then decides. You can
+            reply once to each review on your store page - a polite reply wins future buyers.
           </p>
         ),
       },

@@ -2,25 +2,28 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { BarChart3, LayoutGrid, Package, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
+import { BarChart3, Gavel, LayoutGrid, Package, ShieldAlert, Store, Ticket, Users, Wallet } from "lucide-react";
 
 import { useAuthStore } from "@/src/store/auth-store";
 import ReportsQueue from "./reports-queue";
 import CouponsManager from "./coupons-manager";
 import PayoutsManager from "./payouts-manager";
+import ReturnsManager from "./returns-manager";
 import CategoriesManager from "./categories-manager";
 import UsersManager from "./users-manager";
 import SellersManager from "./sellers-manager";
 import ProductsManager from "./products-manager";
 import OverviewDashboard from "./overview-dashboard";
 
-type Tab = "overview" | "reports" | "users" | "sellers" | "products" | "coupons" | "payouts" | "categories";
+type Tab = "overview" | "reports" | "disputes" | "users" | "sellers" | "products" | "coupons" | "payouts" | "categories";
 
-const VALID_TABS: Tab[] = ["overview", "reports", "users", "sellers", "products", "coupons", "payouts", "categories"];
+const VALID_TABS: Tab[] = ["overview", "reports", "disputes", "users", "sellers", "products", "coupons", "payouts", "categories"];
 
 const tabs: { id: Tab; label: string; icon: typeof ShieldAlert }[] = [
   { id: "overview", label: "Overview", icon: BarChart3 },
   { id: "reports", label: "Reports", icon: ShieldAlert },
+  // Problem reports on orders (returns) - disputes for Nestly to decide.
+  { id: "disputes", label: "Returns", icon: Gavel },
   { id: "users", label: "Users", icon: Users },
   { id: "sellers", label: "Sellers", icon: Store },
   { id: "products", label: "Products", icon: Package },
@@ -53,6 +56,7 @@ function AdminPageContent() {
   const tabViews: Record<Tab, React.ReactNode> = {
     overview: <OverviewDashboard />,
     reports: <ReportsQueue />,
+    disputes: <ReturnsManager />,
     users: <UsersManager />,
     sellers: <SellersManager />,
     products: <ProductsManager />,

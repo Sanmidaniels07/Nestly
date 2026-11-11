@@ -161,13 +161,15 @@ const sections: LegalSection[] = [
     body: (
       <>
         <p>
-          When a buyer pays, your share (item price minus commission, plus your delivery fee) is normally sent automatically to your payout bank account
-          through Paystack, on Paystack&apos;s settlement schedule (usually the next business day).
+          When a buyer pays, Nestly holds the payment until the buyer has the item and the return window has closed - {RETURN_WINDOW_DAYS} days after
+          delivery is confirmed, or {PERISHABLE_REPORT_HOURS} hours for perishable categories. Your share (item price minus commission, plus your full
+          delivery fee) is then paid to your payout bank account, normally by bank transfer within one business day. You can see what&apos;s coming
+          and when under Seller Hub → Earnings.
         </p>
         <p>
-          Where automatic payout isn&apos;t possible (for example while your payout account is being set up or verified, or for {PAYOUT_HOLD_HOURS} hours
-          after you change your bank details, a security measure), your earnings are recorded in your Earnings balance and paid out by Nestly to your
-          payout account.
+          If a buyer reports a problem with an order, the payout for that order waits until the report is closed. Payouts also wait for{" "}
+          {PAYOUT_HOLD_HOURS} hours after you change your bank details, a security measure. Earnings from orders placed before payouts worked this way
+          are paid out by Nestly from your Earnings balance.
         </p>
         <p>You are told by email whenever your payout bank account is changed. If you didn&apos;t make the change, contact us immediately.</p>
       </>
@@ -183,15 +185,21 @@ const sections: LegalSection[] = [
           of your own (stores no longer set one). Buyers may report an item that is damaged, spoiled or expired, faulty, the wrong item, or
           significantly not as described within <strong>{RETURN_WINDOW_DAYS} days</strong> of delivery being confirmed - or within{" "}
           <strong>{PERISHABLE_REPORT_HOURS} hours</strong> for perishable categories such as food, cakes and groceries, where the buyer sends a photo
-          instead of returning the item. There are no change-of-mind returns. You may not refuse a valid report, and you must respond to reports
-          promptly in your dashboard.
+          instead of returning the item. There are no change-of-mind returns. You may not refuse a valid report.
+        </p>
+        <p>
+          You must answer a report within <strong>48 hours</strong> ({PERISHABLE_REPORT_HOURS} hours for perishables) in Seller Hub → Returns: refund the
+          buyer, send a replacement, or tell Nestly why you disagree. If you don&apos;t answer in time, or you disagree, Nestly reviews the evidence and
+          decides. A refund is the full price the buyer paid for the item (plus the delivery fee if they kept nothing else from you) - there are no
+          partial refunds. The buyer may also choose to keep the item, which closes the report.
         </p>
         <p>
           This policy applies to items delivered from {RETURN_POLICY_EFFECTIVE}. By continuing to sell on Nestly after that date you accept it.
         </p>
         <p>
-          If an order is cancelled before fulfilment or a return is approved, the buyer is refunded. Where you have already been paid for that order,
-          the refunded amount may be deducted from your future earnings, or you agree to repay it to Nestly. Where you and a buyer disagree, Nestly&apos;s
+          If an order is cancelled before fulfilment or a refund is agreed, the buyer is refunded from the payment Nestly is holding for that order, so
+          it is not taken from money already paid to you. Where you have already been paid for that order (for example orders paid out before this
+          policy), the refunded amount may be deducted from your future earnings, or you agree to repay it to Nestly. Where you and a buyer disagree, Nestly&apos;s
           decision after reviewing the evidence is final for purposes of the marketplace.
         </p>
       </>
