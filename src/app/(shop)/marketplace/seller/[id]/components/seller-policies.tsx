@@ -39,7 +39,7 @@ export default function SellerPolicies({ store }: Props) {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Store policies
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
           Shop with confidence
         </h2>
       </div>

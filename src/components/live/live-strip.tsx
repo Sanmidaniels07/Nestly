@@ -20,7 +20,7 @@ export default function LiveStrip({ store, title = "Live shopping" }: { store?: 
     <section>
       <div className="mb-3 flex items-end justify-between gap-3">
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">{title}</h2>
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">{title}</h2>
           <p className="text-[12.5px] text-muted">Watch sellers live, ask questions and grab live-only prices.</p>
         </div>
       </div>

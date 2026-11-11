@@ -32,7 +32,7 @@ export default function MyReturnsPage() {
           Back
         </button>
 
-        <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[30px] italic text-ink sm:text-[34px]">
+        <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[30px] text-ink sm:text-[34px]">
           My returns
         </h1>
         <p className="mt-0.5 text-[13.5px] text-muted">

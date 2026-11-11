@@ -45,7 +45,7 @@ function BusinessVerificationCard({ saved, isVerified }: { saved: string; isVeri
     <section ref={sectionRef} id="business-verification" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Business verification</h2>
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Business verification</h2>
           <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-muted">
             Registered with the CAC? Add your registration number and we&apos;ll check it on the CAC public register. Verified stores get a
             badge buyers trust. Not registered yet? You can keep selling and add it whenever you&apos;re ready.

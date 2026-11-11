@@ -53,7 +53,7 @@ export default function CartItem({ item }: Props) {
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0">
               <Link href={`/marketplace/product/${product.id}`}>
-                <h3 className="truncate font-[family-name:var(--font-fraunces)] text-[18px] italic text-ink hover:text-violet-700 dark:hover:text-violet-300 sm:text-[20px]">
+                <h3 className="truncate font-[family-name:var(--font-fraunces)] text-[18px] text-ink hover:text-violet-700 dark:hover:text-violet-300 sm:text-[20px]">
                   {product.title}
                 </h3>
               </Link>

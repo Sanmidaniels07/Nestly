@@ -118,7 +118,7 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
 
       <div className="space-y-4 p-5 sm:p-6">
         <div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic leading-tight text-ink sm:text-[30px]">{link.title}</h1>
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] leading-tight text-ink sm:text-[30px]">{link.title}</h1>
           <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-violet-700 dark:text-violet-300">{naira(link.price)}</p>
         </div>
 

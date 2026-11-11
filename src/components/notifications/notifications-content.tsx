@@ -61,7 +61,7 @@ export default function NotificationsContent({ onNavigate }: Props) {
           <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {unread.length > 0 ? `${unread.length} unread` : "All caught up"}
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] leading-none text-ink">
             Notifications
           </h1>
         </div>

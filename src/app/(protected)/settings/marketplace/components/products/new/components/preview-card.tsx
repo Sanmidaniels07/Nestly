@@ -47,7 +47,7 @@ export default function PreviewCard({ draft }: Props) {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
           {draft.brand || "No brand"}
         </p>
-        <h2 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+        <h2 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
           {draft.name || "Untitled product"}
         </h2>
 

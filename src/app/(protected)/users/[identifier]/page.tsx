@@ -152,7 +152,7 @@ export default function UserProfilePage({
                 out of the card. */}
             <div className="flex flex-col items-center justify-between gap-4 sm:items-start md:flex-row">
               <div className="min-w-0 max-w-full">
-                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-tight text-ink [overflow-wrap:anywhere]">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] leading-tight text-ink [overflow-wrap:anywhere]">
                   {user.name}
                 </h1>
                 {user.username && (

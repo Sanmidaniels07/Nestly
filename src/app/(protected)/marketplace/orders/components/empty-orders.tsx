@@ -10,7 +10,7 @@ export default function EmptyOrders() {
         <ShoppingBag size={28} className="text-violet-600 dark:text-violet-400" strokeWidth={1.5} />
       </div>
 
-      <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+      <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
         No orders yet
       </h2>
 

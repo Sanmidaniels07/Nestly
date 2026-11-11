@@ -54,7 +54,7 @@ export default function EditProfileModal({ opened, onClose }: EditProfileModalPr
           >
             <div className="flex items-center justify-between border-b border-line px-6 py-5 sm:px-8">
               <div>
-                <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+                <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
                   Edit profile
                 </h2>
                 <p className="mt-0.5 text-[13.5px] text-muted">

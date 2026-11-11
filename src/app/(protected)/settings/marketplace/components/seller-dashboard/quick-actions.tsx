@@ -63,7 +63,7 @@ export default function QuickActions() {
           Quick actions
         </p>
         <div className="mt-2 flex flex-wrap items-end justify-between gap-x-4 gap-y-1">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
             Manage your business
           </h2>
           <Link href="/guides/sellers" className="inline-flex items-center gap-1.5 text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300">

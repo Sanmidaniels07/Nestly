@@ -18,7 +18,7 @@ export default function SuggestedUsers() {
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
           <Users2 size={16} className="text-violet-600 dark:text-violet-400" />
         </div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
           Suggested for you
         </h3>
       </div>

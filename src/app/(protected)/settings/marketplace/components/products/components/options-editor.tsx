@@ -55,7 +55,7 @@ export default function OptionsEditor({ value, onChange, basePrice, error, legac
     <div className="space-y-5">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="flex items-center gap-2 font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+          <h3 className="flex items-center gap-2 font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
             <Layers size={17} className="shrink-0 not-italic text-violet-600 dark:text-violet-400" />
             Options
           </h3>

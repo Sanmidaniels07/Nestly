@@ -193,7 +193,7 @@ function LiveInfo({ live }: { live: PublicLive }) {
           </div>
 
           <div>
-            <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic leading-tight text-ink sm:text-[32px]">{live.title}</h1>
+            <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] leading-tight text-ink sm:text-[32px]">{live.title}</h1>
             <p className="mt-1.5 text-[14px] font-semibold text-violet-700 dark:text-violet-300">{liveWhen(live.scheduledAt)} (Nigeria time)</p>
             {live.description && <p className="mt-3 whitespace-pre-line text-[14px] leading-relaxed text-ink-2">{live.description}</p>}
           </div>
@@ -542,7 +542,7 @@ function GuestGate({ live }: { live: PublicLive }) {
       {!live.coverImage && <div className="absolute inset-0 bg-gradient-to-b from-violet-800 to-black" />}
       <div className="relative z-10 mx-6 max-w-sm rounded-3xl bg-white/95 p-6 text-center text-ink shadow-2xl dark:bg-zinc-900/95">
         <span className="mx-auto mb-3 flex w-fit"><LiveBadge /></span>
-        <p className="font-[family-name:var(--font-fraunces)] text-[22px] italic leading-tight">Enjoying the live?</p>
+        <p className="font-[family-name:var(--font-fraunces)] text-[22px] leading-tight">Enjoying the live?</p>
         <p className="mt-2 text-[13.5px] leading-relaxed text-muted">
           Create a free Nestly account to keep watching {live.store.name}, chat and shop the live deals. It takes a minute - or use Google.
         </p>

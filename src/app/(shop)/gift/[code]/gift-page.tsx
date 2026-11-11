@@ -113,7 +113,7 @@ function SenderView({ gift }: { gift: Gift }) {
         >
           <GiftIcon size={36} />
         </motion.div>
-        <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-ink sm:text-[38px]">
+        <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[32px] leading-tight text-ink sm:text-[38px]">
           {gift.status === "SENT"
             ? justSent
               ? "Gift sent! 🎉"
@@ -271,7 +271,7 @@ function RecipientView({ gift }: { gift: Gift }) {
     <div className="space-y-6">
       <div className="text-center">
         <p className="text-[13px] font-semibold uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">For {gift.recipientName}</p>
-        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-ink sm:text-[40px]">
+        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] leading-tight text-ink sm:text-[40px]">
           {gift.sender.name} sent {gift.forSomeoneElse ? "a gift" : "you a gift"}
         </h1>
       </div>
@@ -386,7 +386,7 @@ function GiftCard({ gift }: { gift: Gift }) {
       </div>
       <div className="space-y-4 p-5 sm:p-6">
         <div>
-          <p className="font-[family-name:var(--font-fraunces)] text-[24px] italic leading-tight text-ink">{gift.item.title}</p>
+          <p className="font-[family-name:var(--font-fraunces)] text-[24px] leading-tight text-ink">{gift.item.title}</p>
           <p className="mt-1 text-[13px] text-muted">
             {[gift.item.variantLabel, gift.item.quantity > 1 ? `× ${gift.item.quantity}` : null].filter(Boolean).join(" · ")}
           </p>
@@ -572,7 +572,7 @@ function ClaimedView({ gift }: { gift: Gift }) {
         >
           <PackageCheck size={30} />
         </motion.div>
-        <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-tight text-ink sm:text-[36px]">
+        <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[30px] leading-tight text-ink sm:text-[36px]">
           {delivered ? "Your gift has arrived 🎉" : "Your gift is on its way"}
         </h1>
         <p className="mt-1.5 text-[13.5px] text-muted">From {gift.sender.name}</p>

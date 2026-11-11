@@ -23,7 +23,7 @@ function SessionExpiredContent() {
         <TimerOff size={26} className="text-violet-600 dark:text-violet-400" />
       </div>
 
-      <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+      <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
         Session expired
       </h1>
       <p className="mt-2.5 text-[13.5px] leading-relaxed text-muted">

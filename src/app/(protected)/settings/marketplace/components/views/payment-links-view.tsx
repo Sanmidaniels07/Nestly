@@ -86,7 +86,7 @@ function Intro({ onCreate, showButton }: { onCreate: () => void; showButton: boo
             <ShieldCheck size={19} />
           </div>
           <div className="min-w-0">
-            <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic leading-tight text-ink">Protected payment links</h2>
+            <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] leading-tight text-ink">Protected payment links</h2>
             <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-muted">
               Close more sales from Instagram, WhatsApp and TikTok. Buyers who are scared to send money to a stranger will pay through Nestly, because
               their money is held until they get what they ordered.

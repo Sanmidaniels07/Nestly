@@ -68,7 +68,7 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
         Basic information
       </h2>
       <p className="mt-1.5 text-[13.5px] text-muted">

@@ -12,7 +12,7 @@ export default function CartHeader({ itemsCount, onClearCart }: Props) {
   return (
     <div className="flex flex-col gap-5 rounded-2xl border border-line bg-surface p-6 lg:flex-row lg:items-center lg:justify-between">
       <div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic text-ink">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] text-ink">
           Shopping cart
         </h1>
         <p className="mt-1.5 text-[13.5px] text-muted">

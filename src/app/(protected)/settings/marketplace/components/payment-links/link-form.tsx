@@ -108,7 +108,7 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
     <form onSubmit={submit} className="space-y-5 rounded-2xl border border-violet-200 bg-surface p-5 dark:border-violet-500/30 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="font-[family-name:var(--font-fraunces)] text-[21px] italic text-ink">
+          <h3 className="font-[family-name:var(--font-fraunces)] text-[21px] text-ink">
             {link ? "Edit payment link" : "New payment link"}
           </h3>
           <p className="mt-0.5 text-[12.5px] text-muted">

@@ -146,7 +146,7 @@ function NearbyContent() {
           <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Marketplace
           </p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
+          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] text-ink sm:text-[42px]">
             Shop near you
           </h1>
           <p className="mt-2 max-w-xl text-[14px] text-muted">
@@ -261,7 +261,7 @@ function NearbyContent() {
                 <Fragment key={product.id}>
                   {startsGroup && (
                     <div className={`col-span-full ${i === 0 ? "" : "mt-4"}`}>
-                      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+                      <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
                         {heading.title}{" "}
                         <span className="font-[family-name:var(--font-mono)] text-[13px] not-italic text-subtle">({count})</span>
                       </h2>

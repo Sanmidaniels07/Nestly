@@ -22,7 +22,7 @@ export default function HashtagPage({
       <div>
         <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
           <Hash size={22} />
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[32px] leading-none text-ink">
             {decodedTag}
           </h1>
         </div>

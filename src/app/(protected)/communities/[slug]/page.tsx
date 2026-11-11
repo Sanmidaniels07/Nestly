@@ -75,7 +75,7 @@ export default function CommunityDetailPage({
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-col items-center justify-between gap-4 sm:flex-row sm:items-start">
-              <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic leading-none text-ink">
+              <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] leading-none text-ink">
                 {community.name}
               </h1>
 

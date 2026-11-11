@@ -51,7 +51,7 @@ export default function ProfileAbout() {
 
       {communities.length > 0 && (
         <section className="rounded-2xl border border-line bg-surface p-6">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Communities
           </h2>
 

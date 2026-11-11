@@ -71,7 +71,7 @@ export default function LivesView() {
     <div className="space-y-8">
       <section className="overflow-hidden rounded-2xl border border-line bg-gradient-to-br from-violet-600 to-indigo-600 p-5 text-white sm:p-6">
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.18em] text-white/70">Live selling</p>
-        <h2 className="mt-1 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-tight">Sell live, like a pop-up shop on your phone</h2>
+        <h2 className="mt-1 font-[family-name:var(--font-fraunces)] text-[24px] leading-tight">Sell live, like a pop-up shop on your phone</h2>
         <p className="mt-2 max-w-xl text-[13.5px] text-white/85">
           Show your products on camera, answer questions in the chat and let people buy without leaving. Share the link anywhere - people who aren&apos;t on
           Nestly can join too. Lives run for up to {data.maxMinutes} minutes.

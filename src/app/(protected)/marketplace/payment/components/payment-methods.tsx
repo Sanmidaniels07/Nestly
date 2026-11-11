@@ -10,7 +10,7 @@ export default function PaymentMethods() {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
         Payment method
       </h2>
 

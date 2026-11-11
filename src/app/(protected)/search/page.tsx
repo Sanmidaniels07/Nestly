@@ -45,7 +45,7 @@ function SearchPageContent() {
         <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
           Search
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-tight text-ink [overflow-wrap:anywhere]">
+        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[30px] leading-tight text-ink [overflow-wrap:anywhere]">
           {q ? `Results for "${q}"` : "Search"}
         </h1>
       </div>

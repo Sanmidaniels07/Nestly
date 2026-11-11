@@ -47,7 +47,7 @@ export default function AdvancedFilterDrawer({ open, onClose, children }: Advanc
         <div className="border-b border-line p-6">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-[family-name:var(--font-fraunces)] text-[28px] italic text-ink">
+              <h2 className="font-[family-name:var(--font-fraunces)] text-[28px] text-ink">
                 Filters
               </h2>
               <p className="mt-1 text-[13.5px] text-muted">Refine your marketplace search.</p>

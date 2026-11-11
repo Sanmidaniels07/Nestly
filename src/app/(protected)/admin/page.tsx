@@ -71,7 +71,7 @@ function AdminPageContent() {
         <p className="font-[family-name:var(--font-mono)] text-[12px] font-medium uppercase tracking-widest text-violet-600 dark:text-violet-400">
           Admin
         </p>
-        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[36px] italic leading-none text-ink">
+        <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[36px] leading-none text-ink">
           Dashboard
         </h1>
       </div>

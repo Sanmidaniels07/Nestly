@@ -77,7 +77,7 @@ function HeldEarnings({ mine }: { mine: MyPayouts }) {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Payouts
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">Your earnings</h2>
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">Your earnings</h2>
         <p className="mt-1.5 max-w-2xl text-[13px] leading-relaxed text-muted">
           Nestly holds each order&apos;s money until the buyer has it and the return window has closed - 3 days after
           they confirm delivery, 24 hours for food and other perishables. Then it&apos;s sent to your bank
@@ -172,7 +172,7 @@ function EarlierBalance({ held }: { held: boolean }) {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Balance
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           {held ? "Earlier orders" : "Your earnings"}
         </h2>
       </div>

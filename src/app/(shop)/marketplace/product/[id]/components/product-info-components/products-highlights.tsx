@@ -12,7 +12,7 @@ export default function ProductHighlights({ product }: Props) {
 
   return (
     <div>
-      <h3 className="mb-3 font-[family-name:var(--font-fraunces)] text-[18px] italic text-ink">
+      <h3 className="mb-3 font-[family-name:var(--font-fraunces)] text-[18px] text-ink">
         Highlights
       </h3>
 

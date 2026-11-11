@@ -14,7 +14,7 @@ export default function SuccessHero({ orderId }: Props) {
           <CheckCircle2 size={32} />
         </div>
 
-        <h1 className="mt-6 font-[family-name:var(--font-fraunces)] text-[34px] italic sm:text-[42px]">
+        <h1 className="mt-6 font-[family-name:var(--font-fraunces)] text-[34px] sm:text-[42px]">
           Payment successful
         </h1>
 

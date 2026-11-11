@@ -93,7 +93,7 @@ export default function SetupChecklist({ seller }: Props) {
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Finish setting up
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-tight text-ink sm:text-[28px]">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] leading-tight text-ink sm:text-[28px]">
             {hasStore ? "A few steps before you can start selling" : "Next: set up your store"}
           </h2>
         </div>

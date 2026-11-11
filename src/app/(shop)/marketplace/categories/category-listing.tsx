@@ -160,7 +160,7 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
         <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Shop on {SITE_NAME}
         </p>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[34px] italic leading-tight text-ink sm:text-[44px]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[34px] leading-tight text-ink sm:text-[44px]">
           {category.icon && <span className="mr-2 not-italic">{category.icon}</span>}
           {category.name} in {where}
         </h1>

@@ -64,7 +64,7 @@ export default function Shipping({ draft, setDraft, onBack, onNext }: Props) {
       <div className="space-y-8">
         {/* Dimensions */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Dimensions
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -111,7 +111,7 @@ export default function Shipping({ draft, setDraft, onBack, onNext }: Props) {
 
         {/* Delivery */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Delivery
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -142,7 +142,7 @@ export default function Shipping({ draft, setDraft, onBack, onNext }: Props) {
 
         {/* Availability */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Availability
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -180,7 +180,7 @@ export default function Shipping({ draft, setDraft, onBack, onNext }: Props) {
         {/* Shipping regions — only relevant if delivery is enabled */}
         {draft.deliveryAvailable && (
           <div>
-            <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+            <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
               Shipping regions
             </h2>
             <p className="mt-1 text-[13px] text-muted">

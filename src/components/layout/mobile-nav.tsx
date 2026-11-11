@@ -86,7 +86,7 @@ export default function MobileNav() {
               style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 20px)" }}
             >
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+                <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
                   More
                 </h3>
                 <button

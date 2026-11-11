@@ -23,7 +23,7 @@ export default function OnboardingBanner() {
           </span>
         </div>
 
-        <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-[1.1] sm:text-[40px]">
+        <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[32px] leading-[1.1] sm:text-[40px]">
           Turn your following into customers
         </h2>
 

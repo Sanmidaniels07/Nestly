@@ -94,7 +94,7 @@ export default function EditImagesSection({ draft, setDraft }: Props) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Product images
       </h2>
       <p className="mt-1 text-[13px] text-muted">

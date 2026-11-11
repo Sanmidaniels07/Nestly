@@ -10,7 +10,7 @@ interface Props {
 export default function OrderProgress({ order }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Order progress
       </h2>
 

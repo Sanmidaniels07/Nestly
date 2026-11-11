@@ -19,7 +19,7 @@ export default function OrderHeader({ order }: Props) {
       <div className="mt-5 flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <p className="text-[13px] text-muted">Order number</p>
-          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[28px] italic text-ink">
+          <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[28px] text-ink">
             #{order.id.slice(-8).toUpperCase()}
           </h1>
         </div>

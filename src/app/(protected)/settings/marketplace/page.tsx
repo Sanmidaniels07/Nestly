@@ -89,7 +89,7 @@ function MarketplaceSettingsContent() {
               <XCircle size={26} className="text-red-600 dark:text-red-400" />
             )}
           </div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
             {isPending ? "Application pending" : "Application rejected"}
           </h1>
           <p className="mt-2.5 text-[13.5px] text-muted">

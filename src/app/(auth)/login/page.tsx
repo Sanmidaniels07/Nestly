@@ -28,7 +28,7 @@ export default function LoginPage() {
             <h1 className="font-[family-name:var(--font-fraunces)] text-5xl leading-[1.05] tracking-tight text-ink">
               Welcome back
               <br />
-              <em className="text-violet-600 dark:text-violet-400">to your nest.</em>
+              <em className="not-italic text-violet-600 dark:text-violet-400">to your nest.</em>
             </h1>
             <p className="mt-6 text-lg text-muted max-w-md">
               Pick up right where you left off. Your people, your orders and your plans are waiting.

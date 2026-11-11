@@ -8,7 +8,7 @@ export default function MessagesPage() {
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 text-white shadow-[0_12px_30px_-12px_rgba(91,33,182,0.7)]">
         <MessageCircle size={28} />
       </span>
-      <p className="mt-5 font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">Your chats</p>
+      <p className="mt-5 font-[family-name:var(--font-fraunces)] text-[24px] text-ink">Your chats</p>
       <p className="mt-1.5 max-w-sm text-[13.5px] leading-relaxed text-muted">
         Pick a chat to start messaging. Ask sellers about products, share photos, and keep every payment on Nestly checkout.
       </p>

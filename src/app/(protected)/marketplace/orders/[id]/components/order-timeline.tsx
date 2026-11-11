@@ -24,7 +24,7 @@ export default function OrderTimeline({ order }: Props) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Order timeline</h2>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Order timeline</h2>
 
       <ol className="mt-6 space-y-5">
         {timeline.map((entry, index) => {

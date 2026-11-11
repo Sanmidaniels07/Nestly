@@ -15,7 +15,7 @@ export default function ProductDescription({ product }: Props) {
   return (
     <section className="mt-8 rounded-2xl border border-line bg-surface p-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           Description
         </h2>
 

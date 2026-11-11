@@ -20,7 +20,7 @@ export default function EditProfileBasic() {
   return (
     <section className="space-y-6">
       <div>
-        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+        <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
           Basic information
         </h3>
         <p className="mt-1 text-[13.5px] text-muted">Tell people who you are.</p>

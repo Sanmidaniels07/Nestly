@@ -95,7 +95,7 @@ export default function SellerProfile({ store }: Props) {
 
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink sm:text-[30px]">
+                <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink sm:text-[30px]">
                   {store.name}
                 </h1>
                 {store.isVerified && (

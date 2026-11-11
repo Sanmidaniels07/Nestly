@@ -468,7 +468,7 @@ function LiveSummaryView({ id }: { id: string }) {
         <ArrowLeft size={15} /> Your lives
       </Link>
       <p className="mt-5 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.18em] text-violet-600">Live summary</p>
-      <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] italic leading-tight text-ink">{summary.title}</h1>
+      <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] leading-tight text-ink">{summary.title}</h1>
       <p className="mt-1 text-[13px] text-muted">
         {summary.startedAt ? liveWhen(summary.startedAt) : liveWhen(summary.scheduledAt)} · {summary.durationMinutes} min
         {summary.endReason === "TIME_LIMIT" && " · ended at the 60-minute limit"}

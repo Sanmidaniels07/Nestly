@@ -10,7 +10,7 @@ export default function CartEmpty() {
         <ShoppingBag size={28} className="text-violet-700 dark:text-violet-300" />
       </div>
 
-      <h2 className="mt-6 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+      <h2 className="mt-6 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
         Your cart is empty
       </h2>
 

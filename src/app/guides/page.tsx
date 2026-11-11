@@ -25,7 +25,7 @@ export default function GuidesPage() {
           </Link>
         </div>
 
-        <h1 className="mt-8 font-[family-name:var(--font-fraunces)] text-[38px] italic leading-tight text-ink sm:text-[46px]">How Nestly works</h1>
+        <h1 className="mt-8 font-[family-name:var(--font-fraunces)] text-[38px] leading-tight text-ink sm:text-[46px]">How Nestly works</h1>
         <p className="mt-3 text-[15px] leading-relaxed text-ink-2">Pick a guide - each one takes you step by step from the very start.</p>
 
         <div className="mt-8 grid gap-3">

@@ -86,7 +86,7 @@ export default function DashboardPage() {
                 <p className="font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
                   For you
                 </p>
-                <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-none text-ink sm:text-[26px]">
+                <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] leading-none text-ink sm:text-[26px]">
                   Latest from your feed
                 </h2>
               </div>

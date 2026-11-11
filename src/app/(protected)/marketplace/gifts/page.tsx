@@ -32,7 +32,7 @@ export default function GiftsPage() {
           </span>
           <div>
             <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">Gifts</p>
-            <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[32px] italic text-ink sm:text-[38px]">Your gifts</h1>
+            <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[32px] text-ink sm:text-[38px]">Your gifts</h1>
           </div>
         </div>
         <Link href="/marketplace" className="text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300">
