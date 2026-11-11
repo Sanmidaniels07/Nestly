@@ -16,6 +16,7 @@ import LogoutConfirmDialog from "./logout-confirm-dialog";
 import GlobalSearch, { MobileSearch } from "./global-search";
 import { useAuth } from "@/src/hooks/use-auth";
 import NestlyMark from "./nestly-mark";
+import NestlyWordmark from "./nestly-wordmark";
 import MobileMoreMenu, { MenuRow } from "./more-menu";
 
 export default function Navbar() {
@@ -29,9 +30,7 @@ export default function Navbar() {
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between">
         <Link href="/" className="flex items-center gap-2.5">
           <NestlyMark size={34} />
-          <span className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
-            Nestly
-          </span>
+          <NestlyWordmark size="text-[22px]" />
         </Link>
 
         {isHydrated && (

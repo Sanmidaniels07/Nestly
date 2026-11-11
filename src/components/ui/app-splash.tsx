@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 
+import NestlyWordmark from "./nestly-wordmark";
+
 // Full-screen Nestly splash while the app restores your session - the API
 // (Render) can take up to a minute to wake after being idle, and the page
 // used to sit blank all that time. Rendered on the server too, so it shows
@@ -34,7 +36,7 @@ export default function AppSplash() {
     >
       <div className="splash-pop flex flex-col items-center">
         <NestlyMark />
-        <p className="mt-5 font-[family-name:var(--font-fraunces)] text-[30px] italic leading-none text-ink">Nestly</p>
+        <NestlyWordmark as="p" size="text-[30px]" className="mt-5" />
       </div>
 
       <div className="mt-8 h-[3px] w-40 overflow-hidden rounded-full bg-violet-100 dark:bg-violet-500/15">

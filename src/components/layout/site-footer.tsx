@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import NestlyMark from "@/src/components/ui/nestly-mark";
+import NestlyWordmark from "@/src/components/ui/nestly-wordmark";
 import CookieSettingsLink from "@/src/components/consent/cookie-settings-link";
 import { supportWhatsAppUrl } from "@/src/lib/support";
 
@@ -11,7 +12,7 @@ export default function SiteFooter() {
       <div className="max-w-7xl mx-auto px-6 text-center">
         <div className="flex items-center justify-center gap-3 mb-6">
           <NestlyMark size={44} />
-          <div className="font-bold text-3xl">Nestly</div>
+          <NestlyWordmark as="div" size="text-3xl" color="text-white" />
         </div>
         <p className="text-white/60 max-w-md mx-auto">
           Connect, Celebrate, Commerce — All in one place.
