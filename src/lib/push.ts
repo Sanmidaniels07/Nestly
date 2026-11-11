@@ -16,10 +16,10 @@ export type PushState =
 export const pushSupported = () =>
   typeof window !== "undefined" && "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
 
-const isIos = () =>
+export const isIos = () =>
   /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const isStandalone = () =>
+export const isStandalone = () =>
   window.matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
 
 // iPhones only allow push for sites added to the Home Screen.
@@ -50,7 +50,7 @@ const sameKey = (subscription: PushSubscription, key: Uint8Array) => {
 };
 
 // The API address lets the alert's "Mark as read" button reach the server.
-const registration = () =>
+export const registerServiceWorker = () =>
   navigator.serviceWorker.register(`/sw.js?api=${encodeURIComponent(process.env.NEXT_PUBLIC_API_URL ?? "")}`);
 
 const existingSubscription = async () => {
@@ -70,7 +70,7 @@ const subscribeAndSave = async () => {
   const key = await getPublicKey();
   if (!key) return false;
   const serverKey = toBytes(key);
-  const reg = await registration();
+  const reg = await registerServiceWorker();
   await navigator.serviceWorker.ready;
 
   let subscription = await reg.pushManager.getSubscription();

@@ -7,6 +7,7 @@ import { ThemeProvider } from "../providers/theme-provider";
 import AuthInitializer from "../components/auth/auth-initializer";
 import RouteMemory from "../components/navigation/route-memory";
 import PushSync from "../components/push/push-sync";
+import InstallPrompt from "../components/pwa/install-prompt";
 
 
 
@@ -23,6 +24,7 @@ export default function Providers({
         <AuthInitializer />
         <RouteMemory />
         <PushSync />
+        <InstallPrompt />
         {children}
 
         <ReactQueryDevtools
