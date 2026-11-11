@@ -16,7 +16,7 @@ export default function RecentOrders() {
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Orders
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
             Recent orders
           </h2>
         </div>

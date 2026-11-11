@@ -129,7 +129,7 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Store details
       </h2>
 
@@ -239,7 +239,7 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
           <Wallet size={17} className="text-violet-600 dark:text-violet-400" />
         </div>
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Payout details
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -388,7 +388,7 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Store policies
       </h2>
       <p className="mt-1 text-[13px] text-muted">

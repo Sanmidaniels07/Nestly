@@ -98,7 +98,7 @@ export default async function AreaPage({ params }: Props) {
         <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Shop local on {SITE_NAME}
         </p>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[34px] italic leading-tight text-ink sm:text-[44px]">Shop in {where}</h1>
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[34px] leading-tight text-ink sm:text-[44px]">Shop in {where}</h1>
         <p className="max-w-3xl text-[14.5px] leading-relaxed text-muted">
           {area.storeCount} {area.storeCount === 1 ? "seller is" : "sellers are"} based in or delivering to {area.name}, with {area.productCount}{" "}
           {area.productCount === 1 ? "listing" : "listings"}. Pay securely with Paystack, choose delivery or pickup, and confirm with your delivery code

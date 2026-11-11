@@ -113,7 +113,7 @@ function SendGift() {
         </motion.span>
         <div>
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">Send a gift</p>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] italic leading-tight text-ink sm:text-[36px]">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] leading-tight text-ink sm:text-[36px]">
             Make someone&apos;s day
           </h1>
         </div>

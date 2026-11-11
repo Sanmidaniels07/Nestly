@@ -19,7 +19,7 @@ export default function DeliveryTimeline({ status }: Props) {
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
         Delivery progress
       </h2>
 

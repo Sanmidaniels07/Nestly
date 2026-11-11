@@ -48,7 +48,7 @@ export default async function CategoriesPage() {
         <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Marketplace
         </p>
-        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">All categories</h1>
+        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] text-ink sm:text-[42px]">All categories</h1>
         <p className="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-muted">{description}</p>
       </header>
 
@@ -70,7 +70,7 @@ export default async function CategoriesPage() {
       {states.length > 0 && (
         <section className="space-y-4">
           <div className="flex flex-wrap items-end justify-between gap-2">
-            <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">Shop by state</h2>
+            <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] text-ink">Shop by state</h2>
             <Link href="/marketplace/locations" className="text-[13px] font-medium text-violet-700 hover:underline dark:text-violet-300">
               Shop by area (Lekki, Ikeja, Wuse…) →
             </Link>

@@ -103,7 +103,7 @@ export default function ProductCard({ product, compact = false, badge, deliveryN
 
         <h3
           className={`
-            font-[family-name:var(--font-fraunces)] italic leading-tight text-ink
+            font-[family-name:var(--font-fraunces)] leading-tight text-ink
             ${compact ? "text-[17px]" : "text-[21px]"}
           `}
         >

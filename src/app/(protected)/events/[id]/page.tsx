@@ -197,7 +197,7 @@ export default function EventDetailPage({
         ) : (
           <>
             <div className="flex items-start justify-between gap-4">
-              <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">
+              <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] leading-none text-ink">
                 {event.title}
               </h1>
 

@@ -7,6 +7,7 @@ import { Bell, Package, Gift } from "lucide-react";
 import LoginForm from "@/src/components/auth/LoginForm";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import NestlyMark from "@/src/components/ui/nestly-mark";
+import NestlyWordmark from "@/src/components/ui/nestly-wordmark";
 
 export default function LoginPage() {
   return (
@@ -23,12 +24,12 @@ export default function LoginPage() {
           <div className="mb-8">
             <div className="flex items-center gap-3 mb-6">
              <NestlyMark size={44} />
-              <div className="text-4xl font-bold tracking-tight text-ink">Nestly</div>
+              <NestlyWordmark as="div" size="text-4xl" />
             </div>
             <h1 className="font-[family-name:var(--font-fraunces)] text-5xl leading-[1.05] tracking-tight text-ink">
               Welcome back
               <br />
-              <em className="text-violet-600 dark:text-violet-400">to your nest.</em>
+              <em className="not-italic text-violet-600 dark:text-violet-400">to your nest.</em>
             </h1>
             <p className="mt-6 text-lg text-muted max-w-md">
               Pick up right where you left off. Your people, your orders and your plans are waiting.

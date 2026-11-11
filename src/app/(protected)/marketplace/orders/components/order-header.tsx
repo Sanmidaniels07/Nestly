@@ -12,7 +12,7 @@ export default function OrdersHeader() {
         </div>
 
         <div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] italic text-ink sm:text-[34px]">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[30px] text-ink sm:text-[34px]">
             My orders
           </h1>
           <p className="mt-0.5 text-[13.5px] text-muted">

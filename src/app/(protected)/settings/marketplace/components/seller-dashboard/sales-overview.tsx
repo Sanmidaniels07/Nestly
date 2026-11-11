@@ -33,7 +33,7 @@ export default function SalesOverview() {
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Performance
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+          <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
             Sales overview
           </h2>
         </div>

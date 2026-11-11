@@ -55,7 +55,7 @@ export default function GuideDocument({ current, title, intro, parts, finish }: 
         <p className="mt-8 font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
           Nestly guide · {total} steps
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[36px] italic leading-tight text-ink sm:text-[46px]">{title}</h1>
+        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[36px] leading-tight text-ink sm:text-[46px]">{title}</h1>
         <div className="mt-4 space-y-3 text-[15px] leading-relaxed text-ink-2">{intro}</div>
 
         {/* Switch guide */}
@@ -105,7 +105,7 @@ export default function GuideDocument({ current, title, intro, parts, finish }: 
           {parts.map((part, partIndex) => (
             <section key={part.heading}>
               <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.25em] text-subtle">Part {partIndex + 1}</p>
-              <h2 className="mt-1 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">{part.heading}</h2>
+              <h2 className="mt-1 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">{part.heading}</h2>
 
               <ol className="mt-5">
                 {part.steps.map((step, i) => {

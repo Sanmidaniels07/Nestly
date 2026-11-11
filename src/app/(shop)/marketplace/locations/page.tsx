@@ -25,7 +25,7 @@ export default async function LocationsPage() {
     <div className="mx-auto max-w-[1600px] space-y-10 px-1 py-6 sm:px-3 lg:px-4">
       <header>
         <p className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">Marketplace</p>
-        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">Shop by area</h1>
+        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[36px] text-ink sm:text-[42px]">Shop by area</h1>
         <p className="mt-2 max-w-2xl text-[14.5px] leading-relaxed text-muted">{description}</p>
       </header>
 

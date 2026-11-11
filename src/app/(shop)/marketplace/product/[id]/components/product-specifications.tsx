@@ -12,7 +12,7 @@ export default function ProductSpecifications({ product }: Props) {
   return (
     <section className="mt-8 overflow-hidden rounded-2xl border border-line bg-surface">
       <div className="border-b border-line px-6 py-5">
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           Specifications
         </h2>
       </div>

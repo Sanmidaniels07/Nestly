@@ -25,7 +25,7 @@ export default function EmptySaved({ variant = "no-saved", query }: Props) {
         )}
       </div>
 
-      <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+      <h2 className="mt-5 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
         {isSearchMiss ? `No results for "${query}"` : "No saved products"}
       </h2>
 

@@ -66,7 +66,7 @@ export default function ConversationList() {
     <div className="flex h-full min-h-0 flex-col">
       <div className="space-y-3 px-4 pb-3 pt-4 sm:px-5">
         <div className="flex items-end justify-between gap-3">
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic leading-none text-ink">Chats</h1>
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] leading-none text-ink">Chats</h1>
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-widest text-violet-600 dark:text-violet-400">
             {unreadTotal > 0 ? `${unreadTotal} unread` : "All caught up"}
           </p>

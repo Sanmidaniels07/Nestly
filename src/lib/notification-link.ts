@@ -37,7 +37,16 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
       return "/settings/marketplace?cac=1";
     case "ADMIN_PAYOUT_ACCOUNT_CHANGED":
     case "ADMIN_REFUND_NEEDED":
+    case "ADMIN_PAYOUT_FAILED":
       return "/admin?tab=payouts";
+    case "ADMIN_DISPUTE":
+      return "/admin?tab=disputes";
+    case "SELLER_RETURNS":
+      return "/settings/marketplace?tab=returns";
+    case "SELLER_EARNINGS":
+      return "/settings/marketplace?tab=earnings";
+    case "MY_RETURNS":
+      return "/marketplace/returns";
     case "ORDER":
       return notification.targetId ? `/marketplace/orders/${notification.targetId}` : "/marketplace/orders";
     // Shopping updates: a product (store page view, not the seller's editor),
@@ -48,6 +57,12 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
       return notification.targetId ? `/marketplace/seller/${notification.targetId}` : null;
     case "CART":
       return "/marketplace/cart";
+    // Live selling: the public live page (targetId is its share code), or
+    // the seller's studio for their own live (targetId is the live's id).
+    case "LIVE":
+      return notification.targetId ? `/live/${notification.targetId}` : null;
+    case "LIVE_STUDIO":
+      return notification.targetId ? `/marketplace/live/${notification.targetId}` : "/settings/marketplace?tab=lives";
     case "SELLER_ORDER":
       return notification.targetId
         ? `/settings/marketplace?tab=orders&order=${notification.targetId}`

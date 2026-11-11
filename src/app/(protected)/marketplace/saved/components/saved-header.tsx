@@ -17,7 +17,7 @@ export default function SavedHeader({ count }: Props) {
           <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
             Wishlist
           </p>
-          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[34px] italic text-ink sm:text-[40px]">
+          <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[34px] text-ink sm:text-[40px]">
             Saved products
           </h1>
         </div>

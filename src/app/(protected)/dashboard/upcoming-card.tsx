@@ -19,7 +19,7 @@ export default function UpcomingCard({ birthdays, community }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <div className="flex items-center justify-between">
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Coming up</h2>
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Coming up</h2>
         <Link
           href="/communities"
           className="flex items-center gap-1 text-[12.5px] text-muted hover:text-violet-600 dark:hover:text-violet-400"

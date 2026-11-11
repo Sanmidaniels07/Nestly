@@ -166,7 +166,8 @@ const parts: GuidePart[] = [
             If an item arrives damaged, faulty, the wrong item or significantly not as described, tap <strong>Request return</strong> within{" "}
             {RETURN_WINDOW_DAYS} days of delivery and choose what&apos;s wrong. For food, cakes and groceries you have {PERISHABLE_REPORT_HOURS} hours -
             add a photo and you don&apos;t need to send it back. There are no change-of-mind returns. Follow your requests under{" "}
-            <Link href="/marketplace/returns">Returns</Link>. Approved refunds are made within 7 business days to your original payment method.
+            <Link href="/marketplace/returns">My returns</Link>: the seller has 48 hours to refund you or send a replacement, and if you can&apos;t
+            agree, Nestly decides. Refunds go back to your original payment method, usually within 5-10 business days.
           </p>
         ),
       },

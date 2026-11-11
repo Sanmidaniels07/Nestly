@@ -24,7 +24,7 @@ export default function SectionHeader({ title, subtitle, action }: Props) {
           </p>
         )}
 
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-none text-ink sm:text-[38px]">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[32px] leading-none text-ink sm:text-[38px]">
           {title}
         </h2>
       </div>

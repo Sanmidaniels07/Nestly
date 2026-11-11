@@ -61,7 +61,7 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
       <div className="space-y-8">
         {/* Pricing */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Pricing
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -105,7 +105,7 @@ export default function PricingInventory({ draft, setDraft, onBack, onNext }: Pr
 
         {/* Inventory */}
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             Inventory
           </h2>
           <p className="mt-1 text-[13px] text-muted">
@@ -169,7 +169,7 @@ export function DeliverySection({
 }) {
   return (
     <div>
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery</h2>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Delivery</h2>
       <p className="mt-1 text-[13px] text-muted">
         What&apos;s the smallest vehicle that can deliver this safely? Buyers only see your delivery zones for that vehicle or a bigger one.
       </p>

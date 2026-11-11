@@ -46,7 +46,7 @@ export default function SellerSummary({ store, productId }: Props) {
           )}
 
           <div className="space-y-1.5">
-            <h3 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+            <h3 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
               {store.name}
             </h3>
 

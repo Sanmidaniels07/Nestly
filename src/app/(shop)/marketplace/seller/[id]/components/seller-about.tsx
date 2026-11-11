@@ -17,7 +17,7 @@ export default function SellerAbout({ store }: Props) {
       <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
         About seller
       </p>
-      <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">
+      <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[24px] text-ink">
         Meet {store.name}
       </h2>
 

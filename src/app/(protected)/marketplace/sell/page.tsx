@@ -53,7 +53,7 @@ function SellPageContent() {
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-500/10">
           <Clock size={26} className="text-amber-600 dark:text-amber-400" />
         </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
           Application pending
         </h1>
         <p className="mt-2.5 text-[13.5px] text-muted">
@@ -70,7 +70,7 @@ function SellPageContent() {
         <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 dark:bg-emerald-500/10">
           <CheckCircle2 size={26} className="text-emerald-600 dark:text-emerald-400" />
         </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
           You&apos;re all set up
         </h1>
         <p className="mt-2.5 text-[13.5px] text-muted">
@@ -105,7 +105,7 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
       <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 dark:bg-red-500/10">
         <XCircle size={26} className="text-red-600 dark:text-red-400" />
       </div>
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
         Application rejected
       </h1>
       <p className="mt-2.5 text-[13.5px] text-muted">
@@ -153,7 +153,7 @@ function BecomeSellerForm() {
         <StoreIcon size={26} className="text-violet-600 dark:text-violet-400" />
       </div>
 
-      <h1 className="text-center font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+      <h1 className="text-center font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
         Become a seller
       </h1>
       <p className="mt-2.5 text-center text-[13.5px] text-muted">
@@ -295,7 +295,7 @@ function CreateStoreForm() {
 
   return (
     <section className="mx-auto max-w-2xl rounded-2xl border border-line bg-surface p-6 sm:p-10">
-      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+      <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
         Set up your store
       </h1>
       <p className="mt-2.5 text-[13.5px] text-muted">

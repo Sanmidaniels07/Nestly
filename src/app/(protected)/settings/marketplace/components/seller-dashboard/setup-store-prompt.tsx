@@ -17,7 +17,7 @@ export default function SetupStorePrompt({ section, isSeller }: Props) {
       <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
         <Store size={24} className="text-violet-600 dark:text-violet-400" />
       </div>
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[24px] text-ink">
         {isSeller ? "Set up your store first" : "Become a seller first"}
       </h2>
       <p className="mx-auto mt-2.5 max-w-md text-[13.5px] leading-relaxed text-muted">

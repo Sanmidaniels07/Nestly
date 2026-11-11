@@ -37,6 +37,10 @@ const PREFERENCE_META: Record<
     label: "Shopping updates",
     description: "New products from stores you follow, items left in your cart, and things you asked about being back in stock. Includes emails.",
   },
+  LIVE: {
+    label: "Live selling",
+    description: "When a store you follow announces a live, reminders for lives you asked about, and when they start. Includes emails.",
+  },
   SYSTEM: {
     label: "System announcements",
     description: "Important updates about your account and Nestly.",
@@ -50,7 +54,7 @@ export default function SettingsNotificationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           Notifications
         </h2>
         <p className="mt-1 text-[13.5px] text-muted">

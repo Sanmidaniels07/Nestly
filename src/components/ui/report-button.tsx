@@ -91,7 +91,7 @@ function ReportModal({
 
       <div className="fixed left-1/2 top-1/2 z-[100] w-[92%] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-surface shadow-[0_30px_90px_rgba(0,0,0,0.18)]">
         <div className="flex items-center justify-between border-b border-line px-6 py-5">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
             Report {targetType.toLowerCase()}
           </h2>
           <button

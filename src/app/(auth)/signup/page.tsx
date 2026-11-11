@@ -64,7 +64,7 @@ export default function SignupPage() {
               <h1 className="font-[family-name:var(--font-fraunces)] text-5xl leading-[1.05] tracking-tight text-ink">
                 Come build
                 <br />
-                <em className="text-violet-600 dark:text-violet-400">your nest.</em>
+                <em className="not-italic text-violet-600 dark:text-violet-400">your nest.</em>
               </h1>
               <p className="mt-6 text-lg text-muted max-w-md">
                 Your friends, your celebrations and trusted sellers, together in one app.

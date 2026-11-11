@@ -38,7 +38,7 @@ export default function SocialLinksForm({ store }: { store: Store }) {
 
   return (
     <section id="social-links" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-6 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Social pages</h2>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Social pages</h2>
       <p className="mt-1 flex items-start gap-1.5 text-[13px] leading-relaxed text-muted">
         <Lock size={13} className="mt-[3px] shrink-0" />
         <span>

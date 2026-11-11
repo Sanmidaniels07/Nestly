@@ -24,7 +24,7 @@ export default function MarketplacePicks() {
           <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
             <Store size={16} className="text-violet-600 dark:text-violet-400" />
           </div>
-          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+          <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
             Marketplace picks
           </h3>
         </div>

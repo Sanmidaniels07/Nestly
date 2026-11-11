@@ -16,7 +16,7 @@ interface Props {
 
 const sectionLabel =
   "font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400";
-const sectionTitle = "mt-2 font-[family-name:var(--font-fraunces)] text-[24px] italic leading-none text-ink sm:text-[26px]";
+const sectionTitle = "mt-2 font-[family-name:var(--font-fraunces)] text-[24px] leading-none text-ink sm:text-[26px]";
 
 // The dashboard's seller section adapts to where the user is in the
 // selling journey: not selling, under review, rejected, approved without a

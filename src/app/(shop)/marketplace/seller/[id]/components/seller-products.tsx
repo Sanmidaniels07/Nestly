@@ -23,7 +23,7 @@ export default function SellerProducts({ products }: Props) {
         <p className="font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.3em] text-violet-600 dark:text-violet-400">
           Store products
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] italic text-ink">
+        <h2 className="mt-2 font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
           Products
         </h2>
         <p className="mt-1.5 text-[13px] text-muted">

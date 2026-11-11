@@ -13,9 +13,10 @@ import {
   ChevronLeft,
   ChevronRight,
   Link2,
+  Radio,
 } from "lucide-react";
 
-export type Tab = "dashboard" | "products" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
+export type Tab = "dashboard" | "products" | "lives" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
 
 interface Props {
   active: Tab;
@@ -25,6 +26,7 @@ interface Props {
 const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
   { id: "products", label: "Products", icon: Package },
+  { id: "lives", label: "Lives", icon: Radio },
   { id: "links", label: "Payment links", icon: Link2 },
   { id: "orders", label: "Orders", icon: ClipboardList },
   { id: "customers", label: "Customers", icon: Users },

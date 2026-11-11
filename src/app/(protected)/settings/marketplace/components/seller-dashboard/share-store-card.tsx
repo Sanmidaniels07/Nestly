@@ -94,7 +94,7 @@ export default function ShareStoreCard() {
           <Share2 size={18} />
         </div>
         <div className="min-w-0">
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic leading-tight text-ink">Share your store</h2>
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] leading-tight text-ink">Share your store</h2>
           <p className="mt-1 text-[13px] leading-relaxed text-muted">
             Share your store link on your status, stories and bio so more people can find you and buy.
           </p>

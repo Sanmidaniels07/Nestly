@@ -14,7 +14,7 @@ export default function ProfileMarketSection({ title, subtitle, items }: Props) 
   return (
     <section className="space-y-4">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           {title}
         </h2>
         <p className="text-[13.5px] text-subtle">{subtitle}</p>

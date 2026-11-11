@@ -23,7 +23,7 @@ export default function CheckoutHeader() {
           <ShoppingCart size={20} className="text-white" />
         </div>
         <div>
-          <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] italic text-ink">
+          <h1 className="font-[family-name:var(--font-fraunces)] text-[28px] text-ink">
             Checkout
           </h1>
           <p className="mt-1 text-[13.5px] text-muted">

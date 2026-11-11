@@ -36,7 +36,7 @@ export default function CheckoutSummary() {
 
   return (
     <aside className="sticky top-24 rounded-2xl border border-line bg-surface p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Order summary
       </h2>
 

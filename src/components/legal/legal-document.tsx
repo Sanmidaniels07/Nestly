@@ -40,7 +40,7 @@ export default function LegalDocument({ eyebrow, title, intro, sections }: Props
         <p className="mt-8 font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.25em] text-violet-600 dark:text-violet-400">
           {eyebrow}
         </p>
-        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[38px] italic leading-tight text-ink sm:text-[46px]">
+        <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[38px] leading-tight text-ink sm:text-[46px]">
           {title}
         </h1>
         <p className="mt-2 text-[13px] text-subtle">Last updated {LEGAL_LAST_UPDATED}</p>

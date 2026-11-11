@@ -7,7 +7,7 @@ export default function SellerDashboardHeader() {
         Seller Hub
       </p>
 
-      <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] italic text-ink sm:text-[40px]">
+      <h1 className="mt-2 font-[family-name:var(--font-fraunces)] text-[34px] text-ink sm:text-[40px]">
         Seller dashboard
       </h1>
 

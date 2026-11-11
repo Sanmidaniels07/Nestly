@@ -166,8 +166,8 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             {today && <span className="text-[12px] text-white/60">· {today}</span>}
           </div>
 
-          <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[38px] italic leading-[1.05] tracking-tight sm:text-5xl lg:text-[56px]">
-            Hello, {firstName}
+          <h1 className="mt-5 font-[family-name:var(--font-fraunces)] text-[38px] leading-[1.05] tracking-tight sm:text-5xl lg:text-[56px]">
+            Welcome, {firstName}
           </h1>
 
           {data &&

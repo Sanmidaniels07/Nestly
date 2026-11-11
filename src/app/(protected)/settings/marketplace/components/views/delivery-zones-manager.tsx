@@ -98,7 +98,7 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
 
   return (
     <section id="delivery-zones" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-5 sm:p-7">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">Delivery zones</h2>
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Delivery zones</h2>
       <p className="mt-1 text-[13px] leading-relaxed text-muted">
         Set a price for each group of areas you deliver to, by dispatch bike, car or truck. Buyers only see the zones whose vehicle
         can carry what they&apos;re buying.

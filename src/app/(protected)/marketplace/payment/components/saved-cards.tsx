@@ -14,7 +14,7 @@ export default function SavedCards() {
     <section className="rounded-2xl border border-line bg-surface p-6">
       <div className="mb-5 flex items-center justify-between gap-3">
         <div>
-          <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] italic text-ink">
+          <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
             Saved cards
           </h2>
           <p className="text-[13px] text-muted">Pay faster using an existing card.</p>

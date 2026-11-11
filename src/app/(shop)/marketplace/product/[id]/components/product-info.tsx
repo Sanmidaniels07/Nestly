@@ -20,7 +20,7 @@ export default function ProductInfo({ product }: Props) {
           </p>
         )}
 
-        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[32px] italic leading-tight text-ink sm:text-[36px]">
+        <h1 className="mt-1.5 font-[family-name:var(--font-fraunces)] text-[32px] leading-tight text-ink sm:text-[36px]">
           {product.title}
         </h1>
 

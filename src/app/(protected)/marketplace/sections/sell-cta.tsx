@@ -30,9 +30,9 @@ export default function SellCta() {
           </p>
           <h2 className="mt-3 font-[family-name:var(--font-fraunces)] text-[32px] leading-tight sm:text-[40px]">
             {hasStore ? (
-              <>Keep your store <em className="text-violet-300">growing.</em></>
+              <>Keep your store <em className="not-italic text-violet-300">growing.</em></>
             ) : (
-              <>Turn every visit into a <em className="text-violet-300">sale.</em></>
+              <>Turn every visit into a <em className="not-italic text-violet-300">sale.</em></>
             )}
           </h2>
           <p className="mt-4 max-w-md text-[15px] leading-relaxed text-[#C9C5DC]">

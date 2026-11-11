@@ -16,7 +16,7 @@ const tones: Record<string, string> = {
 export default function ProfileChipSection({ title, items, tone = "violet" }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-6">
-      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] italic text-ink">
+      <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         {title}
       </h2>
 

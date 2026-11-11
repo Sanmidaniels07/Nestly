@@ -24,7 +24,7 @@ export default function DeliveryReturns({ delivery }: { delivery: ProductDeliver
 
   return (
     <section className="mt-8 rounded-2xl border border-line bg-surface p-6" aria-labelledby="delivery-returns">
-      <h2 id="delivery-returns" className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+      <h2 id="delivery-returns" className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
         Delivery &amp; returns
       </h2>
 

@@ -36,7 +36,7 @@ function SearchPageContent() {
           Back
         </button>
 
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[36px] italic text-ink sm:text-[42px]">
+        <h1 className="font-[family-name:var(--font-fraunces)] text-[36px] text-ink sm:text-[42px]">
           Search products
         </h1>
       </div>

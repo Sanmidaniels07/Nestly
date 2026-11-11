@@ -30,7 +30,7 @@ export default function SettingsSecurityPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+        <h2 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
           Security
         </h2>
         <p className="mt-1 text-[13.5px] text-muted">

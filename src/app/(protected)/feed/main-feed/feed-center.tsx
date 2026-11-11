@@ -162,7 +162,7 @@ function QuietFeedWelcome({ hasPosts }: { hasPosts: boolean }) {
       <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
         <Sparkles size={20} />
       </span>
-      <h2 className="mt-4 font-[family-name:var(--font-fraunces)] text-[22px] italic text-ink">
+      <h2 className="mt-4 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
         {hasPosts ? "Your feed is just getting started" : "Your feed is waiting for you"}
       </h2>
       <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">
