@@ -237,6 +237,28 @@ const sections: LegalSection[] = [
     ),
   },
   {
+    id: "live",
+    heading: "Live selling",
+    body: (
+      <ul>
+        <li>You can go live once your store is fully set up (payout account, delivery zones or pickup, and at least one published product). A live ends by itself after 60 minutes.</li>
+        <li>
+          Only show and sell products you&apos;re allowed to list on Nestly, and only feature your own products. What you say on camera about price,
+          condition and delivery must match your listing - buyers can rely on it in a return or dispute.
+        </li>
+        <li>
+          A live-only discount you set is a promise: it applies to orders placed during the live and for 30 minutes after it ends, and you bear it (Nestly&apos;s
+          commission is worked out on the discounted price).
+        </li>
+        <li>
+          All sales from a live go through Nestly checkout. Asking viewers to pay you directly, or sharing phone numbers or account details on camera or in the
+          chat, breaks the &ldquo;Keep sales on Nestly&rdquo; rule below.
+        </li>
+        <li>No nudity, hate, harassment, dangerous activities or misleading giveaways. Nestly may end a live, and suspend live selling for your store, if these rules are broken.</li>
+      </ul>
+    ),
+  },
+  {
     id: "suspension",
     heading: "Suspension and ending",
     body: (

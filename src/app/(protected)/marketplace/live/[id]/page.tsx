@@ -299,7 +299,7 @@ function Studio({ live }: { live: SellerLive }) {
               </div>
               <div className="flex items-center gap-2">
                 <div className="min-w-0 flex-1 lg:hidden">
-                  <LiveChatInput onSend={room.sendChat} />
+                  <LiveChatInput onSend={room.sendChat} placeholder="Reply to your viewers…" />
                 </div>
                 <button type="button" onClick={() => setConfirmEnd(true)} className="h-11 shrink-0 rounded-full bg-rose-600 px-4 text-[13.5px] font-semibold lg:w-full">
                   End live
@@ -391,7 +391,7 @@ function Studio({ live }: { live: SellerLive }) {
               />
             </div>
             <div className="border-t border-line p-3">
-              <LiveChatInput variant="panel" onSend={room.sendChat} blocked={isLive ? null : { label: "Chat opens when you go live" }} />
+              <LiveChatInput variant="panel" placeholder="Reply to your viewers…" onSend={room.sendChat} blocked={isLive ? null : { label: "Chat opens when you go live" }} />
             </div>
           </div>
         )}

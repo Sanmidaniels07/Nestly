@@ -184,9 +184,10 @@ interface ChatInputProps {
   blocked?: { label: string; action?: () => void } | null;
   onHeart?: () => void;
   variant?: "overlay" | "panel";
+  placeholder?: string;
 }
 
-export function LiveChatInput({ onSend, blocked, onHeart, variant = "overlay" }: ChatInputProps) {
+export function LiveChatInput({ onSend, blocked, onHeart, variant = "overlay", placeholder = "Ask the seller something…" }: ChatInputProps) {
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState("");
@@ -240,7 +241,7 @@ export function LiveChatInput({ onSend, blocked, onHeart, variant = "overlay" }:
         <input
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, 200))}
-          placeholder="Ask the seller something…"
+          placeholder={placeholder}
           enterKeyHint="send"
           className={`h-11 min-w-0 flex-1 rounded-full px-4 text-[16px] outline-none sm:text-[14px] ${
             overlay

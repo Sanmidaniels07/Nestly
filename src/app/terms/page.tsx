@@ -208,6 +208,19 @@ const sections: LegalSection[] = [
     ),
   },
   {
+    id: "live",
+    heading: "Live selling",
+    body: (
+      <p>
+        Sellers can host live video sales on Nestly. Anyone with the link can watch a short preview; you need a free account to keep watching, chat
+        and buy. Orders placed during a live are normal Nestly orders, with the same checkout, delivery code, returns and refunds. A live-only price
+        applies only to orders placed during the live and for 30 minutes after it ends. Keep the chat respectful - sellers can remove messages and block
+        people from chatting, and Nestly may end a live that breaks these Terms. Lives aren&apos;t recorded by Nestly, but chat messages are kept with the
+        live.
+      </p>
+    ),
+  },
+  {
     id: "fees",
     heading: "Fees",
     body: (
