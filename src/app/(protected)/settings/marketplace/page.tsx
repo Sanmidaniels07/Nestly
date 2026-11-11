@@ -14,6 +14,7 @@ import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
 import PaymentLinksView from "./components/views/payment-links-view";
+import LivesView from "./components/views/lives-view";
 import OrdersView from "./components/views/orders-view";
 import CustomersView from "./components/views/customers-view";
 import StoreView from "./components/views/store-view";
@@ -27,6 +28,7 @@ import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleto
 const VALID_TABS: Tab[] = [
   "dashboard",
   "products",
+  "lives",
   "links",
   "orders",
   "customers",
@@ -111,6 +113,7 @@ function MarketplaceSettingsContent() {
   const tabSections: Record<Tab, string> = {
     dashboard: "dashboard",
     products: "products",
+    lives: "live selling",
     links: "payment links",
     orders: "orders",
     customers: "customers",
@@ -123,6 +126,7 @@ function MarketplaceSettingsContent() {
   const tabViews: Partial<Record<Tab, React.ReactNode>> = {
     dashboard: <DashboardView seller={seller} />,
     products: <ProductsView />,
+    lives: <LivesView />,
     links: <PaymentLinksView />,
     orders: <OrdersView />,
     customers: <CustomersView />,

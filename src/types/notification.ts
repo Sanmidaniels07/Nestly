@@ -30,7 +30,10 @@ export type NotificationTargetType =
   // Shopping updates for buyers.
   | "PRODUCT_PAGE"
   | "STORE_PAGE"
-  | "CART";
+  | "CART"
+  // Live selling: a live page (share code) / the seller's studio (live id).
+  | "LIVE"
+  | "LIVE_STUDIO";
 
 export interface Notification {
   id: string;
@@ -51,7 +54,8 @@ export type NotificationPreferenceType =
   | "MESSAGE"
   | "ORDER"
   | "SYSTEM"
-  | "SHOPPING";
+  | "SHOPPING"
+  | "LIVE";
 
 export interface NotificationPreference {
   type: NotificationPreferenceType;

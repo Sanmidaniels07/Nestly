@@ -15,6 +15,7 @@ import SellerAbout from "./components/seller-about";
 import SellerPolicies from "./components/seller-policies";
 import Skeleton from "@/src/components/ui/skeleton";
 import SuspendedNotice from "@/src/components/ui/suspended-notice";
+import LiveStrip from "@/src/components/live/live-strip";
 import { useSession } from "@/src/hooks/use-session";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
@@ -69,6 +70,7 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
       <SellerCover store={store} />
       <SellerProfile store={store} />
       <SellerStats store={store} productCount={productsData?.total ?? 0} />
+      <LiveStrip store={store.slug} title="Lives" />
 
       <SellerAbout store={store} />
       <SellerPolicies store={store} />

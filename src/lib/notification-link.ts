@@ -57,6 +57,12 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
       return notification.targetId ? `/marketplace/seller/${notification.targetId}` : null;
     case "CART":
       return "/marketplace/cart";
+    // Live selling: the public live page (targetId is its share code), or
+    // the seller's studio for their own live (targetId is the live's id).
+    case "LIVE":
+      return notification.targetId ? `/live/${notification.targetId}` : null;
+    case "LIVE_STUDIO":
+      return notification.targetId ? `/marketplace/live/${notification.targetId}` : "/settings/marketplace?tab=lives";
     case "SELLER_ORDER":
       return notification.targetId
         ? `/settings/marketplace?tab=orders&order=${notification.targetId}`
