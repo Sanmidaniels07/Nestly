@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { LucideIcon, Minus, Move, Plus, X } from "lucide-react";
+import { LucideIcon, Maximize2, Minus, Move, Plus, X } from "lucide-react";
 
 import type { CardLayout } from "@/src/hooks/use-live-room";
 import { LiveChatMessage, LiveProduct } from "@/src/types/live";
@@ -13,27 +13,130 @@ import { LivePrice } from "./live-ui";
 // (beside the video on wide screens, sliding up over its lower half on
 // phones) and a control bar along the bottom.
 
-export function LiveFrame({ top, stage, panel, controls }: { top: ReactNode; stage: ReactNode; panel?: ReactNode; controls: ReactNode }) {
-  // Full screen while open.
+// When minimized, the same frame (so the video keeps playing without
+// reconnecting) shrinks to a floating window that can be dragged around;
+// tapping it opens the live again.
+
+export function LiveFrame({
+  top,
+  stage,
+  panel,
+  controls,
+  minimized = false,
+  mini,
+  onExpand,
+}: {
+  top: ReactNode;
+  stage: ReactNode;
+  panel?: ReactNode;
+  controls: ReactNode;
+  minimized?: boolean;
+  // Small buttons on the mini window (e.g. mic, close).
+  mini?: ReactNode;
+  onExpand?: () => void;
+}) {
+  // Full screen while open (not while minimized - the page underneath scrolls).
   useEffect(() => {
+    if (minimized) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = previous;
     };
-  }, []);
+  }, [minimized]);
+
+  // Mini window position: distance from the bottom-right corner (null = the usual corner).
+  const [spot, setSpot] = useState<{ right: number; bottom: number } | null>(null);
+  const drag = useRef<{ x: number; y: number; right: number; bottom: number; moved: boolean } | null>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const isDesktop = useIsDesktop();
+  const corner = { right: isDesktop ? 24 : 12, bottom: isDesktop ? 24 : 92 };
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    if ((event.target as HTMLElement).closest("button")) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    drag.current = { x: event.clientX, y: event.clientY, ...(spot ?? corner), moved: false };
+  };
+  const onPointerMove = (event: React.PointerEvent) => {
+    const start = drag.current;
+    const box = boxRef.current;
+    if (!start || !box) return;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    if (Math.hypot(dx, dy) > 6) start.moved = true;
+    if (!start.moved) return;
+    const maxRight = window.innerWidth - box.offsetWidth - 8;
+    const maxBottom = window.innerHeight - box.offsetHeight - 8;
+    setSpot({ right: Math.min(maxRight, Math.max(8, start.right - dx)), bottom: Math.min(maxBottom, Math.max(8, start.bottom - dy)) });
+  };
+  // Set when a drag just ended, so the click that follows doesn't open the live.
+  const justDragged = useRef(false);
+  const onPointerUp = () => {
+    justDragged.current = !!drag.current?.moved;
+    drag.current = null;
+  };
+  // A tap (no drag) opens the live again.
+  const onClick = (event: React.MouseEvent) => {
+    if ((event.target as HTMLElement).closest("button")) return;
+    if (justDragged.current) {
+      justDragged.current = false;
+      return;
+    }
+    onExpand?.();
+  };
 
   return (
-    <div className="fixed inset-0 z-[70] flex flex-col bg-[#0c0c10] text-white">
-      <header className="flex h-14 shrink-0 items-center gap-2 border-b border-white/10 px-2.5 pt-[env(safe-area-inset-top)] sm:px-4">{top}</header>
+    <div
+      ref={boxRef}
+      style={minimized ? { ...(spot ?? corner), touchAction: "none" } : undefined}
+      onPointerDown={minimized ? onPointerDown : undefined}
+      onPointerMove={minimized ? onPointerMove : undefined}
+      onPointerUp={minimized ? onPointerUp : undefined}
+      onPointerCancel={minimized ? onPointerUp : undefined}
+      onClick={minimized ? onClick : undefined}
+      aria-label={minimized ? "Live (minimized) - tap to open" : undefined}
+      className={
+        minimized
+          ? "live-pop fixed z-[70] flex h-[224px] w-[126px] cursor-pointer flex-col overflow-hidden rounded-2xl bg-black text-white shadow-[0_16px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/20 sm:h-[300px] sm:w-[170px]"
+          : "fixed inset-0 z-[70] flex flex-col bg-[#0c0c10] text-white"
+      }
+    >
+      <header className={`h-14 shrink-0 items-center gap-2 border-b border-white/10 px-2.5 pt-[env(safe-area-inset-top)] sm:px-4 ${minimized ? "hidden" : "flex"}`}>{top}</header>
       <div className="relative flex min-h-0 flex-1">
         <main className="relative min-w-0 flex-1 overflow-hidden">{stage}</main>
-        {panel}
+        {!minimized && panel}
       </div>
-      <nav className="shrink-0 border-t border-white/10 bg-[#141419] pb-[env(safe-area-inset-bottom)]">
+      <nav className={`shrink-0 border-t border-white/10 bg-[#141419] pb-[env(safe-area-inset-bottom)] ${minimized ? "hidden" : ""}`}>
         <div className="mx-auto flex max-w-3xl items-stretch justify-around gap-0.5 px-1 py-1.5 sm:justify-center sm:gap-2">{controls}</div>
       </nav>
+      {minimized && (
+        <div className="absolute inset-0 z-40 flex flex-col justify-between bg-gradient-to-b from-black/50 via-transparent to-black/60 p-1.5">
+          <div className="flex items-start justify-between gap-1">
+            <span className="inline-flex items-center gap-1 rounded bg-rose-600 px-1.5 py-0.5 text-[9.5px] font-bold uppercase">
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-white" /> Live
+            </span>
+            <button type="button" onClick={onExpand} aria-label="Open the live" className="flex h-7 w-7 items-center justify-center rounded-full bg-black/55 backdrop-blur">
+              <Maximize2 size={13} />
+            </button>
+          </div>
+          <div className="flex items-center justify-center gap-1.5">{mini}</div>
+        </div>
+      )}
     </div>
+  );
+}
+
+/** Small round button on the mini window. */
+export function MiniButton({ icon: Icon, label, onClick, danger = false }: { icon: LucideIcon; label: string; onClick: () => void; danger?: boolean }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className={`flex h-8 w-8 items-center justify-center rounded-full backdrop-blur ${danger ? "bg-rose-600" : "bg-black/60"}`}
+    >
+      <Icon size={15} />
+    </button>
   );
 }
 

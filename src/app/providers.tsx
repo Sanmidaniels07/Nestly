@@ -8,6 +8,8 @@ import AuthInitializer from "../components/auth/auth-initializer";
 import RouteMemory from "../components/navigation/route-memory";
 import PushSync from "../components/push/push-sync";
 import InstallPrompt from "../components/pwa/install-prompt";
+import { LiveDockProvider } from "../components/live/live-dock-context";
+import LiveDock from "../components/live/live-dock";
 
 
 
@@ -21,11 +23,15 @@ export default function Providers({
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <AuthInitializer />
-        <RouteMemory />
-        <PushSync />
-        <InstallPrompt />
-        {children}
+        <LiveDockProvider>
+          <AuthInitializer />
+          <RouteMemory />
+          <PushSync />
+          <InstallPrompt />
+          {children}
+          {/* A live keeps running here while the person uses the rest of the app. */}
+          <LiveDock />
+        </LiveDockProvider>
 
         <ReactQueryDevtools
           initialIsOpen={false}
