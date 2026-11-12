@@ -115,7 +115,7 @@ export default function LiveBuySheet({ live, productId, onClose }: Props) {
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-end justify-center bg-black/50 sm:items-center" onClick={() => !processing && onClose()}>
+    <div className="fixed inset-0 z-[80] flex items-end justify-center bg-black/50 sm:items-center" onClick={() => !processing && onClose()}>
       <div
         role="dialog"
         aria-modal="true"
