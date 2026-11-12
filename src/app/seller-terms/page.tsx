@@ -241,7 +241,7 @@ const sections: LegalSection[] = [
     heading: "Live selling",
     body: (
       <ul>
-        <li>You can go live once your store is fully set up (payout account, delivery zones or pickup, and at least one published product). A live ends by itself after 60 minutes.</li>
+        <li>You can go live once your store is fully set up (payout account, delivery zones or pickup, and at least one published product). Lives have a time limit (shown in your Lives tab) and end by themselves when it&apos;s reached.</li>
         <li>
           Only show and sell products you&apos;re allowed to list on Nestly, and only feature your own products. What you say on camera about price,
           condition and delivery must match your listing - buyers can rely on it in a return or dispute.

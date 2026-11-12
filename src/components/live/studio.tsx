@@ -36,7 +36,7 @@ import { getHostToken, startLive } from "@/src/services/live.services";
 import { naira } from "@/src/lib/payment-link";
 import { HostVideo, HostVideoHandle, MAX_ZOOM } from "@/src/components/live/live-video";
 import { useLiveDock } from "@/src/components/live/live-dock-context";
-import { ChatPreview, ControlButton, DEFAULT_CARD, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread } from "@/src/components/live/live-shell";
+import { ChatPreview, ControlButton, DEFAULT_CARD, EndingCountdown, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread } from "@/src/components/live/live-shell";
 import { useMyProducts } from "@/src/hooks/use-my-products";
 import { FloatingHearts, LiveBadge, LiveChatInput, LiveChatList, PinnedProduct, PurchaseTicker, liveShareUrl, liveWhen } from "@/src/components/live/live-ui";
 import { LiveVideo, SellerLive } from "@/src/types/live";
@@ -255,7 +255,7 @@ export function Studio({ live }: { live: SellerLive }) {
             <RefreshCw size={12} className="animate-spin" /> Reconnecting
           </span>
         )}
-        {isLive && secondsLeft !== null && secondsLeft <= 5 * 60 ? (
+        {isLive && secondsLeft !== null && secondsLeft <= 2 * 60 ? (
           <span className="rounded-md bg-amber-500 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[12px] font-semibold text-black">Ends {clock(secondsLeft)}</span>
         ) : (
           elapsed !== null && <span className="rounded-md bg-white/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[12px]">{clock(elapsed)}</span>
@@ -278,6 +278,7 @@ export function Studio({ live }: { live: SellerLive }) {
         </div>
       )}
       {!minimized && <FloatingHearts hearts={room.hearts} />}
+      {isLive && !minimized && <EndingCountdown secondsLeft={secondsLeft} host />}
 
       {!minimized && zoom > 1 && !showZoom && (
         <button type="button" onClick={() => changeZoom(1)} className="absolute right-3 top-3 z-20 rounded-full bg-black/60 px-3 py-1 text-[12px] font-semibold backdrop-blur">

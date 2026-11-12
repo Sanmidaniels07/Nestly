@@ -36,7 +36,7 @@ import { rememberReturnTo } from "@/src/lib/return-to";
 import { ViewerVideo } from "@/src/components/live/live-video";
 import LiveBuySheet from "@/src/components/live/live-buy-sheet";
 import { useLiveDock } from "@/src/components/live/live-dock-context";
-import { ChatPreview, ControlButton, DEFAULT_CARD, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useViewerZoom } from "@/src/components/live/live-shell";
+import { ChatPreview, ControlButton, DEFAULT_CARD, EndingCountdown, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useSecondsLeft, useViewerZoom } from "@/src/components/live/live-shell";
 import {
   FloatingHearts,
   LiveBadge,
@@ -98,6 +98,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
   // Where this viewer moved the product card to (only on their screen); null = follow the seller.
   const [myCard, setMyCard] = useState<CardLayout | null>(null);
   const zoom = useViewerZoom();
+  const secondsLeftToEnd = useSecondsLeft(live.endsAt);
   const router = useRouter();
   const dock = useLiveDock();
   const minimized = dock.minimized;
@@ -277,6 +278,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
       )}
 
       {!minimized && <FloatingHearts hearts={room.hearts} />}
+      {!minimized && <EndingCountdown secondsLeft={secondsLeftToEnd} host={false} />}
       {!minimized && (
         <button
           type="button"

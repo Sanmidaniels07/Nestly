@@ -594,3 +594,41 @@ export function MovableCard({
     </div>
   );
 }
+
+/** Seconds until the live ends by itself (null when there's no end time). Ticks every second. */
+export function useSecondsLeft(endsAt: string | null | undefined) {
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!endsAt) return;
+    const timer = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(timer);
+  }, [endsAt]);
+  return endsAt ? Math.max(0, Math.ceil((new Date(endsAt).getTime() - now) / 1000)) : null;
+}
+
+/**
+ * The last minute of a live, like a meeting about to end: a countdown card -
+ * big for the seller, a slim banner for viewers.
+ */
+export function EndingCountdown({ secondsLeft, host }: { secondsLeft: number | null; host: boolean }) {
+  if (secondsLeft === null || secondsLeft > 60) return null;
+  const time = `0:${String(secondsLeft).padStart(2, "0")}`;
+  if (!host) {
+    return (
+      <div role="status" className="pointer-events-none absolute inset-x-0 top-3 z-30 flex justify-center px-3">
+        <p className="live-pop rounded-full bg-amber-400 px-4 py-1.5 text-[12.5px] font-semibold text-black shadow-lg">
+          {secondsLeft > 0 ? <>Live ends in <span className="font-[family-name:var(--font-mono)]">{time}</span> - grab your deals</> : "This live is ending…"}
+        </p>
+      </div>
+    );
+  }
+  return (
+    <div role="alert" className="pointer-events-none absolute inset-x-0 top-1/3 z-30 flex justify-center px-4">
+      <div className="live-pop w-full max-w-xs rounded-3xl bg-black/80 p-5 text-center shadow-2xl ring-1 ring-amber-400/60 backdrop-blur">
+        <p className="text-[13px] font-semibold text-amber-300">{secondsLeft > 0 ? "Your live ends in" : "Ending your live…"}</p>
+        {secondsLeft > 0 && <p className="mt-1 font-[family-name:var(--font-mono)] text-[44px] font-semibold leading-none text-white">{time}</p>}
+        <p className="mt-2 text-[12.5px] leading-snug text-white/75">Say goodbye and share your last deal - it ends by itself. Live prices stay on for 30 minutes after.</p>
+      </div>
+    </div>
+  );
+}
