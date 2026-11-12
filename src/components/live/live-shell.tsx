@@ -2,8 +2,9 @@
 
 import { ReactNode, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Image from "next/image";
-import { LucideIcon, Minus, Plus, X } from "lucide-react";
+import { LucideIcon, Minus, Move, Plus, X } from "lucide-react";
 
+import type { CardLayout } from "@/src/hooks/use-live-room";
 import { LiveChatMessage, LiveProduct } from "@/src/types/live";
 import { LivePrice } from "./live-ui";
 
@@ -323,4 +324,159 @@ export function useUnread(count: number, watching: boolean) {
   const [seen, setSeen] = useState(count);
   if (watching && seen !== count) setSeen(count);
   return watching ? 0 : Math.max(0, count - seen);
+}
+
+export const DEFAULT_CARD: CardLayout = { x: 0, y: 1, scale: 1 };
+const CARD_MIN = 0.6;
+const CARD_MAX = 1.8;
+const clampScale = (scale: number) => Math.round(Math.min(CARD_MAX, Math.max(CARD_MIN, scale)) * 100) / 100;
+
+type CardGesture = { kind: "drag"; px: number; py: number; left: number; top: number } | { kind: "pinch"; distance: number; scale: number };
+
+/**
+ * The product card the seller is showing. It can be dragged anywhere on the
+ * video and made bigger or smaller (pinch, mouse wheel, or tap it for - / +).
+ * x/y are 0-1 across the free space, so the card sits in the same spot on any
+ * screen size. The page decides who sees a change: the seller's goes to
+ * everyone, a viewer's stays on their own screen.
+ */
+export function MovableCard({
+  layout,
+  onChange,
+  onReset,
+  resetLabel,
+  children,
+}: {
+  layout: CardLayout;
+  onChange: (layout: CardLayout) => void;
+  // Shown as a button in the toolbar when set (e.g. "Follow seller").
+  onReset?: () => void;
+  resetLabel?: string;
+  children: ReactNode;
+}) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [frame, setFrame] = useState({ w: 0, h: 0 });
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  const [tools, setTools] = useState(false);
+  const [gesture, setGesture] = useState<CardGesture | null>(null);
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
+
+  // Track the stage and card sizes (the card's unscaled size).
+  useEffect(() => {
+    const frameEl = frameRef.current;
+    const cardEl = cardRef.current;
+    if (!frameEl || !cardEl) return;
+    const observer = new ResizeObserver(() => {
+      setFrame({ w: frameEl.clientWidth, h: frameEl.clientHeight });
+      setSize({ w: cardEl.offsetWidth, h: cardEl.offsetHeight });
+    });
+    observer.observe(frameEl);
+    observer.observe(cardEl);
+    return () => observer.disconnect();
+  }, []);
+
+  const freeW = Math.max(0, frame.w - size.w * layout.scale);
+  const freeH = Math.max(0, frame.h - size.h * layout.scale);
+  const left = layout.x * freeW;
+  const top = layout.y * freeH;
+
+  const place = (nextLeft: number, nextTop: number, scale: number) => {
+    const w = Math.max(0, frame.w - size.w * scale);
+    const h = Math.max(0, frame.h - size.h * scale);
+    onChange({
+      x: w ? Math.min(1, Math.max(0, nextLeft / w)) : 0,
+      y: h ? Math.min(1, Math.max(0, nextTop / h)) : 1,
+      scale,
+    });
+  };
+
+  // Resize around the card's centre.
+  const resize = (scale: number) => {
+    const next = clampScale(scale);
+    const cx = left + (size.w * layout.scale) / 2;
+    const cy = top + (size.h * layout.scale) / 2;
+    place(cx - (size.w * next) / 2, cy - (size.h * next) / 2, next);
+  };
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    // Buttons on the card (Buy, the toolbar) keep working normally.
+    if ((event.target as HTMLElement).closest("button, a")) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pointers.current.size === 2) {
+      const [a, b] = [...pointers.current.values()];
+      setGesture({ kind: "pinch", distance: Math.hypot(a.x - b.x, a.y - b.y), scale: layout.scale });
+    } else {
+      setGesture({ kind: "drag", px: event.clientX, py: event.clientY, left, top });
+    }
+  };
+
+  const onPointerMove = (event: React.PointerEvent) => {
+    if (!pointers.current.has(event.pointerId)) return;
+    pointers.current.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (gesture?.kind === "pinch" && pointers.current.size === 2) {
+      const [a, b] = [...pointers.current.values()];
+      resize((gesture.scale * Math.hypot(a.x - b.x, a.y - b.y)) / gesture.distance);
+    } else if (gesture?.kind === "drag") {
+      place(gesture.left + event.clientX - gesture.px, gesture.top + event.clientY - gesture.py, layout.scale);
+    }
+  };
+
+  const onPointerEnd = (event: React.PointerEvent) => {
+    pointers.current.delete(event.pointerId);
+    if (pointers.current.size === 0) {
+      // A tap without moving shows the size buttons.
+      if (gesture?.kind === "drag" && Math.hypot(event.clientX - gesture.px, event.clientY - gesture.py) < 6) setTools((value) => !value);
+      setGesture(null);
+    } else if (pointers.current.size === 1) {
+      const [only] = [...pointers.current.values()];
+      setGesture({ kind: "drag", px: only.x, py: only.y, left, top });
+    }
+  };
+
+  return (
+    <div ref={frameRef} className="pointer-events-none absolute inset-3 z-[15]">
+      <div
+        ref={cardRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerEnd}
+        onPointerCancel={onPointerEnd}
+        onWheel={(event) => resize(layout.scale * (event.deltaY < 0 ? 1.08 : 1 / 1.08))}
+        style={{
+          left,
+          top,
+          transform: `scale(${layout.scale})`,
+          transformOrigin: "top left",
+          touchAction: "none",
+          visibility: frame.w ? "visible" : "hidden",
+        }}
+        className={`pointer-events-auto absolute w-[min(calc(100vw-2rem),360px)] select-none ${gesture ? "cursor-grabbing" : "cursor-grab"}`}
+      >
+        <div className={`rounded-2xl ${gesture || tools ? "ring-2 ring-violet-400" : ""}`}>{children}</div>
+        {tools && (
+          <div className="absolute -top-11 left-0 flex items-center gap-1 rounded-full bg-black/75 p-1 text-white backdrop-blur">
+            <span className="flex items-center gap-1 px-2 text-[11px] text-white/75">
+              <Move size={12} /> Drag
+            </span>
+            <button type="button" onClick={() => resize(layout.scale - 0.15)} aria-label="Make product smaller" className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/15">
+              <Minus size={14} />
+            </button>
+            <button type="button" onClick={() => resize(layout.scale + 0.15)} aria-label="Make product bigger" className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/15">
+              <Plus size={14} />
+            </button>
+            {onReset && (
+              <button type="button" onClick={onReset} className="whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-semibold hover:bg-white/15">
+                {resetLabel ?? "Reset"}
+              </button>
+            )}
+            <button type="button" onClick={() => setTools(false)} aria-label="Done" className="flex h-7 w-7 items-center justify-center rounded-full hover:bg-white/15">
+              <X size={13} />
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }

@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 
 import { useLive, useLiveReminder } from "@/src/hooks/use-lives";
-import { useLiveRoom } from "@/src/hooks/use-live-room";
+import { CardLayout, useLiveRoom } from "@/src/hooks/use-live-room";
 import { useRequireLogin, useSession } from "@/src/hooks/use-session";
 import { useAuthStore } from "@/src/store/auth-store";
 import { getWatchToken, liveCalendarUrl } from "@/src/services/live.services";
@@ -34,7 +34,7 @@ import { rememberReturnTo } from "@/src/lib/return-to";
 import Skeleton from "@/src/components/ui/skeleton";
 import { ViewerVideo } from "@/src/components/live/live-video";
 import LiveBuySheet from "@/src/components/live/live-buy-sheet";
-import { ChatPreview, ControlButton, LiveFrame, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useViewerZoom } from "@/src/components/live/live-shell";
+import { ChatPreview, ControlButton, DEFAULT_CARD, LiveFrame, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useViewerZoom } from "@/src/components/live/live-shell";
 import {
   FloatingHearts,
   LiveBadge,
@@ -333,6 +333,8 @@ function LiveNow({ live }: { live: PublicLive }) {
   const [panelOpen, setPanelOpen] = useState<boolean | null>(null);
   const [tab, setTab] = useState<"chat" | "products">("chat");
   const [showZoom, setShowZoom] = useState(false);
+  // Where this viewer moved the product card to (only on their screen); null = follow the seller.
+  const [myCard, setMyCard] = useState<CardLayout | null>(null);
   const zoom = useViewerZoom();
 
   const guest = isHydrated && !isLoggedIn;
@@ -363,6 +365,13 @@ function LiveNow({ live }: { live: PublicLive }) {
       return [...missing, ...current].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
     });
   }, [live.messages, setMessages]);
+
+  // Same for the product being shown: the page can open with an older copy
+  // of the live, so follow each fresh fetch.
+  const { setPinnedProductId } = room;
+  useEffect(() => {
+    setPinnedProductId(live.pinnedProductId);
+  }, [live.pinnedProductId, setPinnedProductId]);
 
   // A guest who logs in mid-live: reconnect so chat knows who they are.
   useEffect(() => {
@@ -482,17 +491,23 @@ function LiveNow({ live }: { live: PublicLive }) {
 
       <FloatingHearts hearts={room.hearts} />
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-3">
+      <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 p-3 ${pinned ? "pb-28" : ""}`}>
         <div className="pointer-events-auto space-y-2">
           <PurchaseTicker purchase={room.purchase} />
           {!open && <ChatPreview messages={room.messages} onOpen={() => showPanel("chat")} />}
-          {pinned && (
-            <div className="max-w-md">
-              <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={() => buy(pinned.id)} />
-            </div>
-          )}
         </div>
       </div>
+
+      {pinned && (
+        <MovableCard
+          layout={myCard ?? room.card ?? DEFAULT_CARD}
+          onChange={setMyCard}
+          onReset={myCard ? () => setMyCard(null) : undefined}
+          resetLabel="Follow seller"
+        >
+          <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={() => buy(pinned.id)} />
+        </MovableCard>
+      )}
 
       {showZoom && (
         <ZoomControl zoom={zoom.zoom} max={zoom.max} onChange={zoom.setZoom} onClose={() => setShowZoom(false)} note="Pinch or double-tap the video too" />

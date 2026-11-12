@@ -35,7 +35,7 @@ import { getHostToken, startLive } from "@/src/services/live.services";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
 import { HostVideo, HostVideoHandle, MAX_ZOOM } from "@/src/components/live/live-video";
-import { ChatPreview, ControlButton, LiveFrame, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread } from "@/src/components/live/live-shell";
+import { ChatPreview, ControlButton, DEFAULT_CARD, LiveFrame, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread } from "@/src/components/live/live-shell";
 import { useMyProducts } from "@/src/hooks/use-my-products";
 import { FloatingHearts, LiveBadge, LiveChatInput, LiveChatList, PinnedProduct, PurchaseTicker, liveShareUrl, liveWhen } from "@/src/components/live/live-ui";
 import { LiveVideo, SellerLive } from "@/src/types/live";
@@ -300,7 +300,7 @@ function Studio({ live }: { live: SellerLive }) {
             <ul className="space-y-1 text-[12.5px] text-white/80">
               <li>• Good light on your face and products, phone steady.</li>
               <li>• Keep this screen open - the live stops if your phone locks.</li>
-              <li>• Use Zoom to show details up close, and Products or Store to put an item on everyone&apos;s screen with a Buy button.</li>
+              <li>• Use Zoom to show details up close, and Products or Store to put an item on everyone&apos;s screen with a Buy button. Drag it anywhere, pinch to resize.</li>
             </ul>
             <button
               type="button"
@@ -316,17 +316,23 @@ function Studio({ live }: { live: SellerLive }) {
       )}
 
       {isLive && (
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-3">
+        <div className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 p-3 ${pinned ? "pb-28" : ""}`}>
           <div className="pointer-events-auto space-y-2">
             <PurchaseTicker purchase={room.purchase} />
             {!open && <ChatPreview messages={room.messages} onOpen={() => showPanel("chat")} />}
-            {pinned && (
-              <div className="max-w-md">
-                <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={() => show(pinned.id)} actionLabel="Hide" />
-              </div>
-            )}
           </div>
         </div>
+      )}
+
+      {isLive && pinned && (
+        <MovableCard
+          layout={room.card ?? DEFAULT_CARD}
+          onChange={room.sendCard}
+          onReset={room.card ? () => room.sendCard(DEFAULT_CARD) : undefined}
+          resetLabel="Back to corner"
+        >
+          <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={() => show(pinned.id)} actionLabel="Hide" />
+        </MovableCard>
       )}
 
       {showZoom && (

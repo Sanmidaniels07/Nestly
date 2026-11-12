@@ -11,6 +11,13 @@ import { LiveChatMessage, LiveProduct, LiveStatus } from "../types/live";
 
 const MAX_MESSAGES = 150;
 
+/** Where the seller put the product card: x/y 0-1 across the free space, scale = size. */
+export interface CardLayout {
+  x: number;
+  y: number;
+  scale: number;
+}
+
 export interface LivePurchase {
   key: number;
   name: string;
@@ -38,6 +45,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
   const [banned, setBanned] = useState(false);
   // Set when the seller adds a product mid-live (the full new list).
   const [products, setProducts] = useState<LiveProduct[] | null>(null);
+  const [card, setCard] = useState<CardLayout | null>(null);
   const [connected, setConnected] = useState(false);
 
   // Latest callbacks without re-subscribing.
@@ -56,9 +64,10 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
   useEffect(() => {
     const socket = getLiveSocket();
     const join = () => {
-      socket.emit("live:join", { liveId }, (reply: { ok: boolean; viewers?: number }) => {
+      socket.emit("live:join", { liveId }, (reply: { ok: boolean; viewers?: number; card?: CardLayout | null }) => {
         setConnected(reply.ok);
         if (reply.ok && typeof reply.viewers === "number") setViewers(reply.viewers);
+        if (reply.ok && reply.card) setCard(reply.card);
       });
     };
 
@@ -84,6 +93,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     const onWarning = ({ minutesLeft }: { minutesLeft: number }) => handlers.current.onTimeWarning?.(minutesLeft);
     const onDisconnect = () => setConnected(false);
     const onProducts = ({ products: list }: { products: LiveProduct[] }) => setProducts(list);
+    const onCard = (layout: CardLayout) => setCard(layout);
 
     socket.on("connect", join);
     socket.on("disconnect", onDisconnect);
@@ -98,6 +108,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     socket.on("live:heart", addHeart);
     socket.on("live:time-warning", onWarning);
     socket.on("live:products", onProducts);
+    socket.on("live:card", onCard);
 
     if (socket.connected) join();
     else socket.connect();
@@ -117,6 +128,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
       socket.off("live:heart", addHeart);
       socket.off("live:time-warning", onWarning);
       socket.off("live:products", onProducts);
+      socket.off("live:card", onCard);
     };
   }, [liveId, myUserId, addHeart]);
 
@@ -137,6 +149,25 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     [liveId]
   );
 
+  // Seller only: move / resize the product card for everyone. Sent at most
+  // every 50ms, and the final spot is always sent.
+  const cardTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastCardSent = useRef(0);
+  const sendCard = useCallback(
+    (layout: CardLayout) => {
+      setCard(layout);
+      const emit = () => {
+        lastCardSent.current = Date.now();
+        getLiveSocket().emit("live:card", { liveId, ...layout });
+      };
+      if (cardTimer.current) clearTimeout(cardTimer.current);
+      const wait = 50 - (Date.now() - lastCardSent.current);
+      if (wait <= 0) emit();
+      else cardTimer.current = setTimeout(emit, wait);
+    },
+    [liveId]
+  );
+
   const sendHeart = useCallback(() => {
     getLiveSocket().emit("live:heart", { liveId });
     addHeart();
@@ -154,6 +185,8 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     banned,
     connected,
     products,
+    card,
+    sendCard,
     sendChat,
     sendHeart,
   };
