@@ -9,14 +9,16 @@ import {
   Room,
   RoomEvent,
   Track,
+  TrackProcessor,
   VideoPresets,
+  VideoProcessorOptions,
   createLocalTracks,
 } from "livekit-client";
 import { Loader2, VideoOff, Volume2 } from "lucide-react";
 
 // Live video on LiveKit. Viewers subscribe to the seller's camera and mic;
 // the seller previews their camera, then publishes it once they go live.
-// The video fills a portrait (phone-shaped) frame.
+// Phones show the video edge to edge; wide screens show all of it.
 
 type VideoState = "connecting" | "waiting" | "playing" | "reconnecting" | "ended" | "error";
 
@@ -92,7 +94,7 @@ export function ViewerVideo({ url, token, onState }: { url: string; token: strin
 
   return (
     <div className="absolute inset-0 bg-black">
-      <video ref={videoRef} autoPlay playsInline muted className="h-full w-full object-cover" />
+      <video ref={videoRef} autoPlay playsInline muted className={`h-full w-full ${FIT}`} />
       <audio ref={audioRef} autoPlay />
       {state !== "playing" && <VideoOverlay state={state} />}
       {needsTap && state === "playing" && (
@@ -107,6 +109,8 @@ export function ViewerVideo({ url, token, onState }: { url: string; token: strin
     </div>
   );
 }
+
+const FIT = "object-cover lg:object-contain landscape:object-contain";
 
 function VideoOverlay({ state }: { state: VideoState }) {
   const copy: Record<Exclude<VideoState, "playing">, string> = {
@@ -132,6 +136,71 @@ function VideoOverlay({ state }: { state: VideoState }) {
 export interface HostVideoHandle {
   flipCamera: () => Promise<void>;
   setMicOn: (on: boolean) => Promise<void>;
+  /** 1 = normal. Viewers see the zoom too. */
+  setZoom: (zoom: number) => Promise<void>;
+}
+
+/** Most the seller can zoom in. */
+export const MAX_ZOOM = 4;
+
+type ZoomCapability = { min: number; max: number };
+
+const cameraZoom = (track: MediaStreamTrack | undefined): ZoomCapability | null => {
+  const range = (track?.getCapabilities?.() as MediaTrackCapabilities & { zoom?: ZoomCapability } | undefined)?.zoom;
+  return range && range.max > range.min ? range : null;
+};
+
+// Phones whose camera can't zoom by itself: crop the middle of each frame
+// and scale it back up, so what viewers get is zoomed too.
+class CropZoom implements TrackProcessor<Track.Kind.Video, VideoProcessorOptions> {
+  name = "nestly-crop-zoom";
+  processedTrack?: MediaStreamTrack;
+  zoom = 1;
+  private video?: HTMLVideoElement;
+  private canvas?: HTMLCanvasElement;
+  private timer?: ReturnType<typeof setInterval>;
+
+  async init({ track }: VideoProcessorOptions) {
+    const { width = 720, height = 1280 } = track.getSettings();
+    this.video = document.createElement("video");
+    this.video.muted = true;
+    this.video.playsInline = true;
+    this.video.srcObject = new MediaStream([track]);
+    await this.video.play().catch(() => {});
+    this.canvas = document.createElement("canvas");
+    this.canvas.width = width;
+    this.canvas.height = height;
+    const ctx = this.canvas.getContext("2d");
+    // A timer, not requestAnimationFrame: keeps going if the preview is covered.
+    this.timer = setInterval(() => {
+      const video = this.video;
+      if (!ctx || !video || video.readyState < 2) return;
+      const w = video.videoWidth || width;
+      const h = video.videoHeight || height;
+      if (this.canvas && (this.canvas.width !== w || this.canvas.height !== h)) {
+        this.canvas.width = w;
+        this.canvas.height = h;
+      }
+      const cropW = w / this.zoom;
+      const cropH = h / this.zoom;
+      ctx.drawImage(video, (w - cropW) / 2, (h - cropH) / 2, cropW, cropH, 0, 0, w, h);
+    }, 1000 / 30);
+    this.processedTrack = this.canvas.captureStream(30).getVideoTracks()[0];
+  }
+
+  async restart(opts: VideoProcessorOptions) {
+    await this.destroy();
+    await this.init(opts);
+  }
+
+  async destroy() {
+    if (this.timer) clearInterval(this.timer);
+    this.processedTrack?.stop();
+    if (this.video) this.video.srcObject = null;
+    this.video = undefined;
+    this.canvas = undefined;
+    this.processedTrack = undefined;
+  }
 }
 
 interface HostVideoProps {
@@ -149,6 +218,7 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
   const [cameraError, setCameraError] = useState("");
   // The front camera is shown mirrored (like a selfie); viewers see it the right way round.
   const [mirrored, setMirrored] = useState(true);
+  const zoomRef = useRef({ level: 1, crop: null as CropZoom | null });
 
   const handlers = useRef({ onError, onConnection });
   useEffect(() => {
@@ -227,8 +297,42 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
   useImperativeHandle(ref, () => ({
     flipCamera: async () => {
       facing.current = facing.current === "user" ? "environment" : "user";
-      await tracksRef.current.video?.restartTrack({ facingMode: facing.current, resolution: VideoPresets.h720.resolution });
+      const video = tracksRef.current.video;
+      // Back to normal first - the other camera has its own zoom range.
+      if (zoomRef.current.crop) {
+        await video?.stopProcessor();
+        zoomRef.current.crop = null;
+      }
+      zoomRef.current.level = 1;
+      await video?.restartTrack({ facingMode: facing.current, resolution: VideoPresets.h720.resolution });
       setMirrored(facing.current === "user");
+    },
+    setZoom: async (zoom: number) => {
+      const video = tracksRef.current.video;
+      if (!video) return;
+      const level = Math.min(MAX_ZOOM, Math.max(1, zoom));
+      zoomRef.current.level = level;
+      const hardware = cameraZoom(video.mediaStreamTrack);
+      if (hardware && !zoomRef.current.crop) {
+        const value = Math.min(hardware.max, Math.max(hardware.min, hardware.min * level));
+        await video.mediaStreamTrack.applyConstraints({ advanced: [{ zoom: value } as MediaTrackConstraintSet] }).catch(() => {});
+        return;
+      }
+      if (level === 1) {
+        if (zoomRef.current.crop) {
+          await video.stopProcessor();
+          zoomRef.current.crop = null;
+        }
+        return;
+      }
+      if (!zoomRef.current.crop) {
+        const crop = new CropZoom();
+        crop.zoom = level;
+        zoomRef.current.crop = crop;
+        await video.setProcessor(crop, true);
+      } else {
+        zoomRef.current.crop.zoom = level;
+      }
     },
     setMicOn: async (on: boolean) => {
       if (on) await tracksRef.current.audio?.unmute();
@@ -238,7 +342,7 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
 
   return (
     <div className="absolute inset-0 bg-black">
-      <video ref={videoRef} autoPlay playsInline muted className={`h-full w-full object-cover ${mirrored ? "-scale-x-100" : ""}`} />
+      <video ref={videoRef} autoPlay playsInline muted className={`h-full w-full ${FIT} ${mirrored ? "-scale-x-100" : ""}`} />
       {!cameraReady && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center text-white/80">
           {cameraError ? <VideoOff size={26} /> : <Loader2 size={26} className="animate-spin" />}

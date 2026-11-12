@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { getLiveSocket } from "../lib/live-socket";
-import { LiveChatMessage, LiveStatus } from "../types/live";
+import { LiveChatMessage, LiveProduct, LiveStatus } from "../types/live";
 
 // Everything that happens in a live room over the /live socket: chat,
 // hearts, the pinned product, "X just bought", stock and the viewer count.
@@ -36,6 +36,8 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
   const [purchase, setPurchase] = useState<LivePurchase | null>(null);
   const [stock, setStock] = useState<Record<string, number>>({});
   const [banned, setBanned] = useState(false);
+  // Set when the seller adds a product mid-live (the full new list).
+  const [products, setProducts] = useState<LiveProduct[] | null>(null);
   const [connected, setConnected] = useState(false);
 
   // Latest callbacks without re-subscribing.
@@ -81,6 +83,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     };
     const onWarning = ({ minutesLeft }: { minutesLeft: number }) => handlers.current.onTimeWarning?.(minutesLeft);
     const onDisconnect = () => setConnected(false);
+    const onProducts = ({ products: list }: { products: LiveProduct[] }) => setProducts(list);
 
     socket.on("connect", join);
     socket.on("disconnect", onDisconnect);
@@ -94,6 +97,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     socket.on("live:banned", onBanned);
     socket.on("live:heart", addHeart);
     socket.on("live:time-warning", onWarning);
+    socket.on("live:products", onProducts);
 
     if (socket.connected) join();
     else socket.connect();
@@ -112,6 +116,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
       socket.off("live:banned", onBanned);
       socket.off("live:heart", addHeart);
       socket.off("live:time-warning", onWarning);
+      socket.off("live:products", onProducts);
     };
   }, [liveId, myUserId, addHeart]);
 
@@ -148,6 +153,7 @@ export function useLiveRoom({ liveId, initialMessages, initialPinned, initialVie
     stock,
     banned,
     connected,
+    products,
     sendChat,
     sendHeart,
   };

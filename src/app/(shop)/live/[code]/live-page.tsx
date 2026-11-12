@@ -12,13 +12,16 @@ import {
   BellRing,
   CalendarPlus,
   Clock,
+  Heart,
   Loader2,
+  LogOut,
+  MessageCircle,
   Radio,
   Share2,
   ShoppingBag,
   Store,
   Video,
-  X,
+  ZoomIn,
 } from "lucide-react";
 
 import { useLive, useLiveReminder } from "@/src/hooks/use-lives";
@@ -31,6 +34,7 @@ import { rememberReturnTo } from "@/src/lib/return-to";
 import Skeleton from "@/src/components/ui/skeleton";
 import { ViewerVideo } from "@/src/components/live/live-video";
 import LiveBuySheet from "@/src/components/live/live-buy-sheet";
+import { ChatPreview, ControlButton, LiveFrame, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useViewerZoom } from "@/src/components/live/live-shell";
 import {
   FloatingHearts,
   LiveBadge,
@@ -321,14 +325,20 @@ function LiveNow({ live }: { live: PublicLive }) {
   const { isLoggedIn, isHydrated } = useSession();
   const myUserId = useAuthStore((state) => state.user?.id ?? null);
   const requireLogin = useRequireLogin();
+  const isDesktop = useIsDesktop();
   const [video, setVideo] = useState<WatchToken | null>(null);
   const [videoError, setVideoError] = useState("");
-  const [showProducts, setShowProducts] = useState(false);
   const [buying, setBuying] = useState<string | null>(null);
+  // null = the default: open beside the video on wide screens, closed on phones.
+  const [panelOpen, setPanelOpen] = useState<boolean | null>(null);
+  const [tab, setTab] = useState<"chat" | "products">("chat");
+  const [showZoom, setShowZoom] = useState(false);
+  const zoom = useViewerZoom();
 
   const guest = isHydrated && !isLoggedIn;
   const previewLeft = useGuestPreview(live.code, guest);
   const gated = guest && previewLeft <= 0;
+  const open = panelOpen ?? isDesktop;
 
   const refetch = useCallback(() => queryClient.invalidateQueries({ queryKey: ["lives", "public", live.code] }), [queryClient, live.code]);
 
@@ -340,20 +350,24 @@ function LiveNow({ live }: { live: PublicLive }) {
     myUserId,
     onStatus: () => refetch(),
   });
+  const unread = useUnread(room.messages.length, open && tab === "chat");
+
+  // Chat history can arrive after the room opened (a fresh fetch of the
+  // live) - add anything we don't have yet, in order.
+  const { setMessages } = room;
+  useEffect(() => {
+    setMessages((current) => {
+      const ids = new Set(current.map((message) => message.id));
+      const missing = live.messages.filter((message) => !ids.has(message.id));
+      if (missing.length === 0) return current;
+      return [...missing, ...current].sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
+    });
+  }, [live.messages, setMessages]);
 
   // A guest who logs in mid-live: reconnect so chat knows who they are.
   useEffect(() => {
     if (isLoggedIn) reconnectLiveSocket();
   }, [isLoggedIn]);
-
-  // Full screen while watching.
-  useEffect(() => {
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, []);
 
   useEffect(() => {
     if (!isHydrated || gated || live.isOwner) return;
@@ -366,16 +380,37 @@ function LiveNow({ live }: { live: PublicLive }) {
     };
   }, [isHydrated, gated, live.code, live.isOwner, isLoggedIn]);
 
+  // Products the seller adds mid-live arrive over the socket.
   const products = useMemo(
-    () => live.products.map((product) => (room.stock[product.id] !== undefined ? { ...product, stock: room.stock[product.id] } : product)),
-    [live.products, room.stock]
+    () => (room.products ?? live.products).map((product) => (room.stock[product.id] !== undefined ? { ...product, stock: room.stock[product.id] } : product)),
+    [room.products, live.products, room.stock]
   );
   const pinned = products.find((product) => product.id === room.pinnedProductId) ?? null;
+  const liveWithProducts = useMemo(() => ({ ...live, products }), [live, products]);
 
   const buy = (productId: string) => {
     if (live.isOwner) return;
     if (!requireLogin("Log in or create a free account to buy at the live price.")) return;
     setBuying(productId);
+  };
+
+  const showPanel = (next: "chat" | "products") => {
+    if (open && tab === next) setPanelOpen(false);
+    else {
+      setTab(next);
+      setPanelOpen(true);
+    }
+  };
+
+  const share = async () => {
+    const url = liveShareUrl(live.code, live.referralCode);
+    try {
+      if (navigator.share) return await navigator.share({ title: live.title, text: `${live.store.name} is live on Nestly: ${live.title}`, url });
+      await navigator.clipboard.writeText(url);
+      toast.success("Link copied");
+    } catch {
+      // closed
+    }
   };
 
   const chatBlocked = live.isOwner
@@ -386,146 +421,158 @@ function LiveNow({ live }: { live: PublicLive }) {
         ? { label: "The seller turned off chat for you" }
         : null;
 
-  return (
-    <div className="fixed inset-0 z-[70] flex justify-center bg-black text-white">
-      <div className="relative h-full w-full max-w-[calc(100dvh*9/16)] overflow-hidden lg:max-w-[min(480px,calc(100dvh*9/16))]">
-        {live.isOwner ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-violet-900 to-black px-8 text-center">
-            <Video size={32} />
-            <p className="text-[15px] font-semibold">You&apos;re live</p>
-            <p className="text-[13px] text-white/70">Your camera and controls are in your studio.</p>
-            <Link href={`/marketplace/live/${live.id}`} className="mt-2 rounded-xl bg-white px-5 py-2.5 text-[13.5px] font-semibold text-violet-700">
-              Open studio
-            </Link>
-          </div>
-        ) : gated ? (
-          <GuestGate live={live} />
-        ) : video ? (
-          <ViewerVideo url={video.url} token={video.token} />
-        ) : (
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/80">
-            {videoError ? <p className="px-8 text-center text-[13.5px]">{videoError}</p> : <Loader2 size={26} className="animate-spin" />}
-          </div>
-        )}
+  const top = (
+    <>
+      <Link href="/marketplace" aria-label="Leave the live" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full hover:bg-white/10">
+        <ArrowLeft size={19} />
+      </Link>
+      <Link href={`/marketplace/seller/${live.store.slug}`} className="flex min-w-0 items-center gap-2 rounded-full py-1 pr-2">
+        <span className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500">
+          {live.store.logo ? <Image src={live.store.logo} alt="" fill sizes="32px" className="object-cover" /> : <Store size={15} />}
+        </span>
+        <span className="min-w-0">
+          <span className="block truncate text-[13.5px] font-semibold">{live.store.name}</span>
+          <span className="block truncate text-[11.5px] text-white/60">{live.title}</span>
+        </span>
+      </Link>
+      <span className="ml-auto shrink-0">
+        <LiveBadge viewers={room.viewers} />
+      </span>
+    </>
+  );
 
-        {/* Top bar */}
-        <div className="absolute inset-x-0 top-0 z-20 bg-gradient-to-b from-black/60 to-transparent p-3 pt-[max(0.75rem,env(safe-area-inset-top))]">
-          <div className="flex items-center gap-2">
-            <Link href="/marketplace" aria-label="Leave the live" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-black/40 backdrop-blur">
-              <ArrowLeft size={18} />
-            </Link>
-            <Link href={`/marketplace/seller/${live.store.slug}`} className="flex min-w-0 items-center gap-2 rounded-full bg-black/40 py-1 pl-1 pr-3 backdrop-blur">
-              <span className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-500">
-                {live.store.logo ? <Image src={live.store.logo} alt="" fill sizes="32px" className="object-cover" /> : <Store size={15} />}
-              </span>
-              <span className="min-w-0">
-                <span className="block truncate text-[13px] font-semibold">{live.store.name}</span>
-                <span className="block truncate text-[11px] text-white/70">{live.title}</span>
-              </span>
-            </Link>
-            <span className="ml-auto shrink-0">
-              <LiveBadge viewers={room.viewers} />
-            </span>
-          </div>
-          {guest && !gated && (
-            <p className="mt-2 inline-block rounded-full bg-black/45 px-3 py-1 text-[11.5px] backdrop-blur">
-              Free preview: {previewLeft}s left ·{" "}
-              <button type="button" onClick={() => requireLogin("Create a free account to keep watching.")} className="font-semibold underline">
-                Sign up to keep watching
-              </button>
-            </p>
+  const stage = live.isOwner ? (
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-violet-900 to-black px-8 text-center">
+      <Video size={32} />
+      <p className="text-[15px] font-semibold">You&apos;re live</p>
+      <p className="text-[13px] text-white/70">Your camera and controls are in your studio.</p>
+      <Link href={`/marketplace/live/${live.id}`} className="mt-2 rounded-xl bg-white px-5 py-2.5 text-[13.5px] font-semibold text-violet-700">
+        Open studio
+      </Link>
+    </div>
+  ) : gated ? (
+    <GuestGate live={live} />
+  ) : (
+    <>
+      <div {...zoom.bind} className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0" style={zoom.transform}>
+          {video ? (
+            <ViewerVideo url={video.url} token={video.token} />
+          ) : (
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/80">
+              {videoError ? <p className="px-8 text-center text-[13.5px]">{videoError}</p> : <Loader2 size={26} className="animate-spin" />}
+            </div>
           )}
         </div>
+      </div>
 
-        {!gated && <FloatingHearts hearts={room.hearts} />}
+      {guest && (
+        <p className="absolute left-3 top-3 z-20 rounded-full bg-black/60 px-3 py-1 text-[11.5px] backdrop-blur">
+          Free preview: {previewLeft}s left ·{" "}
+          <button type="button" onClick={() => requireLogin("Create a free account to keep watching.")} className="font-semibold underline">
+            Sign up to keep watching
+          </button>
+        </p>
+      )}
+      {zoom.zoom > 1 && !showZoom && (
+        <button type="button" onClick={() => zoom.setZoom(1)} className="absolute right-3 top-3 z-20 rounded-full bg-black/60 px-3 py-1 text-[12px] font-semibold backdrop-blur">
+          {zoom.zoom.toFixed(1)}x · Reset
+        </button>
+      )}
 
-        {/* Bottom: ticker, chat, pinned product, input */}
-        {!gated && (
-          <div className="absolute inset-x-0 bottom-0 z-20 space-y-2.5 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-16">
-            <PurchaseTicker purchase={room.purchase} />
-            <LiveChatList messages={room.messages} />
-            {pinned && <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={live.isOwner ? undefined : () => buy(pinned.id)} />}
-            <div className="flex items-center gap-2">
+      <FloatingHearts hearts={room.hearts} />
+
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-3">
+        <div className="pointer-events-auto space-y-2">
+          <PurchaseTicker purchase={room.purchase} />
+          {!open && <ChatPreview messages={room.messages} onOpen={() => showPanel("chat")} />}
+          {pinned && (
+            <div className="max-w-md">
+              <PinnedProduct product={pinned} stock={room.stock[pinned.id]} onBuy={() => buy(pinned.id)} />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {showZoom && (
+        <ZoomControl zoom={zoom.zoom} max={zoom.max} onChange={zoom.setZoom} onClose={() => setShowZoom(false)} note="Pinch or double-tap the video too" />
+      )}
+    </>
+  );
+
+  const panel = !gated && !live.isOwner && (
+    <SidePanel
+      open={open}
+      tabs={[
+        { id: "chat", label: "Chat", icon: MessageCircle, count: room.messages.length },
+        { id: "products", label: "Products", icon: ShoppingBag, count: products.length },
+      ]}
+      active={tab}
+      onTab={(id) => setTab(id as "chat" | "products")}
+      onClose={() => setPanelOpen(false)}
+    >
+      {tab === "chat" ? (
+        <>
+          <div className="min-h-0 flex-1">
+            <LiveChatList variant="panel" messages={room.messages} />
+          </div>
+          <div className="border-t border-line p-3">
+            <LiveChatInput variant="panel" onSend={room.sendChat} blocked={chatBlocked} placeholder="Message everyone…" />
+          </div>
+        </>
+      ) : (
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          {live.discountActive && products.some((p) => p.discountPercent) && (
+            <p className="mb-2 rounded-xl bg-rose-50 px-3 py-2 text-[12px] font-semibold text-rose-700 dark:bg-rose-500/10 dark:text-rose-300">Live prices are on now</p>
+          )}
+          <ProductRows
+            products={products}
+            highlightId={room.pinnedProductId}
+            empty="The seller hasn't added products yet."
+            action={(product) => (
               <button
                 type="button"
-                onClick={() => setShowProducts(true)}
-                className="flex h-11 shrink-0 items-center gap-1.5 rounded-full bg-white px-3.5 text-[13px] font-semibold text-violet-700"
+                onClick={() => buy(product.id)}
+                disabled={!product.available || product.stock <= 0}
+                className="h-9 shrink-0 rounded-xl bg-violet-600 px-3.5 text-[12.5px] font-semibold text-white disabled:bg-zinc-400"
               >
-                <ShoppingBag size={16} /> {products.length}
+                {product.available && product.stock > 0 ? "Buy" : "Sold out"}
               </button>
-              <div className="min-w-0 flex-1">
-                <LiveChatInput onSend={room.sendChat} blocked={chatBlocked} onHeart={room.sendHeart} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {showProducts && (
-          <ProductsDrawer
-            products={products}
-            pinnedId={room.pinnedProductId}
-            discountActive={live.discountActive}
-            onClose={() => setShowProducts(false)}
-            onBuy={live.isOwner ? undefined : (id) => buy(id)}
+            )}
           />
-        )}
-      </div>
-
-      {buying && <LiveBuySheet live={live} productId={buying} onClose={() => setBuying(null)} />}
-    </div>
-  );
-}
-
-function ProductsDrawer({
-  products,
-  pinnedId,
-  discountActive,
-  onClose,
-  onBuy,
-}: {
-  products: LiveProduct[];
-  pinnedId: string | null;
-  discountActive: boolean;
-  onClose: () => void;
-  onBuy?: (id: string) => void;
-}) {
-  return (
-    <div className="absolute inset-0 z-30 flex items-end bg-black/40" onClick={onClose}>
-      <div onClick={(event) => event.stopPropagation()} className="max-h-[70%] w-full overflow-y-auto rounded-t-3xl bg-canvas p-4 pb-[max(1rem,env(safe-area-inset-bottom))] text-ink">
-        <div className="mb-3 flex items-center justify-between">
-          <p className="text-[15px] font-semibold">
-            Products in this live{discountActive && products.some((p) => p.discountPercent) && <span className="ml-2 text-[12px] font-medium text-rose-600">Live prices on now</span>}
-          </p>
-          <button type="button" onClick={onClose} aria-label="Close" className="rounded-lg p-1.5 text-muted hover:bg-surface-2">
-            <X size={18} />
-          </button>
+          <Link
+            href={`/marketplace/seller/${live.store.slug}`}
+            className="mt-3 flex h-11 items-center justify-center gap-2 rounded-xl border border-line text-[13px] font-semibold text-ink-2 hover:bg-surface-2"
+          >
+            <Store size={15} /> See everything in {live.store.name}
+          </Link>
         </div>
-        <ul className="space-y-2">
-          {products.map((product) => (
-            <li key={product.id} className={`flex items-center gap-3 rounded-2xl border p-2.5 ${product.id === pinnedId ? "border-violet-400 bg-violet-50/60 dark:bg-violet-500/10" : "border-line bg-surface"}`}>
-              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl bg-surface-sunken">
-                {product.image && <Image src={product.image} alt="" fill sizes="56px" className="object-cover" />}
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate text-[13.5px] font-semibold">{product.title}</span>
-                <LivePrice product={product} size="sm" />
-                {product.id === pinnedId && <span className="block text-[11px] font-semibold text-violet-600">Showing now</span>}
-              </span>
-              {onBuy && (
-                <button
-                  type="button"
-                  onClick={() => onBuy(product.id)}
-                  disabled={!product.available || product.stock <= 0}
-                  className="h-9 shrink-0 rounded-xl bg-violet-600 px-3.5 text-[12.5px] font-semibold text-white disabled:bg-zinc-400"
-                >
-                  {product.available && product.stock > 0 ? "Buy" : "Sold out"}
-                </button>
-              )}
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
+      )}
+    </SidePanel>
+  );
+
+  const controls = (
+    <>
+      <ControlButton icon={MessageCircle} label="Chat" active={open && tab === "chat"} badge={unread} onClick={() => showPanel("chat")} disabled={gated || live.isOwner} />
+      <ControlButton icon={ShoppingBag} label="Products" badge={0} active={open && tab === "products"} onClick={() => showPanel("products")} disabled={gated || live.isOwner} />
+      <ControlButton icon={ZoomIn} label="Zoom" active={showZoom || zoom.zoom > 1} onClick={() => setShowZoom((value) => !value)} disabled={gated || !video} />
+      <ControlButton icon={Heart} label="Love" onClick={room.sendHeart} disabled={gated} />
+      <ControlButton icon={Share2} label="Share" onClick={share} />
+      <Link
+        href="/marketplace"
+        className="flex min-w-[52px] flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-rose-600 px-1.5 py-1.5 text-[10.5px] font-medium text-white hover:bg-rose-700 sm:min-w-[68px] sm:flex-none sm:px-3 sm:text-[11.5px]"
+      >
+        <LogOut size={21} />
+        Leave
+      </Link>
+    </>
+  );
+
+  return (
+    <>
+      <LiveFrame top={top} stage={stage} panel={panel} controls={controls} />
+      {buying && <LiveBuySheet live={liveWithProducts} productId={buying} onClose={() => setBuying(null)} />}
+    </>
   );
 }
 
