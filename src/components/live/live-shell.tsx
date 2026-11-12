@@ -220,13 +220,13 @@ export function SidePanel({
             key={tab.id}
             type="button"
             onClick={() => onTab(tab.id)}
-            className={`flex flex-1 items-center justify-center gap-1.5 border-b-2 py-3 text-[13px] font-semibold ${
+            className={`flex min-w-0 flex-1 items-center justify-center gap-1.5 whitespace-nowrap border-b-2 px-1 py-3 text-[12.5px] font-semibold sm:text-[13px] ${
               active === tab.id ? "border-violet-600 text-violet-700 dark:text-violet-300" : "border-transparent text-muted"
             }`}
           >
             <tab.icon size={15} />
             {tab.label}
-            {typeof tab.count === "number" && <span className="text-[11.5px] font-medium opacity-70">({tab.count})</span>}
+            {typeof tab.count === "number" && <span className="hidden text-[11.5px] font-medium opacity-70 sm:inline">({tab.count})</span>}
           </button>
         ))}
         <button type="button" onClick={onClose} aria-label="Close panel" className="ml-1 rounded-lg p-2 text-muted hover:bg-surface-2">

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import type { Room } from "livekit-client";
 import Image from "next/image";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -23,9 +24,12 @@ import {
   Store,
   SwitchCamera,
   ZoomIn,
+  Users,
 } from "lucide-react";
 
-import { useEndLive, useLive, usePinLiveProduct, useBanLiveViewer, useRemoveLiveMessage } from "@/src/hooks/use-lives";
+import { useEndLive, useLive, usePinLiveProduct, useBanLiveViewer, useRemoveLiveMessage, useSetBuyerMedia, useSetLiveStage } from "@/src/hooks/use-lives";
+import { LivePerson, useLivePeople } from "@/src/hooks/use-live-people";
+import { JoinPops, PeopleList, PeopleStrip, useJoinPops } from "@/src/components/live/live-people";
 import { useLiveRoom } from "@/src/hooks/use-live-room";
 import { useAuthStore } from "@/src/store/auth-store";
 import { getHostToken, startLive } from "@/src/services/live.services";
@@ -68,7 +72,13 @@ export function Studio({ live }: { live: SellerLive }) {
   const [starting, setStarting] = useState(false);
   const [micOn, setMicOn] = useState(true);
   const [panelOpen, setPanelOpen] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"chat" | "products" | "store">("products");
+  const [tab, setTab] = useState<"chat" | "products" | "store" | "people">("products");
+  // The video room once live: buyers who join, and their mics / cameras.
+  const [mediaRoom, setMediaRoom] = useState<Room | null>(null);
+  const joinPops = useJoinPops();
+  const { people } = useLivePeople(mediaRoom, { onJoin: joinPops.add });
+  const { mutate: setBuyerMedia } = useSetBuyerMedia();
+  const { mutate: setStage } = useSetLiveStage();
   const [showZoom, setShowZoom] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [confirmEnd, setConfirmEnd] = useState(false);
@@ -200,7 +210,7 @@ export function Studio({ live }: { live: SellerLive }) {
     pin({ id: live.id, productId: next }, { onError: () => room.setPinnedProductId(room.pinnedProductId) });
   };
 
-  const showPanel = (next: "chat" | "products" | "store") => {
+  const showPanel = (next: "chat" | "products" | "store" | "people") => {
     if (open && tab === next) setPanelOpen(false);
     else {
       setTab(next);
@@ -233,7 +243,7 @@ export function Studio({ live }: { live: SellerLive }) {
         className={`flex h-9 shrink-0 items-center justify-center gap-1 rounded-full hover:bg-white/10 ${isLive ? "bg-white/10 pl-1.5 pr-3 text-[12px] font-semibold" : "w-9"}`}
       >
         {isLive ? <ChevronDown size={20} /> : <ArrowLeft size={19} />}
-        {isLive && "Minimize"}
+        {isLive && <span className="hidden min-[400px]:inline">Minimize</span>}
       </button>
       <span className="min-w-0">
         <span className="block truncate text-[13.5px] font-semibold">{live.title}</span>
@@ -251,13 +261,22 @@ export function Studio({ live }: { live: SellerLive }) {
           elapsed !== null && <span className="rounded-md bg-white/10 px-2 py-0.5 font-[family-name:var(--font-mono)] text-[12px]">{clock(elapsed)}</span>
         )}
         {isLive && <LiveBadge viewers={room.viewers} />}
+        <button type="button" onClick={share} aria-label="Share live link" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-white/10">
+          <Share2 size={18} />
+        </button>
       </span>
     </>
   );
 
   const stage = (
     <>
-      <HostVideo ref={videoRef} session={session} onConnection={setConnection} onError={(message) => toast.error(message)} />
+      <HostVideo ref={videoRef} session={session} onConnection={setConnection} onRoom={setMediaRoom} onError={(message) => toast.error(message)} />
+      {isLive && !minimized && (
+        <div className="pointer-events-none absolute left-3 right-16 top-3 z-20 space-y-2">
+          <PeopleStrip people={people} onOpen={() => showPanel("people")} />
+          <JoinPops pops={joinPops.pops} />
+        </div>
+      )}
       {!minimized && <FloatingHearts hearts={room.hearts} />}
 
       {!minimized && zoom > 1 && !showZoom && (
@@ -340,9 +359,10 @@ export function Studio({ live }: { live: SellerLive }) {
         { id: "chat", label: "Chat", icon: MessageCircle, count: room.messages.length },
         { id: "products", label: "Products", icon: ShoppingBag, count: products.length },
         { id: "store", label: "Store", icon: Store },
+        { id: "people", label: "People", icon: Users, count: people.length },
       ]}
       active={tab}
-      onTab={(id) => setTab(id as "chat" | "products" | "store")}
+      onTab={(id) => setTab(id as "chat" | "products" | "store" | "people")}
       onClose={() => setPanelOpen(false)}
     >
       {tab === "chat" && (
@@ -371,6 +391,24 @@ export function Studio({ live }: { live: SellerLive }) {
           <ProductRows products={products} highlightId={room.pinnedProductId} action={(product) => showButton(product.id)} empty="No products in this live yet - add some from the Store tab." />
         </div>
       )}
+      {tab === "people" &&
+        (isLive ? (
+          <PeopleList
+            people={people}
+            guests={Math.max(0, room.viewers - people.filter((person) => !person.isHost).length)}
+            host={{
+              stage: room.stage,
+              onMedia: (person: LivePerson, source, action) =>
+                person.userId && setBuyerMedia({ id: live.id, userId: person.userId, source, action }, { onSuccess: () => action !== "off" && toast.success(action === "block" ? `${person.name} can't turn it back on` : `${person.name} can turn it on again`) }),
+              onStage: (body) => setStage({ id: live.id, ...body }, { onSuccess: () => body.muteAll && toast.success("Everyone's muted") }),
+              onBlockChat: (person: LivePerson) => {
+                if (person.userId && window.confirm(`Block ${person.name} from this live? Their messages are removed and their mic and camera go off.`)) ban({ id: live.id, userId: person.userId });
+              },
+            }}
+          />
+        ) : (
+          <p className="p-6 text-center text-[13px] text-muted">Once you&apos;re live, you&apos;ll see everyone who joins here - and can mute them or turn off their camera.</p>
+        ))}
       {tab === "store" && <StoreTab liveProductIds={products.map((product) => product.id)} pinnedId={room.pinnedProductId} onShow={show} />}
     </SidePanel>
   );
@@ -397,7 +435,13 @@ export function Studio({ live }: { live: SellerLive }) {
       <ControlButton icon={ZoomIn} label="Zoom" active={showZoom || zoom > 1} onClick={() => setShowZoom((value) => !value)} />
       <ControlButton icon={MessageCircle} label="Chat" active={open && tab === "chat"} badge={unread} onClick={() => showPanel("chat")} />
       <ControlButton icon={ShoppingBag} label="Products" shortLabel="Items" active={open && (tab === "products" || tab === "store")} onClick={() => showPanel("products")} />
-      <ControlButton icon={Share2} label="Share" onClick={share} />
+      <ControlButton
+        icon={Users}
+        label="People"
+        active={open && tab === "people"}
+        badge={people.filter((person) => !person.isHost && (person.micOn || person.camOn)).length || undefined}
+        onClick={() => showPanel("people")}
+      />
       {isLive ? (
         <ControlButton icon={PhoneOff} label="End" danger onClick={() => setConfirmEnd(true)} />
       ) : (

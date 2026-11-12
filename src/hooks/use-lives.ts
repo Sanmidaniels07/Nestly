@@ -7,6 +7,8 @@ import toast from "react-hot-toast";
 import { useSession } from "./use-session";
 import {
   banLiveViewer,
+  setBuyerMedia,
+  setLiveStage,
   buyFromLive,
   cancelLive,
   createLive,
@@ -81,6 +83,18 @@ export const useRemoveLiveMessage = () =>
   useMutation<unknown, AxiosError<ApiErrorResponse>, { id: string; messageId: string }>({
     mutationFn: ({ id, messageId }) => removeLiveMessage(id, messageId),
     onError: (error) => toast.error(errorMessage(error, "Couldn't remove the message")),
+  });
+
+export const useSetBuyerMedia = () =>
+  useMutation<unknown, AxiosError<ApiErrorResponse>, { id: string; userId: string; source: "microphone" | "camera"; action: "off" | "block" | "allow" }>({
+    mutationFn: ({ id, userId, source, action }) => setBuyerMedia(id, userId, source, action),
+    onError: (error) => toast.error(errorMessage(error, "Couldn't change that")),
+  });
+
+export const useSetLiveStage = () =>
+  useMutation<unknown, AxiosError<ApiErrorResponse>, { id: string; muteAll?: boolean; mics?: "on" | "off"; cams?: "on" | "off" }>({
+    mutationFn: ({ id, ...body }) => setLiveStage(id, body),
+    onError: (error) => toast.error(errorMessage(error, "Couldn't change that")),
   });
 
 export const useBanLiveViewer = () =>
