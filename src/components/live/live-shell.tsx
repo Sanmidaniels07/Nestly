@@ -107,7 +107,7 @@ export function LiveFrame({
         {!minimized && panel}
       </div>
       <nav className={`shrink-0 border-t border-white/10 bg-[#141419] pb-[env(safe-area-inset-bottom)] ${minimized ? "hidden" : ""}`}>
-        <div className="mx-auto flex max-w-3xl items-stretch justify-around gap-0.5 px-1 py-1.5 sm:justify-center sm:gap-2">{controls}</div>
+        <div className="mx-auto flex w-full max-w-3xl items-stretch gap-0.5 px-1 py-1.5 sm:justify-center sm:gap-2 sm:px-3">{controls}</div>
       </nav>
       {minimized && (
         <div className="absolute inset-0 z-40 flex flex-col justify-between bg-gradient-to-b from-black/50 via-transparent to-black/60 p-1.5">
@@ -150,9 +150,12 @@ export function ControlButton({
   off = false,
   badge,
   disabled,
+  shortLabel,
 }: {
   icon: LucideIcon;
   label: string;
+  // Used on very narrow phones (under 360px) when the label is long.
+  shortLabel?: string;
   onClick?: () => void;
   active?: boolean;
   danger?: boolean;
@@ -167,14 +170,21 @@ export function ControlButton({
       onClick={onClick}
       disabled={disabled}
       aria-pressed={active}
-      className={`relative flex min-w-[52px] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1.5 py-1.5 text-[10.5px] font-medium transition-colors disabled:opacity-40 sm:min-w-[68px] sm:flex-none sm:px-3 sm:text-[11.5px] ${
+      className={`relative flex min-w-0 flex-1 basis-0 flex-col items-center justify-center gap-1 rounded-xl px-0.5 py-1.5 text-[10px] font-medium transition-colors disabled:opacity-40 min-[400px]:text-[10.5px] sm:w-[76px] sm:flex-none sm:basis-auto sm:px-2 sm:text-[11.5px] ${
         danger ? "bg-rose-600 text-white hover:bg-rose-700" : active ? "bg-white/15 text-white" : "text-white/85 hover:bg-white/10"
       }`}
     >
-      <Icon size={21} className={off ? "text-rose-400" : ""} />
-      <span className="whitespace-nowrap">{label}</span>
+      <Icon size={21} className={`shrink-0 ${off ? "text-rose-400" : ""}`} />
+      {shortLabel ? (
+        <>
+          <span className="max-w-full truncate leading-tight min-[360px]:hidden">{shortLabel}</span>
+          <span className="hidden max-w-full truncate leading-tight min-[360px]:inline">{label}</span>
+        </>
+      ) : (
+        <span className="max-w-full truncate leading-tight">{label}</span>
+      )}
       {!!badge && (
-        <span className="absolute right-1.5 top-0.5 min-w-[18px] rounded-full bg-rose-500 px-1 text-[10px] font-bold leading-[18px] text-white sm:right-3">
+        <span className="absolute left-1/2 top-0.5 ml-1.5 min-w-[18px] rounded-full bg-rose-500 px-1 text-[10px] font-bold leading-[18px] text-white">
           {badge > 99 ? "99+" : badge}
         </span>
       )}
@@ -351,7 +361,8 @@ export function useViewerZoom() {
   };
 
   const setZoom = (next: number) => {
-    const level = Math.min(VIEWER_MAX_ZOOM, Math.max(1, next));
+    const clamped = Math.min(VIEWER_MAX_ZOOM, Math.max(1, next));
+    const level = clamped < 1.05 ? 1 : clamped;
     setZoomState(level);
     setOffset((current) => clampOffset(current, level));
   };

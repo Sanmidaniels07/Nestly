@@ -260,6 +260,16 @@ export function LiveNow({ live }: { live: PublicLive }) {
       )}
 
       {!minimized && <FloatingHearts hearts={room.hearts} />}
+      {!minimized && (
+        <button
+          type="button"
+          onClick={room.sendHeart}
+          aria-label="Send a heart"
+          className={`absolute right-3 z-20 flex h-12 w-12 ${pinned ? "bottom-32" : "bottom-4"} items-center justify-center rounded-full bg-rose-500 text-white shadow-lg shadow-rose-900/30 active:scale-90`}
+        >
+          <Heart size={22} className="fill-white" />
+        </button>
+      )}
 
       <div className={`pointer-events-none ${minimized ? "hidden" : ""} absolute inset-x-0 bottom-0 z-10 p-3 ${pinned ? "pb-28" : ""}`}>
         <div className="pointer-events-auto space-y-2">
@@ -339,9 +349,8 @@ export function LiveNow({ live }: { live: PublicLive }) {
   const controls = (
     <>
       <ControlButton icon={MessageCircle} label="Chat" active={open && tab === "chat"} badge={unread} onClick={() => showPanel("chat")} disabled={gated || live.isOwner} />
-      <ControlButton icon={ShoppingBag} label="Products" badge={0} active={open && tab === "products"} onClick={() => showPanel("products")} disabled={gated || live.isOwner} />
+      <ControlButton icon={ShoppingBag} label="Products" shortLabel="Items" badge={0} active={open && tab === "products"} onClick={() => showPanel("products")} disabled={gated || live.isOwner} />
       <ControlButton icon={ZoomIn} label="Zoom" active={showZoom || zoom.zoom > 1} onClick={() => setShowZoom((value) => !value)} disabled={gated || !video} />
-      <ControlButton icon={Heart} label="Love" onClick={room.sendHeart} disabled={gated} />
       <ControlButton icon={Share2} label="Share" onClick={share} />
       <ControlButton icon={Minimize2} label="Minimize" onClick={minimize} />
       <ControlButton icon={LogOut} label="Leave" danger onClick={leave} />

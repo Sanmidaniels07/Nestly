@@ -12,6 +12,7 @@ import {
   MessageCircle,
   ShieldAlert,
   BriefcaseBusiness,
+  Radio,
 } from "lucide-react";
 
 export const navigation = [
@@ -51,6 +52,12 @@ export const navigation = [
     title: "Seller Hub",
     href: "/settings/marketplace",
     icon: BriefcaseBusiness,
+    sellerOnly: true,
+  },
+  {
+    title: "Live selling",
+    href: "/settings/marketplace?tab=lives",
+    icon: Radio,
     sellerOnly: true,
   },
   {
