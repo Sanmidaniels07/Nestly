@@ -11,6 +11,7 @@ import {
   PublicLive,
   SellerLive,
   WatchToken,
+  LiveStage,
 } from "../types/live";
 
 const code = (value: string) => encodeURIComponent(value);
@@ -37,6 +38,12 @@ export const pinLiveProduct = async (id: string, productId: string | null) =>
 
 export const removeLiveMessage = async (id: string, messageId: string) =>
   (await api.delete<ApiResponse<{ id: string }>>(`/lives/${id}/messages/${messageId}`)).data;
+
+export const setBuyerMedia = async (id: string, userId: string, source: "microphone" | "camera", action: "off" | "block" | "allow") =>
+  (await api.post<ApiResponse<LiveStage>>(`/lives/${id}/participants/${userId}/media`, { source, action })).data;
+
+export const setLiveStage = async (id: string, body: { muteAll?: boolean; mics?: "on" | "off"; cams?: "on" | "off" }) =>
+  (await api.post<ApiResponse<LiveStage>>(`/lives/${id}/stage`, body)).data;
 
 export const banLiveViewer = async (id: string, userId: string) =>
   (await api.post<ApiResponse<{ userId: string }>>(`/lives/${id}/bans`, { userId })).data;

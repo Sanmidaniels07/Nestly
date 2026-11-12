@@ -6,10 +6,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import type { Room } from "livekit-client";
 import {
   ChevronDown,
-  Minimize2,
   Heart,
+  Mic,
+  MicOff,
+  Users,
+  VideoOff,
   Loader2,
   LogOut,
   MessageCircle,
@@ -22,6 +26,8 @@ import {
 } from "lucide-react";
 
 import { CardLayout, useLiveRoom } from "@/src/hooks/use-live-room";
+import { useLivePeople } from "@/src/hooks/use-live-people";
+import { PeopleList, PeopleStrip } from "@/src/components/live/live-people";
 import { useRequireLogin, useSession } from "@/src/hooks/use-session";
 import { useAuthStore } from "@/src/store/auth-store";
 import { getWatchToken } from "@/src/services/live.services";
@@ -30,7 +36,7 @@ import { rememberReturnTo } from "@/src/lib/return-to";
 import { ViewerVideo } from "@/src/components/live/live-video";
 import LiveBuySheet from "@/src/components/live/live-buy-sheet";
 import { useLiveDock } from "@/src/components/live/live-dock-context";
-import { ChatPreview, ControlButton, DEFAULT_CARD, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useViewerZoom } from "@/src/components/live/live-shell";
+import { ChatPreview, ControlButton, DEFAULT_CARD, EndingCountdown, LiveFrame, MiniButton, MovableCard, ProductRows, SidePanel, ZoomControl, useIsDesktop, useUnread, useSecondsLeft, useViewerZoom } from "@/src/components/live/live-shell";
 import {
   FloatingHearts,
   LiveBadge,
@@ -84,11 +90,15 @@ export function LiveNow({ live }: { live: PublicLive }) {
   const [buying, setBuying] = useState<string | null>(null);
   // null = the default: open beside the video on wide screens, closed on phones.
   const [panelOpen, setPanelOpen] = useState<boolean | null>(null);
-  const [tab, setTab] = useState<"chat" | "products">("chat");
+  const [tab, setTab] = useState<"chat" | "products" | "people">("chat");
+  // The video room once connected: who's here, and this buyer's own mic / camera.
+  const [mediaRoom, setMediaRoom] = useState<Room | null>(null);
+  const { people, me, setMic, setCamera } = useLivePeople(mediaRoom);
   const [showZoom, setShowZoom] = useState(false);
   // Where this viewer moved the product card to (only on their screen); null = follow the seller.
   const [myCard, setMyCard] = useState<CardLayout | null>(null);
   const zoom = useViewerZoom();
+  const secondsLeftToEnd = useSecondsLeft(live.endsAt);
   const router = useRouter();
   const dock = useLiveDock();
   const minimized = dock.minimized;
@@ -159,7 +169,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
     setBuying(productId);
   };
 
-  const showPanel = (next: "chat" | "products") => {
+  const showPanel = (next: "chat" | "products" | "people") => {
     if (open && tab === next) setPanelOpen(false);
     else {
       setTab(next);
@@ -214,8 +224,11 @@ export function LiveNow({ live }: { live: PublicLive }) {
           <span className="block truncate text-[11.5px] text-white/60">{live.title}</span>
         </span>
       </Link>
-      <span className="ml-auto shrink-0">
+      <span className="ml-auto flex shrink-0 items-center gap-1.5">
         <LiveBadge viewers={room.viewers} />
+        <button type="button" onClick={share} aria-label="Share this live" className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-white/10">
+          <Share2 size={18} />
+        </button>
       </span>
     </>
   );
@@ -236,7 +249,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
       <div {...zoom.bind} className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0" style={zoom.transform}>
           {video ? (
-            <ViewerVideo url={video.url} token={video.token} />
+            <ViewerVideo url={video.url} token={video.token} onRoom={setMediaRoom} />
           ) : (
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-white/80">
               {videoError ? <p className="px-8 text-center text-[13.5px]">{videoError}</p> : <Loader2 size={26} className="animate-spin" />}
@@ -253,6 +266,11 @@ export function LiveNow({ live }: { live: PublicLive }) {
           </button>
         </p>
       )}
+      {!minimized && (
+        <div className={`pointer-events-none absolute left-3 right-16 z-20 ${guest ? "top-12" : "top-3"}`}>
+          <PeopleStrip people={people} onOpen={() => showPanel("people")} />
+        </div>
+      )}
       {!minimized && zoom.zoom > 1 && !showZoom && (
         <button type="button" onClick={() => zoom.setZoom(1)} className="absolute right-3 top-3 z-20 rounded-full bg-black/60 px-3 py-1 text-[12px] font-semibold backdrop-blur">
           {zoom.zoom.toFixed(1)}x · Reset
@@ -260,6 +278,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
       )}
 
       {!minimized && <FloatingHearts hearts={room.hearts} />}
+      {!minimized && <EndingCountdown secondsLeft={secondsLeftToEnd} host={false} />}
       {!minimized && (
         <button
           type="button"
@@ -301,12 +320,15 @@ export function LiveNow({ live }: { live: PublicLive }) {
       tabs={[
         { id: "chat", label: "Chat", icon: MessageCircle, count: room.messages.length },
         { id: "products", label: "Products", icon: ShoppingBag, count: products.length },
+        { id: "people", label: "People", icon: Users, count: people.length },
       ]}
       active={tab}
-      onTab={(id) => setTab(id as "chat" | "products")}
+      onTab={(id) => setTab(id as "chat" | "products" | "people")}
       onClose={() => setPanelOpen(false)}
     >
-      {tab === "chat" ? (
+      {tab === "people" ? (
+        <PeopleList people={people} guests={Math.max(0, room.viewers - people.filter((person) => !person.isHost).length)} />
+      ) : tab === "chat" ? (
         <>
           <div className="min-h-0 flex-1">
             <LiveChatList variant="panel" messages={room.messages} />
@@ -346,13 +368,33 @@ export function LiveNow({ live }: { live: PublicLive }) {
     </SidePanel>
   );
 
+  // Mic / camera: signed-in buyers only, and only what the seller allows.
+  const media = (source: "microphone" | "camera") => {
+    const isMic = source === "microphone";
+    const on = isMic ? !!me?.micOn : !!me?.camOn;
+    const allowed = isMic ? !!me?.canMic : !!me?.canCam;
+    if (guest) {
+      return { on: false, label: isMic ? "Unmute" : "Start video", disabled: gated, onClick: () => requireLogin(`Log in or create a free account to ${isMic ? "speak" : "show your camera"} on the live.`) };
+    }
+    if (live.isOwner || !me) return { on: false, label: isMic ? "Unmute" : "Start video", disabled: true, onClick: () => {} };
+    if (!allowed) return { on: false, label: isMic ? "Mic off" : "Video off", disabled: true, onClick: () => {} };
+    return {
+      on,
+      label: isMic ? (on ? "Mute" : "Unmute") : on ? "Stop video" : "Start video",
+      disabled: false,
+      onClick: () => (isMic ? setMic(!on) : setCamera(!on)),
+    };
+  };
+  const mic = media("microphone");
+  const cam = media("camera");
+
   const controls = (
     <>
+      <ControlButton icon={mic.on ? Mic : MicOff} label={mic.label} off={!mic.on} onClick={mic.onClick} disabled={mic.disabled} />
+      <ControlButton icon={cam.on ? Video : VideoOff} label={cam.label} shortLabel="Video" off={!cam.on} onClick={cam.onClick} disabled={cam.disabled} />
       <ControlButton icon={MessageCircle} label="Chat" active={open && tab === "chat"} badge={unread} onClick={() => showPanel("chat")} disabled={gated || live.isOwner} />
       <ControlButton icon={ShoppingBag} label="Products" shortLabel="Items" badge={0} active={open && tab === "products"} onClick={() => showPanel("products")} disabled={gated || live.isOwner} />
       <ControlButton icon={ZoomIn} label="Zoom" active={showZoom || zoom.zoom > 1} onClick={() => setShowZoom((value) => !value)} disabled={gated || !video} />
-      <ControlButton icon={Share2} label="Share" onClick={share} />
-      <ControlButton icon={Minimize2} label="Minimize" onClick={minimize} />
       <ControlButton icon={LogOut} label="Leave" danger onClick={leave} />
     </>
   );
@@ -366,7 +408,12 @@ export function LiveNow({ live }: { live: PublicLive }) {
         controls={controls}
         minimized={minimized}
         onExpand={expand}
-        mini={<MiniButton icon={X} label="Leave the live" onClick={leave} />}
+        mini={
+          <>
+            {me?.micOn && <MiniButton icon={Mic} label="Mute your mic" onClick={() => setMic(false)} />}
+            <MiniButton icon={X} label="Leave the live" onClick={leave} />
+          </>
+        }
       />
       {buying && <LiveBuySheet live={liveWithProducts} productId={buying} onClose={() => setBuying(null)} />}
     </>

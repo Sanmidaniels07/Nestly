@@ -92,7 +92,7 @@ function LiveSummaryView({ id }: { id: string }) {
       <h1 className="mt-1 font-[family-name:var(--font-fraunces)] text-[28px] leading-tight text-ink">{summary.title}</h1>
       <p className="mt-1 text-[13px] text-muted">
         {summary.startedAt ? liveWhen(summary.startedAt) : liveWhen(summary.scheduledAt)} · {summary.durationMinutes} min
-        {summary.endReason === "TIME_LIMIT" && " · ended at the 60-minute limit"}
+        {summary.endReason === "TIME_LIMIT" && " · ended at the time limit"}
       </p>
 
       <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3">

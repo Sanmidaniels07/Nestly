@@ -26,60 +26,111 @@ type VideoState = "connecting" | "waiting" | "playing" | "reconnecting" | "ended
 // Viewer
 // ---------------------------------------------------------------------------
 
-export function ViewerVideo({ url, token, onState }: { url: string; token: string; onState?: (state: VideoState) => void }) {
+/** The seller's camera is the main picture; buyers' cameras show as tiles elsewhere. */
+export const isHostIdentity = (identity: string) => identity.startsWith("seller_");
+
+/**
+ * Plays every voice in the room (the seller's and any buyer who unmutes),
+ * each in its own hidden <audio>, and removes it when they stop.
+ */
+function useRoomAudio(room: Room | null, box: React.RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    if (!room) return;
+    const onSubscribed = (track: RemoteTrack) => {
+      if (track.kind !== Track.Kind.Audio || !box.current) return;
+      const element = track.attach();
+      element.setAttribute("data-live-audio", "");
+      box.current.appendChild(element);
+    };
+    const onUnsubscribed = (track: RemoteTrack) => {
+      if (track.kind === Track.Kind.Audio) track.detach().forEach((element) => element.remove());
+    };
+    // Voices already in the room.
+    room.remoteParticipants.forEach((participant) =>
+      participant.audioTrackPublications.forEach((publication) => publication.track && onSubscribed(publication.track))
+    );
+    room.on(RoomEvent.TrackSubscribed, onSubscribed).on(RoomEvent.TrackUnsubscribed, onUnsubscribed);
+    return () => {
+      room.off(RoomEvent.TrackSubscribed, onSubscribed).off(RoomEvent.TrackUnsubscribed, onUnsubscribed);
+    };
+  }, [room, box]);
+}
+
+export function ViewerVideo({
+  url,
+  token,
+  onState,
+  onRoom,
+}: {
+  url: string;
+  token: string;
+  onState?: (state: VideoState) => void;
+  // The connected room, so the page can show people and let the buyer speak.
+  onRoom?: (room: Room | null) => void;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const roomRef = useRef<Room | null>(null);
+  const audioBoxRef = useRef<HTMLDivElement>(null);
+  const [room, setRoom] = useState<Room | null>(null);
   const [state, setState] = useState<VideoState>("connecting");
   const [needsTap, setNeedsTap] = useState(false);
+  useRoomAudio(room, audioBoxRef);
 
-  const update = useCallback(
-    (next: VideoState) => {
-      setState(next);
-      onState?.(next);
-    },
-    [onState]
-  );
+  const handlers = useRef({ onState, onRoom });
+  useEffect(() => {
+    handlers.current = { onState, onRoom };
+  });
+  const update = useCallback((next: VideoState) => {
+    setState(next);
+    handlers.current.onState?.(next);
+  }, []);
 
   useEffect(() => {
-    const room = new Room({ adaptiveStream: true, dynacast: true });
-    roomRef.current = room;
+    const next = new Room({ adaptiveStream: true, dynacast: true });
     let cancelled = false;
 
-    const attach = (track: RemoteTrack) => {
-      if (track.kind === Track.Kind.Video && videoRef.current) {
+    const hostVideo = () => {
+      for (const participant of next.remoteParticipants.values()) {
+        if (!isHostIdentity(participant.identity)) continue;
+        const publication = participant.getTrackPublication(Track.Source.Camera);
+        if (publication?.track) return publication.track;
+      }
+      return null;
+    };
+    const showHost = () => {
+      const track = hostVideo();
+      if (track && videoRef.current) {
         track.attach(videoRef.current);
         update("playing");
-      }
-      if (track.kind === Track.Kind.Audio && audioRef.current) {
-        track.attach(audioRef.current);
-        setNeedsTap(!room.canPlaybackAudio);
+      } else if (next.state === ConnectionState.Connected) {
+        update("waiting");
       }
     };
 
-    room
-      .on(RoomEvent.TrackSubscribed, (track) => attach(track))
-      .on(RoomEvent.TrackUnsubscribed, (track) => {
-        track.detach();
-        if (track.kind === Track.Kind.Video) update("waiting");
+    next
+      .on(RoomEvent.TrackSubscribed, (track, _publication, participant) => {
+        if (track.kind === Track.Kind.Video && isHostIdentity(participant.identity)) showHost();
+        if (track.kind === Track.Kind.Audio) setNeedsTap(!next.canPlaybackAudio);
       })
-      .on(RoomEvent.AudioPlaybackStatusChanged, () => setNeedsTap(!room.canPlaybackAudio))
+      .on(RoomEvent.TrackUnsubscribed, (track, _publication, participant) => {
+        if (track.kind === Track.Kind.Video && isHostIdentity(participant.identity)) {
+          track.detach();
+          showHost();
+        }
+      })
+      .on(RoomEvent.AudioPlaybackStatusChanged, () => setNeedsTap(!next.canPlaybackAudio))
       .on(RoomEvent.Reconnecting, () => update("reconnecting"))
-      .on(RoomEvent.Reconnected, () => update(room.remoteParticipants.size ? "playing" : "waiting"))
+      .on(RoomEvent.Reconnected, showHost)
       .on(RoomEvent.Disconnected, () => {
         if (!cancelled) update("ended");
       });
 
-    room
+    next
       .connect(url, token)
       .then(() => {
         if (cancelled) return;
-        // Tracks published before we joined arrive as TrackSubscribed too;
-        // if the seller isn't publishing yet, wait for them.
-        const hasVideo = [...room.remoteParticipants.values()].some((p) =>
-          [...p.trackPublications.values()].some((pub) => pub.kind === Track.Kind.Video && pub.track)
-        );
-        if (!hasVideo) update("waiting");
+        setRoom(next);
+        handlers.current.onRoom?.(next);
+        showHost();
       })
       .catch(() => {
         if (!cancelled) update("error");
@@ -87,20 +138,21 @@ export function ViewerVideo({ url, token, onState }: { url: string; token: strin
 
     return () => {
       cancelled = true;
-      room.disconnect();
-      roomRef.current = null;
+      next.disconnect();
+      setRoom(null);
+      handlers.current.onRoom?.(null);
     };
   }, [url, token, update]);
 
   return (
     <div className="absolute inset-0 bg-black">
       <video ref={videoRef} autoPlay playsInline muted className={`h-full w-full ${FIT}`} />
-      <audio ref={audioRef} autoPlay />
+      <div ref={audioBoxRef} className="hidden" />
       {state !== "playing" && <VideoOverlay state={state} />}
       {needsTap && state === "playing" && (
         <button
           type="button"
-          onClick={() => roomRef.current?.startAudio().then(() => setNeedsTap(false))}
+          onClick={() => room?.startAudio().then(() => setNeedsTap(false))}
           className="absolute left-1/2 top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-black/60 px-5 py-3 text-[14px] font-semibold text-white backdrop-blur"
         >
           <Volume2 size={18} /> Tap for sound
@@ -208,9 +260,11 @@ interface HostVideoProps {
   session: { url: string; token: string } | null;
   onError?: (message: string) => void;
   onConnection?: (state: "offline" | "connecting" | "live" | "reconnecting") => void;
+  // The live room once connected (to show buyers and their mics / cameras).
+  onRoom?: (room: Room | null) => void;
 }
 
-export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function HostVideo({ session, onError, onConnection }, ref) {
+export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function HostVideo({ session, onError, onConnection, onRoom }, ref) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const tracksRef = useRef<{ video: LocalVideoTrack | null; audio: LocalAudioTrack | null }>({ video: null, audio: null });
   const facing = useRef<"user" | "environment">("user");
@@ -220,10 +274,13 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
   const [mirrored, setMirrored] = useState(true);
   const zoomRef = useRef({ level: 1, crop: null as CropZoom | null });
 
-  const handlers = useRef({ onError, onConnection });
+  const handlers = useRef({ onError, onConnection, onRoom });
   useEffect(() => {
-    handlers.current = { onError, onConnection };
+    handlers.current = { onError, onConnection, onRoom };
   });
+  const audioBoxRef = useRef<HTMLDivElement>(null);
+  const [room, setRoom] = useState<Room | null>(null);
+  useRoomAudio(room, audioBoxRef);
 
   // Camera + mic preview, from the moment the studio opens.
   useEffect(() => {
@@ -260,25 +317,27 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
   // Publish once live.
   useEffect(() => {
     if (!session || !cameraReady) return;
-    const room = new Room({ adaptiveStream: false, dynacast: true });
+    const live = new Room({ adaptiveStream: true, dynacast: true });
     let cancelled = false;
     handlers.current.onConnection?.("connecting");
 
-    room
+    live
       .on(RoomEvent.Reconnecting, () => handlers.current.onConnection?.("reconnecting"))
       .on(RoomEvent.Reconnected, () => handlers.current.onConnection?.("live"))
       .on(RoomEvent.Disconnected, () => {
         if (!cancelled) handlers.current.onConnection?.("offline");
       });
 
-    room
+    live
       .connect(session.url, session.token)
       .then(async () => {
         if (cancelled) return;
         const { video, audio } = tracksRef.current;
-        if (video) await room.localParticipant.publishTrack(video, { simulcast: true, source: Track.Source.Camera });
-        if (audio) await room.localParticipant.publishTrack(audio, { source: Track.Source.Microphone });
-        if (room.state === ConnectionState.Connected) handlers.current.onConnection?.("live");
+        if (video) await live.localParticipant.publishTrack(video, { simulcast: true, source: Track.Source.Camera });
+        if (audio) await live.localParticipant.publishTrack(audio, { source: Track.Source.Microphone });
+        if (live.state === ConnectionState.Connected) handlers.current.onConnection?.("live");
+        setRoom(live);
+        handlers.current.onRoom?.(live);
       })
       .catch(() => {
         if (!cancelled) {
@@ -290,7 +349,9 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
     return () => {
       cancelled = true;
       // Unpublish without stopping the camera - the preview keeps running.
-      room.disconnect(false);
+      live.disconnect(false);
+      setRoom(null);
+      handlers.current.onRoom?.(null);
     };
   }, [session, cameraReady]);
 
@@ -343,6 +404,7 @@ export const HostVideo = forwardRef<HostVideoHandle, HostVideoProps>(function Ho
   return (
     <div className="absolute inset-0 bg-black">
       <video ref={videoRef} autoPlay playsInline muted className={`h-full w-full ${FIT} ${mirrored ? "-scale-x-100" : ""}`} />
+      <div ref={audioBoxRef} className="hidden" />
       {!cameraReady && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 px-8 text-center text-white/80">
           {cameraError ? <VideoOff size={26} /> : <Loader2 size={26} className="animate-spin" />}

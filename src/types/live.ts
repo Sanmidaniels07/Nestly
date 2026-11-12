@@ -129,8 +129,17 @@ export interface HostSession {
   video: LiveVideo;
 }
 
+/** What the seller lets buyers turn on (mics / cameras), for everyone and per person. */
+export interface LiveStage {
+  micsOff: boolean;
+  camsOff: boolean;
+  // userId -> what's switched off for just them.
+  blocked: Record<string, ("microphone" | "camera")[]>;
+}
+
 export interface WatchToken extends LiveVideo {
   guest: boolean;
+  stage?: LiveStage;
 }
 
 export interface BuyFromLivePayload {
