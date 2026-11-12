@@ -229,7 +229,7 @@ function Studio({ live }: { live: SellerLive }) {
   const early = new Date(live.scheduledAt).getTime() - now > 60 * 60 * 1000;
 
   return (
-    <div className="fixed inset-0 z-50 flex bg-black text-white">
+    <div className="fixed inset-0 z-[70] flex bg-black text-white">
       {/* Camera */}
       <div className="relative h-full w-full lg:max-w-[min(480px,calc(100dvh*9/16))] lg:shrink-0">
         <HostVideo ref={videoRef} session={session} onConnection={setConnection} onError={(message) => toast.error(message)} />

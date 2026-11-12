@@ -121,6 +121,8 @@ export const useLive = (code: string, initial?: ApiResponse<PublicLive>) => {
     initialData: initial,
     initialDataUpdatedAt: 0,
     enabled: isHydrated,
+    // Backup for the socket: a waiting page notices the seller going live.
+    refetchInterval: (query) => (query.state.data?.data?.status === "SCHEDULED" ? 15000 : false),
   });
 };
 

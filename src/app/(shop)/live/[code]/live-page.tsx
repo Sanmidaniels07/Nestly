@@ -387,7 +387,7 @@ function LiveNow({ live }: { live: PublicLive }) {
         : null;
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-center bg-black text-white">
+    <div className="fixed inset-0 z-[70] flex justify-center bg-black text-white">
       <div className="relative h-full w-full max-w-[calc(100dvh*9/16)] overflow-hidden lg:max-w-[min(480px,calc(100dvh*9/16))]">
         {live.isOwner ? (
           <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-gradient-to-b from-violet-900 to-black px-8 text-center">
