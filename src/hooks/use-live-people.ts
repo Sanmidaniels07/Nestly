@@ -99,13 +99,13 @@ export function useLivePeople(room: Room | null, { onJoin }: { onJoin?: (person:
     const onConnected = (participant: Participant) => handlers.current.onJoin?.(toPerson(participant, false));
     const onMuted = (publication: TrackPublication, participant: Participant) => {
       if (participant !== room.localParticipant || selfChange.current) return;
-      if (publication.source === Track.Source.Microphone) toast("The seller muted your mic", { icon: "🔇" });
-      if (publication.source === Track.Source.Camera) toast("The seller turned off your camera", { icon: "📷" });
+      if (publication.source === Track.Source.Microphone) toast("The seller muted your mic", { icon: "🔇", id: "live-muted-mic" });
+      if (publication.source === Track.Source.Camera) toast("The seller turned off your camera", { icon: "📷", id: "live-muted-camera" });
     };
     const onPermissions = (_previous: unknown, participant: Participant) => {
       if (participant !== room.localParticipant) return;
       const me = toPerson(participant, true);
-      if (!me.canMic && !me.canCam) toast("The seller has turned off mics and cameras for you for now.");
+      if (!me.canMic && !me.canCam) toast("The seller has turned off mics and cameras for you for now.", { id: "live-media-off" });
     };
 
     ROOM_EVENTS.forEach((event) => room.on(event, refresh));
