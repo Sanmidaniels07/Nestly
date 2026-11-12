@@ -3,7 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import {
   AlertTriangle,
@@ -47,7 +47,17 @@ const copyLink = async (live: SellerLive) => {
 export default function LivesView() {
   const { data, isLoading } = useMyLives();
   const { mutate: cancel } = useCancelLive();
-  const [form, setForm] = useState<{ mode: "now" | "schedule"; live?: SellerLive } | null>(null);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const [form, setForm] = useState<{ mode: "now" | "schedule"; live?: SellerLive } | null>(() => {
+    const asked = searchParams.get("new");
+    return asked === "now" || asked === "schedule" ? { mode: asked } : null;
+  });
+  const closeForm = () => {
+    setForm(null);
+    // Drop ?new= so a refresh doesn't open the form again.
+    if (searchParams.get("new")) router.replace("/settings/marketplace?tab=lives");
+  };
 
   const groups = useMemo(() => {
     const lives = data?.lives ?? [];
@@ -132,7 +142,7 @@ export default function LivesView() {
         </LiveGroup>
       )}
 
-      {form && <LiveForm mode={form.mode} existing={form.live} onClose={() => setForm(null)} />}
+      {form && <LiveForm mode={form.mode} existing={form.live} onClose={closeForm} />}
     </div>
   );
 }

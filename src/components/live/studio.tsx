@@ -396,7 +396,7 @@ export function Studio({ live }: { live: SellerLive }) {
       />
       <ControlButton icon={ZoomIn} label="Zoom" active={showZoom || zoom > 1} onClick={() => setShowZoom((value) => !value)} />
       <ControlButton icon={MessageCircle} label="Chat" active={open && tab === "chat"} badge={unread} onClick={() => showPanel("chat")} />
-      <ControlButton icon={ShoppingBag} label="Products" active={open && (tab === "products" || tab === "store")} onClick={() => showPanel("products")} />
+      <ControlButton icon={ShoppingBag} label="Products" shortLabel="Items" active={open && (tab === "products" || tab === "store")} onClick={() => showPanel("products")} />
       <ControlButton icon={Share2} label="Share" onClick={share} />
       {isLive ? (
         <ControlButton icon={PhoneOff} label="End" danger onClick={() => setConfirmEnd(true)} />

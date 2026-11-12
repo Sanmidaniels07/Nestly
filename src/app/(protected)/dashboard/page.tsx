@@ -24,6 +24,7 @@ import DashboardSkeleton from "./dashboard-skeleton";
 import CacReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/cac-reminder-banner";
 import SetupReminderBanner from "@/src/app/(protected)/settings/marketplace/components/seller-dashboard/setup-reminder-banner";
 import ProfileChecklist from "./profile-checklist";
+import LiveSellingCard from "./live-selling-card";
 import PushPrompt from "@/src/components/push/push-prompt";
 
 export default function DashboardPage() {
@@ -43,6 +44,8 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl space-y-6 pb-20 pt-6 sm:space-y-8">
       <HeroCard name={user?.name || "there"} data={dashboard} profileCompletion={profile?.profileCompletion} />
+
+      {dashboard?.seller?.status === "APPROVED" && dashboard.seller.hasStore && <LiveSellingCard />}
 
       {!!dashboard?.seller?.missingSetup?.length && <SetupReminderBanner />}
 

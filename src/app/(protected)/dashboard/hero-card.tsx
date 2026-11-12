@@ -3,6 +3,7 @@
 import { useSyncExternalStore } from "react";
 import Link from "next/link";
 import {
+  Radio,
   ArrowRight,
   Bell,
   Cake,
@@ -215,6 +216,15 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
               >
                 <Compass size={17} />
                 Explore communities
+              </Link>
+            )}
+            {isActiveSeller && (
+              <Link
+                href="/settings/marketplace?tab=lives&new=now"
+                className="col-span-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-rose-500 px-3 text-[13.5px] font-semibold shadow-lg shadow-rose-900/20 transition-colors hover:bg-rose-600 sm:col-span-1 sm:h-12 sm:px-6 sm:text-[14px]"
+              >
+                <Radio size={17} />
+                Go live
               </Link>
             )}
           </div>
