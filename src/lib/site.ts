@@ -1,4 +1,5 @@
 import { SUPPORT_WHATSAPP } from "./support";
+import { LEGAL_COMPANY_NAME } from "./legal";
 
 // Canonical public address used in metadata, the sitemap and structured data.
 // Staging overrides it (NEXT_PUBLIC_SITE_URL) but is never indexed anyway.
@@ -50,6 +51,7 @@ export const organizationJsonLd = {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
       name: SITE_NAME,
+      legalName: LEGAL_COMPANY_NAME,
       alternateName: SITE_ALT_NAMES,
       url: SITE_URL,
       logo: `${SITE_URL}/icon.png`,
