@@ -1,10 +1,15 @@
-import { SellerApplicationStatus } from "./seller";
+import { CacCheckResult, CacCompanyType, SellerApplicationStatus } from "./seller";
 
 export interface AdminSeller {
   id: string;
   status: SellerApplicationStatus;
   statusReason: string | null;
   cacNumber: string | null;
+  cacCompanyType: CacCompanyType | null;
+  cacCheckResult: CacCheckResult | null;
+  cacCheckedName: string | null;
+  cacCheckedStatus: string | null;
+  cacCheckedAt: string | null;
   isVerified: boolean;
   createdAt: string;
   user: {

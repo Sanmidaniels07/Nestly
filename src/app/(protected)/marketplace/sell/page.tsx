@@ -15,7 +15,8 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 import BackButton from "@/src/components/ui/back-button";
-import { SellerProfile } from "@/src/types/seller";
+import { CacCompanyType, SellerProfile } from "@/src/types/seller";
+import { CAC_COMPANY_TYPES, cacTypeFromNumber } from "@/src/lib/cac";
 import Checkbox from "@/src/components/ui/checkbox";
 
 // Sellers arrive here from the seller dashboard, the marketplace, or a
@@ -143,6 +144,7 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
 
 function BecomeSellerForm() {
   const [cacNumber, setCacNumber] = useState("");
+  const [cacType, setCacType] = useState<CacCompanyType | "">("");
   const [agreed, setAgreed] = useState(false);
   const { mutate: becomeSeller, isPending } = useBecomeSeller();
   const { data: categories } = useCategories();
@@ -196,9 +198,37 @@ function BecomeSellerForm() {
         <Input
           label="CAC registration number (optional)"
           value={cacNumber}
-          onChange={(e) => setCacNumber(e.target.value)}
+          onChange={(e) => {
+            setCacNumber(e.target.value);
+            // RC... is a company, BN... a business name - pick it for them.
+            const fromPrefix = cacTypeFromNumber(e.target.value);
+            if (fromPrefix) setCacType(fromPrefix);
+          }}
           placeholder="RC1234567"
         />
+
+        {cacNumber.trim() && (
+          <div>
+            <label htmlFor="cac-type" className="mb-1.5 block text-[13px] font-medium text-ink-2">
+              Business type
+            </label>
+            <select
+              id="cac-type"
+              value={cacType}
+              onChange={(e) => setCacType(e.target.value as CacCompanyType)}
+              className="h-12 w-full rounded-xl border border-line bg-surface px-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:ring-4 focus:ring-violet-500/10"
+            >
+              <option value="" disabled>
+                Choose...
+              </option>
+              {CAC_COMPANY_TYPES.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* The link can't live inside the checkbox button, so the text toggles it separately. */}
         <div className="flex items-start gap-3 text-[13px] leading-relaxed text-ink-2">
@@ -216,9 +246,12 @@ function BecomeSellerForm() {
           variant="tribely"
           className="w-full"
           loading={isPending}
-          disabled={!agreed || isPending}
+          disabled={!agreed || isPending || (!!cacNumber.trim() && !cacType)}
           onClick={() =>
-            becomeSeller({ cacNumber: cacNumber.trim() || undefined })
+            becomeSeller({
+              cacNumber: cacNumber.trim() || undefined,
+              cacCompanyType: cacNumber.trim() && cacType ? cacType : undefined,
+            })
           }
         >
           Continue
