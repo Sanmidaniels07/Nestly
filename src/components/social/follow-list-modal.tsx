@@ -10,6 +10,7 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { useFollowList, FollowListKind } from "@/src/hooks/use-follow-list";
 import { useFollowStatus } from "@/src/hooks/use-follow-status";
 import { useToggleFollow } from "@/src/hooks/use-toggle-follow";
+import { useRemoveFollower } from "@/src/hooks/use-remove-follower";
 import { PublicUser } from "@/src/types/user";
 
 interface Props {
@@ -118,6 +119,9 @@ function FollowList({ userId, kind }: { userId: string; kind: FollowListKind }) 
   const [query, setQuery] = useState("");
   const { data, isLoading, isError, hasNextPage, fetchNextPage, isFetchingNextPage } = useFollowList(userId, kind);
   const users = useMemo(() => data?.pages.flatMap((page) => page.users) ?? [], [data]);
+  // Your own followers list gets a Remove button on each person.
+  const me = useAuthStore((state) => state.user);
+  const ownFollowers = kind === "followers" && me?.id === userId;
 
   const shown = useMemo(() => {
     const q = query.trim().toLowerCase().replace(/^@/, "");
@@ -168,7 +172,7 @@ function FollowList({ userId, kind }: { userId: string; kind: FollowListKind }) 
         ) : (
           <ul>
             {shown.map((user) => (
-              <FollowRow key={user.id} user={user} />
+              <FollowRow key={user.id} user={user} ownFollowers={ownFollowers} />
             ))}
           </ul>
         )}
@@ -190,17 +194,45 @@ function FollowList({ userId, kind }: { userId: string; kind: FollowListKind }) 
   );
 }
 
-function FollowRow({ user }: { user: PublicUser }) {
+function FollowRow({ user, ownFollowers }: { user: PublicUser; ownFollowers: boolean }) {
   const me = useAuthStore((state) => state.user);
   const isMe = me?.id === user.id;
   const { data: isFollowing, isLoading } = useFollowStatus(user.id, !isMe);
   const href = `/users/${user.username ?? user.id}`;
 
+  const avatar = (
+    <Link href={href} className="shrink-0">
+      <UserAvatar name={user.name} src={user.avatar} size={44} />
+    </Link>
+  );
+
+  // Your own followers: "Remove" (like Instagram), with a quick "Follow"
+  // next to the name for people you don't follow back.
+  if (ownFollowers && !isMe) {
+    return (
+      <li className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-surface-2/60">
+        {avatar}
+        <div className="min-w-0 flex-1">
+          <div className="flex min-w-0 items-center gap-1.5">
+            <Link href={href} className="truncate text-[14px] font-semibold text-ink">
+              {user.username ?? user.name}
+            </Link>
+            {!isLoading && !isFollowing && <FollowBackLink key={String(isFollowing)} userId={user.id} />}
+          </div>
+          {user.username && (
+            <Link href={href} className="block truncate text-[13px] text-muted">
+              {user.name}
+            </Link>
+          )}
+        </div>
+        <RemoveFollowerButton user={user} />
+      </li>
+    );
+  }
+
   return (
     <li className="flex items-center gap-3 rounded-xl px-2 py-2 hover:bg-surface-2/60">
-      <Link href={href} className="shrink-0">
-        <UserAvatar name={user.name} src={user.avatar} size={44} />
-      </Link>
+      {avatar}
       <Link href={href} className="min-w-0 flex-1">
         <p className="truncate text-[14px] font-semibold text-ink">{user.username ?? user.name}</p>
         <p className="truncate text-[13px] text-muted">{user.username ? user.name : ""}</p>
@@ -212,6 +244,65 @@ function FollowRow({ user }: { user: PublicUser }) {
           <RowFollowButton key={String(isFollowing)} userId={user.id} initialIsFollowing={isFollowing ?? false} />
         ))}
     </li>
+  );
+}
+
+function FollowBackLink({ userId }: { userId: string }) {
+  const { isFollowing, toggleFollow } = useToggleFollow(userId, false);
+  if (isFollowing) return null;
+  return (
+    <>
+      <span className="text-[13px] text-subtle">·</span>
+      <button type="button" onClick={toggleFollow} className="shrink-0 text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300">
+        Follow
+      </button>
+    </>
+  );
+}
+
+// Asks first (like Instagram), then makes them stop following you. They
+// aren't told, and they can follow you again.
+function RemoveFollowerButton({ user }: { user: PublicUser }) {
+  const { mutate: remove, isPending, isSuccess } = useRemoveFollower();
+  const [confirming, setConfirming] = useState(false);
+  const who = user.username ? `@${user.username}` : user.name;
+
+  if (isSuccess) {
+    return <span className="shrink-0 px-2 text-[13px] font-medium text-subtle">Removed</span>;
+  }
+
+  if (confirming) {
+    return (
+      <div className="flex shrink-0 items-center gap-1" role="group" aria-label={`Remove ${who} from your followers?`}>
+        <button
+          type="button"
+          onClick={() => setConfirming(false)}
+          disabled={isPending}
+          className="h-8 rounded-lg px-2.5 text-[13px] font-medium text-muted hover:bg-surface-2"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          onClick={() => remove(user.id)}
+          disabled={isPending}
+          className="h-8 rounded-lg bg-red-600 px-3 text-[13px] font-semibold text-white hover:bg-red-700 disabled:opacity-60"
+        >
+          {isPending ? "Removing..." : "Remove"}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={() => setConfirming(true)}
+      title={`Remove ${who} from your followers - they won't be told`}
+      className="h-8 shrink-0 rounded-lg bg-surface-2 px-4 text-[13px] font-semibold text-ink transition-colors hover:bg-line"
+    >
+      Remove
+    </button>
   );
 }
 
