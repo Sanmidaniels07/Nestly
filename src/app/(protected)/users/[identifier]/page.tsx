@@ -32,6 +32,8 @@ import { useBlockUser } from "@/src/hooks/use-block-user";
 import { useUnblockUser } from "@/src/hooks/use-unblock-user";
 import ImageLightbox from "@/src/components/ui/image-lightbox";
 import ProfileWishlist from "@/src/components/gifts/profile-wishlist";
+import FollowListModal from "@/src/components/social/follow-list-modal";
+import { FollowListKind } from "@/src/hooks/use-follow-list";
 
 function formatCount(n?: number) {
   const value = n ?? 0;
@@ -57,6 +59,7 @@ export default function UserProfilePage({
   const goBack = useGoBack("/feed");
   const authUser = useAuthStore((state) => state.user);
   const [lightbox, setLightbox] = useState<"cover" | "avatar" | null>(null);
+  const [followList, setFollowList] = useState<FollowListKind | null>(null);
   // ?tab=wishlist - e.g. from a "birthday is tomorrow" reminder.
   const searchParams = useSearchParams();
   const [tab, setTab] = useState<"posts" | "wishlist">(searchParams.get("tab") === "wishlist" ? "wishlist" : "posts");
@@ -255,18 +258,36 @@ export default function UserProfilePage({
         </div>
 
         <div className="mt-6 grid grid-cols-3 divide-x divide-line-soft border-t border-line-soft pt-6">
-          {[
-            { label: "Posts", value: user.postsCount },
-            { label: "Followers", value: user.followersCount },
-            { label: "Following", value: user.followingCount },
-          ].map((stat) => (
-            <div key={stat.label} className="text-center">
-              <p className="font-[family-name:var(--font-mono)] text-[18px] font-semibold text-ink">
-                {formatCount(stat.value)}
-              </p>
-              <p className="mt-0.5 text-[12px] text-subtle">{stat.label}</p>
-            </div>
-          ))}
+          {([
+            { label: "Posts", value: user.postsCount, list: null },
+            { label: "Followers", value: user.followersCount, list: "followers" },
+            { label: "Following", value: user.followingCount, list: "following" },
+          ] as const).map((stat) => {
+            const content = (
+              <>
+                <p className="font-[family-name:var(--font-mono)] text-[18px] font-semibold text-ink">
+                  {formatCount(stat.value)}
+                </p>
+                <p className="mt-0.5 text-[12px] text-subtle">{stat.label}</p>
+              </>
+            );
+            // Followers / Following open the list, like Instagram.
+            return stat.list ? (
+              <button
+                key={stat.label}
+                type="button"
+                onClick={() => setFollowList(stat.list)}
+                aria-label={`See ${stat.label.toLowerCase()}`}
+                className="rounded-lg text-center transition-colors hover:bg-surface-2/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40"
+              >
+                {content}
+              </button>
+            ) : (
+              <div key={stat.label} className="text-center">
+                {content}
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -325,6 +346,16 @@ export default function UserProfilePage({
           onClose={() => setLightbox(null)}
         />
       )}
+
+      <FollowListModal
+        userId={user.id}
+        title={user.username ?? user.name}
+        open={followList}
+        onChange={setFollowList}
+        onClose={() => setFollowList(null)}
+        followersCount={user.followersCount}
+        followingCount={user.followingCount}
+      />
     </div>
   );
 }

@@ -1,8 +1,6 @@
 import {
   LayoutDashboard,
   Newspaper,
-  Users,
-  UserRoundCheck,
   Store,
   Bell,
   User,
@@ -30,16 +28,6 @@ export const navigation = [
     title: "Messages",
     href: "/messages",
     icon: MessageCircle,
-  },
-  {
-    title: "Followers",
-    href: "/followers",
-    icon: Users,
-  },
-  {
-    title: "Following",
-    href: "/following",
-    icon: UserRoundCheck,
   },
   {
     title: "Marketplace",

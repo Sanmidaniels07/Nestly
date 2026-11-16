@@ -21,7 +21,7 @@ export default function DashboardStats({ data }: Props) {
       positive: social.newFollowers > 0,
       icon: Users,
       tint: "bg-violet-50 text-violet-600 dark:bg-violet-500/10 dark:text-violet-400",
-      href: "/followers",
+      href: "/profile?list=followers",
     },
     {
       label: "Profile views",
