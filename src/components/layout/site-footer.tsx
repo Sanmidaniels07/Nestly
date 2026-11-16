@@ -4,6 +4,7 @@ import NestlyMark from "@/src/components/ui/nestly-mark";
 import NestlyWordmark from "@/src/components/ui/nestly-wordmark";
 import CookieSettingsLink from "@/src/components/consent/cookie-settings-link";
 import { supportWhatsAppUrl } from "@/src/lib/support";
+import { LEGAL_COMPANY_NAME, LEGAL_RC_NUMBER } from "@/src/lib/legal";
 
 // The public site footer - homepage, features and preview pages.
 export default function SiteFooter() {
@@ -32,8 +33,11 @@ export default function SiteFooter() {
             Instagram
           </a>
         </nav>
-        <div className="mt-8 text-xs text-white/40">
-          © 2026 Nestly. All rights reserved.
+        <div className="mt-8 space-y-1 text-xs text-white/40">
+          <p>© 2026 Nestly. All rights reserved.</p>
+          <p>
+            Nestly is operated by {LEGAL_COMPANY_NAME}, a company registered in Nigeria (RC {LEGAL_RC_NUMBER}).
+          </p>
         </div>
       </div>
     </footer>

@@ -15,6 +15,12 @@ export const unfollowUser = async (userId: string) => {
   return response.data;
 };
 
+// Make someone stop following you (without blocking them).
+export const removeFollower = async (userId: string) => {
+  const response = await api.delete<ApiResponse<null>>(`/follow/followers/${userId}`);
+  return response.data;
+};
+
 export const getFollowStatus = async (userId: string) => {
   const response = await api.get<ApiResponse<FollowStatus>>(
     `/follow/${userId}/status`

@@ -26,6 +26,12 @@ export const updateSellerStatus = async (
 };
 
 // Manual CAC check result - also drives the store's public verified badge.
+// Runs the automatic CAC lookup (Dojah) again for a seller.
+export const recheckSellerCac = async (id: string) => {
+  const response = await api.post<ApiResponse<AdminSeller>>(`/admin/sellers/${id}/cac-check`);
+  return response.data;
+};
+
 export const setSellerVerified = async (id: string, isVerified: boolean) => {
   const response = await api.patch<ApiResponse<AdminSeller>>(
     `/admin/sellers/${id}/verify`,

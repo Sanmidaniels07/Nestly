@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { BadgeCheck, Check, Copy, ExternalLink, ShieldCheck, Store as StoreIcon, UserRound } from "lucide-react";
+import { BadgeCheck, Check, Copy, ExternalLink, RefreshCw, ShieldCheck, Store as StoreIcon, UserRound } from "lucide-react";
 
 import { useAdminSellers } from "@/src/hooks/use-admin-sellers";
 import { useUpdateSellerStatus } from "@/src/hooks/use-update-seller-status";
 import { useSetSellerVerified } from "@/src/hooks/use-set-seller-verified";
+import { useRecheckSellerCac } from "@/src/hooks/use-recheck-seller-cac";
+import { CAC_RESULT_LABEL, cacTypeLabel } from "@/src/lib/cac";
 import { AdminSeller } from "@/src/types/admin-seller";
 import { SellerApplicationStatus } from "@/src/types/seller";
 import Pagination from "@/src/components/ui/pagination";
@@ -80,10 +82,12 @@ export default function SellersManager() {
 
 const CAC_SEARCH_URL = "https://search.cac.gov.ng";
 
-// Manual CAC check: copy the number, look it up on the free CAC public
-// search, then mark the business verified (drives the store's ✓ badge).
+// CAC check: what the automatic lookup found (when it ran), plus the manual
+// route - copy the number, look it up on the free CAC public search, then
+// mark the business verified (drives the store's ✓ badge).
 function CacCheck({ seller }: { seller: AdminSeller }) {
   const { mutate: setVerified, isPending } = useSetSellerVerified();
+  const { mutate: recheck, isPending: rechecking } = useRecheckSellerCac();
   const [copied, setCopied] = useState(false);
 
   if (!seller.cacNumber?.trim()) {
@@ -120,9 +124,35 @@ function CacCheck({ seller }: { seller: AdminSeller }) {
               : "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
           }`}
         >
-          {seller.isVerified ? "Verified" : "Not checked"}
+          {seller.isVerified
+            ? seller.cacCheckResult === "VERIFIED"
+              ? "Auto-verified"
+              : "Verified"
+            : seller.cacCheckResult
+              ? CAC_RESULT_LABEL[seller.cacCheckResult]
+              : "Not checked"}
         </span>
       </div>
+
+      {/* What the automatic lookup (Dojah) found on the CAC register. */}
+      {seller.cacCheckResult && (
+        <div className="mt-2 text-[12px] leading-snug text-muted">
+          {seller.cacCheckedName ? (
+            <p>
+              Register: <strong className="text-ink-2">{seller.cacCheckedName}</strong>
+              {seller.cacCheckedStatus && <> · {seller.cacCheckedStatus}</>}
+              {seller.cacCompanyType && <> · {cacTypeLabel(seller.cacCompanyType)}</>}
+            </p>
+          ) : (
+            <p>
+              {seller.cacCheckResult === "NOT_FOUND"
+                ? `Not found on the CAC register${seller.cacCompanyType ? ` as a ${cacTypeLabel(seller.cacCompanyType)?.toLowerCase()}` : ""}.`
+                : "The automatic check couldn't run."}
+            </p>
+          )}
+          {seller.cacCheckedAt && <p className="text-subtle">Checked {formatRelativeTime(seller.cacCheckedAt)}</p>}
+        </div>
+      )}
 
       {!seller.isVerified && (
         <p className="mt-2 text-[12px] leading-snug text-muted">
@@ -153,6 +183,16 @@ function CacCheck({ seller }: { seller: AdminSeller }) {
         >
           {seller.isVerified ? "Remove verification" : (<><ShieldCheck size={13} /> Mark business verified</>)}
         </button>
+        {!seller.isVerified && (
+          <button
+            onClick={() => recheck(seller.id)}
+            disabled={rechecking}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong px-3 py-1.5 text-[12px] font-medium text-ink-2 transition hover:bg-surface-2 disabled:opacity-50"
+          >
+            <RefreshCw size={12} className={rechecking ? "animate-spin" : ""} />
+            {seller.cacCheckResult ? "Check again" : "Run automatic check"}
+          </button>
+        )}
       </div>
     </div>
   );
