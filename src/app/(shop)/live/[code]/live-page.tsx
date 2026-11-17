@@ -132,7 +132,7 @@ function ShareButton({ live }: { live: PublicLive }) {
     }
   };
   return (
-    <button type="button" onClick={share} className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 hover:border-violet-300">
+    <button type="button" onClick={share} className="whitespace-nowrap flex h-11 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 hover:border-violet-300">
       <Share2 size={16} /> Share
     </button>
   );
@@ -194,7 +194,7 @@ function LiveInfo({ live }: { live: PublicLive }) {
               <p className="text-[14px] font-semibold text-ink">This is your live</p>
               <p className="mt-1 text-[13px] text-muted">Share this page so people tap &ldquo;Remind me&rdquo;. Go live from your studio.</p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Link href={`/marketplace/live/${live.id}`} className="flex h-11 items-center gap-2 rounded-xl bg-violet-600 px-4 text-[13.5px] font-semibold text-white">
+                <Link href={`/marketplace/live/${live.id}`} className="whitespace-nowrap flex h-11 items-center gap-2 rounded-xl bg-violet-600 px-4 text-[13.5px] font-semibold text-white">
                   <Video size={16} /> Open studio
                 </Link>
                 <ShareButton live={live} />
@@ -207,7 +207,7 @@ function LiveInfo({ live }: { live: PublicLive }) {
                   type="button"
                   onClick={remind}
                   disabled={isPending}
-                  className={`flex h-12 items-center justify-center gap-2 rounded-xl text-[14px] font-semibold ${
+                  className={`whitespace-nowrap flex h-12 items-center justify-center gap-2 rounded-xl text-[14px] font-semibold ${
                     live.isInterested
                       ? "border border-violet-300 bg-violet-50 text-violet-700 dark:border-violet-500/40 dark:bg-violet-500/10 dark:text-violet-300"
                       : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-lg shadow-violet-500/20"
@@ -216,7 +216,7 @@ function LiveInfo({ live }: { live: PublicLive }) {
                   {isPending ? <Loader2 size={17} className="animate-spin" /> : live.isInterested ? <BellRing size={17} /> : <Bell size={17} />}
                   {live.isInterested ? "You'll be reminded" : isLoggedIn ? "Remind me" : "Remind me - sign up free"}
                 </button>
-                <a href={liveCalendarUrl(live.code)} className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 hover:border-violet-300">
+                <a href={liveCalendarUrl(live.code)} className="whitespace-nowrap flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 hover:border-violet-300">
                   <CalendarPlus size={16} /> Add to calendar
                 </a>
                 <ShareButton live={live} />

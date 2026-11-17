@@ -64,7 +64,7 @@ function PrivateContacts({ slug, isOwnStore }: { slug: string; isOwnStore: boole
             href={href}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-8 min-w-0 max-w-full items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[12px] font-medium text-ink-2"
+            className="whitespace-nowrap inline-flex h-8 min-w-0 max-w-full items-center gap-1.5 rounded-full border border-line bg-surface px-3 text-[12px] font-medium text-ink-2"
           >
             <Icon size={14} className={`shrink-0 ${tone}`} /> <span className="truncate">{label}</span>
           </a>
@@ -184,7 +184,7 @@ function GuestMessageButton() {
   return (
     <button
       onClick={() => requireLogin("Log in or create a free account to message sellers.")}
-      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-600 dark:hover:border-violet-500/40 dark:hover:text-violet-400"
+      className="whitespace-nowrap flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-600 dark:hover:border-violet-500/40 dark:hover:text-violet-400"
     >
       <MessageCircle size={14} />
       Message
@@ -197,7 +197,7 @@ function GuestFollowButton() {
   return (
     <button
       onClick={() => requireLogin("Log in or create a free account to follow stores.")}
-      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+      className="whitespace-nowrap flex h-11 items-center justify-center gap-1.5 rounded-xl border border-violet-600 px-5 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
     >
       Follow
     </button>
@@ -236,7 +236,7 @@ function FollowStoreButtonInner({
     <button
       onClick={toggleFollow}
       disabled={isToggling}
-      className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
+      className={`whitespace-nowrap flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
         isFollowing
           ? "border border-line-strong text-muted hover:border-red-200 dark:hover:border-red-500/30 hover:text-red-500"
           : "border border-violet-600 text-violet-700 dark:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-500/10"
@@ -259,7 +259,7 @@ function MessageSellerButton({ sellerId }: { sellerId: string }) {
         })
       }
       disabled={isPending}
-      className="flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
+      className="whitespace-nowrap flex h-11 items-center justify-center gap-1.5 rounded-xl border border-line-strong px-5 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 dark:hover:border-violet-500/40 hover:text-violet-600 dark:hover:text-violet-400 disabled:opacity-50"
     >
       <MessageCircle size={14} />
       Message
@@ -274,7 +274,7 @@ function VerifyStoreButton({ store }: { store: Store }) {
     <button
       onClick={() => verifyStore({ id: store.id, isVerified: !store.isVerified })}
       disabled={isPending}
-      className={`flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
+      className={`whitespace-nowrap flex h-11 items-center justify-center gap-1.5 rounded-xl px-5 text-[13px] font-semibold transition-colors disabled:opacity-50 ${
         store.isVerified
           ? "border border-red-200 dark:border-red-500/30 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10"
           : "border border-emerald-300 dark:border-emerald-500/40 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-50 dark:hover:bg-emerald-500/10"

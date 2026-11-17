@@ -159,7 +159,7 @@ export default function SetupChecklist({ seller }: Props) {
               {!step.done && (isNext || hasStore) && (
                 <Link
                   href={step.href}
-                  className={`flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-[13px] font-semibold transition-all sm:ml-auto ${
+                  className={`whitespace-nowrap flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl px-4 text-[13px] font-semibold transition-all sm:ml-auto ${
                     isNext
                       ? "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
                       : "border border-line-strong text-ink-2 hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300"

@@ -93,7 +93,7 @@ export default function OfferCard({
         {state === "ACCEPTED" && isBuyer && offer.paymentLink && (
           <Link
             href={`/pay/${offer.paymentLink.code}`}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13px] font-semibold text-white hover:brightness-110"
+            className="whitespace-nowrap flex h-10 w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13px] font-semibold text-white hover:brightness-110"
           >
             <Lock size={14} /> Pay {offer.store._count.shippingOptions > 0 ? naira(offer.price * offer.quantity) + " + delivery" : naira(total)} securely
           </Link>
@@ -178,7 +178,7 @@ function AnswerForm({ offer, conversationId, isSeller }: { offer: Offer; convers
           type="button"
           disabled={isPending}
           onClick={() => (simpleAccept ? submit("ACCEPT") : setMode("accept"))}
-          className="flex h-9 items-center justify-center gap-1 rounded-lg bg-emerald-600 text-[12.5px] font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
+          className="whitespace-nowrap flex h-9 items-center justify-center gap-1 rounded-lg bg-emerald-600 text-[12.5px] font-semibold text-white hover:bg-emerald-700 disabled:opacity-60"
         >
           {isPending ? <Loader2 size={13} className="animate-spin" /> : null} Accept
         </button>
@@ -261,7 +261,7 @@ function AnswerForm({ offer, conversationId, isSeller }: { offer: Offer; convers
           type="button"
           disabled={isPending}
           onClick={() => submit(mode === "accept" ? "ACCEPT" : "COUNTER")}
-          className="flex h-9 flex-1 items-center justify-center gap-1 rounded-lg bg-violet-600 text-[12.5px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+          className="whitespace-nowrap flex h-9 flex-1 items-center justify-center gap-1 rounded-lg bg-violet-600 text-[12.5px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
         >
           {isPending && <Loader2 size={13} className="animate-spin" />}
           {mode === "accept" ? "Accept offer" : "Send counter-offer"}

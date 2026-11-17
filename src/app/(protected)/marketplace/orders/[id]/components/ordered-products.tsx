@@ -144,7 +144,7 @@ function OrderedProductItem({
             {item.product.status !== "PRIVATE" && (
               <Link
                 href={`/marketplace/product/${item.productId}`}
-                className="flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
+                className="whitespace-nowrap flex h-10 items-center justify-center rounded-xl border border-line px-4 text-[12.5px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
               >
                 {item.listingChanged ? "View current listing" : "View product"}
               </Link>
@@ -153,7 +153,7 @@ function OrderedProductItem({
             {!guest && isDelivered && !item.awaitingConfirmation && !reviewing && (
               <button
                 onClick={() => setReviewing(true)}
-                className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-4 text-[12.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/15"
+                className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-4 text-[12.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/15"
               >
                 <MessageSquarePlus size={14} />
                 Write a review
@@ -163,7 +163,7 @@ function OrderedProductItem({
             {!guest && isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && returnMode === null && (
               <button
                 onClick={() => setReturnMode("return")}
-                className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
+                className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
               >
                 <RotateCcw size={14} />
                 Request return
@@ -185,7 +185,7 @@ function OrderedProductItem({
               <button
                 onClick={() => confirmDelivery(item.id)}
                 disabled={isConfirming}
-                className="flex h-10 items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-[12.5px] font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
+                className="whitespace-nowrap flex h-10 items-center gap-1.5 rounded-xl bg-emerald-600 px-4 text-[12.5px] font-semibold text-white transition-colors hover:bg-emerald-700 disabled:opacity-60"
               >
                 <CheckCircle2 size={15} />
                 {isConfirming ? "Confirming..." : "Yes, I received it"}
@@ -193,7 +193,7 @@ function OrderedProductItem({
               {guest ? (
                 <a
                   href="#account"
-                  className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
+                  className="whitespace-nowrap flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
                 >
                   <AlertTriangle size={15} />
                   Report a problem
@@ -201,7 +201,7 @@ function OrderedProductItem({
               ) : (
                 <button
                   onClick={() => setReturnMode("problem")}
-                  className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
+                  className="whitespace-nowrap flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
                 >
                   <AlertTriangle size={15} />
                   Report a problem

@@ -58,7 +58,7 @@ export default function ShareLink({ link, compact = false }: { link: PaymentLink
           <button
             type="button"
             onClick={copy}
-            className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white"
+            className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white"
           >
             {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
           </button>

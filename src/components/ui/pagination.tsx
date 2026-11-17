@@ -40,7 +40,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
         aria-label="Previous page"
-        className="flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        className="whitespace-nowrap flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <ChevronLeft size={15} />
         <span className="hidden sm:inline">Previous</span>
@@ -79,7 +79,7 @@ export default function Pagination({ page, totalPages, onPageChange }: Props) {
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
         aria-label="Next page"
-        className="flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
+        className="whitespace-nowrap flex h-9 items-center gap-1 rounded-lg border border-line px-3 text-[13px] font-medium text-ink-2 transition-colors hover:bg-surface-2 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
       >
         <span className="hidden sm:inline">Next</span>
         <ChevronRight size={15} />

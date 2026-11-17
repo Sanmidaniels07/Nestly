@@ -107,7 +107,7 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
             <button
               onClick={handleArchive}
               aria-label={confirmingArchive ? "Confirm archive" : "Archive product"}
-              className={`
+              className={`whitespace-nowrap 
                 flex h-7 items-center justify-center gap-1 rounded-md px-1.5 text-[11.5px] font-medium transition-colors
                 ${
                   confirmingArchive

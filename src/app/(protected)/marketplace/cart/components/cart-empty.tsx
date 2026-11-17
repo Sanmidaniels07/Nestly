@@ -20,7 +20,7 @@ export default function CartEmpty() {
 
       <Link
         href="/marketplace"
-        className="mt-7 inline-flex h-12 items-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13px] font-semibold text-white transition-all hover:brightness-110"
+        className="whitespace-nowrap mt-7 inline-flex h-12 items-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13px] font-semibold text-white transition-all hover:brightness-110"
       >
         Start shopping
       </Link>

@@ -142,7 +142,7 @@ export function PeopleList({ people, guests, host }: PeopleListProps) {
     <div className="flex min-h-0 flex-1 flex-col">
       {host && (
         <div className="space-y-2 border-b border-line p-3">
-          <button type="button" onClick={() => host.onStage({ muteAll: true })} className="flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 text-[13px] font-semibold text-white">
+          <button type="button" onClick={() => host.onStage({ muteAll: true })} className="whitespace-nowrap flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-violet-600 text-[13px] font-semibold text-white">
             <MicOff size={15} /> Mute everyone
           </button>
           <div className="grid grid-cols-2 gap-2">

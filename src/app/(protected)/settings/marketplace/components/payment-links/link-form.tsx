@@ -298,7 +298,7 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
         <button
           type="submit"
           disabled={saving || uploading > 0}
-          className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13.5px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
+          className="whitespace-nowrap flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13.5px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-60"
         >
           {saving && <Loader2 size={15} className="animate-spin" />}
           {link ? "Save changes" : "Create link"}

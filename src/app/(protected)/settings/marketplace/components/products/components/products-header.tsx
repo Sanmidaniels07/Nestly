@@ -23,7 +23,7 @@ export default function ProductsHeader() {
         <button
           onClick={() => exportCsv()}
           disabled={isExporting}
-          className="flex h-11 items-center justify-center gap-2 rounded-xl border border-line-strong px-4 text-[13.5px] font-medium text-ink-2 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
+          className="whitespace-nowrap flex h-11 items-center justify-center gap-2 rounded-xl border border-line-strong px-4 text-[13.5px] font-medium text-ink-2 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:text-violet-700 dark:hover:text-violet-300 disabled:opacity-50"
         >
           <Download size={15} />
           {isExporting ? "Exporting..." : "Export CSV"}

@@ -208,7 +208,7 @@ function CalloutCard({
       </div>
       <Link
         href={href}
-        className="flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-[13px] font-semibold text-white transition-all hover:brightness-110"
+        className="whitespace-nowrap flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-[13px] font-semibold text-white transition-all hover:brightness-110"
       >
         {cta}
         <ArrowRight size={14} />

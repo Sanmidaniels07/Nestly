@@ -101,7 +101,7 @@ function Intro({ onCreate, showButton }: { onCreate: () => void; showButton: boo
           <button
             type="button"
             onClick={onCreate}
-            className="flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
+            className="whitespace-nowrap flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
           >
             <Plus size={16} /> New payment link
           </button>

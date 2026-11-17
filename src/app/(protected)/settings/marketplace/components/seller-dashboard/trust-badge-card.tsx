@@ -60,7 +60,7 @@ export default function TrustBadgeCard() {
 
       <div className="mt-3 flex items-center gap-2 rounded-xl border border-line bg-surface p-1.5 pl-3.5">
         <p className="min-w-0 flex-1 truncate font-[family-name:var(--font-mono)] text-[12.5px] text-ink-2">{shortUrl}</p>
-        <button type="button" onClick={copy} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
+        <button type="button" onClick={copy} className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
           {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
         </button>
       </div>
@@ -70,14 +70,14 @@ export default function TrustBadgeCard() {
           href={shareLinks(url, message).whatsapp}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 dark:hover:border-violet-500/40"
+          className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 dark:hover:border-violet-500/40"
         >
           <WhatsAppIcon size={15} className="text-emerald-600" /> Share on WhatsApp
         </a>
         <Link
           href={`/s/${store.slug}`}
           target="_blank"
-          className="flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 dark:hover:border-violet-500/40"
+          className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 dark:hover:border-violet-500/40"
         >
           <ExternalLink size={14} /> See what buyers see
         </Link>

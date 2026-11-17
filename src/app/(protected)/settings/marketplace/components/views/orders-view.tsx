@@ -188,7 +188,7 @@ function BuyerContact({ order, isPickup }: { order: Order; isPickup: boolean }) 
           type="button"
           onClick={() => createConversation(buyer.id, { onSuccess: (response) => router.push(`/messages/${response.data.id}`) })}
           disabled={isPending}
-          className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 disabled:opacity-50 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+          className="whitespace-nowrap inline-flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 disabled:opacity-50 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
         >
           <MessageCircle size={14} /> Message buyer
         </button>

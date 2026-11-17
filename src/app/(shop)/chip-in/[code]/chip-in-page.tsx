@@ -323,7 +323,7 @@ function ContributeBox({ gift }: { gift: GroupGiftView }) {
         type="button"
         onClick={pay}
         disabled={processing || !isHydrated}
-        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[14px] font-semibold text-white shadow-lg shadow-violet-500/20 hover:brightness-110 disabled:opacity-70"
+        className="whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[14px] font-semibold text-white shadow-lg shadow-violet-500/20 hover:brightness-110 disabled:opacity-70"
       >
         {processing ? <Loader2 size={16} className="animate-spin" /> : <Lock size={15} />}
         {isLoggedIn || !isHydrated ? `Chip in${value > 0 ? ` ${naira(value)}` : ""} securely` : "Log in to chip in"}
@@ -350,7 +350,7 @@ function ShareBox({ gift }: { gift: GroupGiftView }) {
       <h2 className="text-[14.5px] font-semibold text-ink">Invite friends</h2>
       <div className="flex items-center gap-2 rounded-xl border border-line bg-surface-sunken p-1.5 pl-3.5">
         <p className="min-w-0 flex-1 truncate font-[family-name:var(--font-mono)] text-[12.5px] text-ink-2">{url.replace(/^https?:\/\//, "")}</p>
-        <button type="button" onClick={copy} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
+        <button type="button" onClick={copy} className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
           {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
         </button>
       </div>
@@ -358,7 +358,7 @@ function ShareBox({ gift }: { gift: GroupGiftView }) {
         href={shareLinks(url, message).whatsapp}
         target="_blank"
         rel="noopener noreferrer"
-        className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-line text-[13px] font-semibold text-ink-2 hover:border-violet-300"
+        className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl border border-line text-[13px] font-semibold text-ink-2 hover:border-violet-300"
       >
         <WhatsAppIcon size={16} className="text-emerald-600" /> Share on WhatsApp
       </a>

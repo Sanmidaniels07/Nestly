@@ -99,7 +99,7 @@ function HostingNotice({ studioId }: { studioId: string }) {
       </span>
       <p className="text-[16px] font-semibold text-ink">You&apos;re live right now</p>
       <p className="mt-1.5 text-[13.5px] text-muted">End your own live before watching another one.</p>
-      <Link href={`/marketplace/live/${studioId}`} className="mt-6 inline-flex h-11 items-center rounded-xl bg-violet-600 px-5 text-[13.5px] font-semibold text-white">
+      <Link href={`/marketplace/live/${studioId}`} className="whitespace-nowrap mt-6 inline-flex h-11 items-center rounded-xl bg-violet-600 px-5 text-[13.5px] font-semibold text-white">
         Back to your live
       </Link>
     </div>

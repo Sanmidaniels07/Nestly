@@ -519,7 +519,7 @@ function AcceptForm({ gift }: { gift: Gift }) {
         type="button"
         onClick={accept}
         disabled={isPending}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:brightness-110 disabled:opacity-70"
+        className="whitespace-nowrap flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:brightness-110 disabled:opacity-70"
       >
         {isPending ? <Loader2 size={17} className="animate-spin" /> : <GiftIcon size={17} />} Accept my gift
       </button>
@@ -599,7 +599,7 @@ function ClaimedView({ gift }: { gift: Gift }) {
           onClick={() =>
             confirm(progress.orderItemId, { onSuccess: () => queryClient.invalidateQueries({ queryKey: giftKey(gift.code) }) })
           }
-          className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-[14px] font-semibold text-white disabled:opacity-60"
+          className="whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-emerald-600 text-[14px] font-semibold text-white disabled:opacity-60"
         >
           {isPending ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />} I&apos;ve received it
         </button>

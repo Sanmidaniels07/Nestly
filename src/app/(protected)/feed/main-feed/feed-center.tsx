@@ -61,7 +61,7 @@ function ModeSwitch({ mode, onChange }: { mode: FeedMode; onChange: (mode: FeedM
       role="tab"
       aria-selected={mode === value}
       onClick={() => onChange(value)}
-      className={`flex h-8 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition ${
+      className={`whitespace-nowrap flex h-8 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition ${
         mode === value ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-muted hover:text-ink"
       }`}
     >
@@ -227,7 +227,7 @@ function AskForArea({ onPick }: { onPick: () => void }) {
         <button
           type="button"
           onClick={onPick}
-          className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[14px] font-semibold text-white hover:brightness-110"
+          className="whitespace-nowrap mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[14px] font-semibold text-white hover:brightness-110"
         >
           <MapPin size={16} /> Choose my area
         </button>
@@ -252,7 +252,7 @@ function NothingNear({ area, onChange, onForYou }: { area: FeedArea; onChange: (
             type="button"
             disabled={isPending}
             onClick={() => save({ state: area.state, area: null })}
-            className="inline-flex h-10 items-center gap-2 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+            className="whitespace-nowrap inline-flex h-10 items-center gap-2 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
           >
             {isPending && <Loader2 size={14} className="animate-spin" />} Try all of {stateLabel(area.state)}
           </button>

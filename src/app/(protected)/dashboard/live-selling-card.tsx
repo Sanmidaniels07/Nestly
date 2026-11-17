@@ -34,7 +34,7 @@ export default function LiveSellingCard() {
             </p>
           </div>
         </div>
-        <Link href={`/marketplace/live/${live.id}`} className="flex h-11 shrink-0 items-center justify-center rounded-xl bg-white px-5 text-[13.5px] font-semibold text-rose-600">
+        <Link href={`/marketplace/live/${live.id}`} className="whitespace-nowrap flex h-11 shrink-0 items-center justify-center rounded-xl bg-white px-5 text-[13.5px] font-semibold text-rose-600">
           Back to your live
         </Link>
       </section>
@@ -57,10 +57,10 @@ export default function LiveSellingCard() {
           </div>
         </div>
         <div className="flex shrink-0 gap-2">
-          <Link href={`/marketplace/live/${next.id}`} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 text-[13.5px] font-semibold text-white sm:flex-none">
+          <Link href={`/marketplace/live/${next.id}`} className="whitespace-nowrap flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 text-[13.5px] font-semibold text-white sm:flex-none">
             <Video size={16} /> Open studio
           </Link>
-          <Link href={LIVES_TAB} className="flex h-11 flex-1 items-center justify-center rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 sm:flex-none">
+          <Link href={LIVES_TAB} className="whitespace-nowrap flex h-11 flex-1 items-center justify-center rounded-xl border border-line bg-surface px-4 text-[13.5px] font-semibold text-ink-2 sm:flex-none">
             All lives
           </Link>
         </div>
@@ -82,10 +82,10 @@ export default function LiveSellingCard() {
           </p>
         </div>
         <div className="flex shrink-0 gap-2 sm:flex-col">
-          <Link href={`${LIVES_TAB}&new=now`} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 text-[13.5px] font-semibold hover:bg-rose-600">
+          <Link href={`${LIVES_TAB}&new=now`} className="whitespace-nowrap flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-rose-500 px-5 text-[13.5px] font-semibold hover:bg-rose-600">
             <Radio size={16} /> Go live now
           </Link>
-          <Link href={`${LIVES_TAB}&new=schedule`} className="flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[13.5px] font-semibold text-violet-700">
+          <Link href={`${LIVES_TAB}&new=schedule`} className="whitespace-nowrap flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-white px-5 text-[13.5px] font-semibold text-violet-700">
             <CalendarClock size={16} /> Schedule
           </Link>
         </div>

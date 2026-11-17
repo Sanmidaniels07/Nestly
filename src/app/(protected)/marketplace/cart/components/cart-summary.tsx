@@ -42,7 +42,7 @@ export default function CartSummary({ items }: Props) {
 
       <Link
         href="/marketplace/checkout"
-        className="mt-6 flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14px] font-semibold text-white transition-all hover:brightness-110"
+        className="whitespace-nowrap mt-6 flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14px] font-semibold text-white transition-all hover:brightness-110"
       >
         Proceed to checkout
       </Link>

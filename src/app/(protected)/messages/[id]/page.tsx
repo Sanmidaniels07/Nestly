@@ -214,7 +214,7 @@ function ConversationThread({ id }: { id: string }) {
           <button
             type="button"
             onClick={() => setOffering(true)}
-            className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-violet-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-violet-700"
+            className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-violet-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-violet-700"
           >
             <HandCoins size={14} /> <span>Make an offer</span>
           </button>
@@ -223,7 +223,7 @@ function ConversationThread({ id }: { id: string }) {
         {partner?.store && (
           <Link
             href={`/marketplace/seller/${partner.store.slug}`}
-            className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line px-3 text-[12.5px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
+            className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line px-3 text-[12.5px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
           >
             <Store size={14} /> <span className="hidden sm:inline">View store</span>
           </Link>

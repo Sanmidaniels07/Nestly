@@ -171,7 +171,7 @@ function MessageSeller({ sellerUserId }: { sellerUserId: string }) {
         if (!requireLogin("Log in to message the seller.")) return;
         createConversation(sellerUserId, { onSuccess: (response) => router.push(`/messages/${response.data.id}`) });
       }}
-      className="flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 disabled:opacity-60 dark:hover:border-violet-500/40"
+      className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 disabled:opacity-60 dark:hover:border-violet-500/40"
     >
       {isPending ? <Loader2 size={14} className="animate-spin" /> : <MessageCircle size={14} />} Message seller
     </button>
@@ -275,7 +275,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
           <Link
             href={loginHref(link.code)}
             onClick={() => rememberReturnTo(`/pay/${link.code}`)}
-            className="inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
+            className="whitespace-nowrap inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
           >
             Log in to pay
           </Link>
@@ -524,7 +524,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
         type="button"
         onClick={pay}
         disabled={processing || !isHydrated}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-70"
+        className="whitespace-nowrap flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-70"
       >
         {processing ? (
           <>

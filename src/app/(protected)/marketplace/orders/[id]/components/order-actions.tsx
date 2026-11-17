@@ -35,7 +35,7 @@ export default function OrderActions({ order }: Props) {
       <div className="mt-5 space-y-2.5">
         <button
           onClick={handleBuyAgain}
-          className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[13px] font-semibold transition-all ${
+          className={`whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-xl text-[13px] font-semibold transition-all ${
             added
               ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
               : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white hover:brightness-110"
@@ -50,7 +50,7 @@ export default function OrderActions({ order }: Props) {
           <button
             onClick={() => cancelOrder(order.id)}
             disabled={isCancelling}
-            className="flex h-12 w-full items-center justify-center rounded-xl border border-red-200 dark:border-red-500/30 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="whitespace-nowrap flex h-12 w-full items-center justify-center rounded-xl border border-red-200 dark:border-red-500/30 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isCancelling ? "Cancelling..." : "Cancel order"}
           </button>

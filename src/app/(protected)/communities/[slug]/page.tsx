@@ -149,7 +149,7 @@ function DeleteCommunitySection({ slug }: { slug: string }) {
           <button
             onClick={handleDelete}
             disabled={isPending}
-            className="flex h-11 items-center gap-1.5 rounded-xl bg-red-600 px-6 text-[13.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="whitespace-nowrap flex h-11 items-center gap-1.5 rounded-xl bg-red-600 px-6 text-[13.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Trash2 size={14} />
             {isPending ? "Deleting..." : "Yes, permanently delete"}

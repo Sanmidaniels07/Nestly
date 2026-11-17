@@ -186,7 +186,7 @@ function AccountCard({ order, token }: { order: GuestOrder; token: string }) {
         </p>
         <Link
           href={isLoggedIn ? ordersHref : `/login?returnTo=${encodeURIComponent(ordersHref)}`}
-          className="mt-3 inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
+          className="whitespace-nowrap mt-3 inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
         >
           {isLoggedIn ? "Open in My orders" : "Log in to see it"}
         </Link>
@@ -238,7 +238,7 @@ function AccountCard({ order, token }: { order: GuestOrder; token: string }) {
         <button
           type="submit"
           disabled={isPending}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13.5px] font-semibold text-white hover:brightness-110 disabled:opacity-70"
+          className="whitespace-nowrap flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13.5px] font-semibold text-white hover:brightness-110 disabled:opacity-70"
         >
           {isPending ? <Loader2 size={15} className="animate-spin" /> : null}
           Create my account

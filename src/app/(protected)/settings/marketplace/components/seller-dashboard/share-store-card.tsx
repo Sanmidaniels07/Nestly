@@ -104,7 +104,7 @@ export default function ShareStoreCard() {
       {/* The link */}
       <div className="mt-5 flex items-center gap-2 rounded-xl border border-line bg-surface-sunken p-1.5 pl-3.5">
         <p className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-ink-2">{url.replace(/^https?:\/\//, "")}</p>
-        <button type="button" onClick={copy} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
+        <button type="button" onClick={copy} className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
           {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
         </button>
       </div>

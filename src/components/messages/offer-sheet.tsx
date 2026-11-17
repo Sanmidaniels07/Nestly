@@ -137,7 +137,7 @@ export default function OfferSheet({
           <button
             type="submit"
             disabled={isPending}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14px] font-semibold text-white hover:brightness-110 disabled:opacity-60"
+            className="whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14px] font-semibold text-white hover:brightness-110 disabled:opacity-60"
           >
             {isPending && <Loader2 size={16} className="animate-spin" />} Send offer
           </button>

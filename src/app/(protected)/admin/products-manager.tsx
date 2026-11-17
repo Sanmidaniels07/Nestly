@@ -145,7 +145,7 @@ function FeaturedToggle({ product }: { product: AdminProduct }) {
         type="button"
         onClick={() => setFeatured({ id: product.id, isFeatured: !product.isFeatured })}
         disabled={isPending || (!product.isFeatured && !canFeature)}
-        className={`inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-[12.5px] font-semibold transition-colors disabled:opacity-50 ${
+        className={`whitespace-nowrap inline-flex h-9 items-center gap-1.5 rounded-lg px-3.5 text-[12.5px] font-semibold transition-colors disabled:opacity-50 ${
           product.isFeatured
             ? "border border-line-strong text-ink-2 hover:border-red-200 hover:text-red-600"
             : "bg-violet-600 text-white hover:bg-violet-700"

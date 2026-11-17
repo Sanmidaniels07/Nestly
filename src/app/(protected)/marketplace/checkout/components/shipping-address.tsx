@@ -116,7 +116,7 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-6">
-      <div className="mb-5 flex items-center justify-between">
+      <div className="mb-5 flex flex-wrap items-start justify-between gap-x-4 gap-y-3 sm:flex-nowrap sm:items-center">
         <div>
           <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
             {manage ? "Delivery addresses" : "Shipping address"}
@@ -130,7 +130,7 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
 
         <button
           onClick={() => openForm(!formOpen)}
-          className="flex h-10 items-center gap-1.5 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-violet-700"
+          className="whitespace-nowrap flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white transition-colors hover:bg-violet-700"
         >
           {formOpen ? <X size={15} /> : <Plus size={15} />}
           {formOpen ? "Cancel" : "Add address"}

@@ -35,7 +35,7 @@ export default function CacReminderBanner() {
           <button
             type="button"
             onClick={() => setOpen(true)}
-            className="flex h-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-4 text-[13px] font-semibold text-white hover:bg-emerald-700"
+            className="whitespace-nowrap flex h-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 px-4 text-[13px] font-semibold text-white hover:bg-emerald-700"
           >
             Add CAC number
           </button>

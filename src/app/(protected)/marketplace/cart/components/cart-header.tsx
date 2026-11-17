@@ -23,7 +23,7 @@ export default function CartHeader({ itemsCount, onClearCart }: Props) {
       <div className="flex gap-2.5">
         <Link
           href="/marketplace/products"
-          className="flex h-12 items-center gap-2 rounded-xl border border-line px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
+          className="whitespace-nowrap flex h-12 items-center gap-2 rounded-xl border border-line px-4 text-[13px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
         >
           <ArrowLeft size={15} />
           Continue shopping
@@ -31,7 +31,7 @@ export default function CartHeader({ itemsCount, onClearCart }: Props) {
 
         <button
           onClick={onClearCart}
-          className="flex h-12 items-center gap-2 rounded-xl border border-red-200 dark:border-red-500/30 px-4 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
+          className="whitespace-nowrap flex h-12 items-center gap-2 rounded-xl border border-red-200 dark:border-red-500/30 px-4 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
         >
           <Trash2 size={15} />
           Clear cart

@@ -182,7 +182,7 @@ export default function GuideDocument({ current, title, intro, parts, finish }: 
           </div>
           <Link
             href={finish.href}
-            className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[14px] font-semibold text-white hover:brightness-110"
+            className="whitespace-nowrap inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[14px] font-semibold text-white hover:brightness-110"
           >
             {finish.label} <ArrowRight size={16} />
           </Link>

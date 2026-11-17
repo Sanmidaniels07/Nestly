@@ -27,7 +27,7 @@ export default function VehiclePicker({ value, onChange, variant = "compact", la
               role="radio"
               aria-checked={selected}
               onClick={() => onChange(vehicle.id)}
-              className={`flex h-10 items-center justify-center gap-1.5 rounded-lg text-[13px] font-medium transition-all ${
+              className={`whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-lg text-[13px] font-medium transition-all ${
                 selected ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300" : "text-muted hover:text-ink"
               }`}
             >

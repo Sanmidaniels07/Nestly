@@ -42,7 +42,7 @@ export default function PickupSection({
           <button
             type="button"
             onClick={() => setAdding(true)}
-            className="flex h-9 items-center gap-1.5 rounded-lg border border-line px-3 text-[12.5px] font-medium text-ink-2 hover:border-violet-300"
+            className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg border border-line px-3 text-[12.5px] font-medium text-ink-2 hover:border-violet-300"
           >
             <Plus size={13} />
             {active.length ? "Add another pickup point" : "Offer pickup"}
@@ -140,7 +140,7 @@ function PickupForm({
           type="button"
           onClick={handleSave}
           disabled={!canSave || isPending}
-          className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
+          className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
         >
           {isPending && <Loader2 size={14} className="animate-spin" />}
           {pickup ? "Save changes" : "Offer pickup"}
@@ -208,7 +208,7 @@ function PickupRow({ slug, pickup, storeAddress }: { slug: string; pickup: Shipp
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2"
+            className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2"
           >
             <Pencil size={13} /> Edit
           </button>
@@ -216,7 +216,7 @@ function PickupRow({ slug, pickup, storeAddress }: { slug: string; pickup: Shipp
             type="button"
             onClick={toggleArchive}
             disabled={isUpdating}
-            className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2 disabled:opacity-60"
+            className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2 disabled:opacity-60"
           >
             {pickup.isArchived ? <ArchiveRestore size={13} /> : <Archive size={13} />}
             {pickup.isArchived ? "Restore" : "Pause"}
