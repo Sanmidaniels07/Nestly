@@ -19,7 +19,9 @@ const STATUS_TONE: Record<SellerApplicationStatus, string> = {
   REJECTED: "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
-const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus }[] = [
+// "Needs review": quick-start sellers already selling, waiting for an admin.
+const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus; needsReview?: boolean }[] = [
+  { label: "Needs review", needsReview: true },
   { label: "Pending", value: "PENDING" },
   { label: "Approved", value: "APPROVED" },
   { label: "Rejected", value: "REJECTED" },
@@ -27,10 +29,16 @@ const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus }[] = [
 ];
 
 export default function SellersManager() {
-  const [status, setStatus] = useState<SellerApplicationStatus | undefined>("PENDING");
+  const [filterLabel, setFilterLabel] = useState(STATUS_FILTERS[0].label);
   const [page, setPage] = useState(1);
+  const filter = STATUS_FILTERS.find((f) => f.label === filterLabel) ?? STATUS_FILTERS[0];
 
-  const { data, isLoading } = useAdminSellers({ status, page, limit: 15 });
+  const { data, isLoading } = useAdminSellers({
+    status: filter.value,
+    needsReview: filter.needsReview ? true : undefined,
+    page,
+    limit: 15,
+  });
   const sellers = data?.sellers ?? [];
 
   return (
@@ -40,11 +48,11 @@ export default function SellersManager() {
           <button
             key={filter.label}
             onClick={() => {
-              setStatus(filter.value);
+              setFilterLabel(filter.label);
               setPage(1);
             }}
             className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
-              status === filter.value
+              filterLabel === filter.label
                 ? "bg-violet-600 text-white"
                 : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
             }`}
@@ -228,6 +236,11 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
           {seller.store && (
             <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-subtle">
               Store: {seller.store.name}
+              {seller.store.underReview && !seller.store.isSuspended && (
+                <span className="rounded-full bg-amber-50 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-amber-700 dark:bg-amber-500/10 dark:text-amber-300">
+                  Selling · needs review
+                </span>
+              )}
               {seller.store.isSuspended && (
                 <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-red-700 dark:bg-red-500/10 dark:text-red-300">
                   Suspended
@@ -305,11 +318,26 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
 
       {seller.status === "APPROVED" && (
         <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-line-soft pt-3.5">
+          {seller.store?.underReview && !seller.store.isSuspended && (
+            <>
+              <p className="w-full text-[12px] text-muted">
+                Started selling {seller.store.createdAt ? formatRelativeTime(seller.store.createdAt) : "recently"} with quick start. Their payouts are
+                held and orders capped until you mark them reviewed. Rejecting takes their store down.
+              </p>
+              <button
+                onClick={() => updateStatus({ id: seller.id, data: { status: "APPROVED" } })}
+                disabled={isPending}
+                className="rounded-lg border border-emerald-200 dark:border-emerald-500/30 px-3 py-1.5 text-[12px] font-medium text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-500/10 disabled:opacity-50"
+              >
+                Mark reviewed
+              </button>
+            </>
+          )}
           <button
             onClick={() => setRejecting((prev) => !prev)}
             className="rounded-lg border border-red-200 dark:border-red-500/30 px-3 py-1.5 text-[12px] font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
           >
-            Revoke approval
+            {seller.store?.underReview ? "Reject" : "Revoke approval"}
           </button>
         </div>
       )}

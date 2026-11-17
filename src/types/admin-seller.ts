@@ -18,13 +18,16 @@ export interface AdminSeller {
     email: string;
     username: string | null;
   };
-  store: { id: string; name: string; slug: string; isSuspended?: boolean } | null;
+  // underReview: a quick-start store not reviewed yet (payouts held, orders capped).
+  store: { id: string; name: string; slug: string; isSuspended?: boolean; underReview?: boolean; createdAt?: string } | null;
 }
 
 export interface AdminSellerListParams {
   page?: number;
   limit?: number;
   status?: SellerApplicationStatus;
+  // Only quick-start sellers waiting for a review.
+  needsReview?: boolean;
 }
 
 export interface UpdateSellerStatusPayload {

@@ -63,6 +63,9 @@ export interface Store {
   totalSales?: number;
   isVerified?: boolean;
   isSuspended?: boolean;
+  // Quick start: selling before an admin review - payouts held and one
+  // order capped (SellerProfile.orderLimit) until Nestly reviews the store.
+  underReview?: boolean;
   returnPolicy?: string | null;
   shippingPolicy?: string | null;
   warrantyPolicy?: string | null;

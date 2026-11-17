@@ -8,6 +8,7 @@ import { Clock, XCircle } from "lucide-react";
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
+import UnderReviewBanner from "./components/seller-dashboard/under-review-banner";
 import CacReminderBanner from "./components/seller-dashboard/cac-reminder-banner";
 import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-banner";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
@@ -141,6 +142,7 @@ function MarketplaceSettingsContent() {
       <SellerDashboardHeader />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
+      {seller?.store?.underReview && !seller.store.isSuspended && <UnderReviewBanner orderLimit={seller.orderLimit} />}
 
       {/* What's left before buyers can order (the Dashboard tab has the full checklist). */}
       {seller?.status === "APPROVED" && tab !== "dashboard" && <SetupReminderBanner />}

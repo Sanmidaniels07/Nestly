@@ -7,6 +7,7 @@ import { CheckCircle2, ExternalLink, Link2, Pause, Pencil, Play, Plus, ShieldChe
 
 import { useDeletePaymentLink, useMyPaymentLinks, useUpdatePaymentLink } from "@/src/hooks/use-payment-links";
 import { naira } from "@/src/lib/payment-link";
+import { useMySeller } from "@/src/hooks/use-my-seller";
 import Skeleton from "@/src/components/ui/skeleton";
 import { PaymentLink } from "@/src/types/payment-link";
 
@@ -28,6 +29,9 @@ type Panel = { mode: "new" } | { mode: "edit"; link: PaymentLink } | { mode: "cr
 // buyer pays through Nestly, with the same protection as any order.
 export default function PaymentLinksView() {
   const { data: links, isLoading } = useMyPaymentLinks();
+  const { data: seller } = useMySeller();
+  // Store under review: the most one order can be (checked in the form too).
+  const orderLimit = seller?.orderLimit ?? null;
   const [panel, setPanel] = useState<Panel>(null);
 
   return (
@@ -35,7 +39,7 @@ export default function PaymentLinksView() {
       <Intro onCreate={() => setPanel({ mode: "new" })} showButton={panel?.mode !== "new"} />
 
       {panel?.mode === "new" && (
-        <LinkForm onCancel={() => setPanel(null)} onDone={(link) => setPanel({ mode: "created", link })} />
+        <LinkForm orderLimit={orderLimit} onCancel={() => setPanel(null)} onDone={(link) => setPanel({ mode: "created", link })} />
       )}
 
       {panel?.mode === "created" && <Created link={panel.link} onClose={() => setPanel(null)} />}
@@ -50,7 +54,7 @@ export default function PaymentLinksView() {
           <h3 className="text-[13px] font-semibold uppercase tracking-wide text-subtle">Your links</h3>
           {links.map((link) =>
             panel?.mode === "edit" && panel.link.id === link.id ? (
-              <LinkForm key={link.id} link={link} onCancel={() => setPanel(null)} onDone={() => setPanel(null)} />
+              <LinkForm key={link.id} link={link} orderLimit={orderLimit} onCancel={() => setPanel(null)} onDone={() => setPanel(null)} />
             ) : (
               <LinkRow key={link.id} link={link} onEdit={() => setPanel({ mode: "edit", link })} />
             )

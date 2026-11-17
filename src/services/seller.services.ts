@@ -1,6 +1,6 @@
 import { api } from "../lib/axios";
 import { ApiResponse } from "../types/api";
-import { BecomeSellerPayload, SellerProfile, SellerReadiness } from "../types/seller";
+import { BecomeSellerPayload, QuickStartSellerPayload, SellerProfile, SellerReadiness } from "../types/seller";
 
 export const becomeSeller = async (data: BecomeSellerPayload) => {
   const response = await api.post<ApiResponse<SellerProfile>>(
@@ -25,5 +25,11 @@ export const updateMySeller = async (data: BecomeSellerPayload) => {
     "/seller/me",
     data
   );
+  return response.data;
+};
+
+// A live store in one step (reviewed by Nestly afterwards).
+export const quickStartSeller = async (data: QuickStartSellerPayload) => {
+  const response = await api.post<ApiResponse<SellerProfile>>("/seller/quick-start", data);
   return response.data;
 };

@@ -11,6 +11,7 @@ import FormSelect from "@/src/components/ui/form-select";
 import VehiclePicker from "@/src/components/ui/vehicle-picker";
 import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 import { PaymentLink, PaymentLinkDelivery, PaymentLinkPayload } from "@/src/types/payment-link";
+import { naira } from "@/src/lib/payment-link";
 
 const MAX_IMAGES = 6;
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"];
@@ -24,9 +25,20 @@ interface Props {
   link?: PaymentLink;
   onDone: (link: PaymentLink) => void;
   onCancel: () => void;
+  // Quick start's "first link" step: a brand-new store has no delivery
+  // zones or address yet, so only the agreed delivery fee is offered.
+  firstLink?: boolean;
+  // Store under review: the most one order can be (items + delivery).
+  orderLimit?: number | null;
 }
 
-export default function LinkForm({ link, onDone, onCancel }: Props) {
+const DELIVERY_OPTIONS = [
+  { value: "STORE_OPTIONS", title: "Buyer chooses", hint: "From your delivery zones and pickup points", icon: MapPinned },
+  { value: "DELIVERY", title: "Fixed delivery fee", hint: "When you've agreed the fee", icon: Truck },
+  { value: "PICKUP", title: "Buyer picks up", hint: "From your store's address", icon: Store },
+] as const;
+
+export default function LinkForm({ link, onDone, onCancel, firstLink = false, orderLimit = null }: Props) {
   const { data: categories } = useCategories();
   const { mutateAsync: uploadImage } = useImageUpload();
   const { mutate: createLink, isPending: isCreating } = useCreatePaymentLink();
@@ -39,7 +51,7 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
   const [categoryId, setCategoryId] = useState(link?.category.id ?? "");
   // New links default to the store's zones - the seller often doesn't know
   // where the buyer is yet.
-  const [deliveryType, setDeliveryType] = useState<PaymentLinkDelivery>(link?.deliveryType ?? "STORE_OPTIONS");
+  const [deliveryType, setDeliveryType] = useState<PaymentLinkDelivery>(link?.deliveryType ?? (firstLink ? "DELIVERY" : "STORE_OPTIONS"));
   const [vehicle, setVehicle] = useState<DeliveryVehicle>(link?.deliveryVehicle ?? "BIKE");
   const [deliveryFee, setDeliveryFee] = useState(link ? String(link.deliveryFee) : "");
   const [description, setDescription] = useState(link?.description ?? "");
@@ -80,6 +92,11 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
     if (!Number.isInteger(count) || count < (link ? 0 : 1)) return setError("Enter how many you're selling, e.g. 1.");
     if (!categoryId) return setError("Choose a category.");
     if (Number.isNaN(fee) || fee < 0) return setError("Enter the delivery fee, or 0 for free delivery.");
+    if (orderLimit && amount + fee > orderLimit) {
+      return setError(
+        `While Nestly reviews your new store, one order can be up to ${naira(orderLimit)} (price + delivery). Lower the price - the limit goes once you're reviewed.`
+      );
+    }
     setError("");
 
     const payload: PaymentLinkPayload = {
@@ -109,15 +126,21 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <h3 className="font-[family-name:var(--font-fraunces)] text-[21px] text-ink">
-            {link ? "Edit payment link" : "New payment link"}
+            {link ? "Edit payment link" : firstLink ? "Your first payment link" : "New payment link"}
           </h3>
           <p className="mt-0.5 text-[12.5px] text-muted">
-            {link ? "Orders already paid keep the details they were bought with." : "For a deal you've agreed with a buyer - or something you sell often."}
+            {link
+              ? "Orders already paid keep the details they were bought with."
+              : firstLink
+                ? "Something a buyer has asked you for in your DMs or WhatsApp. You'll send them this link to pay safely."
+                : "For a deal you've agreed with a buyer - or something you sell often."}
           </p>
         </div>
-        <button type="button" onClick={onCancel} aria-label="Close" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-2">
-          <X size={18} />
-        </button>
+        {!firstLink && (
+          <button type="button" onClick={onCancel} aria-label="Close" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-2">
+            <X size={18} />
+          </button>
+        )}
       </div>
 
       {/* Photos */}
@@ -209,12 +232,13 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
       {/* Delivery */}
       <div>
         <span className={label}>How does the buyer get it?</span>
-        <div className="grid gap-2.5 sm:grid-cols-3">
-          {([
-            { value: "STORE_OPTIONS", title: "Buyer chooses", hint: "From your delivery zones and pickup points", icon: MapPinned },
-            { value: "DELIVERY", title: "Fixed delivery fee", hint: "When you've agreed the fee", icon: Truck },
-            { value: "PICKUP", title: "Buyer picks up", hint: "From your store's address", icon: Store },
-          ] as const).map((option) => (
+        {firstLink && (
+          <p className="mb-2.5 text-[12px] text-muted">
+            You deliver it for the fee you agreed with the buyer. Delivery zones and pickup can be added later in Store settings.
+          </p>
+        )}
+        <div className={`grid gap-2.5 ${firstLink ? "" : "sm:grid-cols-3"}`}>
+          {DELIVERY_OPTIONS.filter((option) => !firstLink || option.value === "DELIVERY").map((option) => (
             <button
               type="button"
               key={option.value}
@@ -269,7 +293,7 @@ export default function LinkForm({ link, onDone, onCancel }: Props) {
 
       <div className="flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
         <button type="button" onClick={onCancel} className="h-11 rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2 hover:bg-surface-sunken">
-          Cancel
+          {firstLink ? "Skip for now" : "Cancel"}
         </button>
         <button
           type="submit"
