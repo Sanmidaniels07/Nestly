@@ -14,6 +14,9 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
       return notification.targetId ? `/users/${notification.targetId}?tab=wishlist` : null;
     case "SELLER_AGREEMENT":
       return "/seller-terms#returns";
+    // Chip in on a gift: its page (id is the code).
+    case "GROUP_GIFT":
+      return notification.targetId ? `/chip-in/${notification.targetId}` : null;
     case "GIFT":
       return notification.targetId ? `/gift/${notification.targetId}` : null;
     case "CONVERSATION":
