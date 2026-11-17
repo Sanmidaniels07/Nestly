@@ -108,6 +108,10 @@ api.interceptors.response.use(
             ? window.location.pathname + window.location.search
             : "";
 
+        // A full page load on purpose: this runs outside React (no router),
+        // and a hard reload also clears everything held in memory for the
+        // expired session.
+        // eslint-disable-next-line @next/next/no-location-assign-relative-destination
         window.location.href = `/session-expired?returnTo=${encodeURIComponent(returnTo)}`;
       }
 
