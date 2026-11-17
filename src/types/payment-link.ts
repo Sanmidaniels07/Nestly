@@ -1,4 +1,6 @@
 import { TrafficSource } from "../lib/traffic-source";
+import { Order } from "./order";
+import { User } from "./auth";
 
 import { Category } from "./category";
 import { ShippingOption } from "./store";
@@ -99,3 +101,38 @@ export interface PayPaymentLinkResponse {
   authorizationUrl: string;
   total: number;
 }
+
+// Guest checkout: paying without an account. Who they are and where it
+// goes replace the saved address a logged-in buyer picks.
+export interface GuestPayPaymentLinkPayload {
+  name: string;
+  email: string;
+  phone: string;
+  // Not needed when the buyer picks it up.
+  address?: string;
+  city?: string;
+  state?: string;
+  quantity: number;
+  shippingOptionId?: string;
+  note?: string;
+  source?: TrafficSource;
+  // The store's ?ref= code, as at signup.
+  referralCode?: string;
+}
+
+export interface GuestPayPaymentLinkResponse extends PayPaymentLinkResponse {
+  // Secret for the private tracking page /orders/track/{guestToken}.
+  guestToken: string;
+}
+
+// The guest's order on /orders/track/{token}: the usual order view plus
+// the seller and whether the guest account has been set up yet.
+export interface GuestOrder extends Order {
+  store: { name: string; slug: string; logo: string | null; isVerified: boolean; sellerUserId: string } | null;
+  paymentLinkCode: string | null;
+  buyer: { name: string; email: string; isGuest: boolean };
+}
+
+export type ClaimGuestAccountResponse =
+  | { emailSent: true; email: string }
+  | { emailSent: false; accessToken: string; user: User };

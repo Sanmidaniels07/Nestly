@@ -26,11 +26,19 @@ const CONFIRMED_BY_COPY = {
   AUTO: "automatically",
 } as const;
 
-interface Props {
-  order: Order;
+// Guest checkout (/orders/track/{token}): confirming goes through the
+// order's private link, and reviews / returns need an account first.
+export interface GuestItemActions {
+  onConfirm: (orderItemId: string) => void;
+  isConfirming: boolean;
 }
 
-export default function OrderedProducts({ order }: Props) {
+interface Props {
+  order: Order;
+  guest?: GuestItemActions;
+}
+
+export default function OrderedProducts({ order, guest }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
@@ -45,6 +53,7 @@ export default function OrderedProducts({ order }: Props) {
             item={item}
             orderStatus={order.status}
             events={(order.events ?? []).filter((event) => event.orderItemId === item.id)}
+            guest={guest}
           />
         ))}
       </div>
@@ -57,15 +66,19 @@ function OrderedProductItem({
   item,
   orderStatus,
   events,
+  guest,
 }: {
   orderId: string;
   item: OrderItem;
   orderStatus: string;
   events: OrderEvent[];
+  guest?: GuestItemActions;
 }) {
   const [reviewing, setReviewing] = useState(false);
   const [returnMode, setReturnMode] = useState<"return" | "problem" | null>(null);
-  const { mutate: confirmDelivery, isPending: isConfirming } = useConfirmDelivery(orderId);
+  const { mutate: confirmAsBuyer, isPending: isConfirmingAsBuyer } = useConfirmDelivery(orderId);
+  const confirmDelivery = guest ? guest.onConfirm : confirmAsBuyer;
+  const isConfirming = guest ? guest.isConfirming : isConfirmingAsBuyer;
 
   const primaryImage =
     item.product.images.find((image) => image.isPrimary)?.url ?? item.product.images[0]?.url;
@@ -137,7 +150,7 @@ function OrderedProductItem({
               </Link>
             )}
 
-            {isDelivered && !item.awaitingConfirmation && !reviewing && (
+            {!guest && isDelivered && !item.awaitingConfirmation && !reviewing && (
               <button
                 onClick={() => setReviewing(true)}
                 className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-violet-50 px-4 text-[12.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/10 dark:text-violet-300 dark:hover:bg-violet-500/15"
@@ -147,7 +160,7 @@ function OrderedProductItem({
               </button>
             )}
 
-            {isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && returnMode === null && (
+            {!guest && isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && returnMode === null && (
               <button
                 onClick={() => setReturnMode("return")}
                 className="flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
@@ -177,15 +190,38 @@ function OrderedProductItem({
                 <CheckCircle2 size={15} />
                 {isConfirming ? "Confirming..." : "Yes, I received it"}
               </button>
-              <button
-                onClick={() => setReturnMode("problem")}
-                className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
-              >
-                <AlertTriangle size={15} />
-                Report a problem
-              </button>
+              {guest ? (
+                <a
+                  href="#account"
+                  className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
+                >
+                  <AlertTriangle size={15} />
+                  Report a problem
+                </a>
+              ) : (
+                <button
+                  onClick={() => setReturnMode("problem")}
+                  className="flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
+                >
+                  <AlertTriangle size={15} />
+                  Report a problem
+                </button>
+              )}
             </div>
           </div>
+        )}
+
+        {guest && isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && (
+          <p className="flex items-start gap-2 rounded-xl bg-surface-sunken px-3.5 py-2.5 text-[12.5px] text-muted">
+            <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
+            <span>
+              Something wrong with it?{" "}
+              <a href="#account" className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
+                Set up your account
+              </a>{" "}
+              to report a problem or ask for a return.
+            </span>
+          </p>
         )}
 
         {problemReported && (
