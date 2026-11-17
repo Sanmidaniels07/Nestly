@@ -38,6 +38,7 @@ import { trafficSource } from "@/src/lib/traffic-source";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
+import TrustLine from "@/src/components/trust/trust-line";
 import ShippingAddress from "@/src/app/(protected)/marketplace/checkout/components/shipping-address";
 import ZonePicker, { ZoneOption } from "@/src/app/(protected)/marketplace/checkout/components/zone-picker";
 import { ApiResponse } from "@/src/types/api";
@@ -149,6 +150,8 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
             </span>
           </Link>
           {!link.isOwner && <MessageSeller sellerUserId={link.store.sellerUserId} />}
+          {/* Their record from real Nestly orders - why the link can be trusted. */}
+          <TrustLine slug={link.store.slug} />
         </div>
       </div>
     </section>

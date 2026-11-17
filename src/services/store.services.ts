@@ -1,4 +1,5 @@
 import { api } from "../lib/axios";
+import { StoreTrust } from "../types/trust";
 import { ApiResponse, Paginated } from "../types/api";
 import { Product } from "../types/product";
 import { Review } from "../types/review";
@@ -152,5 +153,11 @@ export const getBanks = async () => {
   const response = await api.get<ApiResponse<Bank[]>>(
     "/payment-methods/banks"
   );
+  return response.data;
+};
+
+// Public trust record (store page, payment links, /s/{slug}).
+export const getStoreTrust = async (slug: string) => {
+  const response = await api.get<ApiResponse<StoreTrust>>(`/stores/${encodeURIComponent(slug)}/trust`);
   return response.data;
 };
