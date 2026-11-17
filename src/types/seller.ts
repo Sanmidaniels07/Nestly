@@ -35,6 +35,8 @@ export interface SellerProfile {
   store?: Store | null;
   // Store still under review: the most one order from it can be (naira).
   orderLimit?: number | null;
+  // ...and what Nestly is holding for it until the review (naira).
+  heldForReview?: number | null;
 }
 
 // POST /seller/quick-start - a live store in one step.

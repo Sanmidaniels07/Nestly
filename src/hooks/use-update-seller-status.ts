@@ -12,19 +12,29 @@ export const useUpdateSellerStatus = () => {
   const queryClient = useQueryClient();
 
   return useMutation<
-    unknown,
+    Awaited<ReturnType<typeof updateSellerStatus>>,
     AxiosError<ApiErrorResponse>,
     { id: string; data: UpdateSellerStatusPayload }
   >({
     mutationFn: ({ id, data }) => updateSellerStatus(id, data),
 
-    onSuccess: (_data, variables) => {
+    onSuccess: (response, variables) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "sellers"] });
-      toast.success(
-        variables.data.status === "APPROVED"
-          ? "Seller approved"
-          : "Seller rejected"
-      );
+      queryClient.invalidateQueries({ queryKey: ["admin", "seller-open-orders", variables.id] });
+      const refunds = response.data.refunds;
+      if (variables.data.status === "APPROVED") {
+        toast.success("Seller approved");
+      } else if (refunds) {
+        const extra = refunds.failed + refunds.manual;
+        toast.success(
+          `Seller rejected. ${refunds.refunded} order${refunds.refunded === 1 ? "" : "s"} refunded${
+            extra ? ` - ${extra} need${extra === 1 ? "s" : ""} a manual refund (see notifications)` : ""
+          }.`,
+          { duration: 7000 }
+        );
+      } else {
+        toast.success("Seller rejected");
+      }
     },
 
     onError: (error) => {

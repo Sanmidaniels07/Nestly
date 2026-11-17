@@ -66,6 +66,9 @@ export interface Store {
   // Quick start: selling before an admin review - payouts held and one
   // order capped (SellerProfile.orderLimit) until Nestly reviews the store.
   underReview?: boolean;
+  // Rejected with "stop new sales": no new orders, but the seller can still
+  // finish (and be paid for) the orders already paid.
+  salesStoppedAt?: string | null;
   returnPolicy?: string | null;
   shippingPolicy?: string | null;
   warrantyPolicy?: string | null;

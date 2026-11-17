@@ -3,6 +3,8 @@ import { ApiResponse, Paginated } from "../types/api";
 import {
   AdminSeller,
   AdminSellerListParams,
+  FraudRefundResult,
+  SellerOpenOrders,
   UpdateSellerStatusPayload,
 } from "../types/admin-seller";
 
@@ -18,10 +20,16 @@ export const updateSellerStatus = async (
   id: string,
   data: UpdateSellerStatusPayload
 ) => {
-  const response = await api.patch<ApiResponse<AdminSeller>>(
+  const response = await api.patch<ApiResponse<AdminSeller & { refunds?: FraudRefundResult | null }>>(
     `/admin/sellers/${id}/status`,
     data
   );
+  return response.data;
+};
+
+// Before rejecting: open orders, what fraud mode would refund, money held.
+export const getSellerOpenOrders = async (id: string) => {
+  const response = await api.get<ApiResponse<SellerOpenOrders>>(`/admin/sellers/${id}/open-orders`);
   return response.data;
 };
 
