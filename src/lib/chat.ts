@@ -31,9 +31,12 @@ export const shortTime = (date: string) => {
 };
 
 /** One-line summary of a message, for previews and reply quotes. */
-export const messageSummary = (message: Pick<Message, "content" | "media" | "deletedAt"> & { product?: { title: string } | null }) => {
+export const messageSummary = (
+  message: Pick<Message, "content" | "media" | "deletedAt"> & { product?: { title: string } | null; offer?: { title: string; price: number } | null }
+) => {
   if (message.deletedAt) return "Message deleted";
   if (message.content) return message.content;
+  if (message.offer) return `🤝 Offer: ${naira(message.offer.price)} for ${message.offer.title}`;
   if (message.product) return `🛍️ ${message.product.title}`;
   const first = message.media?.[0];
   if (first) return first.type === "VIDEO" ? "🎥 Video" : "📷 Photo";

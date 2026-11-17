@@ -69,6 +69,9 @@ export interface PublicPaymentLink {
   shippingOptions: Pick<ShippingOption, "id" | "name" | "fee" | "eta" | "type" | "areas" | "state" | "pickupAddress" | "vehicle">[];
   availability: PaymentLinkAvailability;
   isOwner: boolean;
+  // From an accepted offer in chat: only that buyer can pay it.
+  reserved?: boolean;
+  reservedForViewer?: boolean;
   store: {
     id: string;
     name: string;

@@ -16,6 +16,47 @@ export interface ChatProduct {
   store: { name: string; slug: string };
 }
 
+// An offer in a chat (make an offer): the buyer offers, the seller accepts,
+// counters or declines. Accepted: a payment link only the buyer can pay.
+export type OfferStatus = "PENDING" | "ACCEPTED" | "DECLINED" | "COUNTERED" | "WITHDRAWN";
+
+export interface OfferCard {
+  id: string;
+  status: OfferStatus;
+  title: string;
+  // Naira per item.
+  price: number;
+  quantity: number;
+  note: string | null;
+  deliveryFee: number | null;
+  categoryId: string | null;
+  expiresAt: string;
+  createdAt: string;
+  createdById: string;
+  buyerId: string;
+  counterOfId: string | null;
+  product: ChatProduct | null;
+  store: { name: string; slug: string; seller: { userId: string }; _count: { shippingOptions: number } };
+  paymentLink: { code: string; _count: { orders: number } } | null;
+}
+
+export interface CreateOfferPayload {
+  conversationId: string;
+  productId?: string;
+  title?: string;
+  price: number;
+  quantity?: number;
+  note?: string;
+}
+
+export interface RespondOfferPayload {
+  action: "ACCEPT" | "DECLINE" | "COUNTER";
+  price?: number;
+  categoryId?: string;
+  deliveryFee?: number;
+  note?: string;
+}
+
 /** The message a reply is quoting. */
 export interface QuotedMessage {
   id: string;
@@ -42,6 +83,8 @@ export interface Message {
   media?: MessageMedia[];
   replyTo?: QuotedMessage | null;
   product?: ChatProduct | null;
+  // Make an offer in chat - the card shows its live state.
+  offer?: OfferCard | null;
   reactions?: MessageReaction[];
   readAt?: string | null;
   // Unsent by the sender - shows "This message was deleted".

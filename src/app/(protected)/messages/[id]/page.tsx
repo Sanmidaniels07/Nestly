@@ -3,7 +3,8 @@
 import { use, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowDown, ArrowLeft, Loader2, Store } from "lucide-react";
+import { ArrowDown, ArrowLeft, HandCoins, Loader2, Store } from "lucide-react";
+import OfferSheet from "@/src/components/messages/offer-sheet";
 import { useGoBack } from "@/src/hooks/use-go-back";
 import toast from "react-hot-toast";
 
@@ -90,6 +91,8 @@ function ConversationThread({ id }: { id: string }) {
   const { mutate: unsend } = useDeleteMessage(id);
 
   const [replyTo, setReplyTo] = useState<QuotedMessage | null>(null);
+  // Make an offer: open for a buyer chatting with a seller.
+  const [offering, setOffering] = useState(false);
   const [otherTyping, setOtherTyping] = useState(false);
   const typingExpiry = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastTypingEmit = useRef(0);
@@ -208,6 +211,16 @@ function ConversationThread({ id }: { id: string }) {
         )}
 
         {partner?.store && (
+          <button
+            type="button"
+            onClick={() => setOffering(true)}
+            className="flex h-9 shrink-0 items-center gap-1.5 rounded-full bg-violet-600 px-3 text-[12.5px] font-semibold text-white transition-colors hover:bg-violet-700"
+          >
+            <HandCoins size={14} /> <span>Make an offer</span>
+          </button>
+        )}
+
+        {partner?.store && (
           <Link
             href={`/marketplace/seller/${partner.store.slug}`}
             className="flex h-9 shrink-0 items-center gap-1.5 rounded-full border border-line px-3 text-[12.5px] font-semibold text-ink-2 transition-colors hover:border-violet-300 hover:text-violet-700 dark:hover:border-violet-500/40 dark:hover:text-violet-300"
@@ -251,6 +264,16 @@ function ConversationThread({ id }: { id: string }) {
         onSend={send}
         sending={sending}
       />
+
+      {offering && partner?.store && (
+        <OfferSheet
+          conversationId={id}
+          storeSlug={partner.store.slug}
+          storeName={partner.store.name}
+          initialProduct={product}
+          onClose={() => setOffering(false)}
+        />
+      )}
     </div>
   );
 }

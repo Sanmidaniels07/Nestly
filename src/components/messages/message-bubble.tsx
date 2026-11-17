@@ -9,6 +9,7 @@ import { formatTimeOfDay } from "@/src/lib/date";
 import { QUICK_REACTIONS, messageSummary } from "@/src/lib/chat";
 import MessageText from "./message-text";
 import ChatProductCard from "./chat-product-card";
+import OfferCard from "./offer-card";
 
 interface Props {
   message: Message;
@@ -112,6 +113,16 @@ export default function MessageBubble({
       toast.error("Couldn't copy");
     }
   };
+
+  // An offer is its own card (make an offer in chat), not a speech bubble -
+  // it carries buttons and its own colours.
+  if (message.offer && !deleted) {
+    return (
+      <div id={`msg-${message.id}`} className={`flex scroll-mt-24 ${mine ? "justify-end" : "justify-start"} pt-2`}>
+        <OfferCard offer={message.offer} conversationId={message.conversationId} currentUserId={currentUserId} createdAt={message.createdAt} />
+      </div>
+    );
+  }
 
   // Group reactions: 👍 2, ❤️ 1.
   const counts = reactions.reduce<Record<string, number>>((acc, r) => ({ ...acc, [r.emoji]: (acc[r.emoji] ?? 0) + 1 }), {});

@@ -259,6 +259,31 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     );
   }
 
+  // A price agreed in chat with one buyer: only they can pay it.
+  if (link.reserved && !link.reservedForViewer) {
+    return (
+      <aside className="space-y-3 rounded-2xl border border-line bg-surface p-5">
+        <p className="text-[15px] font-semibold text-ink">This price was agreed in a chat</p>
+        <p className="text-[13px] leading-relaxed text-muted">
+          {isLoggedIn
+            ? "Only the buyer who agreed it with the seller can pay this link. Message the seller to make your own offer."
+            : "Log in to the Nestly account that agreed this price with the seller to pay."}
+        </p>
+        {isLoggedIn ? (
+          <MessageSeller sellerUserId={link.store.sellerUserId} />
+        ) : (
+          <Link
+            href={loginHref(link.code)}
+            onClick={() => rememberReturnTo(`/pay/${link.code}`)}
+            className="inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
+          >
+            Log in to pay
+          </Link>
+        )}
+      </aside>
+    );
+  }
+
   if (link.availability !== "AVAILABLE") {
     return (
       <aside className="rounded-2xl border border-line bg-surface p-5 text-center">
