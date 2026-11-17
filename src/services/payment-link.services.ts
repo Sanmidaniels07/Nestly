@@ -1,6 +1,10 @@
 import { api } from "../lib/axios";
 import { ApiResponse } from "../types/api";
 import {
+  ClaimGuestAccountResponse,
+  GuestOrder,
+  GuestPayPaymentLinkPayload,
+  GuestPayPaymentLinkResponse,
   PaymentLink,
   PaymentLinkPayload,
   PayPaymentLinkPayload,
@@ -39,5 +43,38 @@ export const payPaymentLink = async (code: string, data: PayPaymentLinkPayload) 
     `/payment-links/${encodeURIComponent(code)}/pay`,
     data
   );
+  return response.data;
+};
+
+// Guest checkout - no login; the order's token is the access.
+export const guestPayPaymentLink = async (code: string, data: GuestPayPaymentLinkPayload) => {
+  const response = await api.post<ApiResponse<GuestPayPaymentLinkResponse>>(
+    `/payment-links/${encodeURIComponent(code)}/guest-pay`,
+    data
+  );
+  return response.data;
+};
+
+const guestOrderPath = (token: string) => `/payment-links/guest-orders/${encodeURIComponent(token)}`;
+
+export const getGuestOrder = async (token: string) => {
+  const response = await api.get<ApiResponse<GuestOrder>>(guestOrderPath(token));
+  return response.data;
+};
+
+export const verifyGuestOrder = async (token: string) => {
+  const response = await api.post<ApiResponse<GuestOrder>>(`${guestOrderPath(token)}/verify`);
+  return response.data;
+};
+
+export const confirmGuestDelivery = async (token: string, orderItemId: string) => {
+  const response = await api.post<ApiResponse<GuestOrder>>(
+    `${guestOrderPath(token)}/items/${encodeURIComponent(orderItemId)}/confirm-delivery`
+  );
+  return response.data;
+};
+
+export const claimGuestAccount = async (token: string, password: string) => {
+  const response = await api.post<ApiResponse<ClaimGuestAccountResponse>>(`${guestOrderPath(token)}/claim`, { password });
   return response.data;
 };

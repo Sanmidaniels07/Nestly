@@ -17,10 +17,17 @@ import {
   ShieldCheck,
   Store,
   Truck,
+  UserRound,
   Wallet,
 } from "lucide-react";
+import { AxiosError } from "axios";
 
-import { usePaymentLink, usePayPaymentLink } from "@/src/hooks/use-payment-links";
+import { useGuestPayPaymentLink, usePaymentLink, usePayPaymentLink } from "@/src/hooks/use-payment-links";
+import { verifyGuestOrder } from "@/src/services/payment-link.services";
+import { referralCode } from "@/src/lib/referral";
+import { rememberReturnTo } from "@/src/lib/return-to";
+import { NIGERIAN_STATES } from "@/src/lib/google-maps";
+import { ApiErrorResponse } from "@/src/types/api";
 import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useCreateConversation } from "@/src/hooks/use-create-conversation";
 import { useRequireLogin, useSession } from "@/src/hooks/use-session";
@@ -31,6 +38,7 @@ import { trafficSource } from "@/src/lib/traffic-source";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
+import TrustLine from "@/src/components/trust/trust-line";
 import ShippingAddress from "@/src/app/(protected)/marketplace/checkout/components/shipping-address";
 import ZonePicker, { ZoneOption } from "@/src/app/(protected)/marketplace/checkout/components/zone-picker";
 import { ApiResponse } from "@/src/types/api";
@@ -142,6 +150,8 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
             </span>
           </Link>
           {!link.isOwner && <MessageSeller sellerUserId={link.store.sellerUserId} />}
+          {/* Their record from real Nestly orders - why the link can be trusted. */}
+          <TrustLine slug={link.store.slug} />
         </div>
       </div>
     </section>
@@ -161,7 +171,7 @@ function MessageSeller({ sellerUserId }: { sellerUserId: string }) {
         if (!requireLogin("Log in to message the seller.")) return;
         createConversation(sellerUserId, { onSuccess: (response) => router.push(`/messages/${response.data.id}`) });
       }}
-      className="flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 disabled:opacity-60 dark:hover:border-violet-500/40"
+      className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg border border-line bg-surface px-3 text-[12.5px] font-semibold text-ink-2 hover:border-violet-300 disabled:opacity-60 dark:hover:border-violet-500/40"
     >
       {isPending ? <Loader2 size={14} className="animate-spin" /> : <MessageCircle size={14} />} Message seller
     </button>
@@ -206,11 +216,16 @@ function Protection() {
 function PayPanel({ link }: { link: PublicPaymentLink }) {
   const router = useRouter();
   const { isLoggedIn, isHydrated } = useSession();
-  const requireLogin = useRequireLogin();
   const addressId = useCheckoutStore((state) => state.addressId);
   const deliveryPhone = useCheckoutStore((state) => state.deliveryPhone?.trim() || undefined);
   const { mutateAsync: startPayment } = usePayPaymentLink();
+  const { mutateAsync: startGuestPayment } = useGuestPayPaymentLink();
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();
+
+  // Guest checkout: no account needed - just who they are and where it goes.
+  const isGuest = isHydrated && !isLoggedIn;
+  const [guest, setGuest] = useState<GuestDetailsValue>(emptyGuest);
+  const [accountExists, setAccountExists] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
   const [zone, setZone] = useState<ZoneOption | null>(null);
@@ -244,6 +259,31 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     );
   }
 
+  // A price agreed in chat with one buyer: only they can pay it.
+  if (link.reserved && !link.reservedForViewer) {
+    return (
+      <aside className="space-y-3 rounded-2xl border border-line bg-surface p-5">
+        <p className="text-[15px] font-semibold text-ink">This price was agreed in a chat</p>
+        <p className="text-[13px] leading-relaxed text-muted">
+          {isLoggedIn
+            ? "Only the buyer who agreed it with the seller can pay this link. Message the seller to make your own offer."
+            : "Log in to the Nestly account that agreed this price with the seller to pay."}
+        </p>
+        {isLoggedIn ? (
+          <MessageSeller sellerUserId={link.store.sellerUserId} />
+        ) : (
+          <Link
+            href={loginHref(link.code)}
+            onClick={() => rememberReturnTo(`/pay/${link.code}`)}
+            className="whitespace-nowrap inline-flex h-10 items-center rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700"
+          >
+            Log in to pay
+          </Link>
+        )}
+      </aside>
+    );
+  }
+
   if (link.availability !== "AVAILABLE") {
     return (
       <aside className="rounded-2xl border border-line bg-surface p-5 text-center">
@@ -257,8 +297,64 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     );
   }
 
+  // Picked up from the seller (the link, or the pickup point they chose) - no address needed.
+  const collects = isPickup || zone?.type === "PICKUP";
+
+  const payAsGuest = async () => {
+    if (buyerChooses && !zone) return setError("Choose how you'd like to receive it.");
+    const problem = guestProblem(guest, !collects);
+    if (problem) return setError(problem);
+
+    const attempt = ++attemptRef.current;
+    const isStale = () => attempt !== attemptRef.current;
+    setError("");
+    setAccountExists(false);
+    setProcessing(true);
+
+    try {
+      const { data } = await startGuestPayment({
+        code: link.code,
+        data: {
+          name: guest.name.trim(),
+          email: guest.email.trim(),
+          phone: guest.phone.trim(),
+          ...(collects ? {} : { address: guest.address.trim(), city: guest.city.trim(), state: guest.state }),
+          quantity: qty,
+          shippingOptionId: zone?.id,
+          note: note.trim() || undefined,
+          source: trafficSource(),
+          referralCode: referralCode(),
+        },
+      });
+      const trackPath = `/orders/track/${data.guestToken}`;
+      await payWithPaystack(data.accessCode, {
+        onSuccess: async () => {
+          // The tracking page shows "confirming" if this is slow; the
+          // Paystack webhook confirms it either way.
+          await verifyGuestOrder(data.guestToken).catch(() => undefined);
+          if (!isStale()) router.push(trackPath);
+        },
+        onCancel: () => {
+          if (!isStale()) setProcessing(false);
+        },
+        onError: (message) => {
+          if (!isStale()) {
+            setError(message || "Payment failed. Please try again.");
+            setProcessing(false);
+          }
+        },
+      });
+    } catch (err) {
+      if (isStale()) return;
+      const response = (err as AxiosError<ApiErrorResponse>).response;
+      if (response?.status === 409) setAccountExists(true);
+      setError(response?.data?.message ?? "Couldn't start the payment. Please try again.");
+      setProcessing(false);
+    }
+  };
+
   const pay = async () => {
-    if (!requireLogin("Log in or create a free account to pay safely.")) return;
+    if (isGuest) return payAsGuest();
     if (!addressId) return setError("Add or choose your address first.");
     if (buyerChooses && !zone) return setError("Choose how you'd like to receive it.");
     if (deliveryPhone && !PHONE_PATTERN.test(deliveryPhone)) return setError("Check the phone number for delivery.");
@@ -367,9 +463,13 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
         </dl>
       </div>
 
-      {isLoggedIn && (
+      {isHydrated && (
         <>
-          <ShippingAddress />
+          {isLoggedIn ? (
+            <ShippingAddress />
+          ) : (
+            <GuestDetails value={guest} onChange={setGuest} needsAddress={!collects} code={link.code} />
+          )}
           {buyerChooses && (
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="mb-3 flex items-center gap-2 text-[15px] font-semibold text-ink">
@@ -405,7 +505,18 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
       {error && (
         <div className="flex items-start gap-2 rounded-xl bg-red-50 p-3 text-[12.5px] text-red-600 dark:bg-red-500/10 dark:text-red-400">
           <AlertCircle size={15} className="mt-0.5 shrink-0" />
-          {error}
+          <span className="min-w-0">
+            {error}
+            {accountExists && (
+              <Link
+                href={loginHref(link.code)}
+                onClick={() => rememberReturnTo(`/pay/${link.code}`)}
+                className="ml-1.5 font-semibold underline underline-offset-2"
+              >
+                Log in
+              </Link>
+            )}
+          </span>
         </div>
       )}
 
@@ -413,33 +524,160 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
         type="button"
         onClick={pay}
         disabled={processing || !isHydrated}
-        className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-70"
+        className="whitespace-nowrap flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 transition-all hover:brightness-110 disabled:opacity-70"
       >
         {processing ? (
           <>
             <Loader2 size={17} className="animate-spin" /> Processing payment…
           </>
-        ) : isLoggedIn ? (
+        ) : (
           <>
             <Lock size={16} /> Pay {naira(total)} securely
           </>
-        ) : (
-          "Log in or sign up to pay"
         )}
       </button>
       <p className="text-center text-[12px] leading-relaxed text-subtle">
-        {isLoggedIn ? (
-          <>
-            By paying, you agree to Nestly&apos;s{" "}
-            <Link href="/terms" target="_blank" className="font-medium text-violet-600 hover:underline dark:text-violet-400">
-              Terms of Service
-            </Link>
-            .
-          </>
-        ) : (
-          "Free account, takes a minute. It's how you track your order and get your delivery code."
-        )}
+        {isGuest && "No account needed - we'll email your receipt and delivery code. "}
+        By paying, you agree to Nestly&apos;s{" "}
+        <Link href="/terms" target="_blank" className="font-medium text-violet-600 hover:underline dark:text-violet-400">
+          Terms of Service
+        </Link>
+        .
       </p>
     </aside>
+  );
+}
+
+const loginHref = (code: string) => `/login?returnTo=${encodeURIComponent(`/pay/${code}`)}`;
+
+interface GuestDetailsValue {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+}
+
+const emptyGuest: GuestDetailsValue = { name: "", email: "", phone: "", address: "", city: "", state: "" };
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/** What's missing or wrong in the guest's details, or null when they can pay. */
+const guestProblem = (value: GuestDetailsValue, needsAddress: boolean) => {
+  if (value.name.trim().length < 2) return "Enter your name.";
+  if (!EMAIL_PATTERN.test(value.email.trim())) return "Enter a valid email - your receipt and delivery code go there.";
+  if (!PHONE_PATTERN.test(value.phone.trim())) return "Enter a valid phone number, e.g. 0803 123 4567.";
+  if (needsAddress) {
+    if (value.address.trim().length < 5) return "Enter your street address.";
+    if (value.city.trim().length < 2) return "Enter your city or area.";
+    if (!value.state) return "Choose your state.";
+  }
+  return null;
+};
+
+const inputClass =
+  "w-full rounded-xl border border-line bg-surface px-4 py-3 text-[16px] text-ink outline-none placeholder:text-subtle focus:border-violet-400 focus:ring-4 focus:ring-violet-500/10 sm:text-[14px]";
+
+// Pay without an account: contact details, and the delivery address
+// unless they're picking it up. The seller gets the name, address and
+// phone to deliver, as with any order.
+function GuestDetails({
+  value,
+  onChange,
+  needsAddress,
+  code,
+}: {
+  value: GuestDetailsValue;
+  onChange: (value: GuestDetailsValue) => void;
+  needsAddress: boolean;
+  code: string;
+}) {
+  const set = (key: keyof GuestDetailsValue) => (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    onChange({ ...value, [key]: event.target.value });
+
+  return (
+    <div className="space-y-4 rounded-2xl border border-line bg-surface p-5">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <p className="flex items-center gap-2 text-[15px] font-semibold text-ink">
+          <UserRound size={16} className="text-violet-600 dark:text-violet-400" /> Your details
+        </p>
+        <Link
+          href={loginHref(code)}
+          onClick={() => rememberReturnTo(`/pay/${code}`)}
+          className="text-[12.5px] font-semibold text-violet-700 hover:underline dark:text-violet-300"
+        >
+          Have an account? Log in
+        </Link>
+      </div>
+
+      <div className="grid gap-3">
+        <label className="grid gap-1.5">
+          <span className="text-[12.5px] font-medium text-ink-2">Full name</span>
+          <input value={value.name} onChange={set("name")} autoComplete="name" placeholder="e.g. Tola Adebayo" className={inputClass} />
+        </label>
+        <label className="grid gap-1.5">
+          <span className="text-[12.5px] font-medium text-ink-2">Email</span>
+          <input
+            type="email"
+            value={value.email}
+            onChange={set("email")}
+            autoComplete="email"
+            inputMode="email"
+            placeholder="you@example.com"
+            className={inputClass}
+          />
+          <span className="text-[11.5px] text-subtle">Your receipt, delivery code and order updates go here.</span>
+        </label>
+        <label className="grid gap-1.5">
+          <span className="text-[12.5px] font-medium text-ink-2">Phone number</span>
+          <input
+            type="tel"
+            value={value.phone}
+            onChange={set("phone")}
+            autoComplete="tel"
+            inputMode="tel"
+            placeholder="0803 123 4567"
+            className={inputClass}
+          />
+          <span className="text-[11.5px] text-subtle">The seller calls this number to deliver.</span>
+        </label>
+      </div>
+
+      {needsAddress && (
+        <div className="grid gap-3 border-t border-dashed border-line pt-4">
+          <p className="flex items-center gap-2 text-[13.5px] font-semibold text-ink">
+            <MapPin size={15} className="text-violet-600 dark:text-violet-400" /> Delivery address
+          </p>
+          <label className="grid gap-1.5">
+            <span className="text-[12.5px] font-medium text-ink-2">Street address</span>
+            <input
+              value={value.address}
+              onChange={set("address")}
+              autoComplete="street-address"
+              placeholder="House number, street, nearest bus stop or landmark"
+              className={inputClass}
+            />
+          </label>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <label className="grid gap-1.5">
+              <span className="text-[12.5px] font-medium text-ink-2">City / area</span>
+              <input value={value.city} onChange={set("city")} autoComplete="address-level2" placeholder="e.g. Ikeja" className={inputClass} />
+            </label>
+            <label className="grid gap-1.5">
+              <span className="text-[12.5px] font-medium text-ink-2">State</span>
+              <select value={value.state} onChange={set("state")} autoComplete="address-level1" className={inputClass}>
+                <option value="">Choose…</option>
+                {NIGERIAN_STATES.map((state) => (
+                  <option key={state} value={state}>
+                    {state === "Federal Capital Territory" ? "Abuja (FCT)" : state}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

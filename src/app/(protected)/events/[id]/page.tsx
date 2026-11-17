@@ -214,7 +214,7 @@ export default function EventDetailPage({
                     onClick={handleCancelEvent}
                     disabled={isCancelling}
                     aria-label={confirmingCancel ? "Confirm cancel event" : "Cancel event"}
-                    className={`
+                    className={`whitespace-nowrap 
                       flex h-9 items-center justify-center gap-1.5 rounded-full px-3 text-[12.5px] font-medium transition-colors disabled:opacity-50
                       ${
                         confirmingCancel

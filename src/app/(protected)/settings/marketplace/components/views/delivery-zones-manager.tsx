@@ -139,7 +139,7 @@ export default function DeliveryZonesManager({ slug }: { slug: string }) {
           type="button"
           onClick={handleDetect}
           disabled={isDetecting}
-          className="flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3.5 text-[13px] font-medium text-ink-2 transition-colors hover:border-violet-300 disabled:opacity-60"
+          className="whitespace-nowrap flex h-10 shrink-0 items-center justify-center gap-1.5 rounded-lg border border-line bg-surface px-3.5 text-[13px] font-medium text-ink-2 transition-colors hover:border-violet-300 disabled:opacity-60"
         >
           {isDetecting ? <Loader2 size={14} className="animate-spin" /> : <LocateFixed size={14} />}
           Detect my location
@@ -313,7 +313,7 @@ function SuggestedZonesForm({
           type="button"
           onClick={handleSave}
           disabled={priced.length === 0 || isPending}
-          className="flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
+          className="whitespace-nowrap flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
         >
           {isPending ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
           {priced.length > 0 ? `Add ${priced.length} zone${priced.length === 1 ? "" : "s"}` : "Add zones"}
@@ -514,7 +514,7 @@ function ZoneForm({
           type="button"
           onClick={handleSave}
           disabled={!canSave || isPending}
-          className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
+          className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white transition-all hover:brightness-110 disabled:opacity-50"
         >
           {isPending && <Loader2 size={14} className="animate-spin" />}
           {zone ? "Save changes" : "Add zone"}
@@ -587,7 +587,7 @@ function ZoneRow({
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2"
+            className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2"
           >
             <Pencil size={13} /> Edit
           </button>
@@ -595,7 +595,7 @@ function ZoneRow({
             type="button"
             onClick={toggleArchive}
             disabled={isUpdating}
-            className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2 disabled:opacity-60"
+            className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-[12.5px] font-medium text-ink-2 hover:bg-surface-2 disabled:opacity-60"
           >
             {zone.isArchived ? <ArchiveRestore size={13} /> : <Archive size={13} />}
             {zone.isArchived ? "Restore" : "Archive"}

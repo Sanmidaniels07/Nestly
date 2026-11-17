@@ -88,10 +88,10 @@ export default function LivesView() {
         </p>
         {data.canGoLive ? (
           <div className="mt-4 flex flex-wrap gap-2">
-            <button type="button" onClick={() => setForm({ mode: "schedule" })} className="flex h-11 items-center gap-2 rounded-xl bg-white px-4 text-[13.5px] font-semibold text-violet-700">
+            <button type="button" onClick={() => setForm({ mode: "schedule" })} className="whitespace-nowrap flex h-11 items-center gap-2 rounded-xl bg-white px-4 text-[13.5px] font-semibold text-violet-700">
               <CalendarClock size={16} /> Schedule a live
             </button>
-            <button type="button" onClick={() => setForm({ mode: "now" })} className="flex h-11 items-center gap-2 rounded-xl bg-rose-500 px-4 text-[13.5px] font-semibold">
+            <button type="button" onClick={() => setForm({ mode: "now" })} className="whitespace-nowrap flex h-11 items-center gap-2 rounded-xl bg-rose-500 px-4 text-[13.5px] font-semibold">
               <Radio size={16} /> Go live now
             </button>
           </div>
@@ -186,26 +186,26 @@ function LiveRow({ live, onEdit, onCancel }: { live: SellerLive; onEdit?: () => 
       <div className="flex flex-wrap gap-2">
         {(live.status === "SCHEDULED" || live.status === "LIVE") && (
           <>
-            <Link href={`/marketplace/live/${live.id}`} className="flex h-9 items-center gap-1.5 rounded-xl bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
+            <Link href={`/marketplace/live/${live.id}`} className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-xl bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
               <Video size={14} /> {live.status === "LIVE" ? "Back to studio" : "Studio"}
             </Link>
-            <button type="button" onClick={() => copyLink(live)} className="flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12.5px] font-semibold text-ink-2">
+            <button type="button" onClick={() => copyLink(live)} className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12.5px] font-semibold text-ink-2">
               <Share2 size={14} /> Share link
             </button>
           </>
         )}
         {onEdit && (
-          <button type="button" onClick={onEdit} aria-label="Edit" className="flex h-9 items-center rounded-xl border border-line px-2.5 text-ink-2">
+          <button type="button" onClick={onEdit} aria-label="Edit" className="whitespace-nowrap flex h-9 items-center rounded-xl border border-line px-2.5 text-ink-2">
             <Pencil size={14} />
           </button>
         )}
         {onCancel && (
-          <button type="button" onClick={onCancel} className="flex h-9 items-center rounded-xl border border-line px-3 text-[12.5px] font-semibold text-red-600">
+          <button type="button" onClick={onCancel} className="whitespace-nowrap flex h-9 items-center rounded-xl border border-line px-3 text-[12.5px] font-semibold text-red-600">
             Cancel
           </button>
         )}
         {live.status === "ENDED" && (
-          <Link href={`/marketplace/live/${live.id}`} className="flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12.5px] font-semibold text-ink-2">
+          <Link href={`/marketplace/live/${live.id}`} className="whitespace-nowrap flex h-9 items-center gap-1.5 rounded-xl border border-line px-3 text-[12.5px] font-semibold text-ink-2">
             <BarChart3 size={14} /> Summary
           </Link>
         )}
@@ -327,7 +327,7 @@ function LiveForm({ mode, existing, onClose }: { mode: "now" | "schedule"; exist
               <span className="min-w-0 flex-1 truncate font-[family-name:var(--font-mono)] text-[12.5px] text-violet-700 dark:text-violet-300">
                 {liveShareUrl(created.code, created.referralCode)}
               </span>
-              <button type="button" onClick={() => copyLink(created)} className="flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
+              <button type="button" onClick={() => copyLink(created)} className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
                 <Copy size={14} /> Share
               </button>
             </div>
@@ -453,7 +453,7 @@ function LiveForm({ mode, existing, onClose }: { mode: "now" | "schedule"; exist
               type="button"
               onClick={submit}
               disabled={creating || updating || uploading}
-              className={`flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14.5px] font-semibold text-white ${mode === "now" && !existing ? "bg-rose-600" : "bg-gradient-to-r from-violet-600 to-indigo-600"}`}
+              className={`whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-2xl text-[14.5px] font-semibold text-white ${mode === "now" && !existing ? "bg-rose-600" : "bg-gradient-to-r from-violet-600 to-indigo-600"}`}
             >
               {(creating || updating) && <Loader2 size={17} className="animate-spin" />}
               {existing ? "Save changes" : mode === "now" ? "Continue to camera" : "Schedule live"}

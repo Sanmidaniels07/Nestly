@@ -8,7 +8,8 @@ import { useUpdateSellerStatus } from "@/src/hooks/use-update-seller-status";
 import { useSetSellerVerified } from "@/src/hooks/use-set-seller-verified";
 import { useRecheckSellerCac } from "@/src/hooks/use-recheck-seller-cac";
 import { CAC_RESULT_LABEL, cacTypeLabel } from "@/src/lib/cac";
-import { AdminSeller } from "@/src/types/admin-seller";
+import { AdminSeller, RejectMode } from "@/src/types/admin-seller";
+import { useSellerOpenOrders } from "@/src/hooks/use-seller-open-orders";
 import { SellerApplicationStatus } from "@/src/types/seller";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -19,7 +20,9 @@ const STATUS_TONE: Record<SellerApplicationStatus, string> = {
   REJECTED: "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300",
 };
 
-const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus }[] = [
+// "Needs review": quick-start sellers already selling, waiting for an admin.
+const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus; needsReview?: boolean }[] = [
+  { label: "Needs review", needsReview: true },
   { label: "Pending", value: "PENDING" },
   { label: "Approved", value: "APPROVED" },
   { label: "Rejected", value: "REJECTED" },
@@ -27,10 +30,16 @@ const STATUS_FILTERS: { label: string; value?: SellerApplicationStatus }[] = [
 ];
 
 export default function SellersManager() {
-  const [status, setStatus] = useState<SellerApplicationStatus | undefined>("PENDING");
+  const [filterLabel, setFilterLabel] = useState(STATUS_FILTERS[0].label);
   const [page, setPage] = useState(1);
+  const filter = STATUS_FILTERS.find((f) => f.label === filterLabel) ?? STATUS_FILTERS[0];
 
-  const { data, isLoading } = useAdminSellers({ status, page, limit: 15 });
+  const { data, isLoading } = useAdminSellers({
+    status: filter.value,
+    needsReview: filter.needsReview ? true : undefined,
+    page,
+    limit: 15,
+  });
   const sellers = data?.sellers ?? [];
 
   return (
@@ -40,11 +49,11 @@ export default function SellersManager() {
           <button
             key={filter.label}
             onClick={() => {
-              setStatus(filter.value);
+              setFilterLabel(filter.label);
               setPage(1);
             }}
             className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
-              status === filter.value
+              filterLabel === filter.label
                 ? "bg-violet-600 text-white"
                 : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
             }`}
@@ -203,15 +212,33 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
 
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState("");
+  const [rejectMode, setRejectMode] = useState<RejectMode>("STOP_SALES");
+  // When the card was drawn - for "waiting 30h" (kept stable across renders).
+  const [now] = useState(() => Date.now());
 
   const handleConfirmReject = () => {
     if (!reason.trim()) return;
     updateStatus(
-      { id: seller.id, data: { status: "REJECTED", reason: reason.trim() } },
-      { onSuccess: () => setRejecting(false) }
+      {
+        id: seller.id,
+        data: { status: "REJECTED", reason: reason.trim(), ...(seller.store ? { rejectMode } : {}) },
+      },
+      {
+        onSuccess: () => {
+          setRejecting(false);
+          setReason("");
+          setRejectMode("STOP_SALES");
+        },
+      }
     );
-    setReason("");
   };
+
+  // Quick-start stores waiting for a review: how long, and overdue after 48h.
+  const waitingHours =
+    seller.store?.underReview && !seller.store.isSuspended && seller.store.createdAt
+      ? Math.max(0, Math.floor((now - new Date(seller.store.createdAt).getTime()) / 3_600_000))
+      : null;
+  const overdue = waitingHours !== null && waitingHours >= REVIEW_OVERDUE_HOURS;
 
   return (
     <div className="rounded-2xl border border-line bg-surface p-4 sm:p-5">
@@ -228,6 +255,22 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
           {seller.store && (
             <p className="mt-1 flex flex-wrap items-center gap-1.5 text-[12px] text-subtle">
               Store: {seller.store.name}
+              {waitingHours !== null && (
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide ${
+                    overdue
+                      ? "bg-red-50 text-red-700 dark:bg-red-500/10 dark:text-red-300"
+                      : "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-300"
+                  }`}
+                >
+                  {overdue ? "Review overdue" : "Selling · needs review"} · waiting {formatWait(waitingHours)}
+                </span>
+              )}
+              {seller.store.salesStoppedAt && (
+                <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-muted">
+                  Finishing open orders
+                </span>
+              )}
               {seller.store.isSuspended && (
                 <span className="rounded-full bg-red-50 px-2 py-0.5 text-[10.5px] font-semibold uppercase tracking-wide text-red-700 dark:bg-red-500/10 dark:text-red-300">
                   Suspended
@@ -305,19 +348,35 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
 
       {seller.status === "APPROVED" && (
         <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-line-soft pt-3.5">
+          {seller.store?.underReview && !seller.store.isSuspended && (
+            <>
+              <p className="w-full text-[12px] text-muted">
+                Started selling {seller.store.createdAt ? formatRelativeTime(seller.store.createdAt) : "recently"} with quick start. Their payouts are
+                held and orders capped until you mark them reviewed. Rejecting takes their store down.
+              </p>
+              <button
+                onClick={() => updateStatus({ id: seller.id, data: { status: "APPROVED" } })}
+                disabled={isPending}
+                className="rounded-lg border border-emerald-200 dark:border-emerald-500/30 px-3 py-1.5 text-[12px] font-medium text-emerald-700 dark:text-emerald-300 transition-colors hover:bg-emerald-50 dark:hover:bg-emerald-500/10 disabled:opacity-50"
+              >
+                Mark reviewed
+              </button>
+            </>
+          )}
           <button
             onClick={() => setRejecting((prev) => !prev)}
             className="rounded-lg border border-red-200 dark:border-red-500/30 px-3 py-1.5 text-[12px] font-medium text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10"
           >
-            Revoke approval
+            {seller.store?.underReview ? "Reject" : "Revoke approval"}
           </button>
         </div>
       )}
 
       {rejecting && (
         <div className="mt-3 space-y-2.5 rounded-xl border border-dashed border-line-strong bg-surface-sunken p-3.5">
+          {seller.store && <RejectOptions sellerId={seller.id} mode={rejectMode} onChange={setRejectMode} />}
           <p className="text-[12.5px] text-muted">
-            Reason for rejecting {seller.user.name} (required):
+            Reason for rejecting {seller.user.name} (required - the seller sees it):
           </p>
           <textarea
             value={reason}
@@ -340,11 +399,81 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
               disabled={!reason.trim() || isPending}
               className="rounded-lg bg-red-600 px-4 py-2 text-[12.5px] font-semibold text-white transition-colors hover:bg-red-700 disabled:opacity-50"
             >
-              {isPending ? "Saving..." : "Confirm rejection"}
+              {isPending ? "Saving..." : rejectMode === "FRAUD" && seller.store ? "Reject and refund buyers" : "Confirm rejection"}
             </button>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+const REVIEW_OVERDUE_HOURS = 48;
+
+const formatWait = (hours: number) => (hours < 1 ? "under 1h" : hours < 48 ? `${hours}h` : `${Math.floor(hours / 24)} days`);
+
+const money = (value: number) =>
+  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
+
+// Rejecting a seller with a store: what's in progress, and what each choice
+// does to it - so nobody's order is left hanging.
+function RejectOptions({ sellerId, mode, onChange }: { sellerId: string; mode: RejectMode; onChange: (mode: RejectMode) => void }) {
+  const { data: open, isLoading } = useSellerOpenOrders(sellerId, true);
+
+  const options: { value: RejectMode; title: string; text: string }[] = [
+    {
+      value: "STOP_SALES",
+      title: "Stop new sales",
+      text: "Not fraud (wrong items, store not up to standard). The store is hidden and takes no new orders. The seller can still finish the open orders - buyers are protected by their delivery code - and is paid for them as usual.",
+    },
+    {
+      value: "FRAUD",
+      title: "Fraud - cancel and refund",
+      text: open
+        ? `Scam or fake seller. ${open.refundableOrders} undelivered order${open.refundableOrders === 1 ? "" : "s"} (${money(open.refundableAmount)}) cancelled and refunded through Paystack, and the buyers are emailed.${
+            open.manualOrders ? ` ${open.manualOrders} already paid to the seller - refund by hand.` : ""
+          } Money for delivered orders stays held for you to decide.`
+        : "Scam or fake seller. Everything not yet delivered is cancelled and refunded through Paystack, and the buyers are emailed.",
+    },
+  ];
+
+  return (
+    <div className="space-y-2.5">
+      <p className="text-[12.5px] text-ink-2">
+        {isLoading ? (
+          "Checking their open orders…"
+        ) : open && open.openOrders > 0 ? (
+          <>
+            <strong className="text-ink">
+              {open.openOrders} open order{open.openOrders === 1 ? "" : "s"} · {money(open.openAmount)}
+            </strong>{" "}
+            not delivered yet · {money(open.heldAmount)} held by Nestly for this store.
+          </>
+        ) : (
+          <>No open orders.{open && open.heldAmount > 0 ? ` ${money(open.heldAmount)} held by Nestly for this store.` : ""}</>
+        )}
+      </p>
+      <div className="grid gap-2 sm:grid-cols-2" role="radiogroup" aria-label="How to reject">
+        {options.map((option) => (
+          <button
+            key={option.value}
+            type="button"
+            role="radio"
+            aria-checked={mode === option.value}
+            onClick={() => onChange(option.value)}
+            className={`rounded-xl border p-3 text-left transition-colors ${
+              mode === option.value
+                ? option.value === "FRAUD"
+                  ? "border-red-400 bg-red-50 dark:border-red-500/50 dark:bg-red-500/10"
+                  : "border-violet-400 bg-violet-50 dark:border-violet-500/50 dark:bg-violet-500/10"
+                : "border-line bg-surface hover:border-violet-200 dark:hover:border-violet-500/30"
+            }`}
+          >
+            <span className="block text-[13px] font-semibold text-ink">{option.title}</span>
+            <span className="mt-1 block text-[11.5px] leading-relaxed text-muted">{option.text}</span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 }

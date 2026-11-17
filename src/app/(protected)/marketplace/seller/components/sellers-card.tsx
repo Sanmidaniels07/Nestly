@@ -122,7 +122,7 @@ export default function SellerCard({ seller, rank }: Props) {
         <div className="mt-auto pt-5">
           <Link
             href={`/marketplace/seller/${seller.slug}`}
-            className="flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
+            className="whitespace-nowrap flex h-11 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
           >
             Visit store
             <ArrowRight size={15} className="transition-transform group-hover:translate-x-0.5" />

@@ -28,4 +28,6 @@ export interface CreateReviewPayload {
   productId: string;
   rating: number;
   comment?: string;
+  // Up to 4 photos of what arrived - shown on the product and in the feed.
+  images?: string[];
 }

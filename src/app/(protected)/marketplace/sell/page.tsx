@@ -2,22 +2,19 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { CheckCircle2, Clock, ImagePlus, Percent, Store as StoreIcon, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, ImagePlus, XCircle } from "lucide-react";
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import { useBecomeSeller } from "@/src/hooks/use-become-seller";
 import { useCreateStore } from "@/src/hooks/use-create-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
-import { useCategories } from "@/src/hooks/use-categories";
 import { useCountdown } from "@/src/hooks/use-countdown";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
 import BackButton from "@/src/components/ui/back-button";
-import { CacCompanyType, SellerProfile } from "@/src/types/seller";
-import { CAC_COMPANY_TYPES, cacTypeFromNumber } from "@/src/lib/cac";
-import Checkbox from "@/src/components/ui/checkbox";
+import { SellerProfile } from "@/src/types/seller";
+import QuickStart from "./quick-start";
 
 // Sellers arrive here from the seller dashboard, the marketplace, or a
 // "Set up store" prompt - always offer a way back to where they were.
@@ -33,6 +30,15 @@ export default function SellPage() {
 function SellPageContent() {
   const router = useRouter();
   const { data: seller, isLoading, isError } = useMySeller();
+  // Once quick start begins it stays on screen through its last step, even
+  // though the seller (with a store) has already been created.
+  const [quickStarting, setQuickStarting] = useState(false);
+
+  const finish = () => router.replace("/settings/marketplace");
+
+  if (quickStarting) {
+    return <QuickStart seller={seller} onBegin={() => {}} onFinish={finish} />;
+  }
 
   if (isLoading) {
     return (
@@ -48,21 +54,10 @@ function SellPageContent() {
     return <RejectedApplication seller={seller} />;
   }
 
-  if (isSeller && seller.status === "PENDING") {
-    return (
-      <section className="mx-auto max-w-3xl rounded-2xl border border-line bg-surface px-6 py-16 text-center sm:px-10">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50 dark:bg-amber-500/10">
-          <Clock size={26} className="text-amber-600 dark:text-amber-400" />
-        </div>
-        <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
-          Application pending
-        </h1>
-        <p className="mt-2.5 text-[13.5px] text-muted">
-          Your seller application is awaiting admin review. We&apos;ll notify you as
-          soon as it&apos;s approved.
-        </p>
-      </section>
-    );
+  // New sellers - and applications still waiting - start selling straight
+  // away with quick start (Nestly reviews them afterwards).
+  if (!isSeller || seller.status === "PENDING") {
+    return <QuickStart seller={isSeller ? seller : null} onBegin={() => setQuickStarting(true)} onFinish={finish} />;
   }
 
   if (isSeller && seller.store) {
@@ -88,11 +83,8 @@ function SellPageContent() {
     );
   }
 
-  if (isSeller) {
-    return <CreateStoreForm />;
-  }
-
-  return <BecomeSellerForm />;
+  // Approved the old way (by an admin) but no store yet.
+  return <CreateStoreForm />;
 }
 
 function RejectedApplication({ seller }: { seller: SellerProfile }) {
@@ -138,125 +130,6 @@ function RejectedApplication({ seller }: { seller: SellerProfile }) {
           Apply again
         </Button>
       )}
-    </section>
-  );
-}
-
-function BecomeSellerForm() {
-  const [cacNumber, setCacNumber] = useState("");
-  const [cacType, setCacType] = useState<CacCompanyType | "">("");
-  const [agreed, setAgreed] = useState(false);
-  const { mutate: becomeSeller, isPending } = useBecomeSeller();
-  const { data: categories } = useCategories();
-
-  return (
-    <section className="mx-auto max-w-xl rounded-2xl border border-line bg-surface p-6 sm:p-10">
-      <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-violet-50 dark:bg-violet-500/10">
-        <StoreIcon size={26} className="text-violet-600 dark:text-violet-400" />
-      </div>
-
-      <h1 className="text-center font-[family-name:var(--font-fraunces)] text-[26px] text-ink">
-        Become a seller
-      </h1>
-      <p className="mt-2.5 text-center text-[13.5px] text-muted">
-        Activate your seller account to start setting up your store.{" "}
-        <Link href="/guides/sellers" className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
-          How selling works
-        </Link>
-      </p>
-
-      {!!categories?.length && (
-        <div className="mt-6 rounded-2xl border border-dashed border-line-strong bg-surface-sunken p-5">
-          <div className="flex items-center gap-2">
-            <Percent size={15} className="text-violet-600 dark:text-violet-400" />
-            <p className="text-[13px] font-semibold text-ink">
-              Nestly takes a commission on each sale
-            </p>
-          </div>
-          <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
-            The rate varies by category and applies to item prices only — you keep
-            the rest, plus your delivery fees in full, paid to your registered bank account.
-          </p>
-
-          <div className="mt-3.5 space-y-1.5">
-            {categories.map((category) => (
-              <div
-                key={category.id}
-                className="flex items-center justify-between text-[12.5px]"
-              >
-                <span className="text-ink-2">{category.name}</span>
-                <span className="font-[family-name:var(--font-mono)] font-medium text-violet-700 dark:text-violet-300">
-                  {category.commissionRate}%
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      <div className="mt-6 space-y-4">
-        <Input
-          label="CAC registration number (optional)"
-          value={cacNumber}
-          onChange={(e) => {
-            setCacNumber(e.target.value);
-            // RC... is a company, BN... a business name - pick it for them.
-            const fromPrefix = cacTypeFromNumber(e.target.value);
-            if (fromPrefix) setCacType(fromPrefix);
-          }}
-          placeholder="RC1234567"
-        />
-
-        {cacNumber.trim() && (
-          <div>
-            <label htmlFor="cac-type" className="mb-1.5 block text-[13px] font-medium text-ink-2">
-              Business type
-            </label>
-            <select
-              id="cac-type"
-              value={cacType}
-              onChange={(e) => setCacType(e.target.value as CacCompanyType)}
-              className="h-12 w-full rounded-xl border border-line bg-surface px-3 text-[14px] text-ink outline-none transition-colors focus:border-violet-400 focus:ring-4 focus:ring-violet-500/10"
-            >
-              <option value="" disabled>
-                Choose...
-              </option>
-              {CAC_COMPANY_TYPES.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-
-        {/* The link can't live inside the checkbox button, so the text toggles it separately. */}
-        <div className="flex items-start gap-3 text-[13px] leading-relaxed text-ink-2">
-          <Checkbox checked={agreed} onChange={setAgreed} ariaLabel="I agree to the Seller Agreement" className="mt-0.5" />
-          <span className="cursor-pointer" onClick={() => setAgreed(!agreed)}>
-            I agree to the{" "}
-            <Link href="/seller-terms" target="_blank" onClick={(e) => e.stopPropagation()} className="font-semibold text-violet-600 hover:underline dark:text-violet-400">
-              Seller Agreement
-            </Link>
-            , including the commission rates above and the rules on prohibited items, deliveries and refunds.
-          </span>
-        </div>
-
-        <Button
-          variant="tribely"
-          className="w-full"
-          loading={isPending}
-          disabled={!agreed || isPending || (!!cacNumber.trim() && !cacType)}
-          onClick={() =>
-            becomeSeller({
-              cacNumber: cacNumber.trim() || undefined,
-              cacCompanyType: cacNumber.trim() && cacType ? cacType : undefined,
-            })
-          }
-        >
-          Continue
-        </Button>
-      </div>
     </section>
   );
 }

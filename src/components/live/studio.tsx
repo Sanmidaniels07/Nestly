@@ -240,7 +240,7 @@ export function Studio({ live }: { live: SellerLive }) {
         type="button"
         onClick={() => (isLive ? minimize() : router.push("/settings/marketplace?tab=lives"))}
         aria-label={isLive ? "Minimize - keep your live going while you use the app" : "Back"}
-        className={`flex h-9 shrink-0 items-center justify-center gap-1 rounded-full hover:bg-white/10 ${isLive ? "bg-white/10 pl-1.5 pr-3 text-[12px] font-semibold" : "w-9"}`}
+        className={`whitespace-nowrap flex h-9 shrink-0 items-center justify-center gap-1 rounded-full hover:bg-white/10 ${isLive ? "bg-white/10 pl-1.5 pr-3 text-[12px] font-semibold" : "w-9"}`}
       >
         {isLive ? <ChevronDown size={20} /> : <ArrowLeft size={19} />}
         {isLive && <span className="hidden min-[400px]:inline">Minimize</span>}
@@ -304,7 +304,7 @@ export function Studio({ live }: { live: SellerLive }) {
               type="button"
               onClick={goLive}
               disabled={starting || early}
-              className="flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-rose-600 text-[15px] font-semibold disabled:opacity-60"
+              className="whitespace-nowrap flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-rose-600 text-[15px] font-semibold disabled:opacity-60"
             >
               {starting ? <Loader2 size={18} className="animate-spin" /> : <Radio size={18} />}
               {early ? "You can go live from 1 hour before" : starting ? "Going live…" : "Go live now"}
@@ -345,7 +345,7 @@ export function Studio({ live }: { live: SellerLive }) {
       <button
         type="button"
         onClick={() => show(productId)}
-        className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[12.5px] font-semibold ${showing ? "bg-violet-600 text-white" : "border border-line text-ink-2"}`}
+        className={`whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[12.5px] font-semibold ${showing ? "bg-violet-600 text-white" : "border border-line text-ink-2"}`}
       >
         {showing ? <EyeOff size={14} /> : <Eye size={14} />}
         {showing ? "Hide" : "Show"}
@@ -482,7 +482,7 @@ export function Studio({ live }: { live: SellerLive }) {
               <button type="button" onClick={() => setConfirmEnd(false)} className="h-11 rounded-xl border border-line text-[13.5px] font-semibold">
                 Keep going
               </button>
-              <button type="button" onClick={finish} disabled={ending} className="flex h-11 items-center justify-center gap-2 rounded-xl bg-rose-600 text-[13.5px] font-semibold text-white">
+              <button type="button" onClick={finish} disabled={ending} className="whitespace-nowrap flex h-11 items-center justify-center gap-2 rounded-xl bg-rose-600 text-[13.5px] font-semibold text-white">
                 {ending && <Loader2 size={15} className="animate-spin" />} End live
               </button>
             </div>
@@ -535,7 +535,7 @@ function StoreTab({ liveProductIds, pinnedId, onShow }: { liveProductIds: string
               <button
                 type="button"
                 onClick={() => onShow(product.id)}
-                className={`flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[12.5px] font-semibold ${showing ? "bg-violet-600 text-white" : "border border-line text-ink-2"}`}
+                className={`whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-xl px-3 text-[12.5px] font-semibold ${showing ? "bg-violet-600 text-white" : "border border-line text-ink-2"}`}
               >
                 {showing ? <EyeOff size={14} /> : <Eye size={14} />}
                 {showing ? "Hide" : "Show"}

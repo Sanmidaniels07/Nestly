@@ -183,7 +183,7 @@ function Picker({ initial, onConfirm, onManual }: Props) {
           type="button"
           onClick={locate}
           aria-label="Use my current location"
-          className="absolute bottom-3 right-3 flex h-11 items-center gap-1.5 rounded-full bg-white px-3.5 text-[12.5px] font-semibold text-violet-700 shadow-md hover:bg-violet-50"
+          className="whitespace-nowrap absolute bottom-3 right-3 flex h-11 items-center gap-1.5 rounded-full bg-white px-3.5 text-[12.5px] font-semibold text-violet-700 shadow-md hover:bg-violet-50"
         >
           {locating === "locating" ? <Loader2 size={15} className="animate-spin" /> : <Crosshair size={15} />}
           {locating === "locating" ? "Finding you..." : "My location"}

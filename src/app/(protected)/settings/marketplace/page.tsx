@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Clock, XCircle } from "lucide-react";
@@ -8,6 +8,7 @@ import { Clock, XCircle } from "lucide-react";
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
+import UnderReviewBanner from "./components/seller-dashboard/under-review-banner";
 import CacReminderBanner from "./components/seller-dashboard/cac-reminder-banner";
 import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-banner";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
@@ -70,6 +71,12 @@ function MarketplaceSettingsContent() {
         <Skeleton className="h-72 w-full rounded-2xl" />
       </div>
     );
+  }
+
+  // Rejected with "stop new sales": no new orders, but the orders already
+  // paid still have to be delivered - and they're paid for them as usual.
+  if (seller && seller.status !== "APPROVED" && seller.store?.salesStoppedAt) {
+    return <FinishOpenOrders reason={seller.statusReason} />;
   }
 
   if (seller && seller.status !== "APPROVED") {
@@ -141,6 +148,7 @@ function MarketplaceSettingsContent() {
       <SellerDashboardHeader />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
+      {seller?.store?.underReview && !seller.store.isSuspended && <UnderReviewBanner orderLimit={seller.orderLimit} held={seller.heldForReview} />}
 
       {/* What's left before buyers can order (the Dashboard tab has the full checklist). */}
       {seller?.status === "APPROVED" && tab !== "dashboard" && <SetupReminderBanner />}
@@ -158,6 +166,60 @@ function MarketplaceSettingsContent() {
             <p className="text-[13.5px] text-subtle">This section is coming soon.</p>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+const FINISH_TABS = [
+  { key: "orders", label: "Orders" },
+  { key: "returns", label: "Returns" },
+  { key: "earnings", label: "Earnings" },
+] as const;
+
+// Seller Hub for a seller rejected with "stop new sales": only what they
+// need to finish the orders buyers already paid for.
+function FinishOpenOrders({ reason }: { reason?: string | null }) {
+  const [tab, setTab] = useState<(typeof FINISH_TABS)[number]["key"]>("orders");
+
+  return (
+    <div className="space-y-6">
+      <SellerDashboardHeader />
+      <section className="flex items-start gap-3 rounded-2xl border border-red-200 bg-red-50 p-4 dark:border-red-500/30 dark:bg-red-500/10 sm:p-5">
+        <XCircle size={18} className="mt-0.5 shrink-0 text-red-600 dark:text-red-400" />
+        <div className="text-[13px] leading-relaxed text-red-800 dark:text-red-200">
+          <p className="text-[14px] font-semibold">Your store no longer takes new orders</p>
+          {reason && <p className="mt-1">Reason: {reason}</p>}
+          <p className="mt-1">
+            Please finish the orders already paid: deliver them and enter each buyer&apos;s code. You&apos;re paid for them as usual.
+            You can reapply to sell from{" "}
+            <Link href="/marketplace/sell" className="font-semibold underline underline-offset-2">
+              this page
+            </Link>{" "}
+            once your waiting period ends.
+          </p>
+        </div>
+      </section>
+      <div className="flex gap-2" role="tablist" aria-label="Seller Hub">
+        {FINISH_TABS.map((item) => (
+          <button
+            key={item.key}
+            type="button"
+            role="tab"
+            aria-selected={tab === item.key}
+            onClick={() => setTab(item.key)}
+            className={`rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
+              tab === item.key ? "bg-violet-600 text-white" : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
+            }`}
+          >
+            {item.label}
+          </button>
+        ))}
+      </div>
+      <div className="overflow-x-auto">
+        {tab === "orders" && <OrdersView />}
+        {tab === "returns" && <ReturnsView />}
+        {tab === "earnings" && <EarningsView />}
       </div>
     </div>
   );

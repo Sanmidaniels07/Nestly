@@ -185,7 +185,7 @@ function CategoryRow({ category }: { category: Category }) {
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className={`
+          className={`whitespace-nowrap 
             inline-flex h-8 items-center justify-center gap-1.5 rounded-lg px-2.5 text-[12px] font-medium transition-colors disabled:opacity-50
             ${
               confirmingDelete

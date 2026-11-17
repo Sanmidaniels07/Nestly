@@ -143,7 +143,7 @@ export default function LiveBuySheet({ live, productId, onClose }: Props) {
               <button type="button" onClick={onClose} className="h-11 rounded-xl bg-violet-600 px-5 text-[13.5px] font-semibold text-white">
                 Keep watching
               </button>
-              <Link href={`/marketplace/orders/${paidOrderId}`} className="flex h-11 items-center justify-center rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2">
+              <Link href={`/marketplace/orders/${paidOrderId}`} className="whitespace-nowrap flex h-11 items-center justify-center rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2">
                 View order
               </Link>
             </div>
@@ -238,7 +238,7 @@ export default function LiveBuySheet({ live, productId, onClose }: Props) {
               type="button"
               onClick={pay}
               disabled={processing}
-              className="flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 disabled:opacity-70"
+              className="whitespace-nowrap flex h-13 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/20 disabled:opacity-70"
             >
               {processing ? <Loader2 size={17} className="animate-spin" /> : <Lock size={16} />}
               {processing ? "Processing payment…" : `Pay ${naira(total)} securely`}

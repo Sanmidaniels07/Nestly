@@ -210,7 +210,7 @@ export default async function CategoryListing({ resolved, page }: { resolved: Re
           <ShoppingBag className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
           <p className="mt-3 text-[14px] font-medium text-ink">Nothing here yet</p>
           <p className="mt-1 text-[13px] text-subtle">Sell {category.name.toLowerCase()} in {where}? List your first product on {SITE_NAME}.</p>
-          <Link href="/marketplace/sell" className="mt-4 inline-flex h-10 items-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white">
+          <Link href="/marketplace/sell" className="whitespace-nowrap mt-4 inline-flex h-10 items-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[13px] font-semibold text-white">
             Start selling
           </Link>
         </div>

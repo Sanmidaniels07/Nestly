@@ -368,7 +368,7 @@ const ABOUT_QA = [
   },
   {
     q: "How is Nestly different from shopping on Instagram or WhatsApp?",
-    a: "On Nestly every order goes through secure Paystack checkout, delivery is confirmed with a delivery code, and you can request a return within 7 days if an item arrives faulty, damaged or wrong. You see real reviews and the seller's delivery areas and prices before you pay - no more sending money to strangers in DMs.",
+    a: "On Nestly every order goes through secure Paystack checkout, delivery is confirmed with a delivery code, and you can report a problem within 3 days of delivery (24 hours for cakes, food and other perishables) if an item arrives faulty, damaged or wrong. You see real reviews and the seller's delivery areas and prices before you pay - no more sending money to strangers in DMs.",
   },
   {
     q: "Can I sell on Nestly?",

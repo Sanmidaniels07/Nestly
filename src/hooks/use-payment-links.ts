@@ -5,16 +5,23 @@ import { AxiosError } from "axios";
 import toast from "react-hot-toast";
 
 import { useSession } from "./use-session";
+import { useAuthStore } from "../store/auth-store";
 import {
+  claimGuestAccount,
+  confirmGuestDelivery,
   createPaymentLink,
   deletePaymentLink,
+  getGuestOrder,
   getMyPaymentLinks,
   getPaymentLink,
+  guestPayPaymentLink,
   payPaymentLink,
   updatePaymentLink,
+  verifyGuestOrder,
 } from "../services/payment-link.services";
 import { ApiErrorResponse, ApiResponse } from "../types/api";
 import {
+  GuestPayPaymentLinkPayload,
   PaymentLinkPayload,
   PayPaymentLinkPayload,
   PublicPaymentLink,
@@ -79,6 +86,67 @@ export const usePaymentLink = (code: string, initial?: ApiResponse<PublicPayment
     initialData: initial,
     initialDataUpdatedAt: 0,
     enabled: isHydrated,
+  });
+};
+
+// Guest checkout. No toast here - the pay page shows the error itself
+// (and a "Log in" button when the email already has an account).
+export const useGuestPayPaymentLink = () =>
+  useMutation<
+    Awaited<ReturnType<typeof guestPayPaymentLink>>,
+    AxiosError<ApiErrorResponse>,
+    { code: string; data: GuestPayPaymentLinkPayload }
+  >({
+    mutationFn: ({ code, data }) => guestPayPaymentLink(code, data),
+  });
+
+const guestOrderKey = (token: string) => ["guest-order", token];
+
+// The guest's private order page. Refreshes now and then so a new status
+// (shipped, delivered) shows without reloading.
+export const useGuestOrder = (token: string) =>
+  useQuery({
+    queryKey: guestOrderKey(token),
+    queryFn: () => getGuestOrder(token),
+    select: (response) => response.data,
+    refetchInterval: 60_000,
+    retry: (count, error: AxiosError) => error.response?.status !== 404 && count < 2,
+  });
+
+export const useVerifyGuestOrder = (token: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Awaited<ReturnType<typeof verifyGuestOrder>>, AxiosError<ApiErrorResponse>, void>({
+    mutationFn: () => verifyGuestOrder(token),
+    onSuccess: (response) => queryClient.setQueryData(guestOrderKey(token), response),
+  });
+};
+
+export const useConfirmGuestDelivery = (token: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Awaited<ReturnType<typeof confirmGuestDelivery>>, AxiosError<ApiErrorResponse>, string>({
+    mutationFn: (orderItemId) => confirmGuestDelivery(token, orderItemId),
+    onSuccess: (response) => {
+      queryClient.setQueryData(guestOrderKey(token), response);
+      toast.success("Thanks! Delivery confirmed");
+    },
+    onError: (error) => toast.error(errorMessage(error, "Couldn't confirm delivery")),
+  });
+};
+
+// Sets a password on the guest account. When it signs them in, the
+// session goes into the auth store like a normal login.
+export const useClaimGuestAccount = (token: string) => {
+  const queryClient = useQueryClient();
+  const setAuth = useAuthStore((state) => state.setAuth);
+  return useMutation<Awaited<ReturnType<typeof claimGuestAccount>>, AxiosError<ApiErrorResponse>, string>({
+    mutationFn: (password) => claimGuestAccount(token, password),
+    onSuccess: (response) => {
+      if (!response.data.emailSent) {
+        setAuth(response.data.user, response.data.accessToken);
+        queryClient.invalidateQueries({ queryKey: guestOrderKey(token) });
+      }
+    },
+    onError: (error) => toast.error(errorMessage(error, "Couldn't set up your account")),
   });
 };
 

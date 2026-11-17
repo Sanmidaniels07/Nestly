@@ -125,10 +125,10 @@ function LiveSummaryView({ id }: { id: string }) {
       </section>
 
       <div className="mt-6 flex flex-wrap gap-2">
-        <Link href="/settings/marketplace?tab=lives" className="flex h-11 items-center rounded-xl bg-violet-600 px-5 text-[13.5px] font-semibold text-white">
+        <Link href="/settings/marketplace?tab=lives" className="whitespace-nowrap flex h-11 items-center rounded-xl bg-violet-600 px-5 text-[13.5px] font-semibold text-white">
           Schedule another live
         </Link>
-        <Link href="/settings/marketplace?tab=orders" className="flex h-11 items-center rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2">
+        <Link href="/settings/marketplace?tab=orders" className="whitespace-nowrap flex h-11 items-center rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2">
           See orders
         </Link>
       </div>

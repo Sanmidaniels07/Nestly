@@ -196,7 +196,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
           <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-8 sm:flex sm:flex-wrap sm:gap-3">
             <Link
               href="/feed"
-              className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 bg-white text-[13.5px] font-semibold sm:px-6 sm:text-[14px] text-[#2A1B4D] shadow-lg transition-colors hover:bg-white/90"
+              className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 bg-white text-[13.5px] font-semibold sm:px-6 sm:text-[14px] text-[#2A1B4D] shadow-lg transition-colors hover:bg-white/90"
             >
               <PenSquare size={17} />
               Create post
@@ -204,7 +204,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             {isActiveSeller ? (
               <Link
                 href="/settings/marketplace"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
+                className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
               >
                 <Store size={17} />
                 Manage store
@@ -212,7 +212,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             ) : (
               <Link
                 href="/communities"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
+                className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
               >
                 <Compass size={17} />
                 Explore communities
@@ -221,7 +221,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             {isActiveSeller && (
               <Link
                 href="/settings/marketplace?tab=lives&new=now"
-                className="col-span-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-rose-500 px-3 text-[13.5px] font-semibold shadow-lg shadow-rose-900/20 transition-colors hover:bg-rose-600 sm:col-span-1 sm:h-12 sm:px-6 sm:text-[14px]"
+                className="whitespace-nowrap col-span-2 inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-rose-500 px-3 text-[13.5px] font-semibold shadow-lg shadow-rose-900/20 transition-colors hover:bg-rose-600 sm:col-span-1 sm:h-12 sm:px-6 sm:text-[14px]"
               >
                 <Radio size={17} />
                 Go live

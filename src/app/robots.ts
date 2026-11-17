@@ -22,7 +22,7 @@ const AI_CRAWLERS = [
   "Meta-ExternalAgent",
 ];
 
-const PRIVATE = ["/settings", "/admin", "/messages", "/notifications", "/marketplace/checkout", "/marketplace/payment", "/marketplace/cart", "/verify-email", "/reset-password"];
+const PRIVATE = ["/settings", "/admin", "/messages", "/notifications", "/marketplace/checkout", "/marketplace/payment", "/marketplace/cart", "/verify-email", "/reset-password", "/orders/track"];
 export default function robots(): MetadataRoute.Robots {
   if (isStaging) {
     return { rules: { userAgent: "*", disallow: "/" } };

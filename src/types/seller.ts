@@ -33,6 +33,20 @@ export interface SellerProfile {
   createdAt: string;
   updatedAt: string;
   store?: Store | null;
+  // Store still under review: the most one order from it can be (naira).
+  orderLimit?: number | null;
+  // ...and what Nestly is holding for it until the review (naira).
+  heldForReview?: number | null;
+}
+
+// POST /seller/quick-start - a live store in one step.
+export interface QuickStartSellerPayload {
+  storeName: string;
+  instagram?: string;
+  whatsapp?: string;
+  cacNumber?: string;
+  cacCompanyType?: CacCompanyType;
+  agreeToSellerTerms: true;
 }
 
 // GET /seller/me/readiness - what's left before buyers can order.

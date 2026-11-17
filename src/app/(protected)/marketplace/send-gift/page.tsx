@@ -20,6 +20,7 @@ import {
   Store,
   Truck,
   UserRound,
+  Users,
   X,
 } from "lucide-react";
 
@@ -28,6 +29,9 @@ import { useStore } from "@/src/hooks/use-store";
 import { useUserProfile } from "@/src/hooks/use-user-profile";
 import { useUsers } from "@/src/hooks/use-users";
 import { useSendGift } from "@/src/hooks/use-gifts";
+import { useStartGroupGift } from "@/src/hooks/use-group-gift";
+import { AxiosError } from "axios";
+import { ApiErrorResponse } from "@/src/types/api";
 import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useAuthStore } from "@/src/store/auth-store";
 import { payWithPaystack } from "@/src/lib/paystack";
@@ -39,6 +43,13 @@ import { PublicUser } from "@/src/types/user";
 import { ShippingOption } from "@/src/types/store";
 
 const MESSAGE_MAX = 300;
+
+// "2026-11-25" for a date input, `days` from today.
+const dateInput = (days: number) => {
+  const date = new Date(Date.now() + days * 24 * 60 * 60 * 1000);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+};
+const defaultDeadline = () => dateInput(7);
 
 const naira = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -183,10 +194,14 @@ function Composer({
   const [zoneId, setZoneId] = useState<string | null>(null);
   const [message, setMessage] = useState("");
   const [showPrice, setShowPrice] = useState(false);
+  // "solo": pay now. "group": friends chip in before a deadline.
+  const [payMode, setPayMode] = useState<"solo" | "group">("solo");
+  const [deadline, setDeadline] = useState(() => defaultDeadline());
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const attemptRef = useRef(0);
   const { mutateAsync: sendGift } = useSendGift();
+  const { mutateAsync: startGroupGift } = useStartGroupGift();
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();
 
   // Coming from someone's wishlist: they're the recipient.
@@ -202,6 +217,28 @@ function Composer({
     if (mode === "nestly" && !chosen) return setError("Choose who the gift is for.");
     if (mode === "link" && !linkName.trim()) return setError("Add their name so the gift greets them.");
     if (!zone) return setError(`Choose where ${who} will receive it.`);
+
+    if (payMode === "group") {
+      setError("");
+      setProcessing(true);
+      try {
+        const { data } = await startGroupGift({
+          productId: product.id,
+          variationId,
+          shippingOptionId: zone.id,
+          recipientId: mode === "nestly" ? chosen?.id : undefined,
+          recipientName,
+          message: message.trim() || undefined,
+          // End of the chosen day.
+          deadline: new Date(`${deadline}T23:59:00`).toISOString(),
+        });
+        router.push(`/chip-in/${data.code}?started=1`);
+      } catch (err) {
+        setError((err as AxiosError<ApiErrorResponse>).response?.data?.message ?? "Couldn't start the group gift.");
+        setProcessing(false);
+      }
+      return;
+    }
 
     const attempt = ++attemptRef.current;
     const isStale = () => attempt !== attemptRef.current;
@@ -318,6 +355,7 @@ function Composer({
           <div className="mt-1 text-right font-[family-name:var(--font-mono)] text-[11px] text-subtle">
             {message.length}/{MESSAGE_MAX}
           </div>
+          {payMode === "solo" && (
           <button
             type="button"
             onClick={() => setShowPrice((value) => !value)}
@@ -329,6 +367,52 @@ function Composer({
               <span className="block text-[11.5px] text-muted">Tap to {showPrice ? "hide" : "show"} what it cost</span>
             </span>
           </button>
+          )}
+        </Step>
+
+        <Step number={4} title="How will you pay?">
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {([
+              { key: "solo", title: "I'll pay for it", text: "Pay now and send the gift.", icon: Gift },
+              { key: "group", title: "Chip in with friends", text: "Share a link - friends each pay part of it.", icon: Users },
+            ] as const).map(({ key, title, text, icon: Icon }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setPayMode(key)}
+                aria-pressed={payMode === key}
+                className={`flex items-start gap-3 rounded-xl border p-3.5 text-left transition-colors ${
+                  payMode === key ? "border-violet-400 bg-violet-50 dark:bg-violet-500/10" : "border-line hover:border-violet-200 dark:hover:border-violet-500/30"
+                }`}
+              >
+                <Icon size={18} className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400" />
+                <span>
+                  <span className="block text-[13.5px] font-semibold text-ink">{title}</span>
+                  <span className="block text-[12px] text-muted">{text}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+          {payMode === "group" && (
+            <div className="mt-3 space-y-2">
+              <label htmlFor="chip-deadline" className="block text-[12.5px] font-semibold text-ink-2">
+                Chip-in deadline
+              </label>
+              <input
+                id="chip-deadline"
+                type="date"
+                value={deadline}
+                min={dateInput(1)}
+                max={dateInput(30)}
+                onChange={(e) => setDeadline(e.target.value)}
+                className="w-full rounded-xl border border-line bg-surface px-4 py-3 text-[16px] text-ink outline-none focus:border-violet-400 focus:ring-4 focus:ring-violet-500/10 sm:max-w-[240px] sm:text-[14px]"
+              />
+              <p className="text-[12px] text-muted">
+                When friends have covered {naira(product.price + (zone?.fee ?? 0))}, the gift is sent to {who} straight away. Not covered by the deadline? Everyone is refunded.
+                {quantity > 1 ? " Group gifts are for one item." : ""}
+              </p>
+            </div>
+          )}
         </Step>
       </div>
 
@@ -388,11 +472,15 @@ function Composer({
           type="button"
           onClick={send}
           disabled={processing}
-          className="flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:brightness-110 disabled:opacity-70"
+          className="whitespace-nowrap flex h-14 w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-600 to-indigo-600 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/25 transition-all hover:brightness-110 disabled:opacity-70"
         >
           {processing ? (
             <>
               <Loader2 size={17} className="animate-spin" /> Processing payment…
+            </>
+          ) : payMode === "group" ? (
+            <>
+              <Users size={16} /> Start group gift
             </>
           ) : (
             <>

@@ -271,7 +271,7 @@ function EmojiPanel({ onPick }: { onPick: (emoji: string) => void }) {
                 key={emoji}
                 type="button"
                 onClick={() => onPick(emoji)}
-                className="flex h-9 items-center justify-center rounded-lg text-[21px] transition-colors hover:bg-surface-sunken"
+                className="whitespace-nowrap flex h-9 items-center justify-center rounded-lg text-[21px] transition-colors hover:bg-surface-sunken"
               >
                 {emoji}
               </button>

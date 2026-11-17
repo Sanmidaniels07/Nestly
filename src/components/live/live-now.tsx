@@ -359,7 +359,7 @@ export function LiveNow({ live }: { live: PublicLive }) {
           />
           <Link
             href={`/marketplace/seller/${live.store.slug}`}
-            className="mt-3 flex h-11 items-center justify-center gap-2 rounded-xl border border-line text-[13px] font-semibold text-ink-2 hover:bg-surface-2"
+            className="whitespace-nowrap mt-3 flex h-11 items-center justify-center gap-2 rounded-xl border border-line text-[13px] font-semibold text-ink-2 hover:bg-surface-2"
           >
             <Store size={15} /> See everything in {live.store.name}
           </Link>
@@ -439,11 +439,11 @@ function GuestGate({ live }: { live: PublicLive }) {
         </p>
         <Link
           href={`/signup?returnTo=${encodeURIComponent(path)}`}
-          className="mt-5 flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14.5px] font-semibold text-white"
+          className="whitespace-nowrap mt-5 flex h-12 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[14.5px] font-semibold text-white"
         >
           Sign up free to keep watching
         </Link>
-        <Link href={`/login?returnTo=${encodeURIComponent(path)}`} className="mt-2 flex h-11 items-center justify-center rounded-xl border border-line text-[13.5px] font-semibold text-ink-2">
+        <Link href={`/login?returnTo=${encodeURIComponent(path)}`} className="whitespace-nowrap mt-2 flex h-11 items-center justify-center rounded-xl border border-line text-[13.5px] font-semibold text-ink-2">
           I already have an account
         </Link>
       </div>

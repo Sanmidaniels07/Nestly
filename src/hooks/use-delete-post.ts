@@ -15,6 +15,7 @@ export const useDeletePost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["shopping-feed"] });
       toast.success("Post deleted");
     },
 

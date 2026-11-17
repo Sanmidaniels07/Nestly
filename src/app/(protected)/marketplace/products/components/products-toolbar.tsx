@@ -56,7 +56,7 @@ export default function ProductsToolbar({
 
         <button
           onClick={onOpenFilters}
-          className="flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 text-[13.5px] font-medium text-ink-2 transition-colors hover:bg-surface-sunken"
+          className="whitespace-nowrap flex h-12 items-center justify-center gap-2 rounded-xl border border-line bg-surface px-5 text-[13.5px] font-medium text-ink-2 transition-colors hover:bg-surface-sunken"
         >
           <SlidersHorizontal size={16} />
           Filters

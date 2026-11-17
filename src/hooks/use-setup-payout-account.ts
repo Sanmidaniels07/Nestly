@@ -21,7 +21,7 @@ export const useSetupPayoutAccount = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["store", "me"] });
       queryClient.invalidateQueries({ queryKey: ["store"] });
-      toast.success("Automatic payouts are now active for this store");
+      toast.success("Bank account confirmed");
     },
 
     onError: (error) => {

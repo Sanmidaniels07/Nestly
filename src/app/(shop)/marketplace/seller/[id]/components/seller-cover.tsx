@@ -22,7 +22,7 @@ export default function SellerCover({ store }: Props) {
       <button
         type="button"
         onClick={() => goBack()}
-        className="absolute left-5 top-5 flex h-10 items-center gap-2 rounded-xl bg-surface/90 px-4 text-[13px] font-semibold text-ink-2 backdrop-blur-sm transition-colors hover:bg-surface"
+        className="whitespace-nowrap absolute left-5 top-5 flex h-10 items-center gap-2 rounded-xl bg-surface/90 px-4 text-[13px] font-semibold text-ink-2 backdrop-blur-sm transition-colors hover:bg-surface"
       >
         <ArrowLeft size={15} />
         Back

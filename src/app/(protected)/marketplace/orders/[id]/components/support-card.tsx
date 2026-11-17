@@ -27,7 +27,7 @@ export default function SupportCard({ orderId }: Props) {
         href={supportWhatsAppUrl(`Hi Nestly Support, I need help with my order ${reference}.`)}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] text-[13.5px] font-semibold text-white transition hover:brightness-95"
+        className="whitespace-nowrap mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] text-[13.5px] font-semibold text-white transition hover:brightness-95"
       >
         <MessageCircle size={17} />
         Chat with support

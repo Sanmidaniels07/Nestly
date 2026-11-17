@@ -19,6 +19,7 @@ import LiveStrip from "@/src/components/live/live-strip";
 import { useSession } from "@/src/hooks/use-session";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
+import TrustRecord from "@/src/components/trust/trust-record";
 
 interface Props {
   slug: string;
@@ -70,6 +71,7 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
       <SellerCover store={store} />
       <SellerProfile store={store} />
       <SellerStats store={store} productCount={productsData?.total ?? 0} />
+      {!store.isSuspended && <TrustRecord slug={store.slug} />}
       <LiveStrip store={store.slug} title="Lives" />
 
       <SellerAbout store={store} />

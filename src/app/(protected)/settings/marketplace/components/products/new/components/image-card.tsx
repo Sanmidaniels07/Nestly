@@ -46,7 +46,7 @@ export default function ImageCard({ image, onCover, onDelete }: Props) {
         ) : (
           <button
             onClick={onCover}
-            className="flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-line text-[12.5px] font-medium text-muted transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-700 dark:hover:text-violet-300"
+            className="whitespace-nowrap flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-line text-[12.5px] font-medium text-muted transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-violet-50 dark:hover:bg-violet-500/10 hover:text-violet-700 dark:hover:text-violet-300"
           >
             <Star size={12} />
             Set as cover

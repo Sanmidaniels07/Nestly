@@ -51,14 +51,14 @@ function GuestBanner() {
         <Link
           href={`/login?returnTo=${returnTo}`}
           onClick={remember}
-          className="flex h-10 flex-1 items-center justify-center rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 sm:flex-none"
+          className="whitespace-nowrap flex h-10 flex-1 items-center justify-center rounded-xl border border-line-strong bg-surface px-4 text-[13px] font-semibold text-ink-2 sm:flex-none"
         >
           Log in
         </Link>
         <Link
           href={`/signup?returnTo=${returnTo}`}
           onClick={remember}
-          className="flex h-10 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-[13px] font-semibold text-white sm:flex-none"
+          className="whitespace-nowrap flex h-10 flex-1 items-center justify-center rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 text-[13px] font-semibold text-white sm:flex-none"
         >
           Join free
         </Link>

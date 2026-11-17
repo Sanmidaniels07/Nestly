@@ -26,7 +26,7 @@ export default function SetupStorePrompt({ section, isSeller }: Props) {
       </p>
       <Link
         href="/marketplace/sell"
-        className="mt-7 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
+        className="whitespace-nowrap mt-7 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 text-[13.5px] font-semibold text-white transition-all hover:brightness-110"
       >
         {isSeller ? "Set up store" : "Become a seller"}
         <ArrowRight size={15} />

@@ -11,6 +11,8 @@ export type NotificationTargetType =
   | "BIRTHDAY"
   | "BIRTHDAY_SOON"
   | "GIFT"
+  // Chip in on a gift - id is its code.
+  | "GROUP_GIFT"
   | "SELLER_AGREEMENT"
   | "COMMISSION_CHANGE"
   | "CAC_REMINDER"
