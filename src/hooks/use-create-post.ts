@@ -16,6 +16,7 @@ export const useCreatePost = () => {
 
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["posts"] });
+      queryClient.invalidateQueries({ queryKey: ["shopping-feed"] });
       toast.success("Post published");
     },
 

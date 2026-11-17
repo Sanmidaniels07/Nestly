@@ -1,175 +1,149 @@
 "use client";
 
-import { Fragment } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { ArrowUp, Loader2, RefreshCw, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Loader2, RefreshCw, ShoppingBag, Sparkles, Users2 } from "lucide-react";
 
-import { getPosts } from "@/src/services/post.services";
 import { usePullToRefresh } from "@/src/hooks/use-pull-to-refresh";
-import { useAuthStore } from "@/src/store/auth-store";
+import { useShoppingFeed } from "@/src/hooks/use-shopping-feed";
 
 import Stories from "./stories";
 import CreatePostCard from "./create-post-card";
 import PostCard from "./post-card";
-import { usePosts } from "@/src/hooks/use-posts";
+import HighlightsRail from "./shopping/highlights-rail";
+import PurchaseCard from "./shopping/purchase-card";
+import DropCard from "./shopping/drop-card";
 import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
 import SuggestedPeople from "../right-sidebar/suggested-friends";
 import MarketplacePreview from "../right-sidebar/marketplace-preview";
 import TrendingCommunities from "../left-sidebar/trending-communities";
+import { FeedItem } from "@/src/types/shopping-feed";
+
+// The shopping feed: what's actually happening on Nestly - purchases people
+// made and loved, new items from stores you follow, posts (ones that show
+// something you can buy first) - with what's happening right now on top.
 
 // On smaller screens the sidebars are hidden, so their best cards are woven
-// into the feed between posts (Instagram-style) instead of stacked above it.
-// Each slot hides itself once its sidebar is visible: the right sidebar
-// (people, marketplace) appears at xl, the left one (communities) at lg.
+// into the feed (Instagram-style). Each hides itself once its sidebar shows.
 const INTERSTITIALS = [
-  { afterPost: 3, key: "people", className: "xl:hidden", node: <SuggestedPeople /> },
-  { afterPost: 6, key: "communities", className: "lg:hidden", node: <TrendingCommunities /> },
-  { afterPost: 9, key: "marketplace", className: "xl:hidden", node: <MarketplacePreview /> },
+  { after: 3, key: "people", className: "xl:hidden", node: <SuggestedPeople /> },
+  { after: 7, key: "communities", className: "lg:hidden", node: <TrendingCommunities /> },
+  { after: 11, key: "marketplace", className: "xl:hidden", node: <MarketplacePreview /> },
 ];
 
-// With only a handful of posts the cards would never be reached, so they
-// go straight after the last post instead.
-const slotAfter = (afterPost: number, postCount: number) => Math.min(afterPost, postCount);
+function FeedEntry({ item }: { item: FeedItem }) {
+  if (item.type === "PURCHASE") return <PurchaseCard item={item} />;
+  if (item.type === "DROP") return <DropCard item={item} />;
+  return <PostCard post={item.post} />;
+}
 
 export default function FeedCenter() {
-  const myId = useAuthStore((state) => state.user?.id);
-  const {
-    data,
-    isLoading,
-    isError,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    refetch,
-  } = usePosts({ sort: "desc" });
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useShoppingFeed();
 
-  const posts = data?.pages.flatMap((page) => page.data.posts) ?? [];
-  const isQuiet = !isLoading && !isError && posts.length < 3;
+  const items = data?.pages.flatMap((page) => page.data.items) ?? [];
+  const highlights = data?.pages[0]?.data.highlights ?? null;
+  const isQuiet = !isLoading && !isError && items.length < 3;
 
-  // Cheap check for newer posts every 45s while the tab is open (only the
-  // newest post's id). Its own query key, so posting yourself (which
-  // invalidates ["posts"]) doesn't touch it.
-  const { data: latest } = useQuery({
-    queryKey: ["feed-latest"],
-    queryFn: () => getPosts({ page: 1, limit: 1, sort: "desc" }),
-    select: (response) => response.data.posts[0],
-    refetchInterval: 45_000,
-    refetchIntervalInBackground: false,
-    enabled: !isLoading,
-  });
-  const hasNewPosts =
-    !!latest &&
-    !!posts[0] &&
-    latest.id !== posts[0].id &&
-    latest.authorId !== myId &&
-    new Date(latest.createdAt) > new Date(posts[0].createdAt);
+  const { pull, refreshing, ready } = usePullToRefresh(() => refetch());
 
-  const refresh = () => refetch();
-  const { pull, refreshing, ready } = usePullToRefresh(refresh);
+  // Keep going as you scroll: load the next page a screen before the end.
+  const sentinel = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const node = sentinel.current;
+    if (!node || !hasNextPage) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting && !isFetchingNextPage) fetchNextPage();
+      },
+      { rootMargin: "800px 0px" }
+    );
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const showNewPosts = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    refetch();
-  };
-
-  const interstitialsAt = (index: number) =>
-    INTERSTITIALS.filter((slot) => slotAfter(slot.afterPost, posts.length) === index);
+  const slotsAfter = (count: number) => INTERSTITIALS.filter((slot) => Math.min(slot.after, items.length) === count);
 
   return (
     <div className="space-y-6">
       {/* Pull-to-refresh indicator (touch screens). */}
       {(pull > 0 || refreshing) && (
-        <div
-          className="flex items-end justify-center overflow-hidden transition-[height] duration-150"
-          style={{ height: refreshing ? 44 : pull * 0.6 }}
-        >
+        <div className="flex items-end justify-center overflow-hidden transition-[height] duration-150" style={{ height: refreshing ? 44 : pull * 0.6 }}>
           <span className="mb-1 flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-violet-600 shadow-sm dark:text-violet-400">
-            {refreshing ? (
-              <Loader2 size={17} className="animate-spin" />
-            ) : (
-              <RefreshCw size={16} style={{ transform: `rotate(${pull * 3}deg)` }} className={ready ? "" : "opacity-60"} />
-            )}
+            {refreshing ? <Loader2 size={17} className="animate-spin" /> : <RefreshCw size={16} style={{ transform: `rotate(${pull * 3}deg)` }} className={ready ? "" : "opacity-60"} />}
           </span>
         </div>
       )}
 
-      {/* "New posts" pill, floating under the navbar. */}
-      {hasNewPosts && (
-        <div className="pointer-events-none sticky top-20 z-30 -mb-6 flex justify-center">
-          <button
-            onClick={showNewPosts}
-            className="pointer-events-auto inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2 text-[13px] font-semibold text-white shadow-[0_12px_30px_-10px_rgba(76,29,149,0.7)] transition hover:brightness-110"
-          >
-            <ArrowUp size={14} /> New posts
-          </button>
-        </div>
-      )}
-
       <Stories />
+
+      {highlights && <HighlightsRail highlights={highlights} />}
 
       <CreatePostCard />
 
       {isLoading && <PostListSkeleton />}
 
       {isError && (
-        <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-red-500">
-          Couldn&apos;t load the feed. Please try again.
-        </div>
+        <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-red-500">Couldn&apos;t load the feed. Please try again.</div>
       )}
 
-      {isQuiet && <QuietFeedWelcome hasPosts={posts.length > 0} />}
+      {isQuiet && <QuietFeedWelcome hasItems={items.length > 0} />}
 
-      {!isLoading && !isError && (
+      {!isLoading && !isError && items.length > 0 && (
         <div className="space-y-5">
-          {interstitialsAt(0).map((slot) => (
-            <div key={slot.key} className={slot.className}>{slot.node}</div>
+          <div className="flex items-baseline justify-between gap-3 px-0.5">
+            <h2 className="whitespace-nowrap font-[family-name:var(--font-fraunces)] text-[22px] leading-none text-ink">Your feed</h2>
+            <span className="hidden truncate font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.2em] text-subtle sm:block">Real buys · new drops · posts</span>
+          </div>
+          {slotsAfter(0).map((slot) => (
+            <div key={slot.key} className={slot.className}>
+              {slot.node}
+            </div>
           ))}
-          {posts.map((post, i) => (
-            <Fragment key={post.id}>
-              <PostCard post={post} />
-              {interstitialsAt(i + 1).map((slot) => (
-                <div key={slot.key} className={slot.className}>{slot.node}</div>
+          {items.map((item, index) => (
+            <Fragment key={item.id}>
+              <FeedEntry item={item} />
+              {slotsAfter(index + 1).map((slot) => (
+                <div key={slot.key} className={slot.className}>
+                  {slot.node}
+                </div>
               ))}
             </Fragment>
           ))}
         </div>
       )}
 
-      {hasNextPage && (
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={isFetchingNextPage}
-          className="w-full rounded-2xl border border-line bg-surface py-3 text-[13.5px] font-medium text-violet-600 dark:text-violet-400 transition-colors hover:bg-surface-2 disabled:opacity-50"
-        >
-          {isFetchingNextPage ? "Loading..." : "Load more"}
-        </button>
+      <div ref={sentinel} aria-hidden className="h-px" />
+      {isFetchingNextPage && (
+        <div className="flex justify-center py-2">
+          <Loader2 size={20} className="animate-spin text-violet-600" />
+        </div>
+      )}
+      {!hasNextPage && items.length > 6 && (
+        <p className="py-4 text-center text-[12.5px] text-subtle">You&apos;re all caught up ✨ Follow more stores and people to see more here.</p>
       )}
     </div>
   );
 }
 
 // Shown while the feed is nearly empty (new users, or a quiet network) so the
-// page offers something to do instead of a bare "no posts" line.
-function QuietFeedWelcome({ hasPosts }: { hasPosts: boolean }) {
+// page offers something to do instead of a bare "nothing here".
+function QuietFeedWelcome({ hasItems }: { hasItems: boolean }) {
   const actions = [
-    { href: "/communities", icon: Users2, label: "Join communities", body: "Find people who love what you love" },
-    { href: "/marketplace", icon: ShoppingBag, label: "Browse the marketplace", body: "Shop from sellers you can trust" },
+    { href: "/marketplace", icon: ShoppingBag, label: "Follow stores you love", body: "Their new items and lives show up here" },
+    { href: "/communities", icon: Users2, label: "Find your people", body: "See what friends buy and recommend" },
   ];
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 via-surface to-indigo-50 p-6 dark:border-violet-500/20 dark:from-violet-500/10 dark:via-surface dark:to-indigo-500/10">
-      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-indigo-600 text-white">
+    <div className="relative overflow-hidden rounded-3xl border border-violet-100 bg-gradient-to-br from-violet-50 via-surface to-amber-50 p-6 dark:border-violet-500/20 dark:from-violet-500/10 dark:via-surface dark:to-amber-500/5">
+      <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 via-fuchsia-500 to-amber-400 text-white">
         <Sparkles size={20} />
       </span>
       <h2 className="mt-4 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
-        {hasPosts ? "Your feed is just getting started" : "Your feed is waiting for you"}
+        {hasItems ? "Your feed is just getting started" : "Your feed is waiting for you"}
       </h2>
       <p className="mt-1.5 text-[13.5px] leading-relaxed text-muted">
-        Follow people and join communities - their posts will show up here. Or share the first post above.
+        This is where you see what friends actually buy and love, new drops from shops you follow, and who&apos;s live right now.
       </p>
-
-      {/* Stacked: the feed column is narrow next to the desktop sidebars. */}
       <div className="mt-5 grid gap-3">
         {actions.map(({ href, icon: Icon, label, body }) => (
           <Link
