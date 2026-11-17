@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, MapPin, Sparkles } from "lucide-react";
 
 import UserAvatar from "@/src/components/ui/user-avatar";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -35,6 +35,11 @@ export default function DropCard({ item }: { item: DropItem }) {
             </span>
             · {formatRelativeTime(item.at)}
             {item.reason === "POPULAR" && <span className="text-violet-600 dark:text-violet-400">· Popular store</span>}
+            {item.reason === "NEAR" && (
+              <span className="inline-flex items-center gap-0.5 text-violet-600 dark:text-violet-400">
+                · <MapPin size={11} /> Near you
+              </span>
+            )}
           </p>
         </div>
       </header>

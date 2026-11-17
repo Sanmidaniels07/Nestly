@@ -17,8 +17,9 @@ export interface FeedPerson {
   avatar: string | null;
 }
 
-// FOLLOWING: someone or a store you follow. POPULAR: good activity across Nestly.
-type Reason = "FOLLOWING" | "POPULAR";
+// FOLLOWING: someone or a store you follow. POPULAR: good activity across
+// Nestly. NEAR: a store based in or delivering to your area ("Near me").
+type Reason = "FOLLOWING" | "POPULAR" | "NEAR";
 
 export interface PurchaseItem {
   type: "PURCHASE";
@@ -68,8 +69,19 @@ export interface FeedHighlights {
   }[];
 }
 
+// The area "Near me" uses: picked, from the default address, or the profile.
+export interface FeedArea {
+  state: string;
+  // Null = the whole state.
+  area: string | null;
+  label: string;
+  source: "CHOSEN" | "ADDRESS" | "PROFILE";
+}
+
 export interface ShoppingFeedPage {
   items: FeedItem[];
   nextBefore: string | null;
   highlights: FeedHighlights | null;
+  // "Near me" only: the area (null = none yet - ask for one) and how many stores serve it.
+  area?: (FeedArea & { storeCount: number }) | null;
 }

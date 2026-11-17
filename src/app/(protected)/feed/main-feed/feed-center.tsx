@@ -1,11 +1,12 @@
 "use client";
 
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { Loader2, RefreshCw, ShoppingBag, Sparkles, Users2 } from "lucide-react";
+import { Loader2, MapPin, RefreshCw, ShoppingBag, Sparkles, Store, Users2 } from "lucide-react";
 
 import { usePullToRefresh } from "@/src/hooks/use-pull-to-refresh";
-import { useShoppingFeed } from "@/src/hooks/use-shopping-feed";
+import { useSetFeedArea, useShoppingFeed } from "@/src/hooks/use-shopping-feed";
+import { stateLabel } from "@/src/lib/locations";
 
 import Stories from "./stories";
 import CreatePostCard from "./create-post-card";
@@ -13,11 +14,67 @@ import PostCard from "./post-card";
 import HighlightsRail from "./shopping/highlights-rail";
 import PurchaseCard from "./shopping/purchase-card";
 import DropCard from "./shopping/drop-card";
+import AreaPicker from "./shopping/area-picker";
 import { PostListSkeleton } from "@/src/components/skeletons/post-card-skeleton";
 import SuggestedPeople from "../right-sidebar/suggested-friends";
 import MarketplacePreview from "../right-sidebar/marketplace-preview";
 import TrendingCommunities from "../left-sidebar/trending-communities";
-import { FeedItem } from "@/src/types/shopping-feed";
+import { FeedArea, FeedItem } from "@/src/types/shopping-feed";
+
+type FeedMode = "for-you" | "near";
+const MODE_KEY = "nestly:feed-mode";
+
+// Which feed was open last time - a per-device convenience, so it's fine if
+// storage is blocked.
+let chosenMode: FeedMode | null = null;
+const modeListeners = new Set<() => void>();
+const readMode = (): FeedMode => {
+  if (chosenMode) return chosenMode;
+  try {
+    return window.localStorage.getItem(MODE_KEY) === "near" ? "near" : "for-you";
+  } catch {
+    return "for-you";
+  }
+};
+const subscribeMode = (listener: () => void) => {
+  modeListeners.add(listener);
+  return () => modeListeners.delete(listener);
+};
+
+const useFeedMode = () => {
+  // Server render and first paint use "For you"; the saved choice applies right after.
+  const mode = useSyncExternalStore(subscribeMode, readMode, () => "for-you" as FeedMode);
+  const choose = (next: FeedMode) => {
+    chosenMode = next;
+    try {
+      window.localStorage.setItem(MODE_KEY, next);
+    } catch {}
+    modeListeners.forEach((listener) => listener());
+  };
+  return [mode, choose] as const;
+};
+
+function ModeSwitch({ mode, onChange }: { mode: FeedMode; onChange: (mode: FeedMode) => void }) {
+  const tab = (value: FeedMode, label: React.ReactNode) => (
+    <button
+      type="button"
+      role="tab"
+      aria-selected={mode === value}
+      onClick={() => onChange(value)}
+      className={`flex h-8 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition ${
+        mode === value ? "bg-surface text-ink shadow-sm ring-1 ring-line" : "text-muted hover:text-ink"
+      }`}
+    >
+      {label}
+    </button>
+  );
+  return (
+    <div role="tablist" aria-label="Feed" className="inline-flex shrink-0 rounded-full bg-surface-2 p-1 ring-1 ring-line">
+      {tab("for-you", "For you")}
+      {tab("near", <><MapPin size={13} /> Near me</>)}
+    </div>
+  );
+}
 
 // The shopping feed: what's actually happening on Nestly - purchases people
 // made and loved, new items from stores you follow, posts (ones that show
@@ -38,11 +95,16 @@ function FeedEntry({ item }: { item: FeedItem }) {
 }
 
 export default function FeedCenter() {
-  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useShoppingFeed();
+  const [mode, setMode] = useFeedMode();
+  const near = mode === "near";
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage, refetch } = useShoppingFeed(near);
+  const [picking, setPicking] = useState(false);
 
   const items = data?.pages.flatMap((page) => page.data.items) ?? [];
   const highlights = data?.pages[0]?.data.highlights ?? null;
-  const isQuiet = !isLoading && !isError && items.length < 3;
+  // Near me: the area the server used (null = it doesn't know where you are yet).
+  const area = near && data ? (data.pages[0]?.data.area ?? null) : undefined;
+  const isQuiet = !near && !isLoading && !isError && items.length < 3;
 
   const { pull, refreshing, ready } = usePullToRefresh(() => refetch());
 
@@ -86,14 +148,37 @@ export default function FeedCenter() {
         <div className="rounded-2xl border border-line bg-surface p-10 text-center text-[14px] text-red-500">Couldn&apos;t load the feed. Please try again.</div>
       )}
 
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-3 px-0.5">
+          <h2 className="whitespace-nowrap font-[family-name:var(--font-fraunces)] text-[22px] leading-none text-ink">Your feed</h2>
+          <ModeSwitch mode={mode} onChange={setMode} />
+        </div>
+        {area && (
+          <div className="flex items-center gap-2 px-0.5 text-[12.5px] text-muted">
+            <MapPin size={14} className="shrink-0 text-violet-600 dark:text-violet-400" />
+            <span className="min-w-0 truncate">
+              Near <span className="font-semibold text-ink">{area.label}</span>
+              {area.storeCount > 0 && <> · {area.storeCount} {area.storeCount === 1 ? "shop" : "shops"}</>}
+            </span>
+            <button type="button" onClick={() => setPicking(true)} className="shrink-0 font-semibold text-violet-600 hover:underline dark:text-violet-400">
+              Change
+            </button>
+          </div>
+        )}
+      </div>
+
       {isQuiet && <QuietFeedWelcome hasItems={items.length > 0} />}
+
+      {near && !isLoading && !isError && area === null && <AskForArea onPick={() => setPicking(true)} />}
+
+      {near && !isLoading && !isError && area && items.length === 0 && (
+        <NothingNear area={area} onChange={() => setPicking(true)} onForYou={() => setMode("for-you")} />
+      )}
+
+      {picking && <AreaPicker current={area ?? null} onClose={() => setPicking(false)} />}
 
       {!isLoading && !isError && items.length > 0 && (
         <div className="space-y-5">
-          <div className="flex items-baseline justify-between gap-3 px-0.5">
-            <h2 className="whitespace-nowrap font-[family-name:var(--font-fraunces)] text-[22px] leading-none text-ink">Your feed</h2>
-            <span className="hidden truncate font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-[0.2em] text-subtle sm:block">Real buys · new drops · posts</span>
-          </div>
           {slotsAfter(0).map((slot) => (
             <div key={slot.key} className={slot.className}>
               {slot.node}
@@ -119,8 +204,66 @@ export default function FeedCenter() {
         </div>
       )}
       {!hasNextPage && items.length > 6 && (
-        <p className="py-4 text-center text-[12.5px] text-subtle">You&apos;re all caught up ✨ Follow more stores and people to see more here.</p>
+        <p className="py-4 text-center text-[12.5px] text-subtle">
+          {near ? "That's everything near you for now ✨ Check back soon." : "You're all caught up ✨ Follow more stores and people to see more here."}
+        </p>
       )}
+    </div>
+  );
+}
+
+// Near me, but we don't know where the viewer is yet.
+function AskForArea({ onPick }: { onPick: () => void }) {
+  return (
+    <div className="overflow-hidden rounded-3xl border border-line bg-surface">
+      <div className="bg-gradient-to-br from-violet-500/10 via-transparent to-amber-400/10 px-6 py-8 text-center">
+        <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-lg shadow-violet-600/25">
+          <MapPin size={26} />
+        </span>
+        <h3 className="mt-4 font-[family-name:var(--font-fraunces)] text-[22px] text-ink">Where are you?</h3>
+        <p className="mx-auto mt-1.5 max-w-sm text-[13.5px] text-muted">
+          Tell us your area and we&apos;ll show shops that are based there or deliver to you - their new items, what people bought and their lives.
+        </p>
+        <button
+          type="button"
+          onClick={onPick}
+          className="mt-5 inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 text-[14px] font-semibold text-white hover:brightness-110"
+        >
+          <MapPin size={16} /> Choose my area
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Near me, area known, but no shop serves it yet.
+function NothingNear({ area, onChange, onForYou }: { area: FeedArea; onChange: () => void; onForYou: () => void }) {
+  const { mutate: save, isPending } = useSetFeedArea();
+  return (
+    <div className="rounded-3xl border border-line bg-surface px-6 py-8 text-center">
+      <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-surface-2 text-muted">
+        <Store size={22} />
+      </span>
+      <h3 className="mt-3 font-[family-name:var(--font-fraunces)] text-[20px] text-ink">No shops near {area.label} yet</h3>
+      <p className="mx-auto mt-1 max-w-sm text-[13px] text-muted">Nestly is growing - try a wider area, or see what&apos;s popular everywhere.</p>
+      <div className="mt-5 flex flex-wrap justify-center gap-2">
+        {area.area && (
+          <button
+            type="button"
+            disabled={isPending}
+            onClick={() => save({ state: area.state, area: null })}
+            className="inline-flex h-10 items-center gap-2 rounded-xl bg-violet-600 px-4 text-[13px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+          >
+            {isPending && <Loader2 size={14} className="animate-spin" />} Try all of {stateLabel(area.state)}
+          </button>
+        )}
+        <button type="button" onClick={onChange} className="h-10 rounded-xl border border-line px-4 text-[13px] font-semibold text-ink hover:bg-surface-2">
+          Change area
+        </button>
+        <button type="button" onClick={onForYou} className="h-10 rounded-xl px-4 text-[13px] font-semibold text-muted hover:text-ink">
+          Back to For you
+        </button>
+      </div>
     </div>
   );
 }

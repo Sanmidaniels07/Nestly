@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, ShieldCheck, ShoppingBag, Sparkles, Star } from "lucide-react";
+import { BadgeCheck, MapPin, ShieldCheck, ShoppingBag, Sparkles, Star } from "lucide-react";
 
 import UserAvatar from "@/src/components/ui/user-avatar";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -56,6 +56,11 @@ export default function PurchaseCard({ item }: { item: PurchaseItem }) {
             {item.reason === "POPULAR" && (
               <span className="inline-flex items-center gap-0.5 text-violet-600 dark:text-violet-400">
                 · <Sparkles size={11} /> Popular
+              </span>
+            )}
+            {item.reason === "NEAR" && (
+              <span className="inline-flex items-center gap-0.5 text-violet-600 dark:text-violet-400">
+                · <MapPin size={11} /> Near you
               </span>
             )}
           </p>
