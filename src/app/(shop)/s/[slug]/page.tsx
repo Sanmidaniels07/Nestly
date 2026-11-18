@@ -22,7 +22,7 @@ interface Props {
 
 const loadTrust = async (slug: string) => {
   try {
-    return await serverGet<StoreTrust>(`/stores/${encodeURIComponent(slug)}/trust`, 600);
+    return await serverGet<StoreTrust>(`/stores/${encodeURIComponent(slug)}/trust`, 60);
   } catch (error) {
     if (error instanceof NotFoundError) return null;
     throw error;
