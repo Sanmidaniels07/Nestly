@@ -256,12 +256,12 @@ function AnswerForm({ offer, conversationId, isSeller }: { offer: Offer; convers
         </label>
       )}
       {error && <p className="text-[11.5px] text-red-600 dark:text-red-400">{error}</p>}
-      <div className="flex gap-1.5">
+      <div className="flex flex-wrap gap-1.5">
         <button
           type="button"
           disabled={isPending}
           onClick={() => submit(mode === "accept" ? "ACCEPT" : "COUNTER")}
-          className="whitespace-nowrap flex h-9 flex-1 items-center justify-center gap-1 rounded-lg bg-violet-600 text-[12.5px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
+          className="whitespace-nowrap flex h-9 flex-auto items-center px-3 justify-center gap-1 rounded-lg bg-violet-600 text-[12.5px] font-semibold text-white hover:bg-violet-700 disabled:opacity-60"
         >
           {isPending && <Loader2 size={13} className="animate-spin" />}
           {mode === "accept" ? "Accept offer" : "Send counter-offer"}

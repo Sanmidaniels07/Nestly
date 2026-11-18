@@ -193,10 +193,10 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
               </p>
             ))}
 
-          <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-8 sm:flex sm:flex-wrap sm:gap-3">
+          <div className="mt-6 flex flex-wrap gap-2.5 sm:mt-8 sm:gap-3">
             <Link
               href="/feed"
-              className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 bg-white text-[13.5px] font-semibold sm:px-6 sm:text-[14px] text-[#2A1B4D] shadow-lg transition-colors hover:bg-white/90"
+              className="whitespace-nowrap inline-flex h-11 flex-auto items-center justify-center gap-2 rounded-2xl px-4 sm:h-12 sm:flex-none bg-white text-[13.5px] font-semibold sm:px-6 sm:text-[14px] text-[#2A1B4D] shadow-lg transition-colors hover:bg-white/90"
             >
               <PenSquare size={17} />
               Create post
@@ -204,7 +204,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             {isActiveSeller ? (
               <Link
                 href="/settings/marketplace"
-                className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
+                className="whitespace-nowrap inline-flex h-11 flex-auto items-center justify-center gap-2 rounded-2xl px-4 sm:h-12 sm:flex-none border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
               >
                 <Store size={17} />
                 Manage store
@@ -212,7 +212,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
             ) : (
               <Link
                 href="/communities"
-                className="whitespace-nowrap inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-3 sm:h-12 border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
+                className="whitespace-nowrap inline-flex h-11 flex-auto items-center justify-center gap-2 rounded-2xl px-4 sm:h-12 sm:flex-none border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
               >
                 <Compass size={17} />
                 Explore communities
