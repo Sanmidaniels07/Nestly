@@ -42,11 +42,20 @@ const decode = async (file: File): Promise<Decoded> => {
   }
 };
 
-const hasTransparency = (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-  // Sample on a grid - enough to spot a transparent background or corner.
-  const data = ctx.getImageData(0, 0, width, height).data;
-  const step = Math.max(1, Math.floor((width * height) / 40000)) * 4;
-  for (let i = 3; i < data.length; i += step) if (data[i] < 250) return true;
+/**
+ * Checks a 64x64 copy for see-through pixels - enough to spot a transparent
+ * background, and cheap: reading every pixel of a full-size canvas back from
+ * the GPU took seconds on slow devices.
+ */
+const hasTransparency = (source: CanvasImageSource) => {
+  const size = 64;
+  const canvas = document.createElement("canvas");
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  if (!ctx) return true; // can't tell: keep PNG to be safe
+  ctx.drawImage(source, 0, 0, size, size);
+  const data = ctx.getImageData(0, 0, size, size).data;
+  for (let i = 3; i < data.length; i += 4) if (data[i] < 250) return true;
   return false;
 };
 
@@ -75,9 +84,8 @@ export const compressImage = async (file: File): Promise<File> => {
     ctx.imageSmoothingQuality = "high";
     ctx.drawImage(decoded.source, 0, 0, w, h);
 
-    const keepPng = file.type === "image/png" && hasTransparency(ctx, w, h);
-    const keepWebpAlpha = file.type === "image/webp" && hasTransparency(ctx, w, h);
-    const type = keepPng || keepWebpAlpha ? "image/png" : "image/jpeg";
+    // PNG / WebP with see-through parts (logos) stay PNG; everything else becomes JPEG.
+    const type = file.type !== "image/jpeg" && hasTransparency(decoded.source) ? "image/png" : "image/jpeg";
     const blob = await toBlob(canvas, type, type === "image/jpeg" ? JPEG_QUALITY : undefined);
     if (!blob || blob.size >= file.size) return file;
 
