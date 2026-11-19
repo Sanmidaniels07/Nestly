@@ -141,6 +141,15 @@ export default function Navbar() {
                       </Button>
                     </Link>
                   )}
+                  {/* Phones don't get the centre links, so the demo sits here. */}
+                  <a
+                    href={DEMO_URL}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-violet-50 px-3 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 md:hidden"
+                  >
+                    <Play className="hidden h-3.5 w-3.5 fill-current min-[360px]:block" /> Demo
+                  </a>
                   <Link href="/signup">
                     <Button variant="tribely" size="sm">
                       Get started
