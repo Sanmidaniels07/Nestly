@@ -62,8 +62,22 @@ const hasTransparency = (source: CanvasImageSource) => {
 const toBlob = (canvas: HTMLCanvasElement, type: string, quality?: number) =>
   new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
 
-export const compressImage = async (file: File): Promise<File> => {
-  if (typeof window === "undefined" || !SHRINKABLE.includes(file.type)) return file;
+/**
+ * Longest we'll hold an upload back for shrinking. A phone usually takes well
+ * under a second; on a slow or busy device the original goes up instead, so
+ * shrinking can never make an upload much slower than it was before.
+ */
+const TIME_BUDGET_MS = 4000;
+
+export const compressImage = (file: File): Promise<File> => {
+  if (typeof window === "undefined" || !SHRINKABLE.includes(file.type)) return Promise.resolve(file);
+  return Promise.race([
+    shrink(file),
+    new Promise<File>((resolve) => setTimeout(() => resolve(file), TIME_BUDGET_MS)),
+  ]);
+};
+
+const shrink = async (file: File): Promise<File> => {
 
   let decoded: Decoded | null = null;
   try {
