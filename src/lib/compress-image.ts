@@ -9,18 +9,20 @@
 //   - PNGs with transparency (logos) stay PNG so the see-through parts survive.
 //   - The original goes up instead if: the browser can't shrink in the
 //     background (older browsers), anything fails, the result isn't smaller,
-//     or it takes longer than TIME_BUDGET_MS.
+//     or it takes longer than timeBudgetMs.
 // Re-encoding also drops the photo's hidden metadata (EXIF), including the GPS
 // location phones store - so a seller's photo doesn't reveal where they live.
 
 const SHRINKABLE = ["image/jpeg", "image/png", "image/webp"];
 
 /**
- * Longest we'll hold an upload back for shrinking. A phone usually takes well
- * under a second; on a slow or busy device the original goes up instead, so
- * shrinking can never make an upload much slower than it was before.
+ * Longest we'll hold an upload back for shrinking. A warmed-up browser takes
+ * under a second for several photos; the first shrink after the browser opens
+ * can take a few seconds on slow devices. Bigger photos may wait longer,
+ * because sending them unshrunk on mobile data takes longer still (a 4.5MB
+ * photo waits up to ~10s). Past this, the original goes up as before.
  */
-const TIME_BUDGET_MS = 4000;
+const timeBudgetMs = (file: File) => Math.min(10_000, 3000 + 1500 * (file.size / (1024 * 1024)));
 
 const canShrinkInBackground = () =>
   typeof window !== "undefined" &&
@@ -46,7 +48,7 @@ export const compressImage = (file: File): Promise<File> => {
       worker.terminate();
       resolve(result ?? file);
     };
-    const timer = setTimeout(() => finish(null), TIME_BUDGET_MS);
+    const timer = setTimeout(() => finish(null), timeBudgetMs(file));
     worker.onmessage = (event: MessageEvent<{ file: File | null }>) => finish(event.data.file);
     worker.onerror = () => finish(null);
     worker.postMessage(file);
