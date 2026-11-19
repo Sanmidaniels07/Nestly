@@ -62,7 +62,9 @@ export default function StoreView() {
 function StoreDetailsForm({ storeId }: { storeId: string }) {
   const { data: store } = useMyStore();
   const { mutate: updateStore, isPending: isSaving } = useUpdateStore();
-  const { mutate: uploadImage, isPending: isUploading } = useImageUpload();
+  // mutateAsync: mutate() only reports back for the latest call, so a logo
+  // picked while the banner was still uploading (or the reverse) got lost.
+  const { mutateAsync: uploadImage, isPending: isUploading } = useImageUpload();
 
   const logoInputRef = useRef<HTMLInputElement>(null);
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -106,7 +108,7 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
     onDone: (url: string) => void,
   ) => {
     if (!file) return;
-    uploadImage(file, { onSuccess: onDone });
+    uploadImage(file).then(onDone).catch(() => {}); // the hook shows the error
   };
 
   const handleSubmit = () => {
