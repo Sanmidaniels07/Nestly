@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { LogOut } from "lucide-react";
+import { LogOut, Play } from "lucide-react";
+import { DEMO_URL } from "../../lib/site";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import Button from "@/src/components/ui/button";
 import CartButton from "./cart-button";
@@ -39,7 +40,6 @@ export default function Navbar() {
               <div className="hidden items-center gap-8 text-[14px] font-medium md:flex">
                 {[
                   { href: "/features", label: "Features" },
-                  { href: "/preview", label: "Preview" },
                   { href: "/guides", label: "Guides" },
                 ].map((item) => {
                   const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -62,6 +62,14 @@ export default function Navbar() {
                     </Link>
                   );
                 })}
+                <a
+                  href={DEMO_URL}
+                  target="_blank"
+                  rel="noopener"
+                  className="inline-flex items-center gap-1.5 rounded-full bg-violet-50 px-3 py-1 text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 dark:hover:bg-violet-500/25"
+                >
+                  <Play className="h-3.5 w-3.5" /> Try demo
+                </a>
               </div>
             )}
 
@@ -133,6 +141,15 @@ export default function Navbar() {
                       </Button>
                     </Link>
                   )}
+                  {/* Phones don't get the centre links, so the demo sits here. */}
+                  <a
+                    href={DEMO_URL}
+                    target="_blank"
+                    rel="noopener"
+                    className="inline-flex h-9 items-center gap-1.5 whitespace-nowrap rounded-full bg-violet-50 px-3 text-[13px] font-semibold text-violet-700 transition-colors hover:bg-violet-100 dark:bg-violet-500/15 dark:text-violet-300 md:hidden"
+                  >
+                    <Play className="hidden h-3.5 w-3.5 fill-current min-[360px]:block" /> Demo
+                  </a>
                   <Link href="/signup">
                     <Button variant="tribely" size="sm">
                       Get started

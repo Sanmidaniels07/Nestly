@@ -18,6 +18,7 @@ import {
 import Button from "@/src/components/ui/button";
 import GuestGuard from "@/src/components/guards/GuestGuard";
 import SiteFooter from "@/src/components/layout/site-footer";
+import { DEMO_URL } from "@/src/lib/site";
 import {
   BirthdayDemo,
   ChatDemo,
@@ -158,6 +159,16 @@ export default function FeaturesPage() {
               Nestly brings your social life, your celebrations, your communities and a marketplace of trusted sellers
               together — no more switching apps to stay connected.
             </p>
+            <a
+              href={DEMO_URL}
+              target="_blank"
+              rel="noopener"
+              className="group mt-8 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-violet-600 to-indigo-600 px-6 py-3.5 text-[15px] font-semibold text-white shadow-lg shadow-violet-500/25 transition-transform hover:-translate-y-0.5"
+            >
+              Try the live demo
+              <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+            </a>
+            <p className="mt-3 text-[13px] text-muted">No sign-up. Play a seller or a shopper - nothing is real.</p>
           </motion.div>
         </section>
 
@@ -202,13 +213,15 @@ export default function FeaturesPage() {
                   Join free
                 </Button>
               </Link>
-              <Link
-                href="/preview"
+              <a
+                href={DEMO_URL}
+                target="_blank"
+                rel="noopener"
                 className="group flex items-center gap-1.5 px-4 py-3 text-[14.5px] font-semibold text-white/90 hover:text-white"
               >
-                See it in action
+                Try the live demo
                 <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-              </Link>
+              </a>
             </div>
           </motion.div>
         </section>

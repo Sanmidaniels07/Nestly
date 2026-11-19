@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
+const DEMO_URL = (process.env.NEXT_PUBLIC_DEMO_URL || "https://demo.nestlyapp.site").replace(/\/+$/, "");
+
 const nextConfig: NextConfig = {
+  // The old preview page became the interactive demo; shared links still land somewhere useful.
+  async redirects() {
+    return [{ source: "/preview", destination: DEMO_URL, permanent: false }];
+  },
   images: {
     remotePatterns: [
       {

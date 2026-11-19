@@ -3,6 +3,8 @@
 // refreshed every few minutes. Returns null when it's not there (404) or
 // the API can't be reached - pages then fall back to loading in the browser.
 
+import { unstable_cache } from "next/cache";
+
 import { ApiResponse } from "../types/api";
 
 const API_URL = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
@@ -14,17 +16,30 @@ const TIMEOUT_MS = 15_000;
 
 export class NotFoundError extends Error {}
 
+// What the API said. "missing" (404) is cached like a normal answer: Next's
+// fetch cache only stores 200s, so when a store or product was taken down
+// the old copy was never replaced and the page kept showing it.
+type Loaded = { found: true; body: unknown } | { found: false };
+
+const load = async (path: string): Promise<Loaded> => {
+  const response = await fetch(`${API_URL}${path}`, { cache: "no-store", signal: AbortSignal.timeout(TIMEOUT_MS) });
+  if (response.status === 404) return { found: false };
+  // Errors and an unreachable API throw, so they are never cached - the
+  // next request tries again.
+  if (!response.ok) throw new Error(`API ${response.status} for ${path}`);
+  return { found: true, body: await response.json() };
+};
+
 export async function serverGet<T>(path: string, revalidate = 300): Promise<ApiResponse<T> | null> {
   if (!API_URL) return null;
+  let loaded: Loaded;
   try {
-    const response = await fetch(`${API_URL}${path}`, { next: { revalidate }, signal: AbortSignal.timeout(TIMEOUT_MS) });
-    if (response.status === 404) throw new NotFoundError(path);
-    if (!response.ok) return null;
-    return (await response.json()) as ApiResponse<T>;
-  } catch (error) {
-    if (error instanceof NotFoundError) throw error;
+    loaded = await unstable_cache(() => load(path), ["server-get", path, String(revalidate)], { revalidate })();
+  } catch {
     return null;
   }
+  if (!loaded.found) throw new NotFoundError(path);
+  return loaded.body as ApiResponse<T>;
 }
 
 // JSON for a <script type="application/ld+json"> - "<" escaped so text

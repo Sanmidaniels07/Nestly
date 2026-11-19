@@ -1,10 +1,11 @@
 "use client";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight, BookOpen, Users, Gift, ShoppingBag, Star, Store } from "lucide-react";
+import { ArrowRight, BookOpen, Users, Gift, Play, ShoppingBag, Star, Store } from "lucide-react";
 import Button from "../components/ui/button";
 import Card from "../components/ui/card";
 import SiteFooter from "../components/layout/site-footer";
+import { DEMO_URL } from "../lib/site";
 
 export default function Home() {
   return (
@@ -81,6 +82,18 @@ function Hero() {
               </Button>
             </Link>
           </div>
+
+          <a
+            href={DEMO_URL}
+            target="_blank"
+            rel="noopener"
+            className="group inline-flex items-center gap-2.5 text-[15px] font-semibold text-violet-700 hover:text-violet-800 dark:text-violet-300 dark:hover:text-violet-200"
+          >
+            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-violet-100 transition-transform group-hover:scale-110 dark:bg-violet-500/20">
+              <Play className="h-4 w-4 fill-current" />
+            </span>
+            Try the live demo <span className="font-normal text-muted">- no sign-up</span>
+          </a>
 
           {/* Read before signing up - see Guides below. */}
           <div className="flex flex-wrap items-center gap-2 text-sm">

@@ -7,6 +7,9 @@ export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.nestly
 
 export const SITE_NAME = "Nestly";
 
+/** The interactive demo (a separate site on pretend data, not indexed). */
+export const DEMO_URL = (process.env.NEXT_PUBLIC_DEMO_URL || "https://demo.nestlyapp.site").replace(/\/+$/, "");
+
 export const SITE_TAGLINE = "Connect, celebrate and shop together";
 
 /**
@@ -26,10 +29,10 @@ export const SITE_DESCRIPTION =
 export const OG_IMAGE = { url: "/og.png", width: 1200, height: 630, alt: `${SITE_NAME} – ${SITE_TAGLINE}` };
 
 /** Public, indexable pages - everything else needs an account. */
-export const PUBLIC_ROUTES = ["/", "/features", "/preview", "/signup", "/login", "/terms", "/privacy", "/seller-terms", "/guides", "/guides/sellers", "/guides/buyers", "/guides/community"] as const;
+export const PUBLIC_ROUTES = ["/", "/features", "/signup", "/login", "/terms", "/privacy", "/seller-terms", "/guides", "/guides/sellers", "/guides/buyers", "/guides/community"] as const;
 
 /** Public but not worth Google's attention: kept out of the sitemap. */
-export const NOT_IN_SITEMAP = new Set<string>(["/login", "/signup", "/preview"]);
+export const NOT_IN_SITEMAP = new Set<string>(["/login", "/signup"]);
 
 /**
  * Nestly's own accounts (full URLs) - tells Google they belong to the same
