@@ -18,7 +18,10 @@ interface Props {
 const MAX_IMAGES = 10;
 
 export default function ProductImages({ draft, setDraft, onBack, onNext }: Props) {
-  const { mutate: uploadImage } = useImageUpload();
+  // mutateAsync, not mutate: with several photos picked at once, React Query
+  // only runs mutate()'s per-call callbacks for the LAST call, so the other
+  // photos stayed "uploading" forever and Continue never unlocked.
+  const { mutateAsync: uploadImage } = useImageUpload();
 
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
@@ -40,22 +43,22 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
         ],
       }));
 
-      uploadImage(file, {
-        onSuccess: (url) => {
+      uploadImage(file)
+        .then((url) => {
           setDraft((prev) => ({
             ...prev,
             images: prev.images.map((image) =>
               image.id === id ? { ...image, url, uploading: false } : image
             ),
           }));
-        },
-        onError: () => {
+        })
+        .catch(() => {
+          // The hook already shows "Image upload failed".
           setDraft((prev) => ({
             ...prev,
             images: prev.images.filter((image) => image.id !== id),
           }));
-        },
-      });
+        });
     });
   };
 

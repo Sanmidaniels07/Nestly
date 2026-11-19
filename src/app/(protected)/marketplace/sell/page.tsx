@@ -156,7 +156,9 @@ function CreateStoreForm() {
   const [logo, setLogo] = useState<string>();
   const [banner, setBanner] = useState<string>();
 
-  const { mutate: uploadImage, isPending: isUploading } = useImageUpload();
+  // mutateAsync: mutate() only reports back for the latest call, so a logo
+  // picked while the banner was still uploading (or the reverse) got lost.
+  const { mutateAsync: uploadImage, isPending: isUploading } = useImageUpload();
   const { mutate: createStore, isPending: isCreating } = useCreateStore();
 
   const update = (field: keyof typeof form) => (
@@ -168,7 +170,7 @@ function CreateStoreForm() {
     onDone: (url: string) => void
   ) => {
     if (!file) return;
-    uploadImage(file, { onSuccess: onDone });
+    uploadImage(file).then(onDone).catch(() => {}); // the hook shows the error
   };
 
   const canSubmit = form.name.trim().length > 0 && !isCreating && !isUploading;

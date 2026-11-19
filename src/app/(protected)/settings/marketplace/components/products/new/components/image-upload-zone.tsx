@@ -10,7 +10,9 @@ interface Props {
 }
 
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"];
-const MAX_SIZE_MB = 8;
+// Big phone photos are shrunk before upload (lib/compress-image), so this only
+// stops files too large to handle at all (the server takes up to 50MB).
+const MAX_SIZE_MB = 25;
 
 export default function ImageUploadZone({ onFilesSelected, currentCount, maxImages = 10 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
