@@ -15,7 +15,9 @@ import { naira } from "@/src/lib/payment-link";
 
 const MAX_IMAGES = 6;
 const ACCEPTED_TYPES = ["image/png", "image/jpeg", "image/webp"];
-const MAX_SIZE_MB = 8;
+// Big phone photos are shrunk before upload (lib/compress-image), so this only
+// stops files too large to handle at all (the server takes up to 50MB).
+const MAX_SIZE_MB = 25;
 
 // "15,000" -> 15000; empty or invalid -> NaN.
 const parseAmount = (value: string) => (value.trim() ? Number(value.replace(/[,\s₦]/g, "")) : NaN);

@@ -162,7 +162,7 @@ const parts: GuidePart[] = [
                 receive;
               </li>
               <li>
-                <strong>photos</strong> - up to 10 (PNG, JPG or WEBP, under 8MB each). At least one is needed to publish;
+                <strong>photos</strong> - up to 10 (PNG, JPG or WEBP, under 25MB each - big photos are resized automatically). At least one is needed to publish;
               </li>
               <li>
                 how it&apos;s <strong>delivered</strong> - bike, car or truck - so it&apos;s only offered on zones that can carry it.
