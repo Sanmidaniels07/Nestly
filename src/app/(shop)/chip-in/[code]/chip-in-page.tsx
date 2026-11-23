@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 
 import { useCancelGroupGift, useContribute, useGroupGift } from "@/src/hooks/use-group-gift";
 import { useRequireLogin, useSession } from "@/src/hooks/use-session";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { verifyContribution } from "@/src/services/group-gift.services";
 import { payWithPaystack } from "@/src/lib/paystack";
 import { naira } from "@/src/lib/payment-link";
@@ -218,6 +219,19 @@ function ContributeBox({ gift }: { gift: GroupGiftView }) {
   const [error, setError] = useState("");
   const attemptRef = useRef(0);
 
+  // Amount and message are kept in this browser until they've paid (e.g. they
+  // had to log in first, or refreshed). Brought back quietly - it's a small box.
+  const { clear: clearSaved } = useFormDraft(
+    `chip-in:${gift.code}`,
+    { amount, message, hideName },
+    (saved) => {
+      setAmount(saved.amount ?? "");
+      setMessage(saved.message ?? "");
+      setHideName(!!saved.hideName);
+    },
+    { isEmpty: (draft) => !draft.amount.trim() && !draft.message.trim() && !draft.hideName }
+  );
+
   const remaining = gift.remaining;
   const presets = [2000, 5000, 10000].filter((value) => value < remaining);
   const value = amount.trim() ? Number(amount.replace(/[,\s₦]/g, "")) : NaN;
@@ -239,6 +253,7 @@ function ContributeBox({ gift }: { gift: GroupGiftView }) {
         onSuccess: async () => {
           await verifyContribution(data.reference).catch(() => undefined);
           await queryClient.invalidateQueries({ queryKey: ["group-gift", gift.code] });
+          clearSaved();
           if (!isStale()) {
             toast.success("Thank you for chipping in!");
             setAmount("");

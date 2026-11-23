@@ -12,6 +12,8 @@ import { Category } from "@/src/types/category";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import Checkbox from "@/src/components/ui/checkbox";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 export default function CategoriesManager() {
   const [createOpen, setCreateOpen] = useState(false);
@@ -214,6 +216,33 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
 
   const canSubmit = name.trim().length >= 2 && !isUploading;
 
+  // Kept in this browser until created or cancelled; brought back when the
+  // form is opened again (also after a refresh).
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "admin:category:new",
+    { name, isFeatured, icon: icon ?? null, commissionRate },
+    (saved) => {
+      setName(saved.name ?? "");
+      setIsFeatured(!!saved.isFeatured);
+      setIcon(saved.icon ?? undefined);
+      setCommissionRate(saved.commissionRate ?? "10");
+    },
+    { isEmpty: (value) => !value.name.trim() && !value.isFeatured && !value.icon && value.commissionRate === "10" }
+  );
+
+  const resetForm = () => {
+    setName("");
+    setIcon(undefined);
+    setIsFeatured(false);
+    setCommissionRate("10");
+  };
+
+  const cancel = () => {
+    resetForm();
+    clearSaved();
+    onDone();
+  };
+
   const handleFile = (file: File | undefined) => {
     if (!file) return;
     uploadImage(file, { onSuccess: setIcon });
@@ -226,10 +255,8 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
       { name: name.trim(), icon, isFeatured, commissionRate: Number(commissionRate) || 0 },
       {
         onSuccess: () => {
-          setName("");
-          setIcon(undefined);
-          setIsFeatured(false);
-          setCommissionRate("10");
+          clearSaved();
+          resetForm();
           onDone();
         },
       }
@@ -241,6 +268,9 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
       <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
         Create category
       </h2>
+      {restored && (
+        <DraftRestoredNotice what="the category you started" onStartOver={() => { resetForm(); clearSaved(); }} onDismiss={dismissNotice} className="mt-4" />
+      )}
 
       <div className="mt-5 flex flex-col gap-4 sm:flex-row sm:items-start">
         <button
@@ -287,7 +317,7 @@ function CreateCategoryForm({ onDone }: { onDone: () => void }) {
       </div>
 
       <div className="mt-5 flex justify-end gap-3">
-        <Button variant="outline" onClick={onDone} className="h-11 rounded-xl px-6">
+        <Button variant="outline" onClick={cancel} className="h-11 rounded-xl px-6">
           Cancel
         </Button>
         <Button

@@ -10,6 +10,7 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import { formatRelativeTime } from "@/src/lib/date";
 import Skeleton from "@/src/components/ui/skeleton";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   postId: string;
@@ -24,12 +25,20 @@ export default function CommentSection({ postId }: Props) {
     useCreateComment(postId);
   const { mutate: deleteComment } = useDeleteComment(postId);
 
+  // A comment being typed is kept per post until it's sent.
+  const { clear: clearSaved } = useFormDraft(`comment:${postId}`, content, setContent, {
+    isEmpty: (value) => !value.trim(),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
     createComment(content.trim(), {
-      onSuccess: () => setContent(""),
+      onSuccess: () => {
+        clearSaved();
+        setContent("");
+      },
     });
   };
 

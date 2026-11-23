@@ -36,6 +36,8 @@ import { payWithPaystack } from "@/src/lib/paystack";
 import { afterPaymentPath } from "@/src/lib/order-result";
 import { trafficSource } from "@/src/lib/traffic-source";
 import { PHONE_PATTERN } from "@/src/lib/phone";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
 import TrustLine from "@/src/components/trust/trust-line";
@@ -235,6 +237,32 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   const [error, setError] = useState("");
   const attemptRef = useRef(0);
 
+  // What they've filled in is kept in this browser until they pay - also for
+  // guests (no account), so a refresh or coming back later picks up here.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    `pay-link:${link.code}`,
+    { guest, quantity, zoneId: zone?.id ?? null, note },
+    (saved) => {
+      setGuest({ ...emptyGuest, ...saved.guest });
+      setQuantity(saved.quantity || 1);
+      setZone(link.shippingOptions.find((option) => option.id === saved.zoneId) ?? null);
+      setNote(saved.note ?? "");
+    },
+    {
+      guest: true,
+      isEmpty: (value) =>
+        JSON.stringify(value.guest) === JSON.stringify(emptyGuest) && value.quantity === 1 && !value.zoneId && !value.note.trim(),
+    }
+  );
+
+  const startOver = () => {
+    setGuest(emptyGuest);
+    setQuantity(1);
+    setZone(null);
+    setNote("");
+    clearSaved();
+  };
+
   const isPickup = link.deliveryType === "PICKUP";
   const buyerChooses = link.deliveryType === "STORE_OPTIONS";
   const max = Math.max(1, link.quantityAvailable);
@@ -331,6 +359,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
         onSuccess: async () => {
           // The tracking page shows "confirming" if this is slow; the
           // Paystack webhook confirms it either way.
+          clearSaved();
           await verifyGuestOrder(data.guestToken).catch(() => undefined);
           if (!isStale()) router.push(trackPath);
         },
@@ -371,6 +400,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
       });
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {
+          clearSaved();
           try {
             const { data: order } = await verifyCheckout(data.reference);
             if (!isStale()) router.push(afterPaymentPath(order));
@@ -398,6 +428,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
 
   return (
     <aside className="space-y-5">
+      {restored && <DraftRestoredNotice what="the details you entered" onStartOver={startOver} onDismiss={dismissNotice} />}
       <div className="space-y-4 rounded-2xl border border-line bg-surface p-5 sm:p-6">
         {link.quantityAvailable > 1 && (
           <div className="flex items-center justify-between">

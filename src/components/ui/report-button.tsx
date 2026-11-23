@@ -6,6 +6,7 @@ import { Flag, X } from "lucide-react";
 
 import { useCreateReport } from "@/src/hooks/use-create-report";
 import { ReportTargetType } from "@/src/types/report";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   targetType: ReportTargetType;
@@ -55,6 +56,11 @@ function ReportModal({
   const [reason, setReason] = useState("");
   const { mutate: createReport, isPending } = useCreateReport();
 
+  // A half-written reason is kept per reported item until sent or cancelled.
+  const { clear: clearSaved } = useFormDraft(`report:${targetType}:${targetId}`, reason, setReason, {
+    isEmpty: (value) => !value.trim(),
+  });
+
   useEffect(() => setMounted(true), []);
 
   useEffect(() => {
@@ -75,6 +81,7 @@ function ReportModal({
       { targetType, targetId, reason: reason.trim() },
       {
         onSuccess: () => {
+          clearSaved();
           setReason("");
           onClose();
         },
@@ -118,7 +125,11 @@ function ReportModal({
 
         <div className="flex items-center justify-end gap-3 border-t border-line px-6 py-4">
           <button
-            onClick={onClose}
+            onClick={() => {
+              setReason("");
+              clearSaved();
+              onClose();
+            }}
             className="rounded-xl px-5 py-2.5 text-[13px] font-medium text-muted hover:bg-surface-muted"
           >
             Cancel

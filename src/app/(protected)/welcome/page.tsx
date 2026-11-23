@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,6 +15,8 @@ import Button from "@/src/components/ui/button";
 import DateOfBirthPicker from "@/src/components/ui/date-picker";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import Skeleton from "@/src/components/ui/skeleton";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 const welcomeSchema = z.object({
   username: z
@@ -46,18 +48,43 @@ export default function WelcomePage() {
   const { mutate: updateProfile, isPending } = useUpdateProfile();
 
   const form = useForm<WelcomeValues>({ resolver: zodResolver(welcomeSchema) });
-  const { register, handleSubmit, reset, formState: { errors } } = form;
+  const { register, handleSubmit, reset, watch, formState: { errors } } = form;
+  // The starting values (saved profile or suggestion) - what a draft is compared to.
+  const [seeded, setSeeded] = useState<WelcomeValues | null>(null);
 
   useEffect(() => {
     if (!profile) return;
     const suggestion = suggestUsername(profile.name);
-    reset({
+    const values = {
       username: profile.username ?? (suggestion.length >= 3 ? suggestion : ""),
       dateOfBirth: profile.dateOfBirth?.slice(0, 10) ?? "",
-    });
+    };
+    reset(values);
+    setSeeded(values);
   }, [profile, reset]);
 
+  // What they've typed is kept in this browser until they continue or skip.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "welcome",
+    watch(),
+    (saved) => reset({ ...seeded, ...saved }, { keepDefaultValues: true }),
+    {
+      ready: !!seeded,
+      isEmpty: (value) => value.username === seeded?.username && (value.dateOfBirth ?? "") === (seeded?.dateOfBirth ?? ""),
+    }
+  );
+
+  const startOver = () => {
+    if (seeded) reset(seeded);
+    clearSaved();
+  };
+
   const next = () => router.push(rememberedReturnTo() ?? "/dashboard");
+
+  const skip = () => {
+    clearSaved();
+    next();
+  };
 
   const onSubmit = (values: WelcomeValues) => {
     updateProfile(
@@ -65,7 +92,12 @@ export default function WelcomePage() {
         username: values.username,
         ...(values.dateOfBirth ? { dateOfBirth: values.dateOfBirth } : {}),
       },
-      { onSuccess: next }
+      {
+        onSuccess: () => {
+          clearSaved();
+          next();
+        },
+      }
     );
   };
 
@@ -90,6 +122,7 @@ export default function WelcomePage() {
 
         <FormProvider {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="mt-8 space-y-6">
+            {restored && <DraftRestoredNotice what="what you entered" onStartOver={startOver} onDismiss={dismissNotice} />}
             <div>
               <Input
                 label="Username"
@@ -118,7 +151,7 @@ export default function WelcomePage() {
 
             <button
               type="button"
-              onClick={next}
+              onClick={skip}
               className="w-full text-center text-sm font-medium text-muted transition-colors hover:text-ink"
             >
               Skip for now

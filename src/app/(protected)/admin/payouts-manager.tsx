@@ -13,6 +13,8 @@ import Button from "@/src/components/ui/button";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
 import HeldPayoutsPanel from "./held-payouts-panel";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -139,6 +141,27 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
     setAmount("");
   };
 
+  // Kept in this browser until the payout is created; brought back when the
+  // form is opened again (also after a refresh).
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "admin:payout:new",
+    { storeSearch, selectedStore, amount, note },
+    (saved) => {
+      setStoreSearch(saved.storeSearch ?? "");
+      setSelectedStore(saved.selectedStore ?? null);
+      setAmount(saved.amount ?? "");
+      setNote(saved.note ?? "");
+    },
+    { isEmpty: (value) => !value.storeSearch.trim() && !value.selectedStore && !value.amount && !value.note.trim() }
+  );
+
+  const resetForm = () => {
+    setSelectedStore(null);
+    setStoreSearch("");
+    setAmount("");
+    setNote("");
+  };
+
   const handleSubmit = () => {
     if (!canSubmit || !selectedStore) return;
 
@@ -146,10 +169,8 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
       { storeId: selectedStore.id, amount: Number(amount), note: note.trim() || undefined },
       {
         onSuccess: () => {
-          setSelectedStore(null);
-          setStoreSearch("");
-          setAmount("");
-          setNote("");
+          clearSaved();
+          resetForm();
           onDone();
         },
       }
@@ -158,6 +179,9 @@ function CreatePayoutForm({ onDone }: { onDone: () => void }) {
 
   return (
     <div className="space-y-4 rounded-2xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface-sunken p-5">
+      {restored && (
+        <DraftRestoredNotice what="the payout you started" onStartOver={() => { resetForm(); clearSaved(); }} onDismiss={dismissNotice} />
+      )}
       <div>
         <label className="mb-2 block text-[13px] font-medium text-ink-2">Store</label>
 

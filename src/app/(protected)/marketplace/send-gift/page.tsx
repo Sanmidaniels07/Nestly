@@ -39,6 +39,8 @@ import { trafficSource } from "@/src/lib/traffic-source";
 import { DeliveryVehicle, canCarry } from "@/src/lib/delivery-vehicle";
 import { useGoBack } from "@/src/hooks/use-go-back";
 import Skeleton from "@/src/components/ui/skeleton";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { PublicUser } from "@/src/types/user";
 import { ShippingOption } from "@/src/types/store";
 
@@ -204,6 +206,43 @@ function Composer({
   const { mutateAsync: startGroupGift } = useStartGroupGift();
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();
 
+  // What they've filled in is kept in this browser until the gift is sent, so
+  // a refresh or logging out brings it back. One per item (zones belong to
+  // its store). The deadline isn't "something typed" on its own (it defaults
+  // to a week out), so it doesn't count.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    `gift:send:${product.id}`,
+    { recipient, mode, linkName, zoneId, message, showPrice, payMode, deadline },
+    (saved) => {
+      // Opened from someone's wishlist: they stay the recipient.
+      if (!toId) setRecipient(saved.recipient ?? null);
+      setMode(saved.mode ?? "nestly");
+      setLinkName(saved.linkName ?? "");
+      setZoneId(saved.zoneId ?? null);
+      setMessage(saved.message ?? "");
+      setShowPrice(!!saved.showPrice);
+      setPayMode(saved.payMode ?? "solo");
+      // A deadline that has passed since goes back to the default.
+      if (saved.deadline && saved.deadline > dateInput(0)) setDeadline(saved.deadline);
+    },
+    {
+      isEmpty: (value) =>
+        !value.recipient && value.mode === "nestly" && !value.linkName && !value.zoneId && !value.message && !value.showPrice && value.payMode === "solo",
+    }
+  );
+
+  const startOver = () => {
+    setRecipient(null);
+    setMode("nestly");
+    setLinkName("");
+    setZoneId(null);
+    setMessage("");
+    setShowPrice(false);
+    setPayMode("solo");
+    setDeadline(defaultDeadline());
+    clearSaved();
+  };
+
   // Coming from someone's wishlist: they're the recipient.
   const chosen = recipient ?? (toProfile && toProfile.id !== me?.id ? toProfile : null);
   const recipientName = mode === "nestly" ? chosen?.name ?? "" : linkName.trim();
@@ -232,6 +271,7 @@ function Composer({
           // End of the chosen day.
           deadline: new Date(`${deadline}T23:59:00`).toISOString(),
         });
+        clearSaved();
         router.push(`/chip-in/${data.code}?started=1`);
       } catch (err) {
         setError((err as AxiosError<ApiErrorResponse>).response?.data?.message ?? "Couldn't start the group gift.");
@@ -259,6 +299,8 @@ function Composer({
       });
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {
+          // Paid - the draft has done its job.
+          clearSaved();
           try {
             await verifyCheckout(data.reference);
             if (!isStale()) router.push(`/gift/${data.code}?sent=1`);
@@ -284,6 +326,7 @@ function Composer({
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_380px] lg:items-start">
       <div className="min-w-0 space-y-5">
+        {restored && <DraftRestoredNotice what="the gift you started" onStartOver={startOver} onDismiss={dismissNotice} />}
         <Step number={1} title="Who is it for?">
           <div className="mb-3 inline-flex rounded-xl border border-line bg-surface-2 p-1">
             {([

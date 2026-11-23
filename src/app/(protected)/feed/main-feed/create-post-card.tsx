@@ -10,6 +10,7 @@ import { useProfile } from "@/src/hooks/use-profile";
 import { PostMedia } from "@/src/types/post";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import ProductTagPicker from "./product-tag-picker";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 export default function CreatePostCard() {
   const user = useAuthStore((state) => state.user);
@@ -29,7 +30,23 @@ export default function CreatePostCard() {
   const canPost =
     (content.trim().length > 0 || media.length > 0) && !isUploading;
 
+  // A post being written (text, uploaded media, tagged product) is kept in
+  // this browser until it's posted or cancelled; the composer reopens with it.
+  const { clear: clearSaved } = useFormDraft(
+    "post:new",
+    { title, content, media, productId },
+    (saved) => {
+      setTitle(saved.title ?? "");
+      setContent(saved.content ?? "");
+      setMedia(saved.media ?? []);
+      setProductId(saved.productId ?? null);
+      setExpanded(true);
+    },
+    { isEmpty: (value) => !value.title.trim() && !value.content.trim() && value.media.length === 0 && !value.productId }
+  );
+
   const reset = () => {
+    clearSaved();
     setTitle("");
     setContent("");
     setMedia([]);

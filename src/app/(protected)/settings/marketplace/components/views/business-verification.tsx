@@ -5,6 +5,7 @@ import { AlertCircle, BadgeCheck, Clock, ExternalLink, ShieldCheck } from "lucid
 
 import { useMySeller } from "@/src/hooks/use-my-seller";
 import { useUpdateMySeller } from "@/src/hooks/use-update-my-seller";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { CAC_COMPANY_TYPES, cacTypeFromNumber, cacTypeLabel } from "@/src/lib/cac";
 import { CacCompanyType, SellerProfile } from "@/src/types/seller";
 
@@ -31,6 +32,19 @@ function BusinessVerificationCard({ seller }: { seller: SellerProfile }) {
   const [value, setValue] = useState(saved);
   const [type, setType] = useState<CacCompanyType | "">(savedType ?? "");
   const [editing, setEditing] = useState(false);
+
+  // A number typed but not submitted is kept in this browser (per account),
+  // and the form reopens with it. CAC numbers are public register data.
+  const { clear: clearDraft } = useFormDraft(
+    "store:cac",
+    { value, type },
+    (draft) => {
+      setValue(draft.value ?? saved);
+      setType(draft.type ?? "");
+      setEditing(true);
+    },
+    { isEmpty: (draft) => draft.value === saved && draft.type === (savedType ?? "") }
+  );
 
   // Reminders link straight here (#business-verification).
   useEffect(() => {
@@ -60,7 +74,12 @@ function BusinessVerificationCard({ seller }: { seller: SellerProfile }) {
 
   const submit = () => {
     if (!cleaned || !type || !changed) return;
-    save({ cacNumber: cleaned, cacCompanyType: type }, { onSuccess: () => setEditing(false) });
+    save({ cacNumber: cleaned, cacCompanyType: type }, {
+      onSuccess: () => {
+        clearDraft();
+        setEditing(false);
+      },
+    });
   };
 
   const registered = seller.cacCheckedName ? <strong className="font-semibold">{seller.cacCheckedName}</strong> : null;
@@ -171,6 +190,7 @@ function BusinessVerificationCard({ seller }: { seller: SellerProfile }) {
                   setEditing(false);
                   setValue(saved);
                   setType(savedType ?? "");
+                  clearDraft();
                 }}
                 className="h-12 rounded-xl px-4 text-[13px] font-medium text-muted hover:bg-surface-2"
               >

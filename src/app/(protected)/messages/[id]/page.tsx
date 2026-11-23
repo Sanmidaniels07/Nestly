@@ -251,6 +251,8 @@ function ConversationThread({ id }: { id: string }) {
       )}
 
       <Composer
+        key={id}
+        conversationId={id}
         partnerName={partner?.name}
         currentUserId={currentUserId}
         replyTo={replyTo}

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Lock } from "lucide-react";
 
 import { useUpdateStore } from "@/src/hooks/use-update-store";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { Store } from "@/src/types/store";
 import { FacebookIcon, InstagramIcon, TikTokIcon } from "@/src/components/ui/social-icons";
 
@@ -30,11 +31,19 @@ export default function SocialLinksForm({ store }: { store: Store }) {
 
   const changed = FIELDS.some(({ key }) => values[key].trim() !== initial(key));
 
+  // Unsaved edits are kept in this browser (per account) until saved.
+  const { clear: clearDraft } = useFormDraft("store:social", values, (draft) => setValues((prev) => ({ ...prev, ...draft })), {
+    isEmpty: (draft) => FIELDS.every(({ key }) => (draft[key] ?? "") === initial(key)),
+  });
+
   const save = () =>
-    updateStore({
-      id: store.id,
-      data: Object.fromEntries(FIELDS.map(({ key }) => [key, values[key].trim()])) as Record<Key, string>,
-    });
+    updateStore(
+      {
+        id: store.id,
+        data: Object.fromEntries(FIELDS.map(({ key }) => [key, values[key].trim()])) as Record<Key, string>,
+      },
+      { onSuccess: () => clearDraft() }
+    );
 
   return (
     <section id="social-links" className="scroll-mt-24 rounded-2xl border border-line bg-surface p-6 sm:p-7">

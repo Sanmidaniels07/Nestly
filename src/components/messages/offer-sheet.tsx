@@ -9,6 +9,7 @@ import { useStoreProducts } from "@/src/hooks/use-store-products";
 import { naira } from "@/src/lib/payment-link";
 import { ApiErrorResponse } from "@/src/types/api";
 import { ChatProduct } from "@/src/types/conversation";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 const SOMETHING_ELSE = "__other__";
 const parseAmount = (value: string) => (value.trim() ? Number(value.replace(/[,\s₦]/g, "")) : NaN);
@@ -39,6 +40,25 @@ export default function OfferSheet({
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
 
+  // An offer being written is kept (per chat) until it's sent, so closing the
+  // sheet or refreshing doesn't lose it. Brought back quietly.
+  const startProductId = initialProduct?.id ?? "";
+  const { clear: clearSaved } = useFormDraft(
+    `offer:${conversationId}`,
+    { productId, title, price, quantity, note },
+    (saved) => {
+      setProductId(saved.productId ?? startProductId);
+      setTitle(saved.title ?? "");
+      setPrice(saved.price ?? "");
+      setQuantity(saved.quantity || "1");
+      setNote(saved.note ?? "");
+    },
+    {
+      isEmpty: (value) =>
+        value.productId === startProductId && !value.title.trim() && !value.price.trim() && value.quantity === "1" && !value.note.trim(),
+    }
+  );
+
   const picked = products.find((p) => p.id === productId) ?? (initialProduct && initialProduct.id === productId ? initialProduct : null);
   const describing = productId === SOMETHING_ELSE || (!productId && products.length === 0);
 
@@ -60,7 +80,10 @@ export default function OfferSheet({
         note: note.trim() || undefined,
       },
       {
-        onSuccess: onClose,
+        onSuccess: () => {
+          clearSaved();
+          onClose();
+        },
         onError: (err) => setError((err as AxiosError<ApiErrorResponse>).response?.data?.message ?? "Couldn't send the offer."),
       }
     );

@@ -53,9 +53,11 @@ export default function SellerNotes() {
 function StoreNote({ storeId, storeName }: { storeId: string; storeName: string }) {
   const note = useCheckoutStore((state) => state.sellerNotes[storeId] ?? "");
   const setSellerNote = useCheckoutStore((state) => state.setSellerNote);
-  const [open, setOpen] = useState(note.length > 0);
+  const [open, setOpen] = useState(false);
+  // A note brought back from a saved draft shows straight away.
+  const shown = open || note.length > 0;
 
-  if (!open) {
+  if (!shown) {
     return (
       <button
         type="button"

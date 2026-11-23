@@ -16,6 +16,8 @@ import { afterPaymentPath } from "@/src/lib/order-result";
 import { trafficSource } from "@/src/lib/traffic-source";
 import { Order } from "@/src/types/order";
 import { PHONE_PATTERN } from "@/src/lib/phone";
+import { useAuth } from "@/src/hooks/use-auth";
+import { clearFormDraft } from "@/src/hooks/use-form-draft";
 
 function money(value: number) {
   return new Intl.NumberFormat("en-NG", {
@@ -33,7 +35,14 @@ export default function PaymentSummary() {
   const sellerNotes = useCheckoutStore((state) => state.sellerNotes);
   const deliveryPhone = useCheckoutStore((state) => state.deliveryPhone?.trim() || undefined);
   const appliedCoupon = useCheckoutStore((state) => state.appliedCoupon);
-  const resetCheckout = useCheckoutStore((state) => state.resetCheckout);
+  const resetStore = useCheckoutStore((state) => state.resetCheckout);
+  const { user } = useAuth();
+  // The order went through: also forget the seller notes kept as a draft on
+  // the checkout page.
+  const resetCheckout = () => {
+    resetStore();
+    if (user) clearFormDraft(user.id, "checkout:notes");
+  };
 
   const { mutateAsync: initiateCheckout } = useInitiateCheckout();
   const { mutateAsync: verifyCheckout } = useVerifyCheckout();

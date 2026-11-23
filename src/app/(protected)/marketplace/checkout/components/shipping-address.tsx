@@ -14,6 +14,8 @@ import Skeleton from "@/src/components/ui/skeleton";
 import AddressCard from "./address-card";
 import { PHONE_PATTERN } from "@/src/lib/phone";
 import { PickedAddress, mapsConfigured } from "@/src/lib/google-maps";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 // Loaded only when the form opens - keeps Google Maps out of the page bundle.
 const AddressMapPicker = dynamic(() => import("@/src/components/address/address-map-picker"), {
@@ -53,9 +55,32 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
   const formOpen = showForm ?? (!manage && !isLoading && addresses?.length === 0);
   const pinned = form.latitude !== null && form.longitude !== null;
 
+  // A new address being typed is kept in this browser (same draft at checkout,
+  // on payment links and in settings) until it's saved or cancelled.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "address:new",
+    form,
+    (saved) => {
+      setForm({ ...emptyForm, ...saved });
+      setShowForm(true);
+      setEntry("manual");
+    },
+    { isEmpty: (value) => JSON.stringify(value) === JSON.stringify(emptyForm) }
+  );
+
+  const startOver = () => {
+    setForm(emptyForm);
+    clearSaved();
+  };
+
   const openForm = (open: boolean) => {
     setShowForm(open);
     if (open) setEntry(mapsConfigured ? "map" : "manual");
+    // "Cancel" throws away what was typed.
+    else {
+      setForm(emptyForm);
+      clearSaved();
+    }
   };
 
   const usePickedAddress = (picked: PickedAddress) => {
@@ -107,6 +132,7 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
       },
       {
         onSuccess: () => {
+          clearSaved();
           setForm(emptyForm);
           setShowForm(false);
         },
@@ -136,6 +162,10 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
           {formOpen ? "Cancel" : "Add address"}
         </button>
       </div>
+
+      {formOpen && restored && (
+        <DraftRestoredNotice what="the address you started" onStartOver={startOver} onDismiss={dismissNotice} className="mb-4" />
+      )}
 
       {formOpen && entry === "map" && (
         <div className="mb-5 rounded-2xl border border-dashed border-violet-200 dark:border-violet-500/30 bg-surface-sunken p-4 sm:p-5">

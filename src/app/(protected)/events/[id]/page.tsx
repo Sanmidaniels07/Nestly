@@ -27,6 +27,8 @@ import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { formatRelativeTime } from "@/src/lib/date";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 function formatDateTime(dateString: string) {
   return new Date(dateString).toLocaleString("en-US", {
@@ -77,16 +79,44 @@ export default function EventDetailPage({
 
   const isOrganizer = !!authUser && event?.creatorId === authUser.id;
 
+  // The event as saved, in the form's shape.
+  const savedForm = event
+    ? {
+        title: event.title,
+        description: event.description ?? "",
+        location: event.location ?? "",
+        startAt: toDateTimeLocal(event.startAt),
+        endAt: event.endAt ? toDateTimeLocal(event.endAt) : "",
+      }
+    : null;
+
+  // Unsaved edits are kept in this browser and the editor reopens with them
+  // after a refresh. Not editing (or no changes) counts as nothing to keep.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    isOrganizer ? `event:edit:${id}` : null,
+    isEditing ? form : savedForm,
+    (saved) => {
+      if (!saved) return;
+      setForm(saved);
+      setIsEditing(true);
+    },
+    { ready: !!savedForm, isEmpty: (value) => !value || JSON.stringify(value) === JSON.stringify(savedForm) }
+  );
+
   const startEditing = () => {
-    if (!event) return;
-    setForm({
-      title: event.title,
-      description: event.description ?? "",
-      location: event.location ?? "",
-      startAt: toDateTimeLocal(event.startAt),
-      endAt: event.endAt ? toDateTimeLocal(event.endAt) : "",
-    });
+    if (!savedForm) return;
+    setForm(savedForm);
     setIsEditing(true);
+  };
+
+  const stopEditing = () => {
+    clearSaved();
+    setIsEditing(false);
+  };
+
+  const startOver = () => {
+    if (savedForm) setForm(savedForm);
+    clearSaved();
   };
 
   const handleSave = () => {
@@ -103,7 +133,7 @@ export default function EventDetailPage({
           endAt: form.endAt ? new Date(form.endAt).toISOString() : undefined,
         },
       },
-      { onSuccess: () => setIsEditing(false) }
+      { onSuccess: stopEditing }
     );
   };
 
@@ -145,6 +175,7 @@ export default function EventDetailPage({
       <div className="rounded-2xl border border-line bg-surface p-6 sm:p-8">
         {isEditing ? (
           <div className="space-y-4">
+            {restored && <DraftRestoredNotice what="the changes you started" onStartOver={startOver} onDismiss={dismissNotice} />}
             <Input
               label="Title"
               value={form.title}
@@ -180,7 +211,7 @@ export default function EventDetailPage({
               />
             </div>
             <div className="flex gap-2.5 border-t border-line-soft pt-5">
-              <Button variant="outline" onClick={() => setIsEditing(false)} className="h-11 rounded-xl px-6">
+              <Button variant="outline" onClick={stopEditing} className="h-11 rounded-xl px-6">
                 Cancel
               </Button>
               <Button
@@ -351,11 +382,21 @@ function EventCommentsSection({ eventId }: { eventId: string }) {
 
   const comments = data?.comments ?? [];
 
+  // A comment being typed is kept per event until it's sent.
+  const { clear: clearSaved } = useFormDraft(`event-comment:${eventId}`, content, setContent, {
+    isEmpty: (value) => !value.trim(),
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim()) return;
 
-    createComment(content.trim(), { onSuccess: () => setContent("") });
+    createComment(content.trim(), {
+      onSuccess: () => {
+        clearSaved();
+        setContent("");
+      },
+    });
   };
 
   return (

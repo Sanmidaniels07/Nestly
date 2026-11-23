@@ -7,7 +7,9 @@ import { ImagePlus, Loader2, MapPinned, Star, Store, Truck, X } from "lucide-rea
 import { useCategories } from "@/src/hooks/use-categories";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useCreatePaymentLink, useUpdatePaymentLink } from "@/src/hooks/use-payment-links";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import FormSelect from "@/src/components/ui/form-select";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import VehiclePicker from "@/src/components/ui/vehicle-picker";
 import { DeliveryVehicle } from "@/src/lib/delivery-vehicle";
 import { PaymentLink, PaymentLinkDelivery, PaymentLinkPayload } from "@/src/types/payment-link";
@@ -63,6 +65,49 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
   const [uploading, setUploading] = useState(0);
   const [error, setError] = useState("");
 
+  // What they typed is kept in this browser (per account, per link) until
+  // saved. Photos are only kept once uploaded (images holds uploaded URLs).
+  const initial = {
+    title: link?.title ?? "",
+    price: link ? String(link.price) : "",
+    quantity: link ? String(link.quantity) : "1",
+    categoryId: link?.category.id ?? "",
+    deliveryType: (link?.deliveryType ?? (firstLink ? "DELIVERY" : "STORE_OPTIONS")) as PaymentLinkDelivery,
+    vehicle: (link?.deliveryVehicle ?? "BIKE") as DeliveryVehicle,
+    deliveryFee: link ? String(link.deliveryFee) : "",
+    description: link?.description ?? "",
+    images: link ? [...link.images].sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary)).map((image) => image.url) : [],
+  };
+  const typed = { title, price, quantity, categoryId, deliveryType, vehicle, deliveryFee, description, images };
+  const fill = (values: typeof initial) => {
+    setTitle(values.title);
+    setPrice(values.price);
+    setQuantity(values.quantity);
+    setCategoryId(values.categoryId);
+    setDeliveryType(values.deliveryType);
+    setVehicle(values.vehicle);
+    setDeliveryFee(values.deliveryFee);
+    setDescription(values.description);
+    setImages(values.images);
+  };
+  const { restored, clear: clearDraft, dismissNotice } = useFormDraft(
+    link ? `payment-link:edit:${link.id}` : firstLink ? "payment-link:first" : "payment-link:new",
+    typed,
+    (saved) => fill({ ...initial, ...saved }),
+    { isEmpty: (value) => JSON.stringify(value) === JSON.stringify(initial) }
+  );
+
+  const startOver = () => {
+    fill(initial);
+    setError("");
+    clearDraft();
+  };
+
+  const cancel = () => {
+    clearDraft();
+    onCancel();
+  };
+
   const addPhotos = async (files: FileList | null) => {
     if (!files?.length) return;
     setError("");
@@ -113,7 +158,10 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
       images: images.map((url, index) => ({ url, isPrimary: index === 0 })),
     };
 
-    const done = (response: { data: PaymentLink }) => onDone(response.data);
+    const done = (response: { data: PaymentLink }) => {
+      clearDraft();
+      onDone(response.data);
+    };
     if (link) updateLink({ id: link.id, data: payload }, { onSuccess: done });
     else createLink(payload, { onSuccess: done });
   };
@@ -139,11 +187,13 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
           </p>
         </div>
         {!firstLink && (
-          <button type="button" onClick={onCancel} aria-label="Close" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-2">
+          <button type="button" onClick={cancel} aria-label="Close" className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-muted hover:bg-surface-2">
             <X size={18} />
           </button>
         )}
       </div>
+
+      {restored && <DraftRestoredNotice what={link ? "the changes you hadn't saved" : "the link you started"} onStartOver={startOver} onDismiss={dismissNotice} />}
 
       {/* Photos */}
       <div>
@@ -294,7 +344,7 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
       {error && <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-[12.5px] text-red-600 dark:bg-red-500/10 dark:text-red-400">{error}</p>}
 
       <div className="flex flex-col-reverse gap-2.5 sm:flex-row sm:justify-end">
-        <button type="button" onClick={onCancel} className="h-11 rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2 hover:bg-surface-sunken">
+        <button type="button" onClick={cancel} className="h-11 rounded-xl border border-line px-5 text-[13.5px] font-semibold text-ink-2 hover:bg-surface-sunken">
           {firstLink ? "Skip for now" : "Cancel"}
         </button>
         <button

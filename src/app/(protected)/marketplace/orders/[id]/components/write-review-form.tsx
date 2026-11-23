@@ -7,10 +7,13 @@ import { Camera, Loader2, X } from "lucide-react";
 import { useCreateReview } from "@/src/hooks/use-create-review";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import StarRatingInput from "@/src/components/ui/star-rating-input";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 const MAX_PHOTOS = 4;
 
 interface Props {
+  orderId: string;
   productId: string;
   onDone: () => void;
 }
@@ -18,7 +21,7 @@ interface Props {
 // A review of something that was delivered - stars, a few words and, if
 // they like, photos of what arrived. Reviews with photos stand out in the
 // shopping feed, so the form invites them.
-export default function WriteReviewForm({ productId, onDone }: Props) {
+export default function WriteReviewForm({ orderId, productId, onDone }: Props) {
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const [images, setImages] = useState<string[]>([]);
@@ -27,6 +30,31 @@ export default function WriteReviewForm({ productId, onDone }: Props) {
 
   const { mutate: createReview, isPending } = useCreateReview();
   const { mutateAsync: uploadImage } = useImageUpload();
+
+  // The review in progress (stars, words, uploaded photos) is kept in this
+  // browser, so reopening the form after a refresh brings it back.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    `review:${orderId}:${productId}`,
+    { rating, comment, images },
+    (saved) => {
+      setRating(saved.rating ?? 0);
+      setComment(saved.comment ?? "");
+      setImages(saved.images ?? []);
+    },
+    { isEmpty: (value) => value.rating === 0 && !value.comment.trim() && value.images.length === 0 }
+  );
+
+  const startOver = () => {
+    setRating(0);
+    setComment("");
+    setImages([]);
+    clearSaved();
+  };
+
+  const cancel = () => {
+    clearSaved();
+    onDone();
+  };
 
   const addPhotos = async (files: FileList | null) => {
     if (!files?.length) return;
@@ -49,12 +77,18 @@ export default function WriteReviewForm({ productId, onDone }: Props) {
     if (rating === 0) return;
     createReview(
       { productId, rating, comment: comment.trim() || undefined, images: images.length ? images : undefined },
-      { onSuccess: onDone }
+      {
+        onSuccess: () => {
+          clearSaved();
+          onDone();
+        },
+      }
     );
   };
 
   return (
     <div className="mt-3 space-y-3 rounded-xl border border-dashed border-violet-200 bg-surface-sunken p-4 dark:border-violet-500/30">
+      {restored && <DraftRestoredNotice what="the review you started" onStartOver={startOver} onDismiss={dismissNotice} />}
       <StarRatingInput value={rating} onChange={setRating} />
 
       <textarea
@@ -107,7 +141,7 @@ export default function WriteReviewForm({ productId, onDone }: Props) {
       </div>
 
       <div className="flex justify-end gap-2">
-        <button onClick={onDone} className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted">
+        <button onClick={cancel} className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted">
           Cancel
         </button>
         <button
