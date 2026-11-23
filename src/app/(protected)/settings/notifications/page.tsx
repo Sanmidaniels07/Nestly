@@ -41,6 +41,10 @@ const PREFERENCE_META: Record<
     label: "Live selling",
     description: "When a store you follow announces a live, reminders for lives you asked about, and when they start. Includes emails.",
   },
+  REMINDER: {
+    label: "We miss you",
+    description: "When you haven't been on Nestly for a while, a catch-up on what you missed: messages, new products, and for sellers, shop visits and orders. Includes emails.",
+  },
   SYSTEM: {
     label: "System announcements",
     description: "Important updates about your account and Nestly.",
@@ -91,7 +95,8 @@ export default function SettingsNotificationsPage() {
               <div className="h-16 animate-pulse rounded-2xl bg-surface-2" />
             </>
           ) : (
-            preferences?.map((pref) => (
+            // Skip any type this page doesn't know yet (a newer API) instead of crashing.
+            preferences?.filter((pref) => PREFERENCE_META[pref.type]).map((pref) => (
               <CheckboxRow
                 key={pref.type}
                 label={PREFERENCE_META[pref.type].label}

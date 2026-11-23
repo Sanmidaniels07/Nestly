@@ -70,6 +70,8 @@ export function targetHref(notification: Pick<Notification, "targetType" | "targ
       return notification.targetId
         ? `/settings/marketplace?tab=orders&order=${notification.targetId}`
         : "/settings/marketplace?tab=orders";
+    case "WELCOME_BACK":
+      return notification.targetId === "seller" ? "/settings/marketplace" : "/marketplace";
     default:
       return null;
   }
