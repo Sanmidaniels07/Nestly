@@ -18,6 +18,8 @@ import { referralCode } from "@/src/lib/referral";
 import { trafficSource } from "@/src/lib/traffic-source";
 import GoogleSignIn from "@/src/components/auth/google-sign-in";
 import { TwoFactorChallengeForm } from "@/src/components/auth/LoginForm";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 export default function SignupPage() {
   const form = useForm<SignupValues>({
@@ -26,22 +28,46 @@ export default function SignupPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = form;
+
+  // Name, email and birthday are kept on this device (no account yet, so the
+  // shared guest slot) until the account is created. Never the passwords.
+  const [name, email, dateOfBirth] = watch(["name", "email", "dateOfBirth"]);
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "signup",
+    { name: name ?? "", email: email ?? "", dateOfBirth: dateOfBirth ?? "" },
+    (saved) => {
+      setValue("name", saved.name ?? "");
+      setValue("email", saved.email ?? "");
+      setValue("dateOfBirth", saved.dateOfBirth ?? "");
+    },
+    { guest: true, isEmpty: (value) => !value.name.trim() && !value.email.trim() && !value.dateOfBirth }
+  );
+
+  const startOver = () => {
+    form.reset();
+    clearSaved();
+  };
 
   const signupMutation = useSignup();
   // An existing account with 2FA can tap Continue with Google here too.
   const [twoFactorToken, setTwoFactorToken] = useState<string | null>(null);
 
   const onSubmit = (data: SignupValues) => {
-    signupMutation.mutate({
-      name: data.name,
-      email: data.email,
-      password: data.password,
-      dateOfBirth: data.dateOfBirth || undefined,
-      referralCode: referralCode(),
-      source: trafficSource(),
-    });
+    signupMutation.mutate(
+      {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        dateOfBirth: data.dateOfBirth || undefined,
+        referralCode: referralCode(),
+        source: trafficSource(),
+      },
+      { onSuccess: () => clearSaved() }
+    );
   };
 
   return (
@@ -135,6 +161,7 @@ export default function SignupPage() {
 
               <FormProvider {...form}>
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                {restored && <DraftRestoredNotice what="the details you entered" onStartOver={startOver} onDismiss={dismissNotice} />}
                 <Input
                   label="Full Name"
                   placeholder="e.g. Ada Okafor"

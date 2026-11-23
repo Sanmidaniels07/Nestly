@@ -1,6 +1,7 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
+import toast from "react-hot-toast";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { useCreateProduct } from "@/src/hooks/use-create-product";
@@ -16,6 +17,13 @@ import ReviewPublish from "./components/review-publish";
 import BackButton from "@/src/components/ui/back-button";
 import { canGoBack, useGoBack } from "@/src/hooks/use-go-back";
 import { EMPTY_OPTIONS, optionsPayload, totalStock } from "@/src/lib/product-options";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
+import { AiListingDraft, PriceGuide } from "@/src/services/ai-listing.services";
+import PhotoToListing from "./components/photo-to-listing";
+
+const naira = (value: number) =>
+  new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
 
 const PRODUCTS_PATH = "/settings/marketplace?tab=products";
 
@@ -61,10 +69,70 @@ function AddProductContent() {
   const isDirty = JSON.stringify(draft) !== JSON.stringify(EMPTY_DRAFT);
 
   // Each step is its own history entry (?step=N), so the phone / browser back
-  // button returns to the previous step instead of leaving the form and
-  // throwing the draft away. The draft only lives in memory, so a step can't
-  // be shown beyond the furthest one reached this session (e.g. after a refresh).
+  // button returns to the previous step instead of leaving the form. A step
+  // can't be shown beyond the furthest one reached (kept with the draft).
   const [maxStep, setMaxStep] = useState(1);
+  const [priceGuide, setPriceGuide] = useState<PriceGuide | null>(null);
+
+  // What the seller typed is kept in this browser (per account) until they
+  // save the product, so a refresh or logging out brings them back here.
+  // Only finished uploads are kept - a photo still uploading is lost.
+  const savable = {
+    draft: {
+      ...draft,
+      images: draft.images
+        .filter((image) => image.url && !image.uploading)
+        .map(({ file: _file, ...image }) => ({ ...image, preview: image.url as string })),
+    },
+    maxStep,
+    priceGuide,
+  };
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "product:new",
+    savable,
+    (saved) => {
+      setDraft({ ...EMPTY_DRAFT, ...saved.draft });
+      setMaxStep(saved.maxStep || 1);
+      setPriceGuide(saved.priceGuide ?? null);
+    },
+    { isEmpty: (value) => JSON.stringify(value.draft) === JSON.stringify(EMPTY_DRAFT) }
+  );
+
+  const startOver = () => {
+    setDraft(EMPTY_DRAFT);
+    setMaxStep(1);
+    setPriceGuide(null);
+    clearSaved();
+    router.replace(pathname);
+  };
+
+  const applySuggestion = (suggestion: AiListingDraft, photoUrls: string[]) => {
+    setDraft((prev) => {
+      const known = new Set(prev.images.map((image) => image.url));
+      const newPhotos = photoUrls
+        .filter((url) => !known.has(url))
+        .map((url, index) => ({
+          id: crypto.randomUUID(),
+          preview: url,
+          url,
+          isCover: prev.images.length === 0 && index === 0,
+          uploading: false,
+        }));
+      return {
+        ...prev,
+        name: suggestion.title,
+        description: suggestion.description,
+        categoryId: suggestion.categoryId ?? prev.categoryId,
+        brand: suggestion.brand,
+        condition: suggestion.condition,
+        deliveryVehicle: suggestion.deliveryVehicle,
+        highlights: suggestion.highlights,
+        specifications: suggestion.specifications.map((spec) => ({ id: crypto.randomUUID(), key: spec.name, value: spec.value })),
+        images: [...prev.images, ...newPhotos],
+      };
+    });
+    setPriceGuide(suggestion.priceGuide);
+  };
   const urlStep = Number(searchParams.get("step")) || 1;
   const step = Math.min(Math.max(urlStep, 1), maxStep);
 
@@ -86,18 +154,12 @@ function AddProductContent() {
   // Leaves every step of the form at once, back to wherever the seller came from.
   const exitForm = () => goBack(step);
 
+  // What they typed is kept (useFormDraft above), so leaving is safe - they
+  // pick up here next time.
   const handleBackToProducts = () => {
-    if (isDirty && !window.confirm("Discard this product? Your changes won't be saved.")) return;
+    if (isDirty) toast("We'll keep what you entered so you can finish later.");
     exitForm();
   };
-
-  // Refreshing or closing the tab would also lose the draft.
-  useEffect(() => {
-    if (!isDirty) return;
-    const warn = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [isDirty]);
 
   const { mutateAsync: createProduct, isPending: isCreating } = useCreateProduct();
   const { mutateAsync: updateProduct, isPending: isPublishing } = useUpdateProduct();
@@ -130,6 +192,7 @@ function AddProductContent() {
       await updateProduct({ id: created.id, data: { status: "PUBLISHED" } });
     }
 
+    clearSaved();
     exitForm();
   };
 
@@ -146,10 +209,25 @@ function AddProductContent() {
         </div>
       </div>
 
+      {restored && <DraftRestoredNotice what="the product you started" onStartOver={startOver} onDismiss={dismissNotice} />}
+
       <AddProductStepper currentStep={step} onStepClick={setStep} />
 
       {step === 1 && (
-        <BasicInformation draft={draft} setDraft={setDraft} onNext={() => setStep(2)} />
+        <>
+          <PhotoToListing hasContent={!!(draft.name.trim() || draft.description.trim())} onApply={applySuggestion} />
+          <BasicInformation draft={draft} setDraft={setDraft} onNext={() => setStep(2)} />
+        </>
+      )}
+
+      {step === 2 && priceGuide && (
+        <p className="rounded-2xl border border-line bg-surface-2 px-4 py-3 text-[13px] text-muted">
+          Similar products on Nestly usually sell for{" "}
+          <span className="font-semibold text-ink">
+            {naira(priceGuide.low)} - {naira(priceGuide.high)}
+          </span>{" "}
+          ({priceGuide.basedOn} listings). Set the price that&apos;s right for yours.
+        </p>
       )}
 
       {step === 2 && (

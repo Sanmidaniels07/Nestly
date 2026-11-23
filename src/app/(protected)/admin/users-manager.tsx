@@ -10,6 +10,7 @@ import { useUpdateUserStatus } from "@/src/hooks/use-update-user-status";
 import { AdminUser, UserAccountStatus, UserRole } from "@/src/types/admin-user";
 import Input from "@/src/components/ui/input";
 import Pagination from "@/src/components/ui/pagination";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 const STATUS_TONE: Record<UserAccountStatus, string> = {
   ACTIVE: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
@@ -126,12 +127,25 @@ function UserRow({ user }: { user: AdminUser }) {
   const [pendingAction, setPendingAction] = useState<"SUSPENDED" | "BANNED" | null>(null);
   const [reason, setReason] = useState("");
 
+  // A half-written suspend/ban reason is kept in this browser (and the box
+  // reopened) until it's sent or cancelled.
+  const { clear: clearSaved } = useFormDraft(
+    `admin:user-action:${user.id}`,
+    { pendingAction, reason },
+    (saved) => {
+      setPendingAction(saved.pendingAction ?? null);
+      setReason(saved.reason ?? "");
+    },
+    { isEmpty: (value) => !value.pendingAction || !value.reason.trim() }
+  );
+
   const handleConfirmAction = () => {
     if (!pendingAction || !reason.trim()) return;
     updateStatus(
       { id: user.id, data: { status: pendingAction, reason: reason.trim() } },
       { onSuccess: () => setPendingAction(null) }
     );
+    clearSaved();
     setReason("");
   };
 
@@ -225,6 +239,7 @@ function UserRow({ user }: { user: AdminUser }) {
           <div className="flex justify-end gap-2">
             <button
               onClick={() => {
+                clearSaved();
                 setPendingAction(null);
                 setReason("");
               }}

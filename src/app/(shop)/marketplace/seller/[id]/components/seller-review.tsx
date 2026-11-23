@@ -6,6 +6,7 @@ import { Review } from "@/src/types/review";
 import { AuthorAvatarLink, AuthorNameLink } from "@/src/components/social/author-link";
 import { useReplyToReview } from "@/src/hooks/use-reply-to-review";
 import { formatRelativeTime } from "@/src/lib/date";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   rating?: number;
@@ -72,9 +73,26 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
   const [replying, setReplying] = useState(false);
   const [text, setText] = useState("");
 
+  // A reply being written is kept per review (and reopened) until posted or cancelled.
+  const { clear: clearSaved } = useFormDraft(
+    isOwner && !review.reply ? `review-reply:${review.id}` : null,
+    text,
+    (saved) => {
+      setText(saved);
+      setReplying(true);
+    },
+    { isEmpty: (value) => !value.trim() }
+  );
+
+  const stopReplying = () => {
+    clearSaved();
+    setText("");
+    setReplying(false);
+  };
+
   const handleSubmit = () => {
     if (!text.trim()) return;
-    reply({ id: review.id, reply: text.trim() }, { onSuccess: () => setReplying(false) });
+    reply({ id: review.id, reply: text.trim() }, { onSuccess: stopReplying });
   };
 
   return (
@@ -137,7 +155,7 @@ function ReviewCard({ review, isOwner }: { review: Review; isOwner: boolean }) {
                   />
                   <div className="flex gap-2">
                     <button
-                      onClick={() => setReplying(false)}
+                      onClick={stopReplying}
                       className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted"
                     >
                       Cancel

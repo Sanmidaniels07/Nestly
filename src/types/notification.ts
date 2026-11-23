@@ -35,7 +35,9 @@ export type NotificationTargetType =
   | "CART"
   // Live selling: a live page (share code) / the seller's studio (live id).
   | "LIVE"
-  | "LIVE_STUDIO";
+  | "LIVE_STUDIO"
+  // "We miss you" catch-up - id is "seller" (Seller Hub) or "buyer" (marketplace).
+  | "WELCOME_BACK";
 
 export interface Notification {
   id: string;
@@ -57,7 +59,8 @@ export type NotificationPreferenceType =
   | "ORDER"
   | "SYSTEM"
   | "SHOPPING"
-  | "LIVE";
+  | "LIVE"
+  | "REMINDER";
 
 export interface NotificationPreference {
   type: NotificationPreferenceType;

@@ -8,11 +8,14 @@ import { EMOJI_GROUPS, messageSummary } from "@/src/lib/chat";
 import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useMyProducts } from "@/src/hooks/use-my-products";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import ChatProductCard from "./chat-product-card";
 
 const TEXTAREA_MAX_HEIGHT = 140;
 
 interface Props {
+  /** Keeps an unsent message per chat (see useFormDraft). */
+  conversationId?: string;
   partnerName?: string;
   currentUserId?: string;
   replyTo: QuotedMessage | null;
@@ -27,6 +30,7 @@ interface Props {
 // Message box: emoji, photos/videos (pick, paste or drop), products for
 // sellers, reply preview, Enter to send / Shift+Enter for a new line.
 export default function Composer({
+  conversationId,
   partnerName,
   currentUserId,
   replyTo,
@@ -45,6 +49,18 @@ export default function Composer({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const { mutate: uploadFiles, isPending: uploading } = useUploadFiles();
+
+  // An unsent message (text and uploaded photos) is kept per chat in this
+  // browser, so leaving the chat or refreshing doesn't lose it.
+  const { clear: clearSaved } = useFormDraft(
+    conversationId ? `message:${conversationId}` : null,
+    { content, media },
+    (saved) => {
+      setContent(saved.content ?? "");
+      setMedia(saved.media ?? []);
+    },
+    { isEmpty: (value) => !value.content.trim() && value.media.length === 0 }
+  );
 
   const canSend = (content.trim().length > 0 || media.length > 0 || !!product) && !uploading && !sending;
 
@@ -91,6 +107,7 @@ export default function Composer({
   const send = () => {
     if (!canSend) return;
     onSend({ content: content.trim() || undefined, media: media.length > 0 ? media : undefined });
+    clearSaved();
     setContent("");
     setMedia([]);
     setPanel(null);

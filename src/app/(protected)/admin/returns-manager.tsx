@@ -9,6 +9,7 @@ import Pagination from "@/src/components/ui/pagination";
 import ReturnEvidence from "@/src/components/returns/return-evidence";
 import { ReturnStatusPill, ReturnTrail } from "@/src/components/returns/return-status";
 import { ReturnDecision, ReturnRequest } from "@/src/types/return-request";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 /**
  * Problem reports for Nestly: disputes to decide (seller disagreed, didn't
@@ -57,6 +58,24 @@ function AdminReturnCard({ request }: { request: ReturnRequest }) {
   const [note, setNote] = useState("");
   const open = ["REQUESTED", "APPROVED", "REPLACEMENT", "DISPUTED"].includes(request.status);
   const manualRefund = request.status === "REFUNDED" && request.refundStatus === "FAILED";
+
+  // A decision being written up is kept in this browser (and reopened) until
+  // it's sent or cancelled.
+  const { clear: clearSaved } = useFormDraft(
+    open ? `admin:return:${request.id}` : null,
+    { decision, note },
+    (saved) => {
+      setDecision(saved.decision ?? null);
+      setNote(saved.note ?? "");
+    },
+    { isEmpty: (value) => !value.decision && !value.note.trim() }
+  );
+
+  const closeDecision = () => {
+    clearSaved();
+    setNote("");
+    setDecision(null);
+  };
 
   return (
     <div className={`rounded-2xl border bg-surface p-5 ${request.status === "DISPUTED" ? "border-violet-300 dark:border-violet-500/40" : "border-line"}`}>
@@ -116,13 +135,13 @@ function AdminReturnCard({ request }: { request: ReturnRequest }) {
           />
           <div className="flex gap-2">
             <button
-              onClick={() => decide({ id: request.id, decision, note: note.trim() || undefined }, { onSuccess: () => setDecision(null) })}
+              onClick={() => decide({ id: request.id, decision, note: note.trim() || undefined }, { onSuccess: closeDecision })}
               disabled={isPending}
               className="rounded-lg bg-violet-600 px-4 py-2 text-[12.5px] font-semibold text-white hover:bg-violet-700 disabled:opacity-50"
             >
               {isPending ? "Saving..." : "Confirm"}
             </button>
-            <button onClick={() => setDecision(null)} className="rounded-lg px-4 py-2 text-[12.5px] font-medium text-muted hover:text-ink">
+            <button onClick={closeDecision} className="rounded-lg px-4 py-2 text-[12.5px] font-medium text-muted hover:text-ink">
               Cancel
             </button>
           </div>

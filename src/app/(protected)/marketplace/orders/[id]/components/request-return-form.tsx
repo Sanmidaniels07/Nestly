@@ -10,6 +10,8 @@ import { useCreateReturnRequest } from "@/src/hooks/use-create-return-request";
 import { uploadFiles } from "@/src/services/upload.services";
 import { PERISHABLE_REPORT_HOURS, RETURN_WINDOW_DAYS } from "@/src/lib/legal";
 import { ReturnReason } from "@/src/types/return-request";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 interface Props {
   orderItemId: string;
@@ -41,6 +43,31 @@ export default function RequestReturnForm({ orderItemId, onDone, mode = "return"
   const fileInput = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
   const { mutate: createReturnRequest, isPending } = useCreateReturnRequest();
+
+  // What they've written (and photos already uploaded) is kept in this
+  // browser per order item, so reopening the form after a refresh brings it back.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    `return:${orderItemId}`,
+    { reasonType, reason, photos },
+    (saved) => {
+      setReasonType(saved.reasonType ?? null);
+      setReason(saved.reason ?? "");
+      setPhotos(saved.photos ?? []);
+    },
+    { isEmpty: (value) => !value.reasonType && !value.reason.trim() && value.photos.length === 0 }
+  );
+
+  const startOver = () => {
+    setReasonType(null);
+    setReason("");
+    setPhotos([]);
+    clearSaved();
+  };
+
+  const cancel = () => {
+    clearSaved();
+    onDone();
+  };
 
   const reasons = REASONS.filter(
     (option) => (!option.perishableOnly || perishable) && (!option.problemOnly || mode === "problem")
@@ -74,6 +101,7 @@ export default function RequestReturnForm({ orderItemId, onDone, mode = "return"
         onSuccess: () => {
           // The order page shows the problem as reported (and pauses auto-confirm).
           queryClient.invalidateQueries({ queryKey: ["order"] });
+          clearSaved();
           onDone();
         },
       }
@@ -82,6 +110,7 @@ export default function RequestReturnForm({ orderItemId, onDone, mode = "return"
 
   return (
     <div className="mt-3 space-y-3 rounded-xl border border-dashed border-amber-200 bg-amber-50/40 p-4 dark:border-amber-500/30 dark:bg-amber-500/10">
+      {restored && <DraftRestoredNotice what="the report you started" onStartOver={startOver} onDismiss={dismissNotice} />}
       <p className="text-[12.5px] leading-relaxed text-ink-2">
         {perishable
           ? `Food, cakes and groceries: report a problem within ${PERISHABLE_REPORT_HOURS} hours of delivery and add a photo - you don't need to send it back.`
@@ -150,7 +179,7 @@ export default function RequestReturnForm({ orderItemId, onDone, mode = "return"
       </div>
 
       <div className="flex justify-end gap-2">
-        <button onClick={onDone} className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted">
+        <button onClick={cancel} className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted">
           Cancel
         </button>
         <button

@@ -9,6 +9,7 @@ import Input from "@/src/components/ui/input";
 import { DateTimeField } from "@/src/components/ui/calendar-picker";
 import Button from "@/src/components/ui/button";
 import { useCreateEvent } from "@/src/hooks/use-create-event";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   open: boolean;
@@ -24,6 +25,35 @@ export default function CreateEventModal({ open, onClose }: Props) {
   const [endAt, setEndAt] = useState("");
 
   const { mutate: createEvent, isPending } = useCreateEvent();
+
+  // Kept in this browser until created or cancelled; closing the modal (or a
+  // refresh) doesn't lose it.
+  const { clear: clearSaved } = useFormDraft(
+    "event:new",
+    { title, description, location, startAt, endAt },
+    (saved) => {
+      setTitle(saved.title ?? "");
+      setDescription(saved.description ?? "");
+      setLocation(saved.location ?? "");
+      setStartAt(saved.startAt ?? "");
+      setEndAt(saved.endAt ?? "");
+    },
+    { isEmpty: (value) => Object.values(value).every((field) => !field.trim()) }
+  );
+
+  const resetForm = () => {
+    setTitle("");
+    setDescription("");
+    setLocation("");
+    setStartAt("");
+    setEndAt("");
+  };
+
+  const cancel = () => {
+    resetForm();
+    clearSaved();
+    onClose();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -49,11 +79,8 @@ export default function CreateEventModal({ open, onClose }: Props) {
       },
       {
         onSuccess: (response) => {
-          setTitle("");
-          setDescription("");
-          setLocation("");
-          setStartAt("");
-          setEndAt("");
+          clearSaved();
+          resetForm();
           onClose();
           router.push(`/events/${response.data.id}`);
         },
@@ -135,7 +162,7 @@ export default function CreateEventModal({ open, onClose }: Props) {
             </div>
 
             <div className="flex items-center justify-end gap-3 border-t border-line px-6 py-4">
-              <Button type="button" variant="outline" onClick={onClose} className="h-10 rounded-xl px-5">
+              <Button type="button" variant="outline" onClick={cancel} className="h-10 rounded-xl px-5">
                 Cancel
               </Button>
               <Button

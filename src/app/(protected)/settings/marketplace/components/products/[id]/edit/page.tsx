@@ -7,6 +7,8 @@ import { useUpdateProduct } from "@/src/hooks/use-update-product";
 import Button from "@/src/components/ui/button";
 import BackButton from "@/src/components/ui/back-button";
 import { useGoBack } from "@/src/hooks/use-go-back";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { ProductEditDraft } from "./types";
 import EditBasicSection from "./components/edit-basic-section";
 import EditPricingSection from "./components/edit-pricing-section";
@@ -37,6 +39,15 @@ const EMPTY_DRAFT: ProductEditDraft = {
   images: [],
 };
 
+// What's kept between visits: only finished uploads (no File objects or
+// blob previews), so the draft stays JSON-safe.
+const savableDraft = (draft: ProductEditDraft): ProductEditDraft => ({
+  ...draft,
+  images: draft.images
+    .filter((image) => image.url && !image.uploading)
+    .map((image) => ({ id: image.id, preview: image.url as string, url: image.url, isCover: image.isCover, uploading: false })),
+});
+
 interface Props {
   params: Promise<{ id: string }>;
 }
@@ -49,11 +60,14 @@ export default function EditProductPage({ params }: Props) {
   const { mutate: updateProduct, isPending } = useUpdateProduct();
 
   const [draft, setDraft] = useState<ProductEditDraft>(EMPTY_DRAFT);
+  // The product as loaded, to tell real unsaved changes apart and to go back
+  // to on "Start over".
+  const [loaded, setLoaded] = useState<ProductEditDraft | null>(null);
 
   useEffect(() => {
     if (!product) return;
 
-    setDraft({
+    const fromProduct: ProductEditDraft = {
       title: product.title,
       categoryId: product.categoryId,
       brand: product.brand ?? "",
@@ -79,9 +93,33 @@ export default function EditProductPage({ params }: Props) {
         isCover: !!image.isPrimary,
         uploading: false,
       })),
-    });
+    };
+    setDraft(fromProduct);
+    setLoaded(fromProduct);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [product?.id]);
+
+  // Unsaved edits are kept in this browser (per account, per product) until
+  // saved, so a refresh or logging out doesn't lose them.
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    `product:edit:${id}`,
+    savableDraft(draft),
+    (saved) => setDraft({ ...EMPTY_DRAFT, ...saved }),
+    {
+      ready: loaded !== null,
+      isEmpty: (value) => !!loaded && JSON.stringify(value) === JSON.stringify(savableDraft(loaded)),
+    }
+  );
+
+  const startOver = () => {
+    if (loaded) setDraft(loaded);
+    clearSaved();
+  };
+
+  const cancel = () => {
+    clearSaved();
+    goBack();
+  };
 
   const isUploading = draft.images.some((image) => image.uploading);
   const optionsProblem = optionsError(draft.optionsDraft);
@@ -125,7 +163,10 @@ export default function EditProductPage({ params }: Props) {
         },
       },
       {
-        onSuccess: () => goBack(),
+        onSuccess: () => {
+          clearSaved();
+          goBack();
+        },
       }
     );
   };
@@ -163,6 +204,8 @@ export default function EditProductPage({ params }: Props) {
         </p>
       </div>
 
+      {restored && <DraftRestoredNotice what="the changes you hadn't saved" onStartOver={startOver} onDismiss={dismissNotice} />}
+
       <EditBasicSection draft={draft} setDraft={setDraft} />
       <EditPricingSection
         draft={draft}
@@ -188,7 +231,7 @@ export default function EditProductPage({ params }: Props) {
         )}
 
       <div className="flex flex-col-reverse gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-end">
-        <Button variant="outline" onClick={() => goBack()} className="h-11 rounded-xl px-7">
+        <Button variant="outline" onClick={cancel} className="h-11 rounded-xl px-7">
           Cancel
         </Button>
         <Button

@@ -20,6 +20,8 @@ import { useQuickStartSeller } from "@/src/hooks/use-quick-start-seller";
 import { useBanks } from "@/src/hooks/use-banks";
 import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
 import { useCategories } from "@/src/hooks/use-categories";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { CAC_COMPANY_TYPES, cacTypeFromNumber } from "@/src/lib/cac";
 import { naira } from "@/src/lib/payment-link";
 import Checkbox from "@/src/components/ui/checkbox";
@@ -160,6 +162,41 @@ function ShopStep({
   const [showRates, setShowRates] = useState(false);
   const [error, setError] = useState("");
 
+  // What they typed is kept in this browser (per account) until the store is
+  // opened, so a refresh or logging out brings them back here.
+  const initial = {
+    storeName: "",
+    instagram: "",
+    whatsapp: "",
+    cacNumber: seller?.cacNumber ?? "",
+    cacType: (seller?.cacCompanyType ?? "") as CacCompanyType | "",
+    agreed: false,
+  };
+  const typed = { storeName, instagram, whatsapp, cacNumber, cacType, agreed };
+  const fill = (values: typeof initial) => {
+    setStoreName(values.storeName);
+    setInstagram(values.instagram);
+    setWhatsapp(values.whatsapp);
+    setCacNumber(values.cacNumber);
+    setCacType(values.cacType);
+    setAgreed(values.agreed);
+  };
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "seller:quick-start",
+    typed,
+    (saved) => {
+      fill({ ...initial, ...saved });
+      if (saved.cacNumber && saved.cacNumber !== initial.cacNumber) setShowMore(true);
+    },
+    { isEmpty: (value) => JSON.stringify(value) === JSON.stringify(initial) }
+  );
+
+  const startOver = () => {
+    fill(initial);
+    setError("");
+    clearSaved();
+  };
+
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     if (storeName.trim().length < 2) return setError("Give your store a name.");
@@ -177,7 +214,10 @@ function ShopStep({
         agreeToSellerTerms: true,
       },
       {
-        onSuccess: (response) => onDone(response.data),
+        onSuccess: (response) => {
+          clearSaved();
+          onDone(response.data);
+        },
         onError: (err) => setError(apiError(err, "Couldn't open your store. Please try again.")),
       }
     );
@@ -185,6 +225,8 @@ function ShopStep({
 
   return (
     <form onSubmit={submit} className="space-y-5 rounded-2xl border border-line bg-surface p-5 sm:p-7">
+      {restored && <DraftRestoredNotice what="the shop details you entered" onStartOver={startOver} onDismiss={dismissNotice} />}
+
       {seller?.status === "PENDING" && (
         <p className="flex items-start gap-2 rounded-xl bg-violet-50 px-3.5 py-3 text-[12.5px] text-violet-900 dark:bg-violet-400/10 dark:text-violet-100">
           <Clock size={15} className="mt-0.5 shrink-0" />
@@ -334,6 +376,16 @@ function BankStep({ slug, storeName, onDone }: { slug: string; storeName: string
   const [accountName, setAccountName] = useState<string | null>(null);
   const [error, setError] = useState("");
 
+  // Only the bank choice is kept - never the account number.
+  const { clear: clearSaved } = useFormDraft("seller:quick-start:bank", { bankCode }, (saved) => setBankCode(saved.bankCode ?? ""), {
+    isEmpty: (value) => !value.bankCode,
+  });
+
+  const skip = () => {
+    clearSaved();
+    onDone();
+  };
+
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!bankCode) return setError("Choose your bank.");
@@ -343,6 +395,7 @@ function BankStep({ slug, storeName, onDone }: { slug: string; storeName: string
       { slug, data: { bankCode, accountNumber } },
       {
         onSuccess: (response) => {
+          clearSaved();
           const name = (response as { data?: { payoutAccountName?: string | null } })?.data?.payoutAccountName ?? null;
           setAccountName(name ?? "your account");
         },
@@ -403,7 +456,7 @@ function BankStep({ slug, storeName, onDone }: { slug: string; storeName: string
         {isPending ? <Loader2 size={16} className="animate-spin" /> : <Landmark size={16} />}
         Confirm account
       </button>
-      <button type="button" onClick={onDone} className="w-full text-center text-[13px] font-semibold text-muted hover:text-ink">
+      <button type="button" onClick={skip} className="w-full text-center text-[13px] font-semibold text-muted hover:text-ink">
         Skip for now - I&apos;ll add it before my first payout
       </button>
     </form>

@@ -11,6 +11,8 @@ import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import Pagination from "@/src/components/ui/pagination";
 import { TableSkeleton } from "@/src/components/skeletons/table-skeleton";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 function formatValue(coupon: Coupon) {
   return coupon.type === "PERCENTAGE" ? `${coupon.value}%` : `₦${coupon.value.toLocaleString()}`;
@@ -117,6 +119,38 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
 
   const canSubmit = code.trim().length >= 3 && Number(value) > 0;
 
+  // Kept in this browser until created or cancelled; brought back when the
+  // form is opened again (also after a refresh).
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "admin:coupon:new",
+    { code, type, value, minOrderAmount, usageLimit },
+    (saved) => {
+      setCode(saved.code ?? "");
+      setType(saved.type ?? "PERCENTAGE");
+      setValue(saved.value ?? "");
+      setMinOrderAmount(saved.minOrderAmount ?? "");
+      setUsageLimit(saved.usageLimit ?? "");
+    },
+    {
+      isEmpty: (draft) =>
+        !draft.code.trim() && draft.type === "PERCENTAGE" && !draft.value && !draft.minOrderAmount && !draft.usageLimit,
+    }
+  );
+
+  const resetForm = () => {
+    setCode("");
+    setType("PERCENTAGE");
+    setValue("");
+    setMinOrderAmount("");
+    setUsageLimit("");
+  };
+
+  const cancel = () => {
+    resetForm();
+    clearSaved();
+    onDone();
+  };
+
   const handleSubmit = () => {
     if (!canSubmit) return;
 
@@ -130,10 +164,8 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
       },
       {
         onSuccess: () => {
-          setCode("");
-          setValue("");
-          setMinOrderAmount("");
-          setUsageLimit("");
+          clearSaved();
+          resetForm();
           onDone();
         },
       }
@@ -145,6 +177,9 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
       <h2 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
         Create coupon
       </h2>
+      {restored && (
+        <DraftRestoredNotice what="the coupon you started" onStartOver={() => { resetForm(); clearSaved(); }} onDismiss={dismissNotice} className="mt-4" />
+      )}
 
       <div className="mt-5 grid gap-4 sm:grid-cols-2">
         <Input
@@ -187,7 +222,7 @@ function CreateCouponForm({ onDone }: { onDone: () => void }) {
       </div>
 
       <div className="mt-5 flex justify-end gap-3">
-        <Button variant="outline" onClick={onDone} className="h-11 rounded-xl px-6">
+        <Button variant="outline" onClick={cancel} className="h-11 rounded-xl px-6">
           Cancel
         </Button>
         <Button

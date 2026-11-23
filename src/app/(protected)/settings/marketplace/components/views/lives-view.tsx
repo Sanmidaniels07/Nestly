@@ -23,6 +23,7 @@ import {
 import { useCancelLive, useCreateLive, useMyLives, useUpdateLive } from "@/src/hooks/use-lives";
 import { useMyProducts } from "@/src/hooks/use-my-products";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { naira } from "@/src/lib/payment-link";
 import Skeleton from "@/src/components/ui/skeleton";
 import { LiveBadge, liveShareUrl, liveWhen } from "@/src/components/live/live-ui";
@@ -243,6 +244,23 @@ function LiveForm({ mode, existing, onClose }: { mode: "now" | "schedule"; exist
   const [error, setError] = useState("");
   const [created, setCreated] = useState<SellerLive | null>(null);
 
+  // What's typed is kept in this browser (per account) until the live is
+  // saved - closing the sheet by accident doesn't lose it. The cover is an
+  // uploaded URL, so it's safe to keep.
+  const [initial] = useState(() => ({ title, description, cover, when, selected }));
+  const { clear: clearDraft } = useFormDraft(
+    existing ? `live:edit:${existing.id}` : "live:new",
+    { title, description, cover, when, selected },
+    (saved) => {
+      setTitle(saved.title ?? initial.title);
+      setDescription(saved.description ?? initial.description);
+      setCover(saved.cover ?? null);
+      setWhen(saved.when || initial.when);
+      setSelected(saved.selected ?? initial.selected);
+    },
+    { isEmpty: (value) => JSON.stringify(value) === JSON.stringify(initial) }
+  );
+
   const products = productsPage?.products ?? [];
   const shown = products.filter((product) => product.title.toLowerCase().includes(query.trim().toLowerCase()));
   const count = Object.keys(selected).length;
@@ -288,6 +306,7 @@ function LiveForm({ mode, existing, onClose }: { mode: "now" | "schedule"; exist
         { id: existing.id, data: payload },
         {
           onSuccess: () => {
+            clearDraft();
             toast.success("Live updated");
             onClose();
           },
@@ -296,6 +315,7 @@ function LiveForm({ mode, existing, onClose }: { mode: "now" | "schedule"; exist
     }
     create(payload, {
       onSuccess: (response) => {
+        clearDraft();
         if (mode === "now") return router.push(`/marketplace/live/${response.data.id}`);
         setCreated(response.data);
       },

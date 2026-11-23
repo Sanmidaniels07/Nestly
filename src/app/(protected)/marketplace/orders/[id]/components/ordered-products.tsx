@@ -232,7 +232,7 @@ function OrderedProductItem({
         )}
 
         {reviewing && (
-          <WriteReviewForm productId={item.productId} onDone={() => setReviewing(false)} />
+          <WriteReviewForm orderId={orderId} productId={item.productId} onDone={() => setReviewing(false)} />
         )}
 
         {returnMode && (

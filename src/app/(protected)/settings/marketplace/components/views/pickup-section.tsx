@@ -6,6 +6,7 @@ import { Archive, ArchiveRestore, Loader2, Pencil, Plus, Store, Trash2 } from "l
 import { useCreateShippingOption } from "@/src/hooks/use-create-shipping-option";
 import { useUpdateShippingOption } from "@/src/hooks/use-update-shipping-option";
 import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { ShippingOption } from "@/src/types/store";
 
 const inputClass =
@@ -81,6 +82,24 @@ function PickupForm({
   const isPending = isCreating || isUpdating;
   const canSave = address.trim().length >= 3;
 
+  // What's typed is kept in this browser (per account) until saved, and
+  // comes back the next time this form is opened.
+  const initial = { address: pickup?.pickupAddress ?? storeAddress, eta: pickup?.eta ?? "" };
+  const { clear: clearDraft } = useFormDraft(
+    pickup ? `pickup:edit:${pickup.id}` : "pickup",
+    { address, eta },
+    (saved) => {
+      setAddress(saved.address ?? initial.address);
+      setEta(saved.eta ?? initial.eta);
+    },
+    { isEmpty: (value) => value.address === initial.address && value.eta === initial.eta }
+  );
+
+  const finish = () => {
+    clearDraft();
+    onDone();
+  };
+
   const handleSave = () => {
     if (!canSave) return;
     if (pickup) {
@@ -90,12 +109,12 @@ function PickupForm({
           data: { pickupAddress: address.trim(), eta: eta.trim() || null },
           successMessage: "Pickup updated",
         },
-        { onSuccess: onDone }
+        { onSuccess: finish }
       );
     } else {
       create(
         { type: "PICKUP", fee: 0, pickupAddress: address.trim(), eta: eta.trim() || undefined },
-        { onSuccess: onDone }
+        { onSuccess: finish }
       );
     }
   };
@@ -131,7 +150,7 @@ function PickupForm({
       <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <button
           type="button"
-          onClick={onDone}
+          onClick={finish}
           className="h-10 rounded-xl px-4 text-[13px] font-medium text-muted hover:bg-surface-2"
         >
           Cancel

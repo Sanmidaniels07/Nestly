@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PenSquare, X } from "lucide-react";
 import Button from "@/src/components/ui/button";
 import { useCreatePost } from "@/src/hooks/use-create-post";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 export default function ProfileEmptyPost() {
   const [composing, setComposing] = useState(false);
@@ -11,6 +12,26 @@ export default function ProfileEmptyPost() {
   const [content, setContent] = useState("");
 
   const { mutate: createPost, isPending } = useCreatePost();
+
+  // Kept in this browser until posted or cancelled (its own slot - the feed
+  // composer's draft can carry media this one can't show).
+  const { clear: clearSaved } = useFormDraft(
+    "post:new:profile",
+    { title, content },
+    (saved) => {
+      setTitle(saved.title ?? "");
+      setContent(saved.content ?? "");
+      setComposing(true);
+    },
+    { isEmpty: (value) => !value.title.trim() && !value.content.trim() }
+  );
+
+  const cancel = () => {
+    setTitle("");
+    setContent("");
+    clearSaved();
+    setComposing(false);
+  };
 
   // This composer doesn't offer media attachment, so content is the only
   // way to satisfy "text, media, or both" here — title stays optional.
@@ -23,6 +44,7 @@ export default function ProfileEmptyPost() {
       { title: title.trim() || undefined, content: content.trim() || undefined },
       {
         onSuccess: () => {
+          clearSaved();
           setTitle("");
           setContent("");
           setComposing(false);
@@ -39,7 +61,7 @@ export default function ProfileEmptyPost() {
             Create your first post
           </h2>
           <button
-            onClick={() => setComposing(false)}
+            onClick={cancel}
             aria-label="Cancel"
             className="rounded-full p-1.5 text-subtle transition-colors hover:bg-surface-muted"
           >

@@ -13,6 +13,7 @@ import { useSellerOpenOrders } from "@/src/hooks/use-seller-open-orders";
 import { SellerApplicationStatus } from "@/src/types/seller";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 const STATUS_TONE: Record<SellerApplicationStatus, string> = {
   PENDING: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
@@ -216,6 +217,19 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
   // When the card was drawn - for "waiting 30h" (kept stable across renders).
   const [now] = useState(() => Date.now());
 
+  // A half-written rejection reason is kept in this browser (and the box
+  // reopened) until it's sent or cancelled.
+  const { clear: clearSaved } = useFormDraft(
+    `admin:reject:${seller.id}`,
+    { reason, rejectMode },
+    (saved) => {
+      setReason(saved.reason ?? "");
+      setRejectMode(saved.rejectMode ?? "STOP_SALES");
+      setRejecting(true);
+    },
+    { isEmpty: (value) => !value.reason.trim() }
+  );
+
   const handleConfirmReject = () => {
     if (!reason.trim()) return;
     updateStatus(
@@ -225,6 +239,7 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
       },
       {
         onSuccess: () => {
+          clearSaved();
           setRejecting(false);
           setReason("");
           setRejectMode("STOP_SALES");
@@ -387,6 +402,7 @@ function SellerRow({ seller }: { seller: AdminSeller }) {
           <div className="flex justify-end gap-2">
             <button
               onClick={() => {
+                clearSaved();
                 setRejecting(false);
                 setReason("");
               }}

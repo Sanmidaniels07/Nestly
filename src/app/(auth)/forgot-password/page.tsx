@@ -10,6 +10,7 @@ import Button from "@/src/components/ui/button";
 import { useForgotPassword } from "@/src/hooks/use-forgot-password";
 import { forgotPasswordSchema, ForgotPasswordValues } from "@/src/lib/validations/auth";
 import GuestGuard from "@/src/components/guards/GuestGuard";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 
 export default function ForgotPasswordPage() {
@@ -18,13 +19,21 @@ export default function ForgotPasswordPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<ForgotPasswordValues>({
     resolver: zodResolver(forgotPasswordSchema),
   });
 
+  // The email typed is kept on this device (guest slot) until the link is sent.
+  const { clear: clearSaved } = useFormDraft("forgot-password", watch("email") ?? "", (saved) => setValue("email", saved), {
+    guest: true,
+    isEmpty: (value) => !value.trim(),
+  });
+
   const onSubmit = (data: ForgotPasswordValues) => {
-    mutation.mutate(data.email);
+    mutation.mutate(data.email, { onSuccess: () => clearSaved() });
   };
 
   return (

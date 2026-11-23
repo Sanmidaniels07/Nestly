@@ -16,6 +16,8 @@ import { useUpdateStore } from "@/src/hooks/use-update-store";
 import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useBanks } from "@/src/hooks/use-banks";
 import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { FormCardSkeleton } from "@/src/components/skeletons/form-card-skeleton";
@@ -59,6 +61,21 @@ export default function StoreView() {
   );
 }
 
+interface StoreDetailsDraft {
+  form: {
+    name: string;
+    description: string;
+    email: string;
+    phone: string;
+    address: string;
+    city: string;
+    state: string;
+    country: string;
+  };
+  logo: string | null;
+  banner: string | null;
+}
+
 function StoreDetailsForm({ storeId }: { storeId: string }) {
   const { data: store } = useMyStore();
   const { mutate: updateStore, isPending: isSaving } = useUpdateStore();
@@ -81,22 +98,55 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
   });
   const [logo, setLogo] = useState<string>();
   const [banner, setBanner] = useState<string>();
+  // The details as saved, to tell real unsaved changes apart and to go back
+  // to on "Start over".
+  const [saved, setSaved] = useState<StoreDetailsDraft | null>(null);
+
+  const fill = (values: StoreDetailsDraft) => {
+    setForm(values.form);
+    setLogo(values.logo ?? undefined);
+    setBanner(values.banner ?? undefined);
+  };
 
   useEffect(() => {
     if (!store) return;
-    setForm({
-      name: store.name,
-      description: store.description ?? "",
-      email: store.email ?? "",
-      phone: store.phone ?? "",
-      address: store.address ?? "",
-      city: store.city ?? "",
-      state: store.state ?? "",
-      country: store.country ?? "",
-    });
-    setLogo(store.logo ?? undefined);
-    setBanner(store.banner ?? undefined);
+    const fromStore: StoreDetailsDraft = {
+      form: {
+        name: store.name,
+        description: store.description ?? "",
+        email: store.email ?? "",
+        phone: store.phone ?? "",
+        address: store.address ?? "",
+        city: store.city ?? "",
+        state: store.state ?? "",
+        country: store.country ?? "",
+      },
+      logo: store.logo ?? null,
+      banner: store.banner ?? null,
+    };
+    setForm(fromStore.form);
+    setLogo(fromStore.logo ?? undefined);
+    setBanner(fromStore.banner ?? undefined);
+    setSaved(fromStore);
   }, [store]);
+
+  // Unsaved edits (and uploaded logo/banner links) are kept in this browser
+  // (per account) until saved.
+  const { restored, clear: clearDraft, dismissNotice } = useFormDraft<StoreDetailsDraft>(
+    "store:details",
+    { form, logo: logo ?? null, banner: banner ?? null },
+    (draft) => {
+      setForm((prev) => ({ ...prev, ...draft.form }));
+      setLogo(draft.logo ?? undefined);
+      setBanner(draft.banner ?? undefined);
+    },
+    { ready: saved !== null, isEmpty: (value) => !!saved && JSON.stringify(value) === JSON.stringify(saved) }
+  );
+
+  const startOver = () => {
+    if (saved) fill(saved);
+    clearDraft();
+  };
 
   const update =
     (field: keyof typeof form) =>
@@ -126,7 +176,7 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
         logo,
         banner,
       },
-    });
+    }, { onSuccess: () => clearDraft() });
   };
 
   return (
@@ -134,6 +184,8 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
         Store details
       </h2>
+
+      {restored && <DraftRestoredNotice what="store details you hadn't saved" onStartOver={startOver} onDismiss={dismissNotice} className="mt-4" />}
 
       <div className="mt-6 grid gap-4">
         <div className="grid gap-4 sm:grid-cols-2">
@@ -366,13 +418,31 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
     warrantyPolicy: "",
   });
 
+  // The policies as saved, to tell real unsaved changes apart.
+  const [saved, setSaved] = useState<typeof form | null>(null);
+
   useEffect(() => {
     if (!store) return;
-    setForm({
+    const fromStore = {
       shippingPolicy: store.shippingPolicy ?? "",
       warrantyPolicy: store.warrantyPolicy ?? "",
-    });
+    };
+    setForm(fromStore);
+    setSaved(fromStore);
   }, [store]);
+
+  // Unsaved edits are kept in this browser (per account) until saved.
+  const { restored, clear: clearDraft, dismissNotice } = useFormDraft(
+    "store:policies",
+    form,
+    (draft) => setForm((prev) => ({ ...prev, ...draft })),
+    { ready: saved !== null, isEmpty: (value) => !!saved && JSON.stringify(value) === JSON.stringify(saved) }
+  );
+
+  const startOver = () => {
+    if (saved) setForm(saved);
+    clearDraft();
+  };
 
   const update =
     (field: keyof typeof form) => (e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -385,7 +455,7 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
         shippingPolicy: form.shippingPolicy.trim() || undefined,
         warrantyPolicy: form.warrantyPolicy.trim() || undefined,
       },
-    });
+    }, { onSuccess: () => clearDraft() });
   };
 
   return (
@@ -404,6 +474,8 @@ function StorePoliciesForm({ storeId }: { storeId: string }) {
           Seller Agreement
         </a>
       </p>
+
+      {restored && <DraftRestoredNotice what="policy changes you hadn't saved" onStartOver={startOver} onDismiss={dismissNotice} className="mt-4" />}
 
       <div className="mt-6 space-y-4">
         {(

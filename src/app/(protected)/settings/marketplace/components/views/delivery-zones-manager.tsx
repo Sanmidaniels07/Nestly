@@ -24,6 +24,7 @@ import { useBulkCreateShippingOptions } from "@/src/hooks/use-bulk-create-shippi
 import { useUpdateShippingOption } from "@/src/hooks/use-update-shipping-option";
 import { useDeleteShippingOption } from "@/src/hooks/use-delete-shipping-option";
 import { useDetectState, useNigerianStates, useStateLocations } from "@/src/hooks/use-locations";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { NigerianState, SuggestedZone } from "@/src/types/location";
 import { ShippingOption } from "@/src/types/store";
 import PickupSection from "./pickup-section";
@@ -254,6 +255,18 @@ function SuggestedZonesForm({
 
   const priced = suggestions.filter((zone) => prices[zone.name]?.trim() && Number(prices[zone.name]) >= 0);
 
+  // Prices typed but not added yet are kept in this browser (per account,
+  // per state - the suggested zones differ by state).
+  const { clear: clearDraft } = useFormDraft(
+    state ? `delivery-zone:suggested:${state}` : null,
+    { prices, eta },
+    (saved) => {
+      setPrices(saved.prices ?? {});
+      setEta(saved.eta ?? "");
+    },
+    { isEmpty: (value) => !value.eta && !Object.values(value.prices).some((price) => price) }
+  );
+
   const handleSave = () =>
     bulkCreate(
       priced.map((zone) => ({
@@ -263,7 +276,12 @@ function SuggestedZonesForm({
         eta: eta.trim() || undefined,
         vehicle,
       })),
-      { onSuccess: () => setPrices({}) }
+      {
+        onSuccess: () => {
+          clearDraft();
+          setPrices({});
+        },
+      }
     );
 
   return (
@@ -368,12 +386,40 @@ function ZoneForm({
 
   const canSave = (areas.length > 0 || name.trim().length > 0) && fee.trim() !== "" && Number(fee) >= 0;
 
+  // What's typed is kept in this browser (per account, per zone) until saved;
+  // an edited zone's draft comes back the next time Edit is opened.
+  const initial = {
+    areas: zone?.areas ?? [],
+    ownVehicle: zone?.vehicle ?? null,
+    name: zone && zone.name !== zone.areas.join(" / ") ? zone.name : "",
+    fee: zone ? String(zone.fee) : "",
+    eta: zone?.eta ?? "",
+  };
+  const { clear: clearDraft } = useFormDraft(
+    zone ? `delivery-zone:edit:${zone.id}` : "delivery-zone:new",
+    { areas, ownVehicle, name, fee, eta },
+    (saved) => {
+      setAreas(saved.areas ?? initial.areas);
+      setOwnVehicle(saved.ownVehicle ?? initial.ownVehicle);
+      setName(saved.name ?? initial.name);
+      setFee(saved.fee ?? initial.fee);
+      setEta(saved.eta ?? initial.eta);
+    },
+    { isEmpty: (value) => JSON.stringify(value) === JSON.stringify(initial) }
+  );
+
   const reset = () => {
+    clearDraft();
     setAreas([]);
     setName("");
     setFee("");
     setEta("");
     setQuery("");
+  };
+
+  const cancel = () => {
+    clearDraft();
+    onDone?.();
   };
 
   const handleSave = () => {
@@ -389,7 +435,12 @@ function ZoneForm({
     if (zone) {
       update(
         { optionId: zone.id, data: { ...payload, eta: eta.trim() || null } },
-        { onSuccess: () => onDone?.() }
+        {
+          onSuccess: () => {
+            clearDraft();
+            onDone?.();
+          },
+        }
       );
     } else {
       create({ ...payload, eta: eta.trim() || undefined }, { onSuccess: reset });
@@ -504,7 +555,7 @@ function ZoneForm({
         {onDone && (
           <button
             type="button"
-            onClick={onDone}
+            onClick={cancel}
             className="h-10 rounded-xl px-4 text-[13px] font-medium text-muted hover:bg-surface-2"
           >
             Cancel

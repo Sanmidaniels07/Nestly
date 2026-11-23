@@ -19,6 +19,8 @@ import { useProfile } from "@/src/hooks/use-profile";
 import { useUpdateProfile } from "@/src/hooks/use-update-profile";
 import { useUploadFiles } from "@/src/hooks/use-upload-files";
 import { LANGUAGE_GROUPS } from "@/src/lib/languages";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
+import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 
 interface Props {
   onClose: () => void;
@@ -66,11 +68,15 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
   const [avatar, setAvatar] = useState("");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  // The profile as saved, once it's in the form - what a draft is compared to.
+  const [seeded, setSeeded] = useState<EditProfileBasicValues | null>(null);
 
+  // Fill the form once. The profile refetches on window focus; filling it
+  // again then would wipe what they're typing (or a restored draft).
   useEffect(() => {
-    if (!profile) return;
+    if (!profile || seeded) return;
 
-    reset({
+    const values: EditProfileBasicValues = {
       ...emptyDefaults,
       name: profile.name,
       username: profile.username ?? "",
@@ -90,10 +96,31 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
       facebook: profile.socialLinks?.facebook ?? "",
       tiktok: profile.socialLinks?.tiktok ?? "",
       youtube: profile.socialLinks?.youtube ?? "",
-    });
+    };
+    reset(values);
+    setSeeded(values);
     setCover(profile.cover ?? "");
     setAvatar(profile.avatar ?? "");
-  }, [profile, reset]);
+  }, [profile, reset, seeded]);
+
+  // Unsaved text edits are kept in this browser until saved or cancelled.
+  // New photos aren't (they're files on this device until saved).
+  const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
+    "profile:edit",
+    watch(),
+    (saved) => reset({ ...emptyDefaults, ...saved }, { keepDefaultValues: true }),
+    { ready: !!seeded, isEmpty: (value) => JSON.stringify(value) === JSON.stringify(seeded) }
+  );
+
+  const startOver = () => {
+    if (seeded) reset(seeded);
+    clearSaved();
+  };
+
+  const cancel = () => {
+    clearSaved();
+    onClose();
+  };
 
   const onSubmit = async (values: EditProfileBasicValues) => {
     let avatarUrl = avatar;
@@ -132,6 +159,7 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
         youtube: values.youtube,
       },
     });
+    clearSaved();
     onClose();
   };
 
@@ -144,6 +172,9 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
         className={variant === "modal" ? "flex max-h-[85vh] flex-col" : "flex flex-col"}
       >
         <div className={variant === "modal" ? "flex-1 overflow-y-auto" : ""}>
+          {restored && (
+            <DraftRestoredNotice what="the profile changes you started" onStartOver={startOver} onDismiss={dismissNotice} className="m-4 sm:mx-8" />
+          )}
           <EditProfileCover
             cover={cover}
             onRemove={() => {
@@ -203,7 +234,7 @@ export default function EditProfileForm({ onClose, variant = "modal" }: Props) {
           <Button
             type="button"
             variant="outline"
-            onClick={onClose}
+            onClick={cancel}
             className="h-11 rounded-xl px-6"
           >
             Cancel

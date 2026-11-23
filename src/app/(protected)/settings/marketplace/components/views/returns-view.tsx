@@ -5,6 +5,7 @@ import { RotateCcw } from "lucide-react";
 
 import { useSellerReturnRequests } from "@/src/hooks/use-seller-return-requests";
 import { useRespondToReturn } from "@/src/hooks/use-return-actions";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 import { ReturnRequest, SellerReturnAction } from "@/src/types/return-request";
 import Pagination from "@/src/components/ui/pagination";
 import { formatRelativeTime } from "@/src/lib/date";
@@ -72,9 +73,29 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
   const copy = action ? ACTION_COPY[action] : null;
   const noteTooShort = !!copy?.minNote && note.trim().length < copy.minNote;
 
+  // A half-written answer is kept in this browser (per account, per report)
+  // until it's sent.
+  const { clear: clearDraft } = useFormDraft(
+    answerable ? `return-response:${request.id}` : null,
+    { action, note },
+    (saved) => {
+      setAction(saved.action ?? null);
+      setNote(saved.note ?? "");
+    },
+    { isEmpty: (value) => !value.action && !value.note }
+  );
+
   const submit = () => {
     if (!action || noteTooShort) return;
-    respond({ id: request.id, action, note: note.trim() || undefined }, { onSuccess: () => setAction(null) });
+    respond(
+      { id: request.id, action, note: note.trim() || undefined },
+      {
+        onSuccess: () => {
+          clearDraft();
+          setAction(null);
+        },
+      }
+    );
   };
 
   return (
@@ -141,6 +162,7 @@ function ReturnRequestCard({ request }: { request: ReturnRequest }) {
               onClick={() => {
                 setAction(null);
                 setNote("");
+                clearDraft();
               }}
               className="rounded-lg px-4 py-2 text-[12.5px] font-medium text-muted hover:text-ink"
             >

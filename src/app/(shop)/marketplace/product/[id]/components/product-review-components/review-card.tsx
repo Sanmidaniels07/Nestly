@@ -9,6 +9,7 @@ import { formatRelativeTime } from "@/src/lib/date";
 import { useAuthStore } from "@/src/store/auth-store";
 import { useUpdateReview } from "@/src/hooks/use-update-review";
 import { useDeleteReview } from "@/src/hooks/use-delete-review";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   review: Review;
@@ -25,10 +26,35 @@ export default function ReviewCard({ review }: Props) {
   const [rating, setRating] = useState(review.rating);
   const [comment, setComment] = useState(review.comment ?? "");
 
+  // Unsaved changes to their own review are kept in this browser and the
+  // editor reopens with them after a refresh. Same as the saved review = nothing kept.
+  const { clear: clearSaved } = useFormDraft(
+    isOwn ? `review:edit:${review.id}` : null,
+    { rating, comment },
+    (saved) => {
+      setRating(saved.rating || review.rating);
+      setComment(saved.comment ?? "");
+      setEditing(true);
+    },
+    { isEmpty: (value) => value.rating === review.rating && value.comment === (review.comment ?? "") }
+  );
+
+  const cancelEdit = () => {
+    setRating(review.rating);
+    setComment(review.comment ?? "");
+    clearSaved();
+    setEditing(false);
+  };
+
   const handleSave = () => {
     updateReview(
       { id: review.id, rating, comment: comment.trim() || undefined },
-      { onSuccess: () => setEditing(false) }
+      {
+        onSuccess: () => {
+          clearSaved();
+          setEditing(false);
+        },
+      }
     );
   };
 
@@ -96,7 +122,7 @@ export default function ReviewCard({ review }: Props) {
               />
               <div className="flex justify-end gap-2">
                 <button
-                  onClick={() => setEditing(false)}
+                  onClick={cancelEdit}
                   className="rounded-lg px-3.5 py-2 text-[12.5px] font-medium text-muted hover:bg-surface-muted"
                 >
                   Cancel

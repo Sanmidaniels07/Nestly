@@ -8,6 +8,7 @@ import { X } from "lucide-react";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
 import { useCreateCommunity } from "@/src/hooks/use-create-community";
+import { useFormDraft } from "@/src/hooks/use-form-draft";
 
 interface Props {
   open: boolean;
@@ -20,6 +21,25 @@ export default function CreateCommunityModal({ open, onClose }: Props) {
   const [description, setDescription] = useState("");
 
   const { mutate: createCommunity, isPending } = useCreateCommunity();
+
+  // Kept in this browser until created or cancelled; closing the modal (or a
+  // refresh) doesn't lose it.
+  const { clear: clearSaved } = useFormDraft(
+    "community:new",
+    { name, description },
+    (saved) => {
+      setName(saved.name ?? "");
+      setDescription(saved.description ?? "");
+    },
+    { isEmpty: (value) => !value.name.trim() && !value.description.trim() }
+  );
+
+  const cancel = () => {
+    setName("");
+    setDescription("");
+    clearSaved();
+    onClose();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -37,6 +57,7 @@ export default function CreateCommunityModal({ open, onClose }: Props) {
       { name: name.trim(), description: description.trim() || undefined },
       {
         onSuccess: (response) => {
+          clearSaved();
           setName("");
           setDescription("");
           onClose();
@@ -103,7 +124,7 @@ export default function CreateCommunityModal({ open, onClose }: Props) {
             </div>
 
             <div className="flex items-center justify-end gap-3 border-t border-line px-6 py-4">
-              <Button type="button" variant="outline" onClick={onClose} className="h-10 rounded-xl px-5">
+              <Button type="button" variant="outline" onClick={cancel} className="h-10 rounded-xl px-5">
                 Cancel
               </Button>
               <Button
