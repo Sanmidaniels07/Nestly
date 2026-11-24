@@ -10,6 +10,7 @@ import PushSync from "../components/push/push-sync";
 import InstallPrompt from "../components/pwa/install-prompt";
 import { LiveDockProvider } from "../components/live/live-dock-context";
 import LiveDock from "../components/live/live-dock";
+import GuestCartSync from "../components/guest-checkout/guest-cart-sync";
 
 
 
@@ -27,6 +28,7 @@ export default function Providers({
           <AuthInitializer />
           <RouteMemory />
           <PushSync />
+          <GuestCartSync />
           <InstallPrompt />
           {children}
           {/* A live keeps running here while the person uses the rest of the app. */}

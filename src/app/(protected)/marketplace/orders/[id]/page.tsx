@@ -22,10 +22,14 @@ interface Props {
   params: Promise<{
     id: string;
   }>;
+  // ?item=&action=return|problem: open that item's form (e.g. coming from a
+  // guest order after setting up an account).
+  searchParams: Promise<{ item?: string; action?: string }>;
 }
 
-export default function OrderDetailsPage({ params }: Props) {
+export default function OrderDetailsPage({ params, searchParams }: Props) {
   const { id } = use(params);
+  const { item: focusItem, action } = use(searchParams);
   const { data: order, isLoading, isError } = useOrder(id);
 
   if (isLoading) {
@@ -63,7 +67,7 @@ export default function OrderDetailsPage({ params }: Props) {
           <GiftNotice order={order} />
           <SoldOutNotice order={order} />
           <DeliveryCodes order={order} />
-          <OrderedProducts order={order} />
+          <OrderedProducts order={order} focus={{ itemId: focusItem, mode: action }} />
           <SellerNotesCard order={order} />
 
           {order.address && <ShippingAddress address={order.address} deliveryPhone={order.deliveryPhone} />}

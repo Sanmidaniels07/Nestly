@@ -80,6 +80,12 @@ export const confirmGuestDelivery = async (token: string, orderItemId: string) =
   return response.data;
 };
 
+// "No thanks" to making an account (recorded for the admin's guest list).
+export const declineGuestAccount = async (token: string) => {
+  const response = await api.post<ApiResponse<null>>(`${guestOrderPath(token)}/decline-account`);
+  return response.data;
+};
+
 export const claimGuestAccount = async (token: string, password: string) => {
   const response = await api.post<ApiResponse<ClaimGuestAccountResponse>>(`${guestOrderPath(token)}/claim`, { password });
   return response.data;

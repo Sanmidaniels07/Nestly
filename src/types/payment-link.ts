@@ -147,7 +147,8 @@ export interface GuestPayPaymentLinkResponse extends PayPaymentLinkResponse {
 export interface GuestOrder extends Order {
   store: { name: string; slug: string; logo: string | null; isVerified: boolean; sellerUserId: string } | null;
   paymentLinkCode: string | null;
-  buyer: { name: string; email: string; isGuest: boolean };
+  // declinedAccount: said "No thanks" to the account offer after checkout.
+  buyer: { name: string; email: string; isGuest: boolean; declinedAccount?: boolean };
 }
 
 export type ClaimGuestAccountResponse =

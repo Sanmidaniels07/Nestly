@@ -9,6 +9,7 @@ import { useAuthStore } from "../store/auth-store";
 import {
   claimGuestAccount,
   confirmGuestDelivery,
+  declineGuestAccount,
   createPaymentLink,
   deletePaymentLink,
   getGuestOrder,
@@ -169,3 +170,12 @@ export const usePayPaymentLink = () =>
     mutationFn: ({ code, data }) => payPaymentLink(code, data),
     onError: (error) => toast.error(errorMessage(error, "Couldn't start the payment")),
   });
+
+// "No thanks" to the account offer after checkout.
+export const useDeclineGuestAccount = (token: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<Awaited<ReturnType<typeof declineGuestAccount>>, AxiosError<ApiErrorResponse>, void>({
+    mutationFn: () => declineGuestAccount(token),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: guestOrderKey(token) }),
+  });
+};

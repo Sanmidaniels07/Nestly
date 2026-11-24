@@ -8,7 +8,7 @@ import { LogOut, Play } from "lucide-react";
 import { DEMO_URL } from "../../lib/site";
 import ThemeToggle from "@/src/components/ui/theme-toggle";
 import Button from "@/src/components/ui/button";
-import CartButton from "./cart-button";
+import CartButton, { GuestCartButton } from "./cart-button";
 import Tooltip from "./tooltip";
 import SavedButton from "./saved-button";
 import OrdersButton from "./orders-button";
@@ -134,6 +134,8 @@ export default function Navbar() {
 
               {!isAuthenticated && (
                 <>
+                  {/* Shopping without an account: their browser cart. */}
+                  <GuestCartButton />
                   {showLogin && (
                     <Link href="/login">
                       <Button variant="outline" size="sm" className="hidden sm:flex">
