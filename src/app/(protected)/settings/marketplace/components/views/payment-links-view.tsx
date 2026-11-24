@@ -171,10 +171,15 @@ function LinkRow({ link, onEdit }: { link: PaymentLink; onEdit: () => void }) {
           <div className="flex flex-wrap items-center gap-2">
             <h4 className="min-w-0 truncate text-[14.5px] font-semibold text-ink">{link.title}</h4>
             <span className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${status.className}`}>{status.label}</span>
+            {link.fromListing && (
+              <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[11px] font-semibold text-violet-700 dark:bg-violet-500/10 dark:text-violet-300">
+                From your shop
+              </span>
+            )}
           </div>
           <p className="mt-0.5 font-[family-name:var(--font-mono)] text-[14px] font-semibold text-violet-700 dark:text-violet-300">{naira(link.price)}</p>
           <p className="mt-1 text-[12px] text-muted">
-            {link.quantity} left · {deliveryText(link)}
+            {link.quantity} {link.fromListing ? "in stock" : "left"} · {deliveryText(link)}
             {link.sales.orders > 0 && (
               <>
                 {" "}· <span className="font-semibold text-ink-2">{link.sales.orders} paid order{link.sales.orders === 1 ? "" : "s"} ({naira(link.sales.revenue)})</span>

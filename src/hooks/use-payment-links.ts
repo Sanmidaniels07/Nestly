@@ -13,6 +13,7 @@ import {
   deletePaymentLink,
   getGuestOrder,
   getMyPaymentLinks,
+  getProductPayLink,
   getPaymentLink,
   guestPayPaymentLink,
   payPaymentLink,
@@ -47,6 +48,15 @@ export const useCreatePaymentLink = () => {
     mutationFn: createPaymentLink,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: MY_LINKS }),
     onError: (error) => toast.error(errorMessage(error, "Couldn't create the link")),
+  });
+};
+
+// "Share pay link" on a product. Errors are shown by the caller (inline).
+export const useProductPayLink = () => {
+  const queryClient = useQueryClient();
+  return useMutation<Awaited<ReturnType<typeof getProductPayLink>>, AxiosError<ApiErrorResponse>, string>({
+    mutationFn: getProductPayLink,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: MY_LINKS }),
   });
 };
 

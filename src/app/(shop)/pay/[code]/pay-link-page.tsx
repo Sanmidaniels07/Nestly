@@ -134,6 +134,13 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
 
         {link.description && <p className="whitespace-pre-line text-[14px] leading-relaxed text-ink-2">{link.description}</p>}
 
+        {/* Shared from the seller's shop: the full listing, with its reviews. */}
+        {link.productId && (
+          <Link href={`/marketplace/product/${link.productId}`} className="inline-block text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300">
+            See it in the shop - details and reviews
+          </Link>
+        )}
+
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl bg-surface-sunken p-3.5">
           <Link href={`/marketplace/seller/${link.store.slug}`} className="flex min-w-0 items-center gap-3">
             <span className="relative flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full bg-violet-100 text-violet-700 dark:bg-violet-500/15 dark:text-violet-300">

@@ -33,6 +33,10 @@ export interface PaymentLink {
   deliveryFee: number;
   deliveryVehicle: DeliveryVehicle;
   isActive: boolean;
+  // Shared from a product in the shop ("Share pay link"): title, price,
+  // photos and stock are the listing's - only delivery is edited here.
+  fromListing: boolean;
+  productId: string | null;
   createdAt: string;
   updatedAt: string;
   sales: { orders: number; units: number; revenue: number };
@@ -60,6 +64,8 @@ export interface PublicPaymentLink {
   price: number;
   images: { url: string; isPrimary: boolean }[];
   category: Pick<Category, "id" | "name" | "slug">;
+  // Shared from a product in the shop - the listing, for "See it in the shop".
+  productId?: string | null;
   quantityAvailable: number;
   deliveryType: PaymentLinkDelivery;
   deliveryFee: number;
