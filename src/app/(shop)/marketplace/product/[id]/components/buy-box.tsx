@@ -236,7 +236,7 @@ export default function BuyBox({ product }: Props) {
         </div>
       </div>
 
-      {isOwner && product.status === "PUBLISHED" && !hasOptions && (
+      {isOwner && product.status === "PUBLISHED" && (
         <div className="rounded-2xl border border-violet-200 bg-violet-50/60 p-4 dark:border-violet-500/30 dark:bg-violet-500/5">
           <p className="text-[13px] font-semibold text-ink">Selling this on WhatsApp or Instagram?</p>
           <p className="mt-0.5 text-[12px] leading-relaxed text-muted">Share a pay link - buyers pay straight away, no account needed.</p>

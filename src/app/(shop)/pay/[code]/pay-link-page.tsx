@@ -45,6 +45,7 @@ import ShippingAddress from "@/src/app/(protected)/marketplace/checkout/componen
 import ZonePicker, { ZoneOption } from "@/src/app/(protected)/marketplace/checkout/components/zone-picker";
 import { ApiResponse } from "@/src/types/api";
 import { PublicPaymentLink } from "@/src/types/payment-link";
+import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
 
 interface Props {
   code: string;
@@ -100,6 +101,9 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
   const images = [...link.images].sort((a, b) => Number(b.isPrimary) - Number(a.isPrimary));
   const [active, setActive] = useState(0);
   const location = [...new Set([link.store.city, link.store.state].filter(Boolean))].join(", ");
+  // Options with their own prices: show the cheapest one in stock.
+  const prices = (link.variations ?? []).filter((v) => v.isActive && v.stock > 0).map((v) => v.price ?? link.price);
+  const lowest = prices.length ? Math.min(...prices) : link.price;
 
   return (
     <section className="overflow-hidden rounded-2xl border border-line bg-surface">
@@ -129,7 +133,16 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
       <div className="space-y-4 p-5 sm:p-6">
         <div>
           <h1 className="font-[family-name:var(--font-fraunces)] text-[26px] leading-tight text-ink sm:text-[30px]">{link.title}</h1>
-          <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-violet-700 dark:text-violet-300">{naira(link.price)}</p>
+          <p className="mt-1.5 font-[family-name:var(--font-mono)] text-[22px] font-semibold text-violet-700 dark:text-violet-300">
+            {lowest < link.price || prices.some((p) => p !== lowest) ? (
+              <>
+                <span className="mr-1.5 text-[14px] font-medium text-muted">From</span>
+                {naira(lowest)}
+              </>
+            ) : (
+              naira(link.price)
+            )}
+          </p>
         </div>
 
         {link.description && <p className="whitespace-pre-line text-[14px] leading-relaxed text-ink-2">{link.description}</p>}
@@ -237,34 +250,56 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   const [accountExists, setAccountExists] = useState(false);
 
   const [quantity, setQuantity] = useState(1);
+  // Shared from the shop with options (e.g. Size, Colour): one combination
+  // is bought, with its own price and stock - as in the shop.
+  const options = link.options ?? [];
+  const variations = link.variations ?? [];
+  const hasOptions = options.length > 0 && variations.length > 0;
+  const startPicked = () => options.map((option) => (option.values.length === 1 ? option.values[0] : ""));
+  const [picked, setPicked] = useState<string[]>(startPicked);
+  const match = hasOptions
+    ? variations.find((v) => v.option1 === picked[0] && (options.length < 2 || v.option2 === picked[1]))
+    : undefined;
+  const matchSellable = !!match && match.isActive && match.stock > 0;
   const [zone, setZone] = useState<ZoneOption | null>(null);
   const clearZone = useCallback(() => setZone(null), []);
   const [note, setNote] = useState("");
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const attemptRef = useRef(0);
+  const pick = (position: number, value: string) => {
+    setPicked((current) => current.map((v, i) => (i === position ? (v === value ? "" : value) : v)));
+    setQuantity(1);
+    setError("");
+  };
 
   // What they've filled in is kept in this browser until they pay - also for
   // guests (no account), so a refresh or coming back later picks up here.
   const { restored, clear: clearSaved, dismissNotice } = useFormDraft(
     `pay-link:${link.code}`,
-    { guest, quantity, zoneId: zone?.id ?? null, note },
+    { guest, quantity, zoneId: zone?.id ?? null, note, picked },
     (saved) => {
       setGuest({ ...emptyGuest, ...saved.guest });
       setQuantity(saved.quantity || 1);
+      if (Array.isArray(saved.picked) && saved.picked.length === options.length) setPicked(saved.picked);
       setZone(link.shippingOptions.find((option) => option.id === saved.zoneId) ?? null);
       setNote(saved.note ?? "");
     },
     {
       guest: true,
       isEmpty: (value) =>
-        JSON.stringify(value.guest) === JSON.stringify(emptyGuest) && value.quantity === 1 && !value.zoneId && !value.note.trim(),
+        JSON.stringify(value.guest) === JSON.stringify(emptyGuest) &&
+        value.quantity === 1 &&
+        !value.zoneId &&
+        !value.note.trim() &&
+        JSON.stringify(value.picked) === JSON.stringify(startPicked()),
     }
   );
 
   const startOver = () => {
     setGuest(emptyGuest);
     setQuantity(1);
+    setPicked(startPicked());
     setZone(null);
     setNote("");
     clearSaved();
@@ -272,9 +307,23 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
 
   const isPickup = link.deliveryType === "PICKUP";
   const buyerChooses = link.deliveryType === "STORE_OPTIONS";
-  const max = Math.max(1, link.quantityAvailable);
+  const available = hasOptions ? (matchSellable ? match!.stock : 0) : link.quantityAvailable;
+  const max = Math.max(1, available);
   const qty = Math.min(quantity, max);
-  const subtotal = link.price * qty;
+  const unitPrice = match?.price ?? link.price;
+  const subtotal = unitPrice * qty;
+  // "Size: L · Colour: Black"
+  const choiceLabel = match
+    ? [match.option1, match.option2].map((value, i) => (value && options[i] ? `${options[i].name}: ${value}` : "")).filter(Boolean).join(" · ")
+    : "";
+  // Nothing to pay for until a combination that's in stock is chosen.
+  const optionProblem = !hasOptions
+    ? ""
+    : !match
+      ? `Choose the ${options.filter((_, i) => !picked[i]).map((option) => option.name.toLowerCase()).join(" and ") || "option"} you want.`
+      : !matchSellable
+        ? `${choiceLabel} is sold out. Choose another option.`
+        : "";
   // Unknown until the buyer picks a zone (buyerChooses).
   const deliveryFee: number | null = buyerChooses ? zone?.fee ?? null : isPickup ? 0 : link.deliveryFee;
   const total = subtotal + (deliveryFee ?? 0);
@@ -336,6 +385,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   const collects = isPickup || zone?.type === "PICKUP";
 
   const payAsGuest = async () => {
+    if (optionProblem) return setError(optionProblem);
     if (buyerChooses && !zone) return setError("Choose how you'd like to receive it.");
     const problem = guestProblem(guest, !collects);
     if (problem) return setError(problem);
@@ -356,6 +406,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
           ...(collects ? {} : { address: guest.address.trim(), city: guest.city.trim(), state: guest.state }),
           quantity: qty,
           shippingOptionId: zone?.id,
+          variationId: match?.id,
           note: note.trim() || undefined,
           source: trafficSource(),
           referralCode: referralCode(),
@@ -391,6 +442,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
 
   const pay = async () => {
     if (isGuest) return payAsGuest();
+    if (optionProblem) return setError(optionProblem);
     if (!addressId) return setError("Add or choose your address first.");
     if (buyerChooses && !zone) return setError("Choose how you'd like to receive it.");
     if (deliveryPhone && !PHONE_PATTERN.test(deliveryPhone)) return setError("Check the phone number for delivery.");
@@ -403,7 +455,7 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     try {
       const { data } = await startPayment({
         code: link.code,
-        data: { quantity: qty, addressId, shippingOptionId: zone?.id, deliveryPhone, note: note.trim() || undefined, source: trafficSource() },
+        data: { quantity: qty, addressId, shippingOptionId: zone?.id, variationId: match?.id, deliveryPhone, note: note.trim() || undefined, source: trafficSource() },
       });
       await payWithPaystack(data.accessCode, {
         onSuccess: async () => {
@@ -437,7 +489,9 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
     <aside className="space-y-5">
       {restored && <DraftRestoredNotice what="the details you entered" onStartOver={startOver} onDismiss={dismissNotice} />}
       <div className="space-y-4 rounded-2xl border border-line bg-surface p-5 sm:p-6">
-        {link.quantityAvailable > 1 && (
+        {hasOptions && <OptionPicker options={options} variations={variations} picked={picked} onPick={pick} />}
+
+        {available > 1 && (
           <div className="flex items-center justify-between">
             <span className="text-[13.5px] font-semibold text-ink-2">Quantity</span>
             <div className="flex items-center gap-1 rounded-xl border border-line p-1">
@@ -483,7 +537,10 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
 
         <dl className="space-y-2 text-[13.5px]">
           <div className="flex justify-between">
-            <dt className="text-muted">{qty > 1 ? `${qty} × ${naira(link.price)}` : "Item"}</dt>
+            <dt className="min-w-0 text-muted">
+              {qty > 1 ? `${qty} × ${naira(unitPrice)}` : "Item"}
+              {choiceLabel && <span className="block text-[12px] text-subtle">{choiceLabel}</span>}
+            </dt>
             <dd className="font-[family-name:var(--font-mono)] text-ink">{naira(subtotal)}</dd>
           </div>
           {!isPickup && (
