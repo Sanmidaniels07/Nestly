@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, MessageSquarePlus, PackageCheck, RotateCcw, Truck } from "lucide-react";
@@ -31,14 +31,23 @@ const CONFIRMED_BY_COPY = {
 export interface GuestItemActions {
   onConfirm: (orderItemId: string) => void;
   isConfirming: boolean;
+  // Return / problem report: needs an account (or Nestly Support).
+  onHelp: (item: OrderItem, mode: "return" | "problem") => void;
+}
+
+// From a link (?item=&action=): open this item's return / problem form.
+export interface ItemFocus {
+  itemId?: string;
+  mode?: string;
 }
 
 interface Props {
   order: Order;
   guest?: GuestItemActions;
+  focus?: ItemFocus;
 }
 
-export default function OrderedProducts({ order, guest }: Props) {
+export default function OrderedProducts({ order, guest, focus }: Props) {
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
@@ -54,6 +63,7 @@ export default function OrderedProducts({ order, guest }: Props) {
             orderStatus={order.status}
             events={(order.events ?? []).filter((event) => event.orderItemId === item.id)}
             guest={guest}
+            focus={focus?.itemId === item.id ? focus : undefined}
           />
         ))}
       </div>
@@ -67,15 +77,33 @@ function OrderedProductItem({
   orderStatus,
   events,
   guest,
+  focus,
 }: {
   orderId: string;
   item: OrderItem;
   orderStatus: string;
   events: OrderEvent[];
   guest?: GuestItemActions;
+  focus?: ItemFocus;
 }) {
   const [reviewing, setReviewing] = useState(false);
-  const [returnMode, setReturnMode] = useState<"return" | "problem" | null>(null);
+  const problemAlready = events.some((event) => event.type === "PROBLEM_REPORTED");
+  // Came from "Request a return" / "Report a problem" (e.g. after setting up
+  // an account from a guest order): the form is open and in view.
+  // Only a form they can use now: a return once it's delivered (within the
+  // window), a problem while the delivery waits for their confirmation.
+  const delivered = (item.status ?? orderStatus).toUpperCase() === "DELIVERED";
+  const focusMode =
+    focus?.mode === "return" && delivered && !item.awaitingConfirmation && (item.returnWindowOpen ?? true)
+      ? "return"
+      : focus?.mode === "problem" && item.awaitingConfirmation
+        ? "problem"
+        : null;
+  const [returnMode, setReturnMode] = useState<"return" | "problem" | null>(!guest && !problemAlready ? focusMode : null);
+  const articleRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    if (focusMode) articleRef.current?.scrollIntoView({ block: "start", behavior: "smooth" });
+  }, [focusMode]);
   const { mutate: confirmAsBuyer, isPending: isConfirmingAsBuyer } = useConfirmDelivery(orderId);
   const confirmDelivery = guest ? guest.onConfirm : confirmAsBuyer;
   const isConfirming = guest ? guest.isConfirming : isConfirmingAsBuyer;
@@ -89,7 +117,7 @@ function OrderedProductItem({
   const withinReturnWindow = item.returnWindowOpen ?? true;
 
   return (
-    <article className="flex flex-col gap-5 rounded-2xl border border-line p-4 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 sm:flex-row sm:p-5">
+    <article ref={articleRef} className="flex scroll-mt-24 flex-col gap-5 rounded-2xl border border-line p-4 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 sm:flex-row sm:p-5">
       <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-xl bg-surface-sunken sm:w-28">
         {primaryImage && (
           <Image fill src={primaryImage} alt={item.product.title} className="object-cover" />
@@ -160,9 +188,9 @@ function OrderedProductItem({
               </button>
             )}
 
-            {!guest && isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && returnMode === null && (
+            {isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && returnMode === null && (
               <button
-                onClick={() => setReturnMode("return")}
+                onClick={() => (guest ? guest.onHelp(item, "return") : setReturnMode("return"))}
                 className="whitespace-nowrap flex h-10 items-center justify-center gap-1.5 rounded-xl border border-amber-200 px-4 text-[12.5px] font-semibold text-amber-700 transition-colors hover:bg-amber-50 dark:border-amber-500/30 dark:text-amber-300 dark:hover:bg-amber-500/10"
               >
                 <RotateCcw size={14} />
@@ -191,13 +219,14 @@ function OrderedProductItem({
                 {isConfirming ? "Confirming..." : "Yes, I received it"}
               </button>
               {guest ? (
-                <a
-                  href="#account"
+                <button
+                  type="button"
+                  onClick={() => guest.onHelp(item, "problem")}
                   className="whitespace-nowrap flex h-10 items-center gap-1.5 rounded-xl border border-amber-300 bg-surface px-4 text-[12.5px] font-semibold text-amber-800 transition-colors hover:bg-amber-100 dark:border-amber-500/40 dark:text-amber-200 dark:hover:bg-amber-500/15"
                 >
                   <AlertTriangle size={15} />
                   Report a problem
-                </a>
+                </button>
               ) : (
                 <button
                   onClick={() => setReturnMode("problem")}
@@ -209,19 +238,6 @@ function OrderedProductItem({
               )}
             </div>
           </div>
-        )}
-
-        {guest && isDelivered && !item.awaitingConfirmation && withinReturnWindow && !problemReported && (
-          <p className="flex items-start gap-2 rounded-xl bg-surface-sunken px-3.5 py-2.5 text-[12.5px] text-muted">
-            <AlertTriangle size={14} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" />
-            <span>
-              Something wrong with it?{" "}
-              <a href="#account" className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
-                Set up your account
-              </a>{" "}
-              to report a problem or ask for a return.
-            </span>
-          </p>
         )}
 
         {problemReported && (

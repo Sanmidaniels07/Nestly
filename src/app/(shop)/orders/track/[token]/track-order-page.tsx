@@ -16,6 +16,7 @@ import { useSession } from "@/src/hooks/use-session";
 import { formatRelativeTime } from "@/src/lib/date";
 import { orderReference } from "@/src/lib/support";
 import { GuestOrder } from "@/src/types/payment-link";
+import GuestHelpDialog, { GuestHelpMode } from "@/src/components/guest-checkout/guest-help-dialog";
 import Skeleton from "@/src/components/ui/skeleton";
 import OrderStatusBadge from "@/src/app/(protected)/marketplace/orders/components/order-status-badge";
 import DeliveryCodes from "@/src/app/(protected)/marketplace/orders/[id]/components/delivery-codes";
@@ -35,6 +36,8 @@ export default function TrackOrderPage({ token, welcome = false }: { token: stri
   // is recorded; they can still make one from the card at the side later.
   const [offerClosed, setOfferClosed] = useState(false);
   const { mutate: decline } = useDeclineGuestAccount(token);
+  // Request a return / report a problem: account (back to the form) or Nestly Support.
+  const [help, setHelp] = useState<{ item: { id: string; title: string }; mode: GuestHelpMode } | null>(null);
   const { mutate: confirm, isPending: isConfirming } = useConfirmGuestDelivery(token);
 
   if (isLoading) {
@@ -72,6 +75,7 @@ export default function TrackOrderPage({ token, welcome = false }: { token: stri
       </div>
 
       <Header order={order} />
+      {help && <GuestHelpDialog order={order} token={token} item={help.item} mode={help.mode} onClose={() => setHelp(null)} />}
       {showOffer && (
         <AccountCard
           order={order}
@@ -91,7 +95,11 @@ export default function TrackOrderPage({ token, welcome = false }: { token: stri
           <DeliveryCodes order={order} />
           <OrderedProducts
             order={order}
-            guest={{ onConfirm: (itemId) => confirm(itemId), isConfirming }}
+            guest={{
+              onConfirm: (itemId) => confirm(itemId),
+              isConfirming,
+              onHelp: (item, mode) => setHelp({ item: { id: item.id, title: item.product.title }, mode }),
+            }}
           />
           {order.address && order.address.address !== "Pickup" && (
             <ShippingAddress address={order.address} deliveryPhone={order.deliveryPhone} />
