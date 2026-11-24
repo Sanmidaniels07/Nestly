@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BadgeCheck, CheckCircle2, Loader2, Lock, Mail, RefreshCw, ShieldCheck, Store, UserRound } from "lucide-react";
+import { BadgeCheck, CheckCircle2, Loader2, Lock, Mail, RefreshCw, ShieldCheck, Sparkles, Store, UserRound } from "lucide-react";
 
 import {
   useClaimGuestAccount,
   useConfirmGuestDelivery,
+  useDeclineGuestAccount,
   useGuestOrder,
   useVerifyGuestOrder,
 } from "@/src/hooks/use-payment-links";
@@ -24,11 +25,16 @@ import OrderTimeline from "@/src/app/(protected)/marketplace/orders/[id]/compone
 import OrderSummary from "@/src/app/(protected)/marketplace/orders/[id]/components/order-summary";
 import SoldOutNotice from "@/src/app/(protected)/marketplace/orders/[id]/components/sold-out-notice";
 
-// Where someone who paid through a payment link without an account follows
+// Where someone who paid without an account (a payment link or the shop
+// cart) follows
 // their order: status, delivery code, confirming it arrived - and turning
 // it into a full account when they're ready.
-export default function TrackOrderPage({ token }: { token: string }) {
+export default function TrackOrderPage({ token, welcome = false }: { token: string; welcome?: boolean }) {
   const { data: order, isLoading, isError } = useGuestOrder(token);
+  // Just paid as a guest: offer a free account at the top, once. "No thanks"
+  // is recorded; they can still make one from the card at the side later.
+  const [offerClosed, setOfferClosed] = useState(false);
+  const { mutate: decline } = useDeclineGuestAccount(token);
   const { mutate: confirm, isPending: isConfirming } = useConfirmGuestDelivery(token);
 
   if (isLoading) {
@@ -57,6 +63,8 @@ export default function TrackOrderPage({ token }: { token: string }) {
     );
   }
 
+  const showOffer = welcome && !offerClosed && order.buyer.isGuest && !order.buyer.declinedAccount;
+
   return (
     <div className="mx-auto max-w-6xl space-y-6 px-4 pb-20 pt-6 sm:pt-8">
       <div className="flex items-center gap-2 text-[12.5px] font-semibold text-emerald-700 dark:text-emerald-300">
@@ -64,6 +72,17 @@ export default function TrackOrderPage({ token }: { token: string }) {
       </div>
 
       <Header order={order} />
+      {showOffer && (
+        <AccountCard
+          order={order}
+          token={token}
+          welcome
+          onDecline={() => {
+            setOfferClosed(true);
+            decline();
+          }}
+        />
+      )}
       {order.status === "PENDING" && <ConfirmingPayment token={token} />}
 
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
@@ -81,7 +100,7 @@ export default function TrackOrderPage({ token }: { token: string }) {
         </section>
 
         <aside className="min-w-0 space-y-5">
-          <AccountCard order={order} token={token} />
+          {!showOffer && <AccountCard order={order} token={token} />}
           <OrderSummary order={order} />
           <Protection />
         </aside>
@@ -167,7 +186,18 @@ function ConfirmingPayment({ token }: { token: string }) {
 
 // Turn the guest checkout into a full account: set a password here (or a
 // link is emailed when the account has older orders too).
-function AccountCard({ order, token }: { order: GuestOrder; token: string }) {
+function AccountCard({
+  order,
+  token,
+  welcome = false,
+  onDecline,
+}: {
+  order: GuestOrder;
+  token: string;
+  // Right after paying: the big "keep using Nestly?" offer with No thanks.
+  welcome?: boolean;
+  onDecline?: () => void;
+}) {
   const { isLoggedIn } = useSession();
   const { mutate: claim, isPending, data: result } = useClaimGuestAccount(token);
   const [password, setPassword] = useState("");
@@ -216,14 +246,46 @@ function AccountCard({ order, token }: { order: GuestOrder; token: string }) {
   };
 
   return (
-    <section id="account" className="rounded-2xl border border-line bg-surface p-5">
-      <p className="flex items-center gap-2 text-[14.5px] font-semibold text-ink">
-        <UserRound size={17} className="text-violet-600 dark:text-violet-400" /> Save your details for next time
-      </p>
-      <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
-        Add a password to keep this order in a free Nestly account ({order.buyer.email}). You&apos;ll be able to message the seller,
-        report a problem, leave a review and check out faster.
-      </p>
+    <section
+      id="account"
+      className={
+        welcome
+          ? "rounded-2xl border border-violet-200 bg-gradient-to-br from-violet-50 to-indigo-50 p-5 dark:border-violet-500/30 dark:from-violet-500/10 dark:to-indigo-500/10 sm:p-6"
+          : "rounded-2xl border border-line bg-surface p-5"
+      }
+    >
+      {welcome ? (
+        <>
+          <p className="flex items-center gap-2 text-[16px] font-semibold text-ink">
+            <Sparkles size={18} className="text-violet-600 dark:text-violet-300" /> Thanks for your order! Keep using Nestly?
+          </p>
+          <p className="mt-1.5 text-[13px] leading-relaxed text-ink-2">
+            Add a password and this becomes your free Nestly account ({order.buyer.email}). It&apos;s optional - your order is safe either way.
+          </p>
+          <ul className="mt-3 grid gap-1.5 text-[12.5px] text-ink-2 sm:grid-cols-2">
+            {[
+              "See all your orders in one place",
+              "Message sellers and report a problem",
+              "Follow shops and get their new arrivals",
+              "Check out faster next time",
+            ].map((benefit) => (
+              <li key={benefit} className="flex items-start gap-1.5">
+                <CheckCircle2 size={14} className="mt-0.5 shrink-0 text-emerald-600" /> {benefit}
+              </li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <>
+          <p className="flex items-center gap-2 text-[14.5px] font-semibold text-ink">
+            <UserRound size={17} className="text-violet-600 dark:text-violet-400" /> Save your details for next time
+          </p>
+          <p className="mt-1.5 text-[12.5px] leading-relaxed text-muted">
+            Add a password to keep this order in a free Nestly account ({order.buyer.email}). You&apos;ll be able to message the seller,
+            report a problem, leave a review and check out faster.
+          </p>
+        </>
+      )}
       <form onSubmit={submit} className="mt-3 space-y-2.5">
         <input
           type="password"
@@ -251,6 +313,15 @@ function AccountCard({ order, token }: { order: GuestOrder; token: string }) {
         </Link>{" "}
         using the same email.
       </p>
+      {welcome && onDecline && (
+        <button
+          type="button"
+          onClick={onDecline}
+          className="mt-3 w-full rounded-xl border border-line bg-surface py-2.5 text-[13px] font-semibold text-ink-2 transition-colors hover:bg-surface-sunken"
+        >
+          No thanks, just this order
+        </button>
+      )}
     </section>
   );
 }

@@ -1,15 +1,16 @@
 import { api } from "../lib/axios";
-import { ApiResponse, Paginated } from "../types/api";
+import { ApiResponse } from "../types/api";
 import {
   AdminUser,
   AdminUserListParams,
+  AdminUserListResponse,
   UpdateUserStatusPayload,
   UpdateUserStatusResponse,
   UserRole,
 } from "../types/admin-user";
 
 export const getAdminUsers = async (params: AdminUserListParams) => {
-  const response = await api.get<ApiResponse<Paginated<"users", AdminUser>>>(
+  const response = await api.get<ApiResponse<AdminUserListResponse>>(
     "/admin/users",
     { params }
   );

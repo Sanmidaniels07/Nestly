@@ -7,7 +7,13 @@ import { useAuthStore } from "@/src/store/auth-store";
 import { useAdminUsers } from "@/src/hooks/use-admin-users";
 import { useUpdateUserRole } from "@/src/hooks/use-update-user-role";
 import { useUpdateUserStatus } from "@/src/hooks/use-update-user-status";
-import { AdminUser, UserAccountStatus, UserRole } from "@/src/types/admin-user";
+import {
+  AdminGuestFilter,
+  AdminGuestSummary,
+  AdminUser,
+  UserAccountStatus,
+  UserRole,
+} from "@/src/types/admin-user";
 import Input from "@/src/components/ui/input";
 import Pagination from "@/src/components/ui/pagination";
 import { useFormDraft } from "@/src/hooks/use-form-draft";
@@ -31,10 +37,31 @@ const STATUS_FILTERS: { label: string; value: UserAccountStatus | "ALL" }[] = [
   { label: "Banned", value: "BANNED" },
 ];
 
+// People who checked out without an account, split by whether they later
+// turned it into a full account.
+const GUEST_FILTERS: { label: string; value: AdminGuestFilter }[] = [
+  { label: "All guests", value: "all" },
+  { label: "Signed up", value: "signed_up" },
+  { label: "Not signed up", value: "not_signed_up" },
+  { label: "Said no thanks", value: "declined" },
+];
+
+const chipClass = (active: boolean) =>
+  `rounded-full px-4 py-2 text-[13px] font-semibold transition-colors ${
+    active
+      ? "bg-violet-600 text-white"
+      : "border border-line-strong text-muted hover:border-violet-200 dark:hover:border-violet-500/30"
+  }`;
+
+const formatShortDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+
 export default function UsersManager() {
   const [search, setSearch] = useState("");
   const [role, setRole] = useState<UserRole | "ALL">("ALL");
   const [status, setStatus] = useState<UserAccountStatus | "ALL">("ALL");
+  // null = the normal user list; otherwise the guest-shopper view.
+  const [guests, setGuests] = useState<AdminGuestFilter | null>(null);
   const [page, setPage] = useState(1);
 
   const { data, isLoading } = useAdminUsers({
@@ -43,12 +70,43 @@ export default function UsersManager() {
     search: search.trim() || undefined,
     role: role !== "ALL" ? role : undefined,
     status: status !== "ALL" ? status : undefined,
+    guests: guests ?? undefined,
   });
 
   const users = data?.users ?? [];
 
+  const changeGuests = (value: AdminGuestFilter | null) => {
+    setGuests(value);
+    setPage(1);
+  };
+
   return (
     <div className="space-y-5">
+      <div className="flex flex-wrap gap-2">
+        <button onClick={() => changeGuests(null)} className={chipClass(guests === null)}>
+          All users
+        </button>
+        <button onClick={() => changeGuests(guests ?? "all")} className={chipClass(guests !== null)}>
+          Guest shoppers
+        </button>
+      </div>
+
+      {guests !== null && (
+        <div className="space-y-3 rounded-2xl border border-line bg-surface-sunken p-3.5 sm:p-4">
+          <p className="text-[12.5px] text-muted">
+            People who checked out without an account, and whether they signed up afterwards.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {GUEST_FILTERS.map((f) => (
+              <button key={f.value} onClick={() => changeGuests(f.value)} className={chipClass(guests === f.value)}>
+                {f.label}
+              </button>
+            ))}
+          </div>
+          <GuestSummaryTiles summary={data?.guestSummary ?? null} isLoading={isLoading} />
+        </div>
+      )}
+
       <div className="grid gap-3 sm:grid-cols-[1fr_160px_160px]">
         <Input
           value={search}
@@ -100,7 +158,9 @@ export default function UsersManager() {
       ) : users.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
           <UsersIcon className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
-          <p className="mt-4 text-[13.5px] text-subtle">No users match your filters.</p>
+          <p className="mt-4 text-[13.5px] text-subtle">
+            {guests !== null ? "No guest shoppers match your filters." : "No users match your filters."}
+          </p>
         </div>
       ) : (
         <div className="space-y-2.5">
@@ -113,6 +173,86 @@ export default function UsersManager() {
       {data && data.totalPages > 1 && (
         <Pagination page={data.page} totalPages={data.totalPages} onPageChange={setPage} />
       )}
+    </div>
+  );
+}
+
+function GuestSummaryTiles({
+  summary,
+  isLoading,
+}: {
+  summary: AdminGuestSummary | null;
+  isLoading: boolean;
+}) {
+  if (!summary) {
+    return isLoading ? (
+      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <div key={i} className="h-[68px] animate-pulse rounded-xl bg-surface-2" />
+        ))}
+      </div>
+    ) : null;
+  }
+
+  const rate = summary.total > 0 ? Math.round((summary.signedUp / summary.total) * 100) : 0;
+  const tiles: { label: string; value: string; tone?: string }[] = [
+    { label: "Guests", value: summary.total.toLocaleString() },
+    { label: "Signed up", value: summary.signedUp.toLocaleString(), tone: "text-emerald-700 dark:text-emerald-300" },
+    { label: "Not signed up", value: summary.notSignedUp.toLocaleString(), tone: "text-amber-700 dark:text-amber-300" },
+    { label: "Said no thanks", value: summary.declined.toLocaleString(), tone: "text-red-600 dark:text-red-400" },
+    { label: "Sign-up rate", value: summary.total > 0 ? `${rate}%` : "—" },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-5">
+      {tiles.map((t, i) => (
+        <div
+          key={t.label}
+          className={`min-w-0 rounded-xl border border-line bg-surface px-3.5 py-3 ${
+            i === tiles.length - 1 ? "col-span-2 sm:col-span-1" : ""
+          }`}
+        >
+          <p className="truncate text-[11.5px] text-muted">{t.label}</p>
+          <p className={`mt-1 truncate text-[20px] font-semibold leading-tight tabular-nums ${t.tone ?? "text-ink"}`}>
+            {t.value}
+          </p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Badge + small dates for anyone who ever checked out as a guest.
+function GuestInfo({ user }: { user: AdminUser }) {
+  if (!user.guestSince) return null;
+
+  const badge = !user.isGuest
+    ? {
+        label: "Guest → signed up",
+        tone: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300",
+      }
+    : user.guestDeclinedAt
+      ? {
+          label: "Guest – said no thanks",
+          tone: "bg-red-50 dark:bg-red-500/10 text-red-700/80 dark:text-red-300/80",
+        }
+      : {
+          label: "Guest – not signed up",
+          tone: "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300",
+        };
+
+  const orders = user._count?.orders ?? 0;
+  const details = [
+    `First guest checkout ${formatShortDate(user.guestSince)}`,
+    !user.isGuest && user.guestJoinedAt ? `Signed up ${formatShortDate(user.guestJoinedAt)}` : null,
+    user.isGuest && user.guestDeclinedAt ? `Said no ${formatShortDate(user.guestDeclinedAt)}` : null,
+    `${orders} paid order${orders === 1 ? "" : "s"}`,
+  ].filter(Boolean);
+
+  return (
+    <div className="mt-2.5 flex flex-wrap items-center gap-x-2 gap-y-1.5">
+      <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${badge.tone}`}>{badge.label}</span>
+      <span className="text-[11.5px] text-subtle">{details.join(" · ")}</span>
     </div>
   );
 }
@@ -162,7 +302,7 @@ function UserRow({ user }: { user: AdminUser }) {
               </span>
             )}
           </div>
-          <p className="mt-0.5 text-[12.5px] text-muted">
+          <p className="mt-0.5 text-[12.5px] text-muted [overflow-wrap:anywhere]">
             {user.email}
             {user.username && ` · @${user.username}`}
           </p>
@@ -179,6 +319,8 @@ function UserRow({ user }: { user: AdminUser }) {
           </span>
         </div>
       </div>
+
+      <GuestInfo user={user} />
 
       {user.statusReason && user.status !== "ACTIVE" && (
         <p className="mt-2 rounded-lg bg-surface-sunken px-3 py-2 text-[12px] text-muted">

@@ -16,6 +16,9 @@ import { useRequireLogin } from "@/src/hooks/use-session";
 import ShareButton from "@/src/components/ui/share-button";
 import { SITE_URL } from "@/src/lib/site";
 import { useAuthStore } from "@/src/store/auth-store";
+import { useAuth } from "@/src/hooks/use-auth";
+import { useGuestCart } from "@/src/store/guest-cart-store";
+import toast from "react-hot-toast";
 import SharePayLinkDialog from "@/src/components/marketplace/share-pay-link-dialog";
 
 interface Props {
@@ -41,6 +44,8 @@ export default function BuyBox({ product }: Props) {
   const { isSaved: saved, toggle: toggleSaved } = useToggleWishlist(product.id);
   // The seller looking at their own listing can share its pay link.
   const currentUserId = useAuthStore((state) => state.user?.id);
+  const { isAuthenticated, isHydrated } = useAuth();
+  const addToGuestCart = useGuestCart((state) => state.add);
   const isOwner = !!currentUserId && currentUserId === product.store?.sellerUserId;
   const [sharingPayLink, setSharingPayLink] = useState(false);
 
@@ -81,6 +86,14 @@ export default function BuyBox({ product }: Props) {
 
   const handleAddToCart = () => {
     if (outOfStock || !choiceMade) return;
+    // No account: kept in this browser, paid for at guest checkout.
+    if (isHydrated && !isAuthenticated) {
+      addToGuestCart({ productId: product.id, variationId: match?.id ?? null, quantity });
+      toast.success("Added to cart");
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2000);
+      return;
+    }
     if (!requireLogin("Log in or create a free account to buy from Nestly sellers.")) return;
 
     addToCart(
@@ -105,6 +118,13 @@ export default function BuyBox({ product }: Props) {
 
   const handleBuyNow = () => {
     if (outOfStock || !choiceMade) return;
+    // No account: straight to guest checkout with just this item.
+    if (isHydrated && !isAuthenticated) {
+      const params = new URLSearchParams({ product: product.id, qty: String(quantity) });
+      if (match?.id) params.set("variation", match.id);
+      router.push(`/checkout/guest?${params}`);
+      return;
+    }
     if (!requireLogin("Log in or create a free account to buy from Nestly sellers.")) return;
 
     addToCart(
