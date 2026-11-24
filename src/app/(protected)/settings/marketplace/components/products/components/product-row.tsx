@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Archive, Eye, Pencil } from "lucide-react";
+import { Archive, Eye, Link2, Pencil } from "lucide-react";
 
 import { Product } from "@/src/types/product";
 import { useDeleteProduct } from "@/src/hooks/use-delete-product";
 import Checkbox from "@/src/components/ui/checkbox";
+import SharePayLinkDialog from "@/src/components/marketplace/share-pay-link-dialog";
 
 interface Props {
   product: Product;
@@ -17,6 +18,7 @@ interface Props {
 
 export default function ProductRow({ product, selected, onToggleSelect }: Props) {
   const [confirmingArchive, setConfirmingArchive] = useState(false);
+  const [sharingPayLink, setSharingPayLink] = useState(false);
   const { mutate: archiveProduct } = useDeleteProduct();
 
   const status =
@@ -87,6 +89,21 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
 
       <td className="whitespace-nowrap px-4 py-3 pr-5">
         <div className="flex items-center justify-end gap-1">
+          {product.status === "PUBLISHED" && (
+            <button
+              type="button"
+              onClick={() => setSharingPayLink(true)}
+              aria-label="Share pay link"
+              title="Share pay link - buyers pay without an account"
+              className="flex h-7 items-center justify-center gap-1 rounded-md px-1.5 text-[11.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+            >
+              <Link2 size={14} /> Pay link
+            </button>
+          )}
+          {sharingPayLink && (
+            <SharePayLinkDialog productId={product.id} productTitle={product.title} onClose={() => setSharingPayLink(false)} />
+          )}
+
           <Link
             href={`/marketplace/product/${product.id}`}
             aria-label="View product"

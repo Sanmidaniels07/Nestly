@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ImagePlus, Loader2, MapPinned, Star, Store, Truck, X } from "lucide-react";
 
 import { useCategories } from "@/src/hooks/use-categories";
@@ -43,6 +44,8 @@ const DELIVERY_OPTIONS = [
 ] as const;
 
 export default function LinkForm({ link, onDone, onCancel, firstLink = false, orderLimit = null }: Props) {
+  // Shared from a product in the shop: only delivery is edited here.
+  const fromListing = !!link?.fromListing;
   const { data: categories } = useCategories();
   const { mutateAsync: uploadImage } = useImageUpload();
   const { mutate: createLink, isPending: isCreating } = useCreatePaymentLink();
@@ -133,6 +136,18 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
     const amount = parseAmount(price);
     const count = Number(quantity);
     const fee = deliveryType === "DELIVERY" ? (deliveryFee.trim() ? parseAmount(deliveryFee) : 0) : 0;
+    const done = (response: { data: PaymentLink }) => {
+      clearDraft();
+      onDone(response.data);
+    };
+
+    // Shared from a product in the shop: only delivery is the link's own.
+    if (link?.fromListing) {
+      if (Number.isNaN(fee) || fee < 0) return setError("Enter the delivery fee, or 0 for free delivery.");
+      setError("");
+      updateLink({ id: link.id, data: { deliveryType, deliveryFee: fee } }, { onSuccess: done });
+      return;
+    }
 
     if (title.trim().length < 2) return setError("Give the item a name.");
     if (!(amount > 0)) return setError("Enter the price, e.g. 15000.");
@@ -158,10 +173,6 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
       images: images.map((url, index) => ({ url, isPrimary: index === 0 })),
     };
 
-    const done = (response: { data: PaymentLink }) => {
-      clearDraft();
-      onDone(response.data);
-    };
     if (link) updateLink({ id: link.id, data: payload }, { onSuccess: done });
     else createLink(payload, { onSuccess: done });
   };
@@ -195,6 +206,23 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
 
       {restored && <DraftRestoredNotice what={link ? "the changes you hadn't saved" : "the link you started"} onStartOver={startOver} onDismiss={dismissNotice} />}
 
+      {fromListing ? (
+        <div className="rounded-xl bg-surface-sunken px-4 py-3.5 text-[12.5px] leading-relaxed text-ink-2">
+          <p>
+            <span className="font-semibold text-ink">{link?.title}</span> · {naira(link?.price ?? 0)} · {link?.quantity} in stock
+          </p>
+          <p className="mt-1 text-muted">
+            This link sells the product from your shop, so its title, price, photos and stock always match it.{" "}
+            {link?.productId && (
+              <Link href={`/settings/marketplace/components/products/${link.productId}/edit`} className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
+                Edit the product
+              </Link>
+            )}{" "}
+            to change them.
+          </p>
+        </div>
+      ) : (
+      <>
       {/* Photos */}
       <div>
         <span className={label}>Photos</span>
@@ -280,6 +308,8 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
         />
         <p className="mt-1 text-[11.5px] text-subtle">Sets Nestly&apos;s commission, the same as for your listed products.</p>
       </div>
+      </>
+      )}
 
       {/* Delivery */}
       <div>
@@ -314,10 +344,12 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
             <p className="text-[12px] text-muted">
               The buyer picks their area when paying and pays that zone&apos;s fee - the same zones as your store (Store settings → Delivery).
             </p>
-            <div className="sm:max-w-sm">
-              <span className={label}>Smallest vehicle that can carry it</span>
-              <VehiclePicker value={vehicle} onChange={setVehicle} label="Smallest vehicle that can carry it" />
-            </div>
+            {!fromListing && (
+              <div className="sm:max-w-sm">
+                <span className={label}>Smallest vehicle that can carry it</span>
+                <VehiclePicker value={vehicle} onChange={setVehicle} label="Smallest vehicle that can carry it" />
+              </div>
+            )}
           </div>
         )}
         {deliveryType === "DELIVERY" && (
@@ -328,6 +360,7 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
         )}
       </div>
 
+      {!fromListing && (
       <div>
         <label htmlFor="link-desc" className={label}>Details (optional)</label>
         <textarea
@@ -340,6 +373,7 @@ export default function LinkForm({ link, onDone, onCancel, firstLink = false, or
           className="w-full rounded-xl border border-line bg-surface px-4 py-3 text-[16px] text-ink outline-none transition-colors placeholder:text-subtle focus:border-violet-400 focus:ring-4 focus:ring-violet-500/10 sm:text-[14px]"
         />
       </div>
+      )}
 
       {error && <p className="rounded-xl bg-red-50 px-3.5 py-2.5 text-[12.5px] text-red-600 dark:bg-red-500/10 dark:text-red-400">{error}</p>}
 

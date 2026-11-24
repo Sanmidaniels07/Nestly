@@ -23,6 +23,12 @@ export const createPaymentLink = async (data: PaymentLinkPayload) => {
   return response.data;
 };
 
+// The pay link for a product in the shop - made the first time, reused after.
+export const getProductPayLink = async (productId: string) => {
+  const response = await api.post<ApiResponse<PaymentLink>>(`/payment-links/from-product/${encodeURIComponent(productId)}`);
+  return response.data;
+};
+
 export const updatePaymentLink = async (id: string, data: UpdatePaymentLinkPayload) => {
   const response = await api.patch<ApiResponse<PaymentLink>>(`/payment-links/${id}`, data);
   return response.data;

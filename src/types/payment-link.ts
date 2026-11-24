@@ -5,6 +5,7 @@ import { User } from "./auth";
 import { Category } from "./category";
 import { ShippingOption } from "./store";
 import { DeliveryVehicle } from "../lib/delivery-vehicle";
+import { ProductOption, ProductVariation } from "./product";
 
 // DELIVERY: the seller delivers for the link's fee. PICKUP: from the store.
 // STORE_OPTIONS: the buyer picks one of the store's zones / pickup points.
@@ -33,6 +34,10 @@ export interface PaymentLink {
   deliveryFee: number;
   deliveryVehicle: DeliveryVehicle;
   isActive: boolean;
+  // Shared from a product in the shop ("Share pay link"): title, price,
+  // photos and stock are the listing's - only delivery is edited here.
+  fromListing: boolean;
+  productId: string | null;
   createdAt: string;
   updatedAt: string;
   sales: { orders: number; units: number; revenue: number };
@@ -60,6 +65,11 @@ export interface PublicPaymentLink {
   price: number;
   images: { url: string; isPrimary: boolean }[];
   category: Pick<Category, "id" | "name" | "slug">;
+  // Shared from a product in the shop - the listing, for "See it in the shop".
+  productId?: string | null;
+  // Shared from the shop with options (e.g. Size, Colour): the buyer picks one.
+  options?: ProductOption[];
+  variations?: ProductVariation[];
   quantityAvailable: number;
   deliveryType: PaymentLinkDelivery;
   deliveryFee: number;
@@ -91,6 +101,8 @@ export interface PayPaymentLinkPayload {
   quantity: number;
   addressId: string;
   shippingOptionId?: string;
+  // Shared from the shop with options: the combination chosen.
+  variationId?: string;
   deliveryPhone?: string;
   /** Where the visitor came from (admin overview). */
   source?: TrafficSource;
@@ -117,6 +129,8 @@ export interface GuestPayPaymentLinkPayload {
   state?: string;
   quantity: number;
   shippingOptionId?: string;
+  // Shared from the shop with options: the combination chosen.
+  variationId?: string;
   note?: string;
   source?: TrafficSource;
   // The store's ?ref= code, as at signup.
