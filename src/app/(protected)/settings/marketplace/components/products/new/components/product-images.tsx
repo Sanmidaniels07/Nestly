@@ -13,11 +13,15 @@ interface Props {
   setDraft: React.Dispatch<React.SetStateAction<ProductDraft>>;
   onBack: () => void;
   onNext: () => void;
+  // First step of the form: says so, and Back leaves the form.
+  first?: boolean;
+  // Shown under the photos (e.g. Fill it in for me).
+  children?: React.ReactNode;
 }
 
 const MAX_IMAGES = 10;
 
-export default function ProductImages({ draft, setDraft, onBack, onNext }: Props) {
+export default function ProductImages({ draft, setDraft, onBack, onNext, first, children }: Props) {
   // mutateAsync, not mutate: with several photos picked at once, React Query
   // only runs mutate()'s per-call callbacks for the LAST call, so the other
   // photos stayed "uploading" forever and Continue never unlocked.
@@ -102,10 +106,12 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
   return (
     <section className="rounded-2xl border border-line bg-surface p-6 sm:p-7">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
-        Product images
+        {first ? "Start with photos" : "Product images"}
       </h2>
       <p className="mt-1 text-[13px] text-muted">
-        Clear, well-lit photos help buyers trust your listing.
+        {first
+          ? "Snap or pick a few clear photos of what you're selling - the first one is the cover buyers see."
+          : "Clear, well-lit photos help buyers trust your listing."}
       </p>
 
       <div className="mt-6">
@@ -137,9 +143,11 @@ export default function ProductImages({ draft, setDraft, onBack, onNext }: Props
         </div>
       )}
 
+      {children}
+
       <div className="mt-8 flex justify-between border-t border-line-soft pt-6">
         <Button variant="outline" onClick={onBack} className="h-11 rounded-xl px-7">
-          Back
+          {first ? "Cancel" : "Back"}
         </Button>
         <Button
           variant="tribely"

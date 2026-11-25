@@ -20,7 +20,7 @@ import { EMPTY_OPTIONS, optionsPayload, totalStock } from "@/src/lib/product-opt
 import { useFormDraft } from "@/src/hooks/use-form-draft";
 import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { AiListingDraft, PriceGuide } from "@/src/services/ai-listing.services";
-import PhotoToListing from "./components/photo-to-listing";
+import FillFromPhotos from "./components/fill-from-photos";
 
 const naira = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -106,7 +106,7 @@ function AddProductContent() {
     router.replace(pathname);
   };
 
-  const applySuggestion = (suggestion: AiListingDraft, photoUrls: string[]) => {
+  const applySuggestion = (suggestion: AiListingDraft, photoUrls: string[] = []) => {
     setDraft((prev) => {
       const known = new Set(prev.images.map((image) => image.url));
       const newPhotos = photoUrls
@@ -213,14 +213,24 @@ function AddProductContent() {
 
       <AddProductStepper currentStep={step} onStepClick={setStep} />
 
+      {/* Photos first: they're what sells, and (when it's on) they can
+          write the rest of the listing. */}
       {step === 1 && (
-        <>
-          <PhotoToListing hasContent={!!(draft.name.trim() || draft.description.trim())} onApply={applySuggestion} />
-          <BasicInformation draft={draft} setDraft={setDraft} onNext={() => setStep(2)} />
-        </>
+        <ProductImages draft={draft} setDraft={setDraft} first onBack={handleBackToProducts} onNext={() => setStep(2)}>
+          <FillFromPhotos
+            photoUrls={draft.images.filter((image) => image.url && !image.uploading).map((image) => image.url as string)}
+            hasContent={!!(draft.name.trim() || draft.description.trim())}
+            onApply={(suggestion) => {
+              applySuggestion(suggestion);
+              setStep(2);
+            }}
+          />
+        </ProductImages>
       )}
 
-      {step === 2 && priceGuide && (
+      {step === 2 && <BasicInformation draft={draft} setDraft={setDraft} onBack={() => setStep(1)} onNext={() => setStep(3)} />}
+
+      {step === 3 && priceGuide && (
         <p className="rounded-2xl border border-line bg-surface-2 px-4 py-3 text-[13px] text-muted">
           Similar products on Nestly usually sell for{" "}
           <span className="font-semibold text-ink">
@@ -230,17 +240,8 @@ function AddProductContent() {
         </p>
       )}
 
-      {step === 2 && (
-        <PricingInventory
-          draft={draft}
-          setDraft={setDraft}
-          onBack={() => setStep(1)}
-          onNext={() => setStep(3)}
-        />
-      )}
-
       {step === 3 && (
-        <Specifications
+        <PricingInventory
           draft={draft}
           setDraft={setDraft}
           onBack={() => setStep(2)}
@@ -249,7 +250,7 @@ function AddProductContent() {
       )}
 
       {step === 4 && (
-        <ProductImages
+        <Specifications
           draft={draft}
           setDraft={setDraft}
           onBack={() => setStep(3)}

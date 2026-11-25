@@ -8,6 +8,8 @@ interface Props {
 }
 
 const labels = ["Basic information", "Pricing & inventory", "Specifications", "Images"];
+// The form step each item is on (photos come first).
+const STEP_OF = [2, 3, 4, 1];
 
 export default function CompletionChecklist({ completed, onStepClick }: Props) {
   const doneCount = completed.filter(Boolean).length;
@@ -37,7 +39,7 @@ export default function CompletionChecklist({ completed, onStepClick }: Props) {
           return (
             <button
               key={label}
-              onClick={() => onStepClick?.(index + 1)}
+              onClick={() => onStepClick?.(STEP_OF[index])}
               disabled={!clickable}
               className={`
                 group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left transition-colors
