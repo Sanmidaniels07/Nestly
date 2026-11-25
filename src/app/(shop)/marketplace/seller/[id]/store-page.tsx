@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 
 import { useStore } from "@/src/hooks/use-store";
 import { useStoreProducts } from "@/src/hooks/use-store-products";
@@ -41,15 +40,6 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
   const { data: productsData } = useStoreProducts(slug, { limit: 12 }, initialProducts, { enabled: !waiting });
   const isLoading = waiting || isFetching;
   const { data: reviewsData } = useStoreReviews(slug, { limit: 10 });
-
-  // Opened with a name the store had before a rename (the server page
-  // usually redirects already; this covers a cached copy): move to the
-  // current name, keeping ?ref= and the rest.
-  const router = useRouter();
-  const currentSlug = store?.slug;
-  useEffect(() => {
-    if (currentSlug && currentSlug !== slug) router.replace(`/marketplace/seller/${currentSlug}${window.location.search}`);
-  }, [currentSlug, slug, router]);
 
   if (isLoading) {
     return (
