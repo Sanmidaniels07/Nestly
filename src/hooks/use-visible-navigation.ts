@@ -25,7 +25,7 @@ export function useVisibleNavigation() {
 }
 
 // Your own pages: they light up Me although their address isn't /me.
-const ME_PAGES = ["/me", "/profile", "/settings", "/notifications", "/marketplace/saved", "/marketplace/gifts", "/marketplace/returns"];
+export const ME_PAGES = ["/me", "/profile", "/settings", "/notifications", "/marketplace/saved", "/marketplace/gifts", "/marketplace/returns"];
 
 const pathOf = (href: string) => href.split("?")[0];
 const matches = (href: string, pathname: string) => {

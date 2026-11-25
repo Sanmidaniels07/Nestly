@@ -76,10 +76,12 @@ export default function EditProfilePersonal() {
         />
 
         {website && hasValidUrl && !errors.website && (
-          <div className="mt-1.5 flex items-center gap-1.5 text-[12px] text-emerald-600 dark:text-emerald-400">
-            <Globe size={12} />
-            <span className="font-[family-name:var(--font-mono)]">{website}</span>
-            <span className="text-subtle">will be shown on your profile</span>
+          <div className="mt-1.5 text-[12px] text-emerald-600 dark:text-emerald-400">
+            <p className="flex items-start gap-1.5">
+              <Globe size={12} className="mt-[3px] shrink-0" />
+              <span className="min-w-0 font-[family-name:var(--font-mono)] [overflow-wrap:anywhere]">{website}</span>
+            </p>
+            <p className="mt-0.5 pl-[18px] text-subtle">will be shown on your profile</p>
           </div>
         )}
       </div>
