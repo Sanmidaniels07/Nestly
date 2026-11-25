@@ -31,7 +31,9 @@ export default function ProductsTable({
   const allSelected = products.length > 0 && products.every((p) => selectedIds.has(p.id));
 
   return (
-    <ManagementTable>
+    // Narrow enough that the actions fit on a laptop without scrolling
+    // sideways (phones still scroll; tapping a product shows everything).
+    <ManagementTable minWidth={860}>
       <thead>
         <tr className="border-b border-line bg-surface-sunken">
           <th className="w-10 px-4 py-3 pl-5">
