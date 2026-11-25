@@ -62,6 +62,11 @@ export interface PublicPaymentLink {
   code: string;
   title: string;
   description: string;
+  // What the seller added when listing it.
+  brand?: string | null;
+  condition?: string | null;
+  highlights?: string[];
+  specifications?: { name: string; value: string }[];
   price: number;
   images: { url: string; isPrimary: boolean }[];
   category: Pick<Category, "id" | "name" | "slug">;

@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { BadgeCheck, Check, Layers, Loader2, Lock, MapPin, Minus, Plus, ShieldCheck, Store } from "lucide-react";
+import { BadgeCheck, Check, ChevronDown, Layers, Loader2, Lock, MapPin, Minus, Plus, ShieldCheck, Store } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { getPublicCollection } from "@/src/services/collection.services";
@@ -14,6 +14,7 @@ import { addToCart } from "@/src/services/cart.services";
 import { useAuth } from "@/src/hooks/use-auth";
 import BrandScope from "@/src/components/ui/brand-scope";
 import Skeleton from "@/src/components/ui/skeleton";
+import ProductDetailsBlock from "@/src/components/marketplace/product-details-block";
 import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
 import { ApiErrorResponse, ApiResponse } from "@/src/types/api";
 import { CollectionProduct, PublicCollection } from "@/src/types/collection";
@@ -220,6 +221,8 @@ export default function CollectionPage({ store, slug, initial }: Props) {
 }
 
 function ProductRow({ product, pick, onChange }: { product: CollectionProduct; pick?: Pick; onChange: (next: Pick | null) => void }) {
+  const [showDetails, setShowDetails] = useState(false);
+  const hasDetails = !!(product.description?.trim() || product.highlights?.length || product.specifications?.length || product.brand);
   const image = product.images.find((i) => i.isPrimary)?.url ?? product.images[0]?.url;
   const hasOptions = product.options.length > 0;
   const values = pick?.values ?? [];
@@ -291,6 +294,26 @@ function ProductRow({ product, pick, onChange }: { product: CollectionProduct; p
           </div>
         </div>
       </div>
+
+      {/* What the seller wrote about it, without leaving the page. */}
+      {hasDetails && (
+        <div className="mt-2">
+          <button
+            type="button"
+            onClick={() => setShowDetails((v) => !v)}
+            aria-expanded={showDetails}
+            className="inline-flex h-8 items-center gap-1 rounded-lg px-1 text-[12.5px] font-semibold text-violet-700 hover:underline dark:text-violet-300"
+          >
+            {showDetails ? "Hide details" : "Details"}
+            <ChevronDown size={14} className={`transition-transform ${showDetails ? "rotate-180" : ""}`} />
+          </button>
+          {showDetails && (
+            <div className="mt-2 rounded-xl bg-surface-2/60 p-3">
+              <ProductDetailsBlock product={product} compact />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Sizes, colours...: chosen once it's added. */}
       {hasOptions && quantity > 0 && (

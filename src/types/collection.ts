@@ -23,6 +23,11 @@ export interface CollectionPayload {
 export interface CollectionProduct {
   id: string;
   title: string;
+  description?: string | null;
+  brand?: string | null;
+  condition?: string | null;
+  highlights?: string[];
+  specifications?: { name: string; value: string }[];
   price: number;
   originalPrice: number | null;
   stock: number;

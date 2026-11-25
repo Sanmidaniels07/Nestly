@@ -45,6 +45,7 @@ import { ApiResponse } from "@/src/types/api";
 import { PublicPaymentLink } from "@/src/types/payment-link";
 import GuestDetails, { GuestDetailsValue, emptyGuest, guestProblem } from "@/src/components/guest-checkout/guest-details";
 import BrandScope from "@/src/components/ui/brand-scope";
+import ProductDetailsBlock from "@/src/components/marketplace/product-details-block";
 import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
 
 interface Props {
@@ -147,7 +148,7 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
           </p>
         </div>
 
-        {link.description && <p className="whitespace-pre-line text-[14px] leading-relaxed text-ink-2">{link.description}</p>}
+        <ProductDetailsBlock product={link} />
 
         {/* Shared from the seller's shop: the full listing, with its reviews. */}
         {link.productId && (
