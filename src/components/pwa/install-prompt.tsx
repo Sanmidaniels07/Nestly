@@ -20,8 +20,9 @@ interface InstallEvent extends Event {
 const DISMISS_KEY = "nestly:install-dismissed";
 const SNOOZE_DAYS = 7;
 const SHOW_AFTER_MS = 4000;
-// Full-screen pages where a card on top would get in the way.
-const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout"];
+// Pages where it would cover what matters (paying, the cart, a collection's
+// Check out bar, lives).
+const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout", "/checkout/", "/cart", "/marketplace/cart", "/c/"];
 
 const snoozed = () => {
   try {
