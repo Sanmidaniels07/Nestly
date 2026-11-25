@@ -14,7 +14,8 @@ interface Props {
 
 const columns = [
   { label: "Product", align: "left" },
-  { label: "SKU", align: "left" },
+  // Wide screens only - it's in the product's details too.
+  { label: "SKU", align: "left", className: "hidden 2xl:table-cell" },
   { label: "Price", align: "right" },
   { label: "Stock", align: "right" },
   { label: "Status", align: "left" },
@@ -49,6 +50,7 @@ export default function ProductsTable({
               className={`
                 whitespace-nowrap px-4 py-3 text-[12.5px] font-semibold text-ink-3
                 ${col.align === "right" ? "text-right" : "text-left"}
+                ${"className" in col ? col.className : ""}
                 last:pr-5
               `}
             >

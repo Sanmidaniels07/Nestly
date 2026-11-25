@@ -21,7 +21,9 @@ export default function ActionTip({ label, children }: Props) {
     const r = element.getBoundingClientRect();
     // Above the button, or below it when there's no room at the top.
     const below = r.top < 48;
-    setBox({ x: r.left + r.width / 2, y: below ? r.bottom + 8 : r.top - 8, below });
+    // Kept inside the screen (the label is up to 220px wide).
+    const x = Math.min(Math.max(r.left + r.width / 2, 120), window.innerWidth - 120);
+    setBox({ x, y: below ? r.bottom + 8 : r.top - 8, below });
   };
 
   // Scrolling moves the button away from the label - just hide it.
@@ -59,7 +61,7 @@ export default function ActionTip({ label, children }: Props) {
             id={id}
             role="tooltip"
             style={{ left: box.x, top: box.y }}
-            className={`pointer-events-none fixed z-[300] max-w-[220px] -translate-x-1/2 rounded-lg bg-[#13131A] px-2.5 py-1.5 text-center text-[12px] font-medium leading-snug text-white shadow-lg dark:bg-[#2a2839] ${
+            className={`pointer-events-none fixed z-[300] w-max max-w-[220px] -translate-x-1/2 rounded-lg bg-[#13131A] px-2.5 py-1.5 text-center text-[12px] font-medium leading-snug text-white shadow-lg dark:bg-[#2a2839] ${
               box.below ? "" : "-translate-y-full"
             }`}
           >

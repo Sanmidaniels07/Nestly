@@ -94,7 +94,7 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
         )}
       </td>
 
-      <td className="whitespace-nowrap px-4 py-3 font-[family-name:var(--font-mono)] text-[12.5px] text-muted">
+      <td className="hidden whitespace-nowrap px-4 py-3 font-[family-name:var(--font-mono)] text-[12.5px] text-muted 2xl:table-cell">
         {product.sku}
       </td>
 
@@ -120,9 +120,9 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
               type="button"
               onClick={() => setSharingPayLink(true)}
               aria-label="Share pay link"
-              className="flex h-7 items-center justify-center gap-1 rounded-md px-1.5 text-[11.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
             >
-              <Link2 size={14} /> Pay link
+              <Link2 size={15} />
             </button>
             </ActionTip>
           )}
