@@ -6,7 +6,6 @@ import {
   CircleUserRound,
   ShieldAlert,
   BriefcaseBusiness,
-  Radio,
   Users2,
   CalendarDays,
 } from "lucide-react";
@@ -36,7 +35,6 @@ export const navigation: NavItem[] = [
   // The sellers' workspace (dashboard, products, orders, earnings). Lives
   // under /settings/marketplace; only shown to applicants and sellers.
   { title: "Seller Hub", href: "/settings/marketplace", icon: BriefcaseBusiness, sellerOnly: true, mobile: true },
-  { title: "Live selling", href: "/settings/marketplace?tab=lives", icon: Radio, sellerOnly: true },
   { title: "Communities", href: "/communities", icon: Users2, feature: "communities" },
   { title: "Events", href: "/events", icon: CalendarDays, feature: "events" },
   { title: "Me", href: "/me", icon: CircleUserRound, mobile: true },

@@ -9,8 +9,7 @@ import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
 import UnderReviewBanner from "./components/seller-dashboard/under-review-banner";
-import CacReminderBanner from "./components/seller-dashboard/cac-reminder-banner";
-import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-banner";
+import SellerNextStep from "./components/seller-dashboard/seller-next-step";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
@@ -144,17 +143,14 @@ function MarketplaceSettingsContent() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <SellerDashboardHeader />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
       {seller?.store?.underReview && !seller.store.isSuspended && <UnderReviewBanner orderLimit={seller.orderLimit} held={seller.heldForReview} />}
 
-      {/* What's left before buyers can order (the Dashboard tab has the full checklist). */}
-      {seller?.status === "APPROVED" && tab !== "dashboard" && <SetupReminderBanner />}
-
-      {/* Every approved seller without a CAC number, store or not. */}
-      {seller?.status === "APPROVED" && !seller.cacNumber && <CacReminderBanner />}
+      {/* The one thing to do next (setup step, then the CAC number). */}
+      <SellerNextStep seller={seller} />
 
       <MarketplaceTabs active={tab} onChange={handleTabChange} />
 

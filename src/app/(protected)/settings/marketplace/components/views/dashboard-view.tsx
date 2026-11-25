@@ -2,13 +2,10 @@
 
 import { SellerProfile } from "@/src/types/seller";
 import DashboardStats from "../seller-dashboard/dashboard-stat";
-import InventorySnapshot from "../seller-dashboard/inventory-snapshot";
 import OnboardingBanner from "../seller-dashboard/onboarding-banner";
 import QuickActions from "../seller-dashboard/quick-actions";
 import RecentOrders from "../seller-dashboard/recent-orders";
-import SalesOverview from "../seller-dashboard/sales-overview";
 import SetupChecklist from "../seller-dashboard/setup-checklist";
-import TopSellingProducts from "../seller-dashboard/top-selling-products";
 import ShareStoreCard from "../seller-dashboard/share-store-card";
 import TrustBadgeCard from "../seller-dashboard/trust-badge-card";
 import KeepSalesOnNestly from "../seller-dashboard/keep-sales-on-nestly";
@@ -28,27 +25,21 @@ export default function DashboardView({ seller }: Props) {
     return <SetupChecklist seller={seller} />;
   }
 
-  // The tab wrapper adds no spacing, so the gap between sections lives here.
+  // Today at a glance: numbers, quick actions, the latest orders, then ways
+  // to bring buyers in. Charts and stock live under Insights. What to set up
+  // next is the card above the tabs.
   return (
-    <div className="space-y-10 sm:space-y-12">
-      <SetupChecklist seller={seller} />
-
+    <div className="space-y-8 sm:space-y-10">
       <DashboardStats />
 
       <QuickActions />
 
-      <TrustBadgeCard />
-      <ShareStoreCard />
-
-      <KeepSalesOnNestly />
-
-      <InventorySnapshot />
-
       <RecentOrders />
 
-      <SalesOverview />
+      <ShareStoreCard />
+      <TrustBadgeCard />
 
-      <TopSellingProducts />
+      <KeepSalesOnNestly />
     </div>
   );
 }

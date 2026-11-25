@@ -10,6 +10,8 @@ import OrderStatusChart from "../seller-dashboard/order-status-chart";
 import CategoryRevenueChart from "../seller-dashboard/category-revenue-chart";
 import TrafficChart from "../seller-dashboard/traffic-chart";
 import CustomerMap from "../seller-dashboard/customer-map";
+import TopSellingProducts from "../seller-dashboard/top-selling-products";
+import InventorySnapshot from "../seller-dashboard/inventory-snapshot";
 
 const PERIODS = [
   { label: "30 days", value: 30 },
@@ -104,6 +106,9 @@ export default function AnalyticsView() {
 
         <CustomerMap days={period} />
       </section>
+      {/* Moved here from the Seller Hub home page. */}
+      <TopSellingProducts />
+      <InventorySnapshot />
     </div>
   );
 }
