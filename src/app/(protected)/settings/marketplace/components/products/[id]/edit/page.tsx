@@ -1,5 +1,7 @@
 "use client";
 
+import { Clock3 } from "lucide-react";
+import { UPDATE_COOLDOWN_MINUTES, changesWhatBuyersSee } from "@/src/lib/product-cooldown";
 import { use, useEffect, useState } from "react";
 
 import { useMyProduct } from "@/src/hooks/use-my-product";
@@ -75,7 +77,8 @@ export default function EditProductPage({ params }: Props) {
       condition: product.condition,
       sku: product.sku,
       deliveryVehicle: product.deliveryVehicle ?? "BIKE",
-      status: product.status,
+      // Being updated shows as Published (saving it doesn't skip the wait).
+      status: product.status === "UPDATING" ? "PUBLISHED" : product.status,
       price: String(product.price),
       originalPrice: product.originalPrice != null ? String(product.originalPrice) : "",
       stock: String(product.stock),
@@ -229,6 +232,19 @@ export default function EditProductPage({ params }: Props) {
             </p>
           </div>
         )}
+
+      {/* Warned before saving: a listed product that now looks or costs
+          different is off the marketplace for a few minutes. */}
+      {loaded && ["PUBLISHED", "OUT_OF_STOCK", "UPDATING"].includes(product.status) && draft.status !== "DRAFT" && draft.status !== "ARCHIVED" && changesWhatBuyersSee(loaded, draft) && (
+        <div className="flex items-start gap-3 rounded-2xl border border-violet-200 bg-violet-50 p-4 text-[13px] leading-relaxed text-ink-2 dark:border-violet-500/30 dark:bg-violet-500/10">
+          <Clock3 size={17} className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-300" />
+          <p>
+            <span className="font-semibold text-ink">Buyers won&apos;t see this product for {UPDATE_COOLDOWN_MINUTES} minutes after you save.</span>{" "}
+            Changing photos, the name, description, price or options takes it off the marketplace for a short while to protect buyers - then it&apos;s
+            back on sale by itself. Orders already placed aren&apos;t affected. Changing only the stock doesn&apos;t hide it.
+          </p>
+        </div>
+      )}
 
       <div className="flex flex-col-reverse gap-3 rounded-2xl border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-end">
         <Button variant="outline" onClick={cancel} className="h-11 rounded-xl px-7">

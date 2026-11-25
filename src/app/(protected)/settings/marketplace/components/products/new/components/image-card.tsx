@@ -1,16 +1,20 @@
 "use client";
 
 import Image from "next/image";
-import { Star, Trash2, Loader2 } from "lucide-react";
+import { useRef } from "react";
+import { RefreshCw, Star, Trash2, Loader2 } from "lucide-react";
 import { DraftImage } from "@/src/types/product-image";
 
 interface Props {
   image: DraftImage;
   onCover: () => void;
   onDelete: () => void;
+  // Swap this photo for another (keeps its place and cover status).
+  onReplace?: (file: File) => void;
 }
 
-export default function ImageCard({ image, onCover, onDelete }: Props) {
+export default function ImageCard({ image, onCover, onDelete, onReplace }: Props) {
+  const input = useRef<HTMLInputElement>(null);
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-line bg-surface transition-shadow hover:shadow-[0_12px_32px_-16px_rgba(124,58,237,0.2)]">
       <div className="relative aspect-square bg-surface-sunken">
@@ -38,7 +42,31 @@ export default function ImageCard({ image, onCover, onDelete }: Props) {
         </button>
       </div>
 
-      <div className="p-3">
+      <div className="space-y-2 p-3">
+        {onReplace && (
+          <>
+            <button
+              type="button"
+              disabled={image.uploading}
+              onClick={() => input.current?.click()}
+              className="whitespace-nowrap flex h-9 w-full items-center justify-center gap-1.5 rounded-xl border border-line text-[12.5px] font-medium text-ink-2 transition-colors hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 disabled:opacity-50 dark:hover:border-violet-500/30 dark:hover:bg-violet-500/10 dark:hover:text-violet-300"
+            >
+              <RefreshCw size={12} />
+              Replace photo
+            </button>
+            <input
+              ref={input}
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (file) onReplace(file);
+              }}
+            />
+          </>
+        )}
         {image.isCover ? (
           <div className="flex h-9 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-500/10 text-[12.5px] font-medium text-violet-700 dark:text-violet-300">
             Cover image

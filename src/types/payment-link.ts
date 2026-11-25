@@ -11,7 +11,7 @@ import { ProductOption, ProductVariation } from "./product";
 // STORE_OPTIONS: the buyer picks one of the store's zones / pickup points.
 export type PaymentLinkDelivery = "DELIVERY" | "PICKUP" | "STORE_OPTIONS";
 
-export type PaymentLinkAvailability = "AVAILABLE" | "SOLD_OUT" | "PAUSED";
+export type PaymentLinkAvailability = "AVAILABLE" | "SOLD_OUT" | "PAUSED" | "UPDATING";
 
 export interface PaymentLinkImage {
   id?: string;

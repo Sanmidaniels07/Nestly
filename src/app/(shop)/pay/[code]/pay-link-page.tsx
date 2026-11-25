@@ -374,11 +374,15 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   if (link.availability !== "AVAILABLE") {
     return (
       <aside className="rounded-2xl border border-line bg-surface p-5 text-center">
-        <p className="text-[15px] font-semibold text-ink">{link.availability === "SOLD_OUT" ? "Sold out" : "Not available right now"}</p>
+        <p className="text-[15px] font-semibold text-ink">
+          {link.availability === "SOLD_OUT" ? "Sold out" : link.availability === "UPDATING" ? "Being updated" : "Not available right now"}
+        </p>
         <p className="mt-1 text-[13px] text-muted">
           {link.availability === "SOLD_OUT"
             ? "This item has been bought. Message the seller if you'd like another."
-            : "The seller has paused this link. Message them to turn it back on."}
+            : link.availability === "UPDATING"
+              ? "The seller is updating this item. Check back in a few minutes."
+              : "The seller has paused this link. Message them to turn it back on."}
         </p>
       </aside>
     );

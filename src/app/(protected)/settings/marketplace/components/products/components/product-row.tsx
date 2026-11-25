@@ -11,6 +11,7 @@ import Checkbox from "@/src/components/ui/checkbox";
 import SharePayLinkDialog from "@/src/components/marketplace/share-pay-link-dialog";
 import ActionTip from "@/src/components/ui/action-tip";
 import ProductQuickView from "./product-quick-view";
+import { relistTime } from "@/src/lib/product-cooldown";
 
 interface Props {
   product: Product;
@@ -31,7 +32,9 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
         ? "Published"
         : product.status === "OUT_OF_STOCK"
           ? "Sold out"
-          : "Draft";
+          : product.status === "UPDATING"
+            ? `Updating${relistTime(product.relistAt) ? ` · back at ${relistTime(product.relistAt)}` : ""}`
+            : "Draft";
 
   const statusTone =
     status === "Published"
@@ -40,6 +43,8 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
         ? "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300"
         : status === "Sold out"
           ? "bg-surface-2 text-muted"
+          : status.startsWith("Updating")
+            ? "bg-violet-50 dark:bg-violet-500/10 text-violet-700 dark:text-violet-300"
           : "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300";
 
   const primaryImage =
