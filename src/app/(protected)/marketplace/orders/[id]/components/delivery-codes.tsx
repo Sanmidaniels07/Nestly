@@ -28,7 +28,7 @@ export default function DeliveryCodes({ order }: Props) {
     order.items.find((item) => item.product.store?.id === storeId)?.product.store?.name ?? "Seller";
 
   return (
-    <section className="rounded-2xl border border-violet-200 bg-violet-50/60 p-5 dark:border-violet-500/30 dark:bg-violet-500/10 sm:p-6">
+    <section id="delivery-codes" className="scroll-mt-24 rounded-2xl border border-violet-200 bg-violet-50/60 p-5 dark:border-violet-500/30 dark:bg-violet-500/10 sm:p-6">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-600 text-white">

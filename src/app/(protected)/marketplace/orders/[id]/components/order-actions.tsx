@@ -50,7 +50,7 @@ export default function OrderActions({ order }: Props) {
           <button
             onClick={() => cancelOrder(order.id)}
             disabled={isCancelling}
-            className="whitespace-nowrap flex h-12 w-full items-center justify-center rounded-xl border border-red-200 dark:border-red-500/30 text-[13px] font-semibold text-red-600 dark:text-red-400 transition-colors hover:bg-red-50 dark:hover:bg-red-500/10 disabled:cursor-not-allowed disabled:opacity-50"
+            className="whitespace-nowrap flex h-10 w-full items-center justify-center rounded-xl text-[13px] font-semibold text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50 dark:text-red-400 dark:hover:bg-red-500/10"
           >
             {isCancelling ? "Cancelling..." : "Cancel order"}
           </button>
