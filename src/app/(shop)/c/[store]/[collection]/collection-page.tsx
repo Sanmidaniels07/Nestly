@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { BadgeCheck, Check, Layers, Loader2, Lock, MapPin, Minus, Plus, ShieldCheck, Store } from "lucide-react";
@@ -52,7 +52,6 @@ const lowestPrice = (product: CollectionProduct) => {
 // or without an account.
 export default function CollectionPage({ store, slug, initial }: Props) {
   const router = useRouter();
-  const pathname = usePathname();
   const queryClient = useQueryClient();
   const { isAuthenticated } = useAuth();
   const [picks, setPicks] = useState<Record<string, Pick>>({});
@@ -119,7 +118,7 @@ export default function CollectionPage({ store, slug, initial }: Props) {
     // No account: the guest checkout, with just these items.
     if (!isAuthenticated) {
       const param = items.map((item) => `${item.productId}.${item.variationId ?? ""}.${item.quantity}`).join(",");
-      router.push(`/checkout/guest?items=${encodeURIComponent(param)}&back=${encodeURIComponent(pathname)}`);
+      router.push(`/checkout/guest?items=${encodeURIComponent(param)}&back=${encodeURIComponent(window.location.pathname)}`);
       return;
     }
 
