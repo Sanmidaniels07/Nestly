@@ -88,7 +88,7 @@ function CollectionCard({ collection, storeSlug, onEdit }: { collection: SellerC
   };
 
   return (
-    <article className={`rounded-2xl border bg-surface p-5 transition-colors ${collection.isActive ? "border-line" : "border-dashed border-line-strong opacity-80"}`}>
+    <article className={`min-w-0 rounded-2xl border bg-surface p-5 transition-colors ${collection.isActive ? "border-line" : "border-dashed border-line-strong opacity-80"}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h3 className="truncate text-[16px] font-semibold text-ink">{collection.name}</h3>
