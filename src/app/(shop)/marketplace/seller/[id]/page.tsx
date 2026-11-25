@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import { NotFoundError, jsonLd, serverGet } from "@/src/lib/server-api";
 import { stateLabel } from "@/src/lib/locations";
@@ -10,6 +11,7 @@ import SellerStorePage from "./store-page";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 const clip = (text: string, max: number) => {
@@ -98,9 +100,35 @@ const storeJsonLd = (store: Store) => ({
       : undefined,
 });
 
-export default async function StorePage({ params }: Props) {
+// The store's name right now (uncached), or null if it can't be checked.
+const currentSlug = async (slug: string) => {
+  const api = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+  try {
+    const response = await fetch(`${api}/stores/${encodeURIComponent(slug)}/link`, { cache: "no-store", signal: AbortSignal.timeout(4000) });
+    return response.ok ? ((await response.json()) as { data: { slug: string } }).data.slug : null;
+  } catch {
+    return null;
+  }
+};
+
+export default async function StorePage({ params, searchParams }: Props) {
   const { id: slug } = await params;
   const { response } = await loadStore(slug);
+  // Looks like an old name (the store was renamed): move to the current one,
+  // keeping ?ref= and the rest. The store data above can be a few minutes
+  // old, so the current name is checked fresh first - otherwise renaming
+  // and renaming back could send people to the in-between name, or loop.
+  // Temporary redirect: a name can be taken back, so browsers mustn't keep it.
+  if (response && response.data.slug !== slug) {
+    const current = await currentSlug(slug);
+    if (current && current !== slug) {
+      const query = new URLSearchParams();
+      for (const [key, value] of Object.entries(await searchParams)) {
+        for (const v of [value].flat()) if (v !== undefined) query.append(key, v);
+      }
+      redirect(`/marketplace/seller/${current}${query.size ? `?${query}` : ""}`);
+    }
+  }
   const products = response
     ? await serverGet<Paginated<"products", Product>>(`/stores/${encodeURIComponent(slug)}/products?limit=12`).catch(() => null)
     : null;

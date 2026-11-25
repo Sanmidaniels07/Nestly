@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { useMyStore } from "@/src/hooks/use-my-store";
 import { useMyProducts } from "@/src/hooks/use-my-products";
 import { useMyReferrals } from "@/src/hooks/use-my-referrals";
-import { SITE_URL } from "@/src/lib/site";
+import { displayUrl, storeShareUrl } from "@/src/lib/store-link";
 import type { ReferralStats } from "@/src/types/referral";
 import { shareLinks } from "@/src/lib/social";
 import { downloadBlob, qrImage, storyImage } from "@/src/lib/share-image";
@@ -24,9 +24,10 @@ export default function ShareStoreCard() {
 
   if (!store) return null;
 
-  // Tagged with the store's code so people who join through it count as
-  // this seller's referrals (lower commission on their orders).
-  const url = `${SITE_URL}/marketplace/seller/${store.slug}${referrals ? `?ref=${referrals.code}` : ""}`;
+  // The short link (nestlyapp.site/{slug}). It adds the store's referral
+  // code on the way, so people who join through it count as this seller's
+  // referrals (lower commission on their orders).
+  const url = storeShareUrl(store.slug, referrals?.code);
   const message = `Shop ${store.name} on Nestly - order securely with Paystack and get it delivered:`;
   const links = shareLinks(url, message);
   const location = [...new Set([store.city, store.state].filter(Boolean))].join(", ");
@@ -103,7 +104,7 @@ export default function ShareStoreCard() {
 
       {/* The link */}
       <div className="mt-5 flex items-center gap-2 rounded-xl border border-line bg-surface-sunken p-1.5 pl-3.5">
-        <p className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-ink-2">{url.replace(/^https?:\/\//, "")}</p>
+        <p className="min-w-0 flex-1 truncate font-mono text-[12.5px] text-ink-2">{displayUrl(url)}</p>
         <button type="button" onClick={copy} className="whitespace-nowrap flex h-9 shrink-0 items-center gap-1.5 rounded-lg bg-violet-600 px-3 text-[12.5px] font-semibold text-white">
           {copied ? <Check size={14} /> : <Copy size={14} />} {copied ? "Copied" : "Copy"}
         </button>

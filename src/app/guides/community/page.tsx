@@ -3,11 +3,12 @@ import type { Metadata } from "next";
 import GuideDocument, { GuidePart } from "@/src/components/guides/guide-document";
 import { MIN_AGE } from "@/src/lib/legal";
 import { OG_IMAGE } from "@/src/lib/site";
+import { featureOn } from "@/src/lib/features";
 
 export const metadata: Metadata = {
   title: "Community guide - get started on Nestly",
   description:
-    "Step by step: create your profile, follow people, post and share stories, message, join communities and events, celebrate birthdays and stay safe on Nestly.",
+    "Step by step: create your profile, follow people, post and share stories, message, shop, celebrate birthdays and stay safe on Nestly.",
   alternates: { canonical: "/guides/community" },
   openGraph: { title: "Getting started on Nestly", url: "/guides/community", images: [OG_IMAGE] },
 };
@@ -170,7 +171,10 @@ export default function CommunityGuidePage() {
       current="/guides/community"
       title="Get started on Nestly"
       intro={<p>Nestly is where your people, your moments and your favourite sellers come together. Here&apos;s how to make the most of it.</p>}
-      parts={parts}
+      parts={parts.map((part) => ({
+        ...part,
+        steps: part.steps.filter((step) => (step.id !== "communities" || featureOn.communities) && (step.id !== "events" || featureOn.events)),
+      }))}
       finish={{ label: "Join Nestly", href: "/signup" }}
     />
   );

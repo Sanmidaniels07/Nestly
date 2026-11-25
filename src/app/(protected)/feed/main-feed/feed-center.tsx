@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { Loader2, MapPin, RefreshCw, ShoppingBag, Sparkles, Store, Users2 } from "lucide-react";
+import { featureOn } from "@/src/lib/features";
 
 import { usePullToRefresh } from "@/src/hooks/use-pull-to-refresh";
 import { useSetFeedArea, useShoppingFeed } from "@/src/hooks/use-shopping-feed";
@@ -273,7 +274,9 @@ function NothingNear({ area, onChange, onForYou }: { area: FeedArea; onChange: (
 function QuietFeedWelcome({ hasItems }: { hasItems: boolean }) {
   const actions = [
     { href: "/marketplace", icon: ShoppingBag, label: "Follow stores you love", body: "Their new items and lives show up here" },
-    { href: "/communities", icon: Users2, label: "Find your people", body: "See what friends buy and recommend" },
+    ...(featureOn.communities
+      ? [{ href: "/communities", icon: Users2, label: "Find your people", body: "See what friends buy and recommend" }]
+      : [{ href: "/search", icon: Users2, label: "Find your people", body: "Follow friends to see what they buy and recommend" }]),
   ];
 
   return (

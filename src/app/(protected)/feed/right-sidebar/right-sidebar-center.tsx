@@ -2,6 +2,7 @@ import MarketplacePreview from "./marketplace-preview";
 import SuggestedFriends from "./suggested-friends";
 import TrendingHashtags from "./trending-hashtags";
 import UpcomingEvents from "./upcoming-events";
+import { featureOn } from "@/src/lib/features";
 
 export default function RightSidebar() {
   return (
@@ -9,7 +10,7 @@ export default function RightSidebar() {
       <SuggestedFriends />
       <TrendingHashtags />
       <MarketplacePreview />
-      <UpcomingEvents />
+      {featureOn.events && <UpcomingEvents />}
     </div>
   );
 }

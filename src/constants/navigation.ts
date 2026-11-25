@@ -52,11 +52,13 @@ export const navigation = [
     title: "Communities",
     href: "/communities",
     icon: Users2,
+    feature: "communities" as const,
   },
   {
     title: "Events",
     href: "/events",
     icon: CalendarDays,
+    feature: "events" as const,
   },
   {
     title: "Notifications",

@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useProfile } from "@/src/hooks/use-profile";
 import { useMyCommunities } from "@/src/hooks/use-my-communities";
+import { featureOn } from "@/src/lib/features";
 import ProfileBioCard from "../components/profile-bio-card";
 import ProfilePersonalInfo from "../components/profile-personal-info";
 import ProfileChipSection from "../components/profile-chip";
@@ -18,7 +19,7 @@ function formatJoinedDate(dateString: string) {
 export default function ProfileAbout() {
   const { data: profile, isLoading } = useProfile();
   const { data: communitiesData } = useMyCommunities({ limit: 12 });
-  const communities = communitiesData?.communities ?? [];
+  const communities = featureOn.communities ? communitiesData?.communities ?? [] : [];
 
   if (isLoading || !profile) {
     return (

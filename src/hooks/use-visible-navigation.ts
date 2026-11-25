@@ -1,6 +1,7 @@
 "use client";
 
 import { navigation } from "../constants/navigation";
+import { featureOn } from "../lib/features";
 import { useAuthStore } from "../store/auth-store";
 import { useMySeller } from "./use-my-seller";
 
@@ -16,6 +17,7 @@ export function useVisibleNavigation() {
   const isSeller = !!seller && seller.status !== "REJECTED";
 
   return navigation.filter((item) => {
+    if ("feature" in item && item.feature && !featureOn[item.feature]) return false;
     if (item.adminOnly && user?.role !== "ADMIN") return false;
     if ("sellerOnly" in item && item.sellerOnly && !isSeller) return false;
     return true;

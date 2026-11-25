@@ -88,6 +88,7 @@ export interface PublicPaymentLink {
     slug: string;
     address: string | null;
     logo: string | null;
+    brandColor?: string | null;
     city: string | null;
     state: string | null;
     isVerified: boolean;
