@@ -55,7 +55,8 @@ export interface VariationInput {
 
 export type ProductCondition = "NEW" | "USED" | "REFURBISHED" | "FRESHLY_MADE" | "MADE_TO_ORDER" | "PRE_ORDER";
 // PRIVATE: the item behind a payment link (bought only through /pay/{code}).
-export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED" | "PRIVATE";
+// UPDATING: just edited - off the marketplace until relistAt (lib/product-cooldown).
+export type ProductStatus = "DRAFT" | "PUBLISHED" | "OUT_OF_STOCK" | "ARCHIVED" | "PRIVATE" | "UPDATING";
 
 export interface ProductStoreSummary {
   id: string;
@@ -91,6 +92,8 @@ export interface Product {
   isFeatured?: boolean;
   highlights?: string[];
   status: ProductStatus;
+  // While UPDATING: when it's back on sale.
+  relistAt?: string | null;
   images: ProductImage[];
   specifications: ProductSpecification[];
   options?: ProductOption[];

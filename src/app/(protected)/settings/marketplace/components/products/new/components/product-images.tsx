@@ -66,6 +66,24 @@ export default function ProductImages({ draft, setDraft, onBack, onNext, first, 
     });
   };
 
+  // Swap one photo for another: same place, same cover status. If the new
+  // one fails to upload, the old one stays.
+  const replaceImage = (id: string, file: File) => {
+    const old = draft.images.find((image) => image.id === id);
+    if (!old) return;
+    setDraft((prev) => ({
+      ...prev,
+      images: prev.images.map((image) => (image.id === id ? { ...image, file, preview: URL.createObjectURL(file), url: undefined, uploading: true } : image)),
+    }));
+    uploadImage(file)
+      .then((url) => {
+        setDraft((prev) => ({ ...prev, images: prev.images.map((image) => (image.id === id ? { ...image, url, uploading: false } : image)) }));
+      })
+      .catch(() => {
+        setDraft((prev) => ({ ...prev, images: prev.images.map((image) => (image.id === id ? old : image)) }));
+      });
+  };
+
   const removeImage = (id: string) => {
     setDraft((prev) => {
       const target = prev.images.find((image) => image.id === id);
@@ -138,6 +156,7 @@ export default function ProductImages({ draft, setDraft, onBack, onNext, first, 
               image={image}
               onCover={() => setCover(image.id)}
               onDelete={() => removeImage(image.id)}
+              onReplace={(file) => replaceImage(image.id, file)}
             />
           ))}
         </div>

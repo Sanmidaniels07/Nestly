@@ -1,5 +1,7 @@
 "use client";
 
+import { Clock3 } from "lucide-react";
+import { relistTime } from "@/src/lib/product-cooldown";
 import { useState } from "react";
 import { Heart, ShieldCheck, Check, Gift, Link2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -132,6 +134,27 @@ export default function BuyBox({ product }: Props) {
       { onSuccess: () => router.push("/marketplace/checkout") }
     );
   };
+
+  // Just edited by the seller: off sale for a few minutes, then back.
+  if (product.status === "UPDATING") {
+    const at = relistTime(product.relistAt);
+    return (
+      <aside className="sticky top-24 space-y-3 rounded-2xl border border-line bg-surface p-6 shadow-[0_20px_60px_-24px_rgba(124,58,237,0.15)]">
+        <p className="font-[family-name:var(--font-mono)] text-[28px] font-bold text-violet-700 dark:text-violet-300">{money(product.price)}</p>
+        <div className="flex items-start gap-3 rounded-xl bg-amber-50 p-4 dark:bg-amber-500/10">
+          <Clock3 size={18} className="mt-0.5 shrink-0 text-amber-600 dark:text-amber-300" />
+          <div>
+            <p className="text-[14px] font-semibold text-ink">{isOwner ? "Your product is updating" : "The seller is updating this product"}</p>
+            <p className="mt-0.5 text-[12.5px] leading-relaxed text-ink-2">
+              {isOwner
+                ? `Buyers can't see or buy it until ${at ?? "a few minutes from now"} - then it's back on sale by itself.`
+                : `You can buy it again ${at ? `from ${at}` : "in a few minutes"}. The details may change - check them again then.`}
+            </p>
+          </div>
+        </div>
+      </aside>
+    );
+  }
 
   return (
     <aside className="sticky top-24 max-h-[calc(100vh-6rem)] space-y-5 overflow-y-auto rounded-2xl border border-line bg-surface p-6 shadow-[0_20px_60px_-24px_rgba(124,58,237,0.15)]">

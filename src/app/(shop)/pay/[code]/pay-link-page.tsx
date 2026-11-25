@@ -45,6 +45,7 @@ import { ApiResponse } from "@/src/types/api";
 import { PublicPaymentLink } from "@/src/types/payment-link";
 import GuestDetails, { GuestDetailsValue, emptyGuest, guestProblem } from "@/src/components/guest-checkout/guest-details";
 import BrandScope from "@/src/components/ui/brand-scope";
+import ProductDetailsBlock from "@/src/components/marketplace/product-details-block";
 import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
 
 interface Props {
@@ -147,7 +148,7 @@ function ItemDetails({ link }: { link: PublicPaymentLink }) {
           </p>
         </div>
 
-        {link.description && <p className="whitespace-pre-line text-[14px] leading-relaxed text-ink-2">{link.description}</p>}
+        <ProductDetailsBlock product={link} />
 
         {/* Shared from the seller's shop: the full listing, with its reviews. */}
         {link.productId && (
@@ -373,11 +374,15 @@ function PayPanel({ link }: { link: PublicPaymentLink }) {
   if (link.availability !== "AVAILABLE") {
     return (
       <aside className="rounded-2xl border border-line bg-surface p-5 text-center">
-        <p className="text-[15px] font-semibold text-ink">{link.availability === "SOLD_OUT" ? "Sold out" : "Not available right now"}</p>
+        <p className="text-[15px] font-semibold text-ink">
+          {link.availability === "SOLD_OUT" ? "Sold out" : link.availability === "UPDATING" ? "Being updated" : "Not available right now"}
+        </p>
         <p className="mt-1 text-[13px] text-muted">
           {link.availability === "SOLD_OUT"
             ? "This item has been bought. Message the seller if you'd like another."
-            : "The seller has paused this link. Message them to turn it back on."}
+            : link.availability === "UPDATING"
+              ? "The seller is updating this item. Check back in a few minutes."
+              : "The seller has paused this link. Message them to turn it back on."}
         </p>
       </aside>
     );
