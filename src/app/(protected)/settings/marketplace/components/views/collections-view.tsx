@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Copy, Layers, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, Copy, ImagePlus, Layers, Loader2, Pencil, Plus, Search, Trash2, X } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { useMyStore } from "@/src/hooks/use-my-store";
@@ -15,6 +16,7 @@ import { shareLinks } from "@/src/lib/social";
 import { WhatsAppIcon } from "@/src/components/ui/social-icons";
 import { SellerCollection } from "@/src/types/collection";
 import { Product } from "@/src/types/product";
+import { CollectionDraft, clearCollectionDraft, peekCollectionDraft, saveCollectionDraft } from "@/src/lib/collection-draft";
 
 const naira = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -26,7 +28,15 @@ const LISTED = ["PUBLISHED", "OUT_OF_STOCK"];
 export default function CollectionsView() {
   const { data: store } = useMyStore();
   const { data: collections, isLoading } = useMyCollections();
-  const [editing, setEditing] = useState<SellerCollection | "new" | null>(null);
+  // Back from "Add a new product": reopen the editor as it was, with the
+  // new product ticked. (Seller Hub only renders in the browser.)
+  const [restore] = useState<CollectionDraft | null>(() => peekCollectionDraft());
+  const [editingId, setEditingId] = useState<string | null>(() => (restore ? restore.collectionId ?? "new" : null));
+  useEffect(() => {
+    if (restore) clearCollectionDraft();
+  }, [restore]);
+  const editingCollection = editingId && editingId !== "new" ? collections?.find((c) => c.id === editingId) : undefined;
+  const setEditing = (value: SellerCollection | "new" | null) => setEditingId(value === null ? null : value === "new" ? "new" : value.id);
 
   return (
     <div className="space-y-5">
@@ -65,7 +75,13 @@ export default function CollectionsView() {
         ))}
       </div>
 
-      {editing && <CollectionEditor collection={editing === "new" ? null : editing} onClose={() => setEditing(null)} />}
+      {(editingId === "new" || editingCollection) && (
+        <CollectionEditor
+          collection={editingCollection ?? null}
+          restore={restore && (restore.collectionId ?? "new") === editingId ? restore : undefined}
+          onClose={() => setEditing(null)}
+        />
+      )}
     </div>
   );
 }
@@ -161,14 +177,25 @@ function CollectionCard({ collection, storeSlug, onEdit }: { collection: SellerC
   );
 }
 
-function CollectionEditor({ collection, onClose }: { collection: SellerCollection | null; onClose: () => void }) {
+function CollectionEditor({
+  collection,
+  restore,
+  onClose,
+}: {
+  collection: SellerCollection | null;
+  restore?: CollectionDraft;
+  onClose: () => void;
+}) {
+  const router = useRouter();
   const { data: productsData, isLoading } = useMyProducts({ limit: 100 });
   const { mutate: create, isPending: isCreating } = useCreateCollection();
   const { mutate: update, isPending: isUpdating } = useUpdateCollection();
-  const [name, setName] = useState(collection?.name ?? "");
-  const [description, setDescription] = useState(collection?.description ?? "");
+  const [name, setName] = useState(restore?.name ?? collection?.name ?? "");
+  const [description, setDescription] = useState(restore?.description ?? collection?.description ?? "");
   // In the order they were picked - that's the order buyers see.
-  const [picked, setPicked] = useState<string[]>(collection?.products.filter((p) => LISTED.includes(p.status)).map((p) => p.id) ?? []);
+  const [picked, setPicked] = useState<string[]>(
+    restore?.picked ?? collection?.products.filter((p) => LISTED.includes(p.status)).map((p) => p.id) ?? []
+  );
   const [query, setQuery] = useState("");
   const [error, setError] = useState("");
   const busy = isCreating || isUpdating;
@@ -195,6 +222,14 @@ function CollectionEditor({ collection, onClose }: { collection: SellerCollectio
     setPicked((current) =>
       current.includes(id) ? current.filter((x) => x !== id) : current.length >= MAX_PRODUCTS ? current : [...current, id]
     );
+  };
+
+  // A product that isn't in the shop yet: the normal Add product form (so
+  // it's a real listing with its own stock), then straight back here with
+  // it ticked.
+  const addNewProduct = () => {
+    saveCollectionDraft({ collectionId: collection?.id ?? null, name, description, picked });
+    router.push("/settings/marketplace/components/products/new");
   };
 
   const save = () => {
@@ -300,6 +335,19 @@ function CollectionEditor({ collection, onClose }: { collection: SellerCollectio
                 );
               })}
             </ul>
+            <button
+              type="button"
+              onClick={addNewProduct}
+              className="mt-2 flex w-full items-center gap-3 rounded-xl border border-dashed border-violet-300 bg-violet-50/60 px-3 py-3 text-left transition-colors hover:bg-violet-50 dark:border-violet-500/40 dark:bg-violet-500/10"
+            >
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-violet-600 text-white">
+                <ImagePlus size={19} />
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[13.5px] font-semibold text-violet-800 dark:text-violet-200">Add a new product</span>
+                <span className="block text-[12px] text-muted">Not in your shop yet? Add it - we&apos;ll bring you back here with it picked.</span>
+              </span>
+            </button>
             <p className="mt-1.5 text-[11.5px] text-subtle">Buyers see them in the order you pick them. Up to {MAX_PRODUCTS}.</p>
           </div>
         </div>

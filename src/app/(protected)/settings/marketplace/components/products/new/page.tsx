@@ -21,6 +21,9 @@ import { useFormDraft } from "@/src/hooks/use-form-draft";
 import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { AiListingDraft, PriceGuide } from "@/src/services/ai-listing.services";
 import FillFromPhotos from "./components/fill-from-photos";
+import { handBackNewProduct, pendingCollectionDraft } from "@/src/lib/collection-draft";
+import { Layers } from "lucide-react";
+import { useIsClient } from "@/src/components/ui/cart-button";
 
 const naira = (value: number) =>
   new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
@@ -193,8 +196,25 @@ function AddProductContent() {
     }
 
     clearSaved();
+
+    // Started from a collection's "Add a new product": back to it, with this
+    // product ticked (only listed products can be in a collection).
+    if (pendingCollectionDraft()) {
+      if (status === "PUBLISHED") {
+        handBackNewProduct(created.id);
+        toast.success("Published - it's added to your collection");
+      } else {
+        toast("Saved as a draft. Publish it to add it to the collection.");
+      }
+      router.replace("/settings/marketplace?tab=collections");
+      return;
+    }
     exitForm();
   };
+
+  // Only in the browser (it's kept in this tab's storage).
+  const isClient = useIsClient();
+  const forCollection = isClient ? pendingCollectionDraft() : null;
 
   return (
     <div className="space-y-8">
@@ -208,6 +228,16 @@ function AddProductContent() {
           <AddProductHeader />
         </div>
       </div>
+
+      {forCollection && (
+        <p className="flex items-start gap-2 rounded-2xl border border-violet-200 bg-violet-50/70 px-4 py-3 text-[13px] text-ink-2 dark:border-violet-500/30 dark:bg-violet-500/10">
+          <Layers size={16} className="mt-0.5 shrink-0 text-violet-600 dark:text-violet-400" />
+          <span>
+            For your collection{forCollection.name.trim() ? <> &ldquo;{forCollection.name.trim()}&rdquo;</> : ""}: once you publish, we&apos;ll take
+            you back to it with this product picked. It&apos;s a normal product in your shop too, and its stock goes down as it sells.
+          </span>
+        </p>
+      )}
 
       {restored && <DraftRestoredNotice what="the product you started" onStartOver={startOver} onDismiss={dismissNotice} />}
 
