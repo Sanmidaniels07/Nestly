@@ -21,8 +21,8 @@ const DISMISS_KEY = "nestly:install-dismissed";
 const SNOOZE_DAYS = 7;
 const SHOW_AFTER_MS = 4000;
 // Pages where it would cover what matters (paying, the cart, a collection's
-// Check out bar, lives).
-const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout", "/checkout/", "/cart", "/marketplace/cart", "/c/"];
+// Check out bar, the add / edit product forms and their Save button, lives).
+const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout", "/checkout/", "/cart", "/marketplace/cart", "/c/", "/settings/marketplace/components/products/"];
 
 const snoozed = () => {
   try {
