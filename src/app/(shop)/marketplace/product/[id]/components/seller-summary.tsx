@@ -35,7 +35,7 @@ export default function SellerSummary({ store, productId }: Props) {
   return (
     <section className="mt-8 rounded-2xl border border-line bg-surface p-6">
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 items-center gap-4">
           {store.logo ? (
             <div className="relative h-[72px] w-[72px] shrink-0 overflow-hidden rounded-full">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -45,8 +45,8 @@ export default function SellerSummary({ store, productId }: Props) {
             <UserAvatar name={store.name} size={72} />
           )}
 
-          <div className="space-y-1.5">
-            <h3 className="font-[family-name:var(--font-fraunces)] text-[22px] text-ink">
+          <div className="min-w-0 space-y-1.5">
+            <h3 className="min-w-0 font-[family-name:var(--font-fraunces)] text-[22px] leading-tight text-ink [overflow-wrap:anywhere]">
               {store.name}
             </h3>
 

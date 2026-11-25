@@ -1,6 +1,7 @@
 import Sidebar from "./sidebar";
 import MobileNav from "./mobile-nav";
 import MessageSocketListener from "./message-socket-listener";
+import BackToMe from "./back-to-me";
 
 export default function AppShell({
   children,
@@ -13,6 +14,7 @@ export default function AppShell({
       <Sidebar />
 
       <main className="min-h-screen px-4 pb-24 pt-20 sm:px-6 lg:ml-[264px] lg:px-8 lg:pb-8">
+        <BackToMe />
         {children}
       </main>
 

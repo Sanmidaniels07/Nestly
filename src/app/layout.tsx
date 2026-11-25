@@ -1,4 +1,5 @@
 import Navbar from "../components/ui/navbar";
+import MemberNav from "../components/layout/member-nav";
 import "./globals.css";
 import Providers from "./providers";
 import { fraunces, jakarta, jetbrainsMono } from "@/src/lib/fonts";
@@ -78,6 +79,7 @@ export default function RootLayout({
           <NavigationTracker />
           <Navbar/>
           {children}
+          <MemberNav />
         </Providers>
         <AppToaster />
         <SiteAnalytics />
