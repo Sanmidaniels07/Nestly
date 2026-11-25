@@ -3,10 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AlertCircle, CreditCard, Loader2 } from "lucide-react";
+import { AlertCircle, CreditCard, Loader2, Lock } from "lucide-react";
 import SummaryRow from "./summary-row";
 import { useCart } from "@/src/hooks/use-cart";
-import { sellersMissingDelivery, useCheckoutStore } from "@/src/store/checkout-store";
+import { listSellerNames, sellersMissingDelivery, useCheckoutStore } from "@/src/store/checkout-store";
 import { useInitiateCheckout } from "@/src/hooks/use-initiate-checkout";
 import { useVerifyCheckout } from "@/src/hooks/use-verify-checkout";
 import { useSavedCards } from "@/src/hooks/use-saved-cards";
@@ -85,10 +85,20 @@ export default function PaymentSummary() {
   // Arrived without an address or a delivery choice for every seller (e.g.
   // typed the URL, or reloaded and lost the choices) - the total here would
   // leave out delivery, so go back and finish checkout first.
-  const incomplete = !!items && items.length > 0 && (!addressId || sellersMissingDelivery(items, shippingSelections).length > 0);
-  useEffect(() => {
-    if (incomplete && !confirmedOrder && !processing) router.replace("/marketplace/checkout");
-  }, [incomplete, confirmedOrder, processing, router]);
+  // What still has to be chosen before paying (shown under the button).
+  const undeliverable = items?.filter((item) => item.product.store?.canDeliver === false) ?? [];
+  const needDelivery = undeliverable.length > 0 ? [] : sellersMissingDelivery(items, shippingSelections);
+  const blocker = confirmedOrder
+    ? ""
+    : undeliverable.length > 0
+      ? `Remove ${undeliverable.length === 1 ? "the item" : "items"} from sellers who haven't set up delivery or pickup yet.`
+      : totalItems === 0
+        ? "Your cart is empty."
+        : !addressId
+          ? "Choose where to deliver your order."
+          : needDelivery.length > 0
+            ? `Choose delivery for ${listSellerNames(needDelivery)}.`
+            : "";
 
   const sellerNotesArray = Object.entries(sellerNotes)
     .map(([storeId, note]) => ({ storeId, note: note.trim() }))
@@ -96,11 +106,11 @@ export default function PaymentSummary() {
 
   const handlePay = async () => {
     if (!addressId) {
-      setError("Select a delivery address on the checkout page first.");
+      setError("Choose where to deliver your order.");
       return;
     }
     if (deliveryPhone && !PHONE_PATTERN.test(deliveryPhone)) {
-      setError("Check the phone number for delivery on the checkout page.");
+      setError("Check the phone number for delivery.");
       return;
     }
 
@@ -176,9 +186,9 @@ export default function PaymentSummary() {
   };
 
   return (
-    <aside className="space-y-5 rounded-2xl border border-line bg-surface p-6">
+    <aside className="space-y-5 rounded-2xl border border-line bg-surface p-5 sm:p-6 xl:sticky xl:top-24">
       <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">
-        Payment summary
+        Your order
       </h2>
 
       {!!savedCards?.length && (
@@ -220,7 +230,7 @@ export default function PaymentSummary() {
       <div className="space-y-3">
         <SummaryRow label="Items" value={totalItems.toString()} />
         <SummaryRow label="Subtotal" value={money(subtotal)} />
-        {deliveryFee > 0 && <SummaryRow label="Shipping" value={money(deliveryFee)} />}
+        {deliveryFee > 0 && <SummaryRow label="Delivery" value={money(deliveryFee)} />}
         {discountAmount > 0 && (
           <SummaryRow label="Coupon discount" value={`-${money(discountAmount)}`} />
         )}
@@ -233,11 +243,6 @@ export default function PaymentSummary() {
           />
         </div>
 
-        {!confirmedOrder && (
-          <p className="text-[11.5px] text-subtle">
-            The exact amount is confirmed by the server before payment.
-          </p>
-        )}
       </div>
 
       {error && (
@@ -249,8 +254,8 @@ export default function PaymentSummary() {
 
       <button
         onClick={handlePay}
-        disabled={processing || totalItems === 0}
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 py-3.5 text-[14px] font-semibold text-white transition-all hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-70"
+        disabled={processing || !!blocker}
+        className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 text-[15px] font-semibold text-white shadow-[0_10px_24px_-12px_rgba(91,33,182,0.7)] transition-all hover:brightness-110 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
       >
         {processing ? (
           <>
@@ -258,9 +263,15 @@ export default function PaymentSummary() {
             Processing payment...
           </>
         ) : (
-          `Pay ${money(estimatedTotal)}`
+          <>
+            <Lock size={15} /> Pay {money(estimatedTotal)}
+          </>
         )}
       </button>
+      {blocker && <p className="-mt-2 text-center text-[12.5px] text-muted">{blocker}</p>}
+      {!blocker && !confirmedOrder && (
+        <p className="-mt-2 text-center text-[12px] text-subtle">Card, bank transfer or USSD - secured by Paystack</p>
+      )}
 
       <p className="mt-3 text-center text-[12px] leading-relaxed text-subtle">
         By paying, you agree to Nestly&apos;s{" "}

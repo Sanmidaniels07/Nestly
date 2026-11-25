@@ -48,12 +48,12 @@ export default function GuestGuard({
 
     // Honour ?returnTo= (e.g. a guest who tapped "Add to cart" on a product,
     // or a session that expired) - otherwise this would win the race with
-    // the login hook's own redirect and always land on the dashboard.
+    // the login hook's own redirect and always land on the shop.
     const returnTo =
       getSafeReturnTo(new URLSearchParams(window.location.search).get("returnTo")) ?? rememberedReturnTo();
 
     router.replace(
-      returnTo ?? "/dashboard"
+      returnTo ?? "/marketplace"
     );
   }, [
     isHydrated,
@@ -65,7 +65,7 @@ export default function GuestGuard({
 
   // The Nestly splash, so pages behind this guard (login, signup...) don't
   // sit blank while the session check runs (long when the API is waking
-  // up) or the redirect to the dashboard happens.
+  // up) or the redirect to the shop happens.
   if (!isHydrated || isAuthenticated) {
     return <AppSplash />;
   }

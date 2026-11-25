@@ -1,135 +1,129 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import {
+  BarChart3,
+  ClipboardList,
+  House,
+  Layers,
+  Link2,
   LayoutDashboard,
   Package,
-  ClipboardList,
-  Users,
-  BarChart3,
-  Store,
-  RotateCcw,
-  Wallet,
-  ChevronLeft,
-  ChevronRight,
-  Link2,
   Radio,
+  RotateCcw,
+  Store,
+  Users,
+  Wallet,
 } from "lucide-react";
 
-export type Tab = "dashboard" | "products" | "lives" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
+// The page's ?tab= values. They stay as they were so every existing link
+// (emails, notifications, buttons) still opens the right place.
+export type Tab = "dashboard" | "products" | "collections" | "lives" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
 
 interface Props {
   active: Tab;
   onChange: (tab: Tab) => void;
 }
 
-const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard }[] = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "products", label: "Products", icon: Package },
-  { id: "lives", label: "Lives", icon: Radio },
-  { id: "links", label: "Payment links", icon: Link2 },
-  { id: "orders", label: "Orders", icon: ClipboardList },
-  { id: "customers", label: "Customers", icon: Users },
-  { id: "returns", label: "Returns", icon: RotateCcw },
-  { id: "analytics", label: "Analytics", icon: BarChart3 },
-  { id: "earnings", label: "Earnings", icon: Wallet },
-  { id: "store", label: "Store settings", icon: Store },
+type Icon = typeof LayoutDashboard;
+
+// Five sections instead of ten tabs; the rest sit as small choices inside
+// the section they belong to.
+const SECTIONS: { id: string; label: string; icon: Icon; tabs: { id: Tab; label: string; icon: Icon }[] }[] = [
+  {
+    id: "home",
+    label: "Home",
+    icon: House,
+    tabs: [
+      { id: "dashboard", label: "Overview", icon: LayoutDashboard },
+      { id: "analytics", label: "Insights", icon: BarChart3 },
+    ],
+  },
+  {
+    id: "products",
+    label: "Products",
+    icon: Package,
+    tabs: [
+      { id: "products", label: "Products", icon: Package },
+      { id: "collections", label: "Collections", icon: Layers },
+      { id: "lives", label: "Go live", icon: Radio },
+      { id: "links", label: "Pay links", icon: Link2 },
+    ],
+  },
+  {
+    id: "orders",
+    label: "Orders",
+    icon: ClipboardList,
+    tabs: [
+      { id: "orders", label: "Orders", icon: ClipboardList },
+      { id: "returns", label: "Returns", icon: RotateCcw },
+      { id: "customers", label: "Customers", icon: Users },
+    ],
+  },
+  { id: "money", label: "Money", icon: Wallet, tabs: [{ id: "earnings", label: "Earnings", icon: Wallet }] },
+  { id: "store", label: "Store", icon: Store, tabs: [{ id: "store", label: "Store settings", icon: Store }] },
 ];
 
+export const sectionOf = (tab: Tab) => SECTIONS.find((section) => section.tabs.some((item) => item.id === tab)) ?? SECTIONS[0];
+
 export default function MarketplaceTabs({ active, onChange }: Props) {
-  const stripRef = useRef<HTMLDivElement>(null);
-  const activeRef = useRef<HTMLButtonElement>(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(false);
-
-  // Arrows only appear when tabs are hidden off that side - a mouse can't
-  // swipe the strip the way a finger can.
-  const measure = useCallback(() => {
-    const strip = stripRef.current;
-    if (!strip) return;
-    setCanLeft(strip.scrollLeft > 4);
-    setCanRight(strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 4);
-  }, []);
-
-  useEffect(() => {
-    measure();
-    const strip = stripRef.current;
-    if (!strip) return;
-    const observer = new ResizeObserver(measure);
-    observer.observe(strip);
-    return () => observer.disconnect();
-  }, [measure]);
-
-  // Keep the active tab in view when arriving via a link (e.g. ?tab=store)
-  // or the back button.
-  useEffect(() => {
-    const strip = stripRef.current;
-    const tab = activeRef.current;
-    if (!strip || !tab) return;
-    const left = tab.offsetLeft;
-    if (left < strip.scrollLeft || left + tab.offsetWidth > strip.scrollLeft + strip.clientWidth) {
-      strip.scrollTo({ left: Math.max(0, left - 48), behavior: "smooth" });
-    }
-  }, [active]);
-
-  const scrollBy = (direction: 1 | -1) => {
-    const strip = stripRef.current;
-    if (!strip) return;
-    strip.scrollBy({ left: direction * Math.max(200, strip.clientWidth * 0.6), behavior: "smooth" });
-  };
+  const current = sectionOf(active);
 
   return (
-    <section className="relative">
-      <div ref={stripRef} onScroll={measure} className="relative overflow-x-auto scrollbar-hide rounded-xl">
-        <div className="inline-flex gap-0.5 rounded-xl bg-surface-2 p-1">
-          {tabs.map((tab) => {
-            const isActive = active === tab.id;
+    <nav aria-label="Seller Hub" className="space-y-3">
+      {/* Five fixed places - no sideways scrolling, even on a small phone. */}
+      <div className="grid grid-cols-5 gap-1 rounded-2xl border border-line bg-surface p-1 shadow-sm">
+        {SECTIONS.map((section) => {
+          const isActive = section.id === current.id;
+          return (
+            <button
+              key={section.id}
+              type="button"
+              onClick={() => onChange(section.tabs[0].id)}
+              aria-current={isActive ? "page" : undefined}
+              className={`relative flex min-w-0 flex-col items-center justify-center gap-1 rounded-xl px-1 py-2 text-[11.5px] font-semibold transition-colors sm:flex-row sm:gap-2 sm:py-2.5 sm:text-[13.5px] ${
+                isActive ? "text-white" : "text-muted hover:text-ink"
+              }`}
+            >
+              {isActive && (
+                <motion.span
+                  layoutId="seller-hub-section"
+                  className="absolute inset-0 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 shadow-[0_8px_20px_-10px_rgba(91,33,182,0.7)]"
+                  transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                />
+              )}
+              <section.icon size={18} className="relative shrink-0" />
+              <span className="relative truncate">{section.label}</span>
+            </button>
+          );
+        })}
+      </div>
 
+      {/* The choices inside this section, when it has more than one. */}
+      {current.tabs.length > 1 && (
+        <div className="flex flex-wrap gap-2" role="tablist" aria-label={current.label}>
+          {current.tabs.map((item) => {
+            const isActive = item.id === active;
             return (
               <button
-                key={tab.id}
-                ref={isActive ? activeRef : undefined}
-                onClick={() => onChange(tab.id)}
-                aria-current={isActive ? "page" : undefined}
-                className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-4 py-2.5 text-[13.5px] font-medium transition-all ${
+                key={item.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                onClick={() => onChange(item.id)}
+                className={`flex h-9 items-center gap-1.5 rounded-full px-3.5 text-[13px] font-semibold transition-colors ${
                   isActive
-                    ? "bg-surface text-violet-700 shadow-sm dark:bg-track dark:text-violet-300"
-                    : "text-muted hover:text-ink"
+                    ? "bg-violet-100 text-violet-800 ring-1 ring-violet-300 dark:bg-violet-500/20 dark:text-violet-200 dark:ring-violet-500/40"
+                    : "border border-line bg-surface text-muted hover:border-violet-200 hover:text-ink dark:hover:border-violet-500/30"
                 }`}
               >
-                <tab.icon size={15} className={isActive ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
-                {tab.label}
+                <item.icon size={14} />
+                {item.label}
               </button>
             );
           })}
         </div>
-      </div>
-
-      {canLeft && (
-        <div className="pointer-events-none absolute inset-y-0 left-0 flex w-16 items-center bg-gradient-to-r from-canvas via-canvas/80 to-transparent">
-          <button
-            type="button"
-            onClick={() => scrollBy(-1)}
-            aria-label="Show earlier tabs"
-            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-ink-2 shadow-sm transition-colors hover:text-violet-700 dark:hover:text-violet-300"
-          >
-            <ChevronLeft size={17} />
-          </button>
-        </div>
       )}
-
-      {canRight && (
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex w-16 items-center justify-end bg-gradient-to-l from-canvas via-canvas/80 to-transparent">
-          <button
-            type="button"
-            onClick={() => scrollBy(1)}
-            aria-label="Show more tabs"
-            className="pointer-events-auto flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-ink-2 shadow-sm transition-colors hover:text-violet-700 dark:hover:text-violet-300"
-          >
-            <ChevronRight size={17} />
-          </button>
-        </div>
-      )}
-    </section>
+    </nav>
   );
 }

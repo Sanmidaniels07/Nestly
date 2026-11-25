@@ -45,7 +45,7 @@ function Hero() {
               and Shop Together
             </h1>
             <p className="mt-6 text-xl text-muted max-w-lg">
-              The social marketplace where your friends, birthdays, communities
+              The social marketplace where your friends, birthdays
               and sellers you trust live in one place.
             </p>
           </div>
@@ -306,7 +306,7 @@ const GUIDE_LINKS = [
     href: "/guides/buyers",
     short: "Buying",
     title: "Shop on Nestly",
-    desc: "Find products, pay securely with Paystack, track delivery and get returns - step by step.",
+    desc: "Find products, buy with or without an account, pay securely with Paystack, track delivery and get returns - step by step.",
     cta: "Read the buyer guide",
     icon: ShoppingBag,
     color: "bg-tint-orange text-[#FF7A45]",
@@ -315,7 +315,7 @@ const GUIDE_LINKS = [
     href: "/guides/sellers",
     short: "Selling",
     title: "Sell on Nestly",
-    desc: "Apply, set up your store, delivery and payouts, list products and get paid for every order.",
+    desc: "Open your shop in minutes, set up delivery and payouts, list products, share links and collections, and get paid for every order.",
     cta: "Read the seller guide",
     icon: Store,
     color: "bg-tint text-[#8B5CF6]",
@@ -324,7 +324,7 @@ const GUIDE_LINKS = [
     href: "/guides/community",
     short: "Community",
     title: "Get started",
-    desc: "Set up your profile, follow friends, post, join communities and events, and stay safe.",
+    desc: "Set up your profile, follow friends and stores, post, message and stay safe.",
     cta: "Read the community guide",
     icon: Users,
     color: "bg-tint-blue text-[#2B7FFF]",
@@ -377,7 +377,7 @@ function Guides() {
 const ABOUT_QA = [
   {
     q: "What is Nestly?",
-    a: "Nestly (also called the Nestly app) is a social marketplace app made in Nigeria. It brings shopping and your social life together: you can buy and sell online from trusted sellers, follow friends and stores, join communities, and get reminded of birthdays so you never miss a celebration - all in one app.",
+    a: "Nestly (also called the Nestly app) is a social marketplace app made in Nigeria. It brings shopping and your social life together: you can buy and sell online from trusted sellers, follow friends and stores, and get reminded of birthdays so you never miss a celebration - all in one app.",
   },
   {
     q: "How is Nestly different from shopping on Instagram or WhatsApp?",

@@ -9,12 +9,12 @@ import { useMySeller } from "@/src/hooks/use-my-seller";
 import SellerDashboardHeader from "./components/seller-dashboard/seller-dashboard-header";
 import SuspendedStoreBanner from "./components/seller-dashboard/suspended-store-banner";
 import UnderReviewBanner from "./components/seller-dashboard/under-review-banner";
-import CacReminderBanner from "./components/seller-dashboard/cac-reminder-banner";
-import SetupReminderBanner from "./components/seller-dashboard/setup-reminder-banner";
+import SellerNextStep from "./components/seller-dashboard/seller-next-step";
 import MarketplaceTabs, { Tab } from "./components/marketplace-tabs";
 import DashboardView from "./components/views/dashboard-view";
 import ProductsView from "./components/views/product-view";
 import PaymentLinksView from "./components/views/payment-links-view";
+import CollectionsView from "./components/views/collections-view";
 import LivesView from "./components/views/lives-view";
 import OrdersView from "./components/views/orders-view";
 import CustomersView from "./components/views/customers-view";
@@ -29,6 +29,7 @@ import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleto
 const VALID_TABS: Tab[] = [
   "dashboard",
   "products",
+  "collections",
   "lives",
   "links",
   "orders",
@@ -120,6 +121,7 @@ function MarketplaceSettingsContent() {
   const tabSections: Record<Tab, string> = {
     dashboard: "dashboard",
     products: "products",
+    collections: "collections",
     lives: "live selling",
     links: "payment links",
     orders: "orders",
@@ -133,6 +135,7 @@ function MarketplaceSettingsContent() {
   const tabViews: Partial<Record<Tab, React.ReactNode>> = {
     dashboard: <DashboardView seller={seller} />,
     products: <ProductsView />,
+    collections: <CollectionsView />,
     lives: <LivesView />,
     links: <PaymentLinksView />,
     orders: <OrdersView />,
@@ -144,19 +147,17 @@ function MarketplaceSettingsContent() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-5 sm:space-y-7">
       <SellerDashboardHeader />
+
+      {/* The sections first, then anything that needs attention. */}
+      <MarketplaceTabs active={tab} onChange={handleTabChange} />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
       {seller?.store?.underReview && !seller.store.isSuspended && <UnderReviewBanner orderLimit={seller.orderLimit} held={seller.heldForReview} />}
 
-      {/* What's left before buyers can order (the Dashboard tab has the full checklist). */}
-      {seller?.status === "APPROVED" && tab !== "dashboard" && <SetupReminderBanner />}
-
-      {/* Every approved seller without a CAC number, store or not. */}
-      {seller?.status === "APPROVED" && !seller.cacNumber && <CacReminderBanner />}
-
-      <MarketplaceTabs active={tab} onChange={handleTabChange} />
+      {/* The one thing to do next (setup step, then the CAC number). */}
+      <SellerNextStep seller={seller} />
 
       <div className="overflow-x-auto">
         {tab !== "dashboard" && !hasStore ? (

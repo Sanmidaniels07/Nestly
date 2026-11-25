@@ -7,7 +7,7 @@ interface Props {
   onStepClick?: (step: number) => void;
 }
 
-const steps = ["Basic info", "Pricing", "Specifications", "Images", "Review"];
+const steps = ["Photos", "Details", "Pricing", "Specifications", "Review"];
 
 export default function AddProductStepper({ currentStep, onStepClick }: Props) {
   return (

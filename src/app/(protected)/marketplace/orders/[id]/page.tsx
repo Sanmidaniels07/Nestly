@@ -4,6 +4,7 @@ import { use } from "react";
 import { notFound } from "next/navigation";
 
 import { useOrder } from "@/src/hooks/use-order";
+import NextStep from "./components/next-step";
 import OrderHeader from "./components/order-header";
 import ShippingAddress from "./components/shipping-address";
 import PaymentDetails from "./components/payment-details";
@@ -61,13 +62,16 @@ export default function OrderDetailsPage({ params, searchParams }: Props) {
   return (
     <div className="mx-auto max-w-7xl space-y-6 px-4 py-6 sm:px-5 sm:py-8">
       <OrderHeader order={order} />
+      <NextStep order={order} />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.7fr)_420px]">
         <section className="min-w-0 space-y-5">
           <GiftNotice order={order} />
           <SoldOutNotice order={order} />
           <DeliveryCodes order={order} />
-          <OrderedProducts order={order} focus={{ itemId: focusItem, mode: action }} />
+          <div id="order-items" className="scroll-mt-24">
+            <OrderedProducts order={order} focus={{ itemId: focusItem, mode: action }} />
+          </div>
           <SellerNotesCard order={order} />
 
           {order.address && <ShippingAddress address={order.address} deliveryPhone={order.deliveryPhone} />}

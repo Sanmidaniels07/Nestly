@@ -65,7 +65,7 @@ export const useLogin = () => {
         return;
       }
 
-      router.push(returnTo ?? rememberedReturnTo() ?? "/dashboard");
+      router.push(returnTo ?? rememberedReturnTo() ?? "/marketplace");
     },
 
     onError: (error) => {

@@ -44,7 +44,7 @@ export const useGoogleAuth = () => {
       }
 
       toast.success("Logged in successfully");
-      router.push(returnTo ?? rememberedReturnTo() ?? "/dashboard");
+      router.push(returnTo ?? rememberedReturnTo() ?? "/marketplace");
     },
 
     onError: (error) => {

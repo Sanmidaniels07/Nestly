@@ -20,8 +20,9 @@ interface InstallEvent extends Event {
 const DISMISS_KEY = "nestly:install-dismissed";
 const SNOOZE_DAYS = 7;
 const SHOW_AFTER_MS = 4000;
-// Full-screen pages where a card on top would get in the way.
-const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout"];
+// Pages where it would cover what matters (paying, the cart, a collection's
+// Check out bar, lives).
+const HIDDEN_ON = ["/live/", "/marketplace/live/", "/pay/", "/marketplace/checkout", "/checkout/", "/cart", "/marketplace/cart", "/c/"];
 
 const snoozed = () => {
   try {
@@ -100,12 +101,15 @@ export default function InstallPrompt() {
     setOpen(false);
   };
 
+  // At the bottom on every screen, so it never covers a page's heading:
+  // phones - just above the bottom menu bar; bigger screens - the bottom
+  // right corner, out of the way of what people are reading.
   return (
-    <div className="pointer-events-none fixed inset-x-0 top-3 z-[60] flex justify-center px-3 sm:top-4">
+    <div className="pointer-events-none fixed inset-x-0 bottom-[calc(env(safe-area-inset-bottom)+5.25rem)] z-[60] flex justify-center px-3 lg:inset-x-auto lg:bottom-6 lg:right-6 lg:px-0">
       <div
         role="dialog"
         aria-label="Install Nestly"
-        className="pointer-events-auto relative flex w-full max-w-md items-start gap-3.5 rounded-2xl border border-line bg-surface p-4 pr-11 shadow-[0_18px_48px_-12px_rgba(15,23,42,0.35)] live-pop"
+        className="pointer-events-auto relative flex w-full max-w-md items-start gap-3.5 rounded-2xl border border-violet-200 bg-surface/95 p-4 pr-11 shadow-[0_18px_48px_-12px_rgba(76,29,149,0.45)] backdrop-blur-xl live-pop dark:border-violet-500/30 lg:max-w-sm"
       >
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 dark:bg-violet-500/15">
           <NestlyMark size={30} />

@@ -9,6 +9,8 @@ import { Product } from "@/src/types/product";
 import { useDeleteProduct } from "@/src/hooks/use-delete-product";
 import Checkbox from "@/src/components/ui/checkbox";
 import SharePayLinkDialog from "@/src/components/marketplace/share-pay-link-dialog";
+import ActionTip from "@/src/components/ui/action-tip";
+import ProductQuickView from "./product-quick-view";
 
 interface Props {
   product: Product;
@@ -19,6 +21,7 @@ interface Props {
 export default function ProductRow({ product, selected, onToggleSelect }: Props) {
   const [confirmingArchive, setConfirmingArchive] = useState(false);
   const [sharingPayLink, setSharingPayLink] = useState(false);
+  const [viewing, setViewing] = useState(false);
   const { mutate: archiveProduct } = useDeleteProduct();
 
   const status =
@@ -26,14 +29,18 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
       ? "Archived"
       : product.status === "PUBLISHED"
         ? "Published"
-        : "Draft";
+        : product.status === "OUT_OF_STOCK"
+          ? "Sold out"
+          : "Draft";
 
   const statusTone =
     status === "Published"
       ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-700 dark:text-emerald-300"
       : status === "Draft"
         ? "bg-amber-50 dark:bg-amber-500/10 text-amber-700 dark:text-amber-300"
-        : "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300";
+        : status === "Sold out"
+          ? "bg-surface-2 text-muted"
+          : "bg-red-50 dark:bg-red-500/10 text-red-700 dark:text-red-300";
 
   const primaryImage =
     product.images.find((image) => image.isPrimary)?.url ?? product.images[0]?.url;
@@ -54,22 +61,40 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
       </td>
 
       <td className="px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-surface-muted">
+        <button
+          type="button"
+          onClick={() => setViewing(true)}
+          className="group/open -m-1.5 flex max-w-[260px] items-center gap-3 rounded-xl p-1.5 text-left transition-colors hover:bg-violet-50 dark:hover:bg-violet-500/10"
+        >
+          <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-lg bg-surface-muted">
             {primaryImage && (
-              <Image src={primaryImage} alt={product.title} fill className="object-cover" />
+              <Image src={primaryImage} alt={product.title} fill sizes="44px" className="object-cover" />
             )}
           </div>
           <div className="min-w-0">
-            <p className="truncate text-[13.5px] font-medium text-ink">{product.title}</p>
-            {product.brand && (
-              <p className="mt-0.5 truncate text-[12px] text-subtle">{product.brand}</p>
-            )}
+            <p className="truncate text-[13.5px] font-medium text-ink group-hover/open:text-violet-700 dark:group-hover/open:text-violet-300">{product.title}</p>
+            <p className="mt-0.5 truncate text-[12px] text-subtle">{product.brand || "Tap to see details and actions"}</p>
           </div>
-        </div>
+        </button>
+        {viewing && (
+          <ProductQuickView
+            product={product}
+            status={status}
+            statusTone={statusTone}
+            onClose={() => setViewing(false)}
+            onPayLink={() => {
+              setViewing(false);
+              setSharingPayLink(true);
+            }}
+            onArchive={() => {
+              setViewing(false);
+              archiveProduct(product.id);
+            }}
+          />
+        )}
       </td>
 
-      <td className="whitespace-nowrap px-4 py-3 font-[family-name:var(--font-mono)] text-[12.5px] text-muted">
+      <td className="hidden whitespace-nowrap px-4 py-3 font-[family-name:var(--font-mono)] text-[12.5px] text-muted 2xl:table-cell">
         {product.sku}
       </td>
 
@@ -90,37 +115,43 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
       <td className="whitespace-nowrap px-4 py-3 pr-5">
         <div className="flex items-center justify-end gap-1">
           {product.status === "PUBLISHED" && (
+            <ActionTip label="Share a pay link buyers can pay with">
             <button
               type="button"
               onClick={() => setSharingPayLink(true)}
               aria-label="Share pay link"
-              title="Share pay link - buyers pay without an account"
-              className="flex h-7 items-center justify-center gap-1 rounded-md px-1.5 text-[11.5px] font-semibold text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-violet-700 transition-colors hover:bg-violet-50 dark:text-violet-300 dark:hover:bg-violet-500/10"
             >
-              <Link2 size={14} /> Pay link
+              <Link2 size={15} />
             </button>
+            </ActionTip>
           )}
           {sharingPayLink && (
             <SharePayLinkDialog productId={product.id} productTitle={product.title} onClose={() => setSharingPayLink(false)} />
           )}
 
+          <ActionTip label="View in your shop, as buyers see it">
           <Link
             href={`/marketplace/product/${product.id}`}
-            aria-label="View product"
-            className="flex h-7 w-7 items-center justify-center rounded-md text-subtle transition-colors hover:bg-surface-muted hover:text-ink-2"
+            aria-label="View in your shop"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-muted hover:text-ink-2"
           >
             <Eye size={14} />
           </Link>
+          </ActionTip>
 
+          <ActionTip label="Edit photos, details, price and stock">
           <Link
             href={`/settings/marketplace/components/products/${product.id}/edit`}
             aria-label="Edit product"
-            className="flex h-7 w-7 items-center justify-center rounded-md text-subtle transition-colors hover:bg-surface-muted hover:text-ink-2"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-subtle transition-colors hover:bg-surface-muted hover:text-ink-2"
           >
             <Pencil size={14} />
           </Link>
+          </ActionTip>
 
           {product.status !== "ARCHIVED" && (
+            <ActionTip label={confirmingArchive ? "Tap again to archive" : "Archive - takes it out of your shop (past orders are kept)"}>
             <button
               onClick={handleArchive}
               aria-label={confirmingArchive ? "Confirm archive" : "Archive product"}
@@ -136,6 +167,7 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
               <Archive size={14} />
               {confirmingArchive && "Sure?"}
             </button>
+            </ActionTip>
           )}
         </div>
       </td>

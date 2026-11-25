@@ -12,11 +12,12 @@ interface Props {
   draft: ProductDraft;
   setDraft: React.Dispatch<React.SetStateAction<ProductDraft>>;
   onNext: () => void;
+  onBack?: () => void;
 }
 
 const DESCRIPTION_MAX = 1000;
 
-export default function BasicInformation({ draft, setDraft, onNext }: Props) {
+export default function BasicInformation({ draft, setDraft, onNext, onBack }: Props) {
   const { data: categories } = useCategories();
 
   const [nameError, setNameError] = useState("");
@@ -172,7 +173,12 @@ export default function BasicInformation({ draft, setDraft, onNext }: Props) {
         </div>
       </div>
 
-      <div className="mt-8 flex justify-end border-t border-line-soft pt-6">
+      <div className={`mt-8 flex border-t border-line-soft pt-6 ${onBack ? "justify-between" : "justify-end"}`}>
+        {onBack && (
+          <Button variant="outline" onClick={onBack} className="h-11 rounded-xl px-7">
+            Back
+          </Button>
+        )}
         <Button variant="tribely" onClick={handleContinue} className="h-11 rounded-xl px-7">
           Continue
         </Button>

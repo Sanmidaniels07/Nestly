@@ -8,7 +8,7 @@ import { OG_IMAGE } from "@/src/lib/site";
 export const metadata: Metadata = {
   title: "Buyer guide - shop safely on Nestly",
   description:
-    "Step by step: find products from Nigerian sellers, check out securely with Paystack, track delivery with your delivery code, and get returns and refunds.",
+    "Step by step: find products from Nigerian sellers, buy with or without an account, pay securely with Paystack, track delivery with your delivery code, and get returns and refunds.",
   alternates: { canonical: "/guides/buyers" },
   openGraph: { title: "How to buy on Nestly", url: "/guides/buyers", images: [OG_IMAGE] },
 };
@@ -20,7 +20,7 @@ const parts: GuidePart[] = [
       {
         id: "browse",
         title: "Browse - no account needed",
-        where: { label: "Marketplace → Categories", href: "/marketplace/categories" },
+        where: { label: "Shop → Categories", href: "/marketplace/categories" },
         body: (
           <p>
             Look through categories, see what&apos;s sold in your state, search for something specific, or open a store to see everything it sells.
@@ -30,12 +30,13 @@ const parts: GuidePart[] = [
       },
       {
         id: "account",
-        title: "Create your free account",
+        title: "Buy with or without an account",
         where: { label: "nestlyapp.site/signup", href: "/signup" },
         body: (
           <p>
-            You&apos;ll need an account to buy, save items or follow stores. Sign up with your name, email and a password and verify your email. If
-            you started from a product, we bring you straight back to it.
+            You can buy as a guest - just your name, email and phone at checkout, and we email your receipt and delivery code. A free account lets you
+            save items, follow stores, see all your orders in one place and check out faster. After a guest order we offer to set one up for you -
+            or tap <strong>No thanks</strong>.
           </p>
         ),
       },
@@ -46,7 +47,7 @@ const parts: GuidePart[] = [
           <p>
             Tap <strong>Save item</strong> on anything you like - it waits for you in <strong>Saved products</strong>. <strong>Follow</strong> stores you
             love and we&apos;ll tell you when they list something new. Sold out? Tap <strong>Notify me when it&apos;s back</strong>. You can turn these
-            alerts off under Settings → Notifications → Shopping updates.
+            alerts off under Me → Settings → Notifications → Shopping updates.
           </p>
         ),
       },
@@ -78,6 +79,17 @@ const parts: GuidePart[] = [
         ),
       },
       {
+        id: "links",
+        title: "Bought from a link a seller sent you?",
+        body: (
+          <p>
+            Sellers often share a <strong>pay link</strong> (one item) or a <strong>collection</strong> (a few of their products on one page). On a
+            collection, tap <strong>Add</strong> on what you want, choose sizes and quantities, then <strong>Check out</strong> - one payment for
+            everything, with the same protection as any Nestly order.
+          </p>
+        ),
+      },
+      {
         id: "address",
         title: "Add your delivery address",
         body: <p>Enter your full name, phone number, address, city and state, then check the <strong>phone number for delivery</strong> - change it if someone else is receiving the order. The seller (who delivers) gets your name, address and that number only to deliver; your email is never shared.</p>,
@@ -104,8 +116,9 @@ const parts: GuidePart[] = [
         title: "Pay securely with Paystack",
         body: (
           <p>
-            Pay with your debit or credit card (Visa, Mastercard, Verve) through Paystack - Nestly never sees your card number. You can save a card for
-            faster checkout next time. When payment goes through you&apos;ll see <strong>Payment successful</strong>.
+            Everything is on one page: check your address and delivery, then tap <strong>Pay</strong>. Pay by card, bank transfer or USSD through
+            Paystack - Nestly never sees your card number. With an account you can save a card for faster checkout next time. Your money is held by
+            Nestly until you have your order.
           </p>
         ),
       },
@@ -117,11 +130,12 @@ const parts: GuidePart[] = [
       {
         id: "track",
         title: "Track your order",
-        where: { label: "Marketplace → Orders", href: "/marketplace/orders" },
+        where: { label: "Orders (in the menu)", href: "/marketplace/orders" },
         body: (
           <p>
-            Follow each order from <strong>Payment confirmed</strong> to <strong>Being prepared</strong>, <strong>Shipped</strong> and{" "}
-            <strong>Delivered</strong>. You&apos;re notified at each step.
+            Open an order and the <strong>What&apos;s next</strong> card at the top tells you where it is - placed, being prepared, on its way (or
+            ready for pickup), delivered - and the one thing to do now. You&apos;re notified at each step. Bought as a guest? Use the link in your
+            email.
           </p>
         ),
       },
@@ -130,8 +144,8 @@ const parts: GuidePart[] = [
         title: "Give your delivery code only when you have the item",
         body: (
           <p>
-            Each order has a 6-digit <strong>delivery code</strong> on its order page. Give it to the person delivering only once the item is in your
-            hands - it tells Nestly you received it.
+            Each order has a 6-digit <strong>delivery code</strong> - tap <strong>Show my code</strong> on the order page. Give it to the person
+            delivering only once the item is in your hands - it tells Nestly you received it.
           </p>
         ),
         warning: "Never share your delivery code before you receive your order.",
@@ -166,8 +180,9 @@ const parts: GuidePart[] = [
             If an item arrives damaged, faulty, the wrong item or significantly not as described, tap <strong>Request return</strong> within{" "}
             {RETURN_WINDOW_DAYS} days of delivery and choose what&apos;s wrong. For food, cakes and groceries you have {PERISHABLE_REPORT_HOURS} hours -
             add a photo and you don&apos;t need to send it back. There are no change-of-mind returns. Follow your requests under{" "}
-            <Link href="/marketplace/returns">My returns</Link>: the seller has 48 hours to refund you or send a replacement, and if you can&apos;t
-            agree, Nestly decides. Refunds go back to your original payment method, usually within 5-10 business days.
+            <Link href="/marketplace/returns">Me → Returns &amp; refunds</Link>: the seller has 48 hours to refund you or send a replacement, and
+            if you can&apos;t agree, Nestly decides. Refunds go back to your original payment method, usually within 5-10 business days. Bought as a
+            guest? Returns go through a free account - set a password and you land right on the form - or message Nestly on WhatsApp.
           </p>
         ),
       },

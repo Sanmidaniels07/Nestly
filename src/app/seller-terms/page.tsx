@@ -164,7 +164,7 @@ const sections: LegalSection[] = [
           When a buyer pays, Nestly holds the payment until the buyer has the item and the return window has closed - {RETURN_WINDOW_DAYS} days after
           delivery is confirmed, or {PERISHABLE_REPORT_HOURS} hours for perishable categories. Your share (item price minus commission, plus your full
           delivery fee) is then paid to your payout bank account, normally by bank transfer within one business day. You can see what&apos;s coming
-          and when under Seller Hub → Earnings.
+          and when under Seller Hub → Money.
         </p>
         <p>
           If a buyer reports a problem with an order, the payout for that order waits until the report is closed. Payouts also wait for{" "}
@@ -188,7 +188,7 @@ const sections: LegalSection[] = [
           instead of returning the item. There are no change-of-mind returns. You may not refuse a valid report.
         </p>
         <p>
-          You must answer a report within <strong>48 hours</strong> ({PERISHABLE_REPORT_HOURS} hours for perishables) in Seller Hub → Returns: refund the
+          You must answer a report within <strong>48 hours</strong> ({PERISHABLE_REPORT_HOURS} hours for perishables) in Seller Hub → Orders → Returns: refund the
           buyer, send a replacement, or tell Nestly why you disagree. If you don&apos;t answer in time, or you disagree, Nestly reviews the evidence and
           decides. A refund is the full price the buyer paid for the item (plus the delivery fee if they kept nothing else from you) - there are no
           partial refunds. The buyer may also choose to keep the item, which closes the report.

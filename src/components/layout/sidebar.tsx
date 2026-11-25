@@ -120,7 +120,7 @@ export default function Sidebar() {
         </a>
 
         <Link
-          href="/profile"
+          href="/me"
           className="flex items-center gap-3 rounded-xl border border-line bg-surface p-3 transition-colors hover:border-violet-200 dark:hover:border-violet-500/30 hover:bg-surface-sunken"
         >
           <div className="rounded-full bg-gradient-to-br from-violet-600 to-indigo-600 p-[2px]">

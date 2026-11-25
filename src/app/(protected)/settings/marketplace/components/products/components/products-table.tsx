@@ -14,7 +14,8 @@ interface Props {
 
 const columns = [
   { label: "Product", align: "left" },
-  { label: "SKU", align: "left" },
+  // Wide screens only - it's in the product's details too.
+  { label: "SKU", align: "left", className: "hidden 2xl:table-cell" },
   { label: "Price", align: "right" },
   { label: "Stock", align: "right" },
   { label: "Status", align: "left" },
@@ -30,7 +31,9 @@ export default function ProductsTable({
   const allSelected = products.length > 0 && products.every((p) => selectedIds.has(p.id));
 
   return (
-    <ManagementTable>
+    // Narrow enough that the actions fit on a laptop without scrolling
+    // sideways (phones still scroll; tapping a product shows everything).
+    <ManagementTable minWidth={860}>
       <thead>
         <tr className="border-b border-line bg-surface-sunken">
           <th className="w-10 px-4 py-3 pl-5">
@@ -49,6 +52,7 @@ export default function ProductsTable({
               className={`
                 whitespace-nowrap px-4 py-3 text-[12.5px] font-semibold text-ink-3
                 ${col.align === "right" ? "text-right" : "text-left"}
+                ${"className" in col ? col.className : ""}
                 last:pr-5
               `}
             >

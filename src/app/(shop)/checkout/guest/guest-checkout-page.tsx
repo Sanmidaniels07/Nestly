@@ -48,13 +48,28 @@ export default function GuestCheckoutPage() {
         : null,
     [buyNowId, searchParams]
   );
-  const lines = useMemo(() => (buyNow ? [buyNow] : cartLines), [buyNow, cartLines]);
+  // Several items from a link (a collection): ?items=productId.variationId.qty,...
+  // (variationId empty when there's none) - the cart is left as it is too.
+  const itemsParam = searchParams.get("items");
+  const linkLines = useMemo<GuestCartLine[] | null>(() => {
+    if (buyNow) return [buyNow];
+    if (!itemsParam) return null;
+    const parsed = itemsParam
+      .split(",")
+      .map((part) => part.split("."))
+      .filter(([productId]) => !!productId)
+      .map(([productId, variationId, qty]) => ({ productId, variationId: variationId || null, quantity: Math.max(1, Number(qty) || 1) }));
+    return parsed.length ? parsed : null;
+  }, [buyNow, itemsParam]);
+  // Where "back" goes for items from a link (e.g. the collection page).
+  const back = searchParams.get("back");
+  const lines = useMemo(() => linkLines ?? cartLines, [linkLines, cartLines]);
 
   // Signed in: the normal checkout.
   useEffect(() => {
     if (!isHydrated || !isAuthenticated) return;
-    router.replace(buyNow ? `/marketplace/product/${buyNow.productId}` : "/marketplace/cart");
-  }, [isHydrated, isAuthenticated, buyNow, router]);
+    router.replace(buyNow ? `/marketplace/product/${buyNow.productId}` : back?.startsWith("/") ? back : "/marketplace/cart");
+  }, [isHydrated, isAuthenticated, buyNow, back, router]);
 
   const { data: quote, isLoading } = useQuery({
     queryKey: ["guest-cart-quote", lines],
@@ -120,7 +135,7 @@ export default function GuestCheckoutPage() {
   const total = subtotal + deliveryFee;
   // Everything picked up: no address needed.
   const needsAddress = !(allChosen && chosen.every((zone) => zone.type === "PICKUP"));
-  const returnTo = buyNow ? `/marketplace/product/${buyNow.productId}` : "/marketplace/cart";
+  const returnTo = buyNow ? `/marketplace/product/${buyNow.productId}` : back?.startsWith("/") ? back : "/marketplace/cart";
 
   const pay = async () => {
     if (groups.length === 0) return setError("Nothing in your cart can be bought right now.");
@@ -153,7 +168,7 @@ export default function GuestCheckoutPage() {
         onSuccess: async () => {
           clearSaved();
           // What was bought leaves the cart (Buy now leaves the cart alone).
-          if (!buyNow) items.forEach((item) => removeFromCart(item.productId, item.variationId));
+          if (!linkLines) items.forEach((item) => removeFromCart(item.productId, item.variationId));
           await verifyGuestOrder(data.guestToken).catch(() => undefined);
           if (!isStale()) router.push(`/orders/track/${data.guestToken}?welcome=1`);
         },
@@ -190,7 +205,7 @@ export default function GuestCheckoutPage() {
           {leftOut > 0 && (
             <p className="rounded-xl bg-amber-50 px-3.5 py-2.5 text-[12.5px] text-amber-800 dark:bg-amber-500/10 dark:text-amber-300">
               {leftOut} item{leftOut === 1 ? "" : "s"} can&apos;t be bought right now and {leftOut === 1 ? "is" : "are"} left out.{" "}
-              {!buyNow && (
+              {!linkLines && (
                 <Link href="/cart" className="font-semibold underline">
                   See your cart
                 </Link>
@@ -290,7 +305,7 @@ export default function GuestCheckoutPage() {
                       >
                         Log in
                       </Link>
-                      {buyNow ? "" : " - your cart comes with you."}
+                      {linkLines ? "" : " - your cart comes with you."}
                     </>
                   )}
                 </span>

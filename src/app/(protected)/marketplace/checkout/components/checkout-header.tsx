@@ -27,7 +27,7 @@ export default function CheckoutHeader() {
             Checkout
           </h1>
           <p className="mt-1 text-[13.5px] text-muted">
-            Review your order and continue to payment.
+            Check the details and pay - it takes a minute.
           </p>
         </div>
       </div>

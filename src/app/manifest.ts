@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: SITE_NAME,
     short_name: SITE_NAME,
     description: SITE_DESCRIPTION,
-    start_url: "/dashboard",
+    start_url: "/marketplace",
     display: "standalone",
     background_color: "#F5F7FA",
     theme_color: "#7C3AED",

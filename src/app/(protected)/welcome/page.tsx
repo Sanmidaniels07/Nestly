@@ -79,7 +79,7 @@ export default function WelcomePage() {
     clearSaved();
   };
 
-  const next = () => router.push(rememberedReturnTo() ?? "/dashboard");
+  const next = () => router.push(rememberedReturnTo() ?? "/marketplace");
 
   const skip = () => {
     clearSaved();
