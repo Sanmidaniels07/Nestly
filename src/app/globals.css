@@ -470,3 +470,29 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .live-heart, .live-pop { animation-duration: 0.01ms; }
 }
+
+/* Shop greeting: the name's colours drift slowly, and the hand waves once.
+   Both stay still for people who turn motion off. */
+@keyframes greeting-drift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+@keyframes greeting-wave {
+  0%, 60%, 100% { transform: rotate(0deg); }
+  10%, 30% { transform: rotate(14deg); }
+  20% { transform: rotate(-8deg); }
+  40% { transform: rotate(-4deg); }
+  50% { transform: rotate(10deg); }
+}
+.greeting-name {
+  background-size: 220% 220%;
+  animation: greeting-drift 8s ease-in-out infinite;
+}
+.greeting-wave {
+  display: inline-block;
+  transform-origin: 70% 70%;
+  animation: greeting-wave 2.2s ease-in-out 0.4s 1;
+}
+@media (prefers-reduced-motion: reduce) {
+  .greeting-name, .greeting-wave { animation: none; }
+}
