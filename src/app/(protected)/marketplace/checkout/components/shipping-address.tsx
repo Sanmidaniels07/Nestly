@@ -53,6 +53,10 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
   // The map is the default way in; typing stays available.
   const [entry, setEntry] = useState<"map" | "manual">(mapsConfigured ? "map" : "manual");
   const formOpen = showForm ?? (!manage && !isLoading && addresses?.length === 0);
+  // Checkout: just the chosen address, until they ask to pick another.
+  const [choosing, setChoosing] = useState(false);
+  const chosen = addresses?.find((address) => address.id === addressId);
+  const shown = manage || choosing || !chosen ? addresses : [chosen];
   const pinned = form.latitude !== null && form.longitude !== null;
 
   // A new address being typed is kept in this browser (same draft at checkout,
@@ -255,16 +259,31 @@ export default function ShippingAddress({ mode = "select" }: { mode?: "select" |
       )}
 
       <div className="space-y-3.5">
-        {addresses?.map((address) => (
+        {shown?.map((address) => (
           <AddressCard
             key={address.id}
             address={address}
             selected={!manage && addressId === address.id}
-            onSelect={() => !manage && setAddressId(address.id)}
+            onSelect={() => {
+              if (manage) return;
+              setAddressId(address.id);
+              setChoosing(false);
+            }}
             onDelete={() => deleteAddress(address.id)}
           />
         ))}
       </div>
+
+      {/* Checkout shows the chosen address only - the rest on request. */}
+      {!manage && (addresses?.length ?? 0) > 1 && (
+        <button
+          type="button"
+          onClick={() => setChoosing((value) => !value)}
+          className="mt-3 text-[13px] font-semibold text-violet-700 hover:underline dark:text-violet-300"
+        >
+          {choosing ? "Done" : `Deliver somewhere else (${(addresses?.length ?? 1) - 1} more saved)`}
+        </button>
+      )}
 
       {!manage && <DeliveryPhone key={addressId} phone={addresses?.find((a) => a.id === addressId)?.phone} />}
     </section>
