@@ -12,7 +12,7 @@ export default function AddProductHeader() {
       </h1>
 
       <p className="mt-2.5 max-w-2xl text-[14.5px] leading-relaxed text-muted">
-        Complete the information below to publish a new product to your marketplace store.
+        Start with a photo of what you sell - we&apos;ll guide you through the rest.
       </p>
     </section>
   );

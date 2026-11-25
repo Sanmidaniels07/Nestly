@@ -143,16 +143,17 @@ function MarketplaceSettingsContent() {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-5 sm:space-y-7">
       <SellerDashboardHeader />
+
+      {/* The sections first, then anything that needs attention. */}
+      <MarketplaceTabs active={tab} onChange={handleTabChange} />
 
       {seller?.store?.isSuspended && <SuspendedStoreBanner />}
       {seller?.store?.underReview && !seller.store.isSuspended && <UnderReviewBanner orderLimit={seller.orderLimit} held={seller.heldForReview} />}
 
       {/* The one thing to do next (setup step, then the CAC number). */}
       <SellerNextStep seller={seller} />
-
-      <MarketplaceTabs active={tab} onChange={handleTabChange} />
 
       <div className="overflow-x-auto">
         {tab !== "dashboard" && !hasStore ? (
