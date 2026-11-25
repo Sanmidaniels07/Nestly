@@ -4,7 +4,7 @@ import { SITE_URL } from "./site";
 // won't give a store one of these slugs (utils/slugify RESERVED_STORE_SLUGS);
 // older stores that already have one keep the long link.
 export const SITE_PAGES = new Set([
-  "about", "account", "admin", "api", "app", "apple-icon", "blog", "cart", "chip-in", "checkout", "communities",
+  "about", "account", "admin", "api", "app", "apple-icon", "blog", "c", "cart", "chip-in", "checkout", "communities",
   "contact", "dashboard", "demo", "events", "explore", "faq", "features", "feed", "feeds", "followers", "following",
   "forgot-password", "gift", "guides", "hashtags", "help", "home", "icon", "live", "llms", "login", "logout", "me",
   "manifest", "marketplace", "messages", "nestly", "notifications", "orders", "partners", "pay", "post", "pricing",
@@ -24,3 +24,11 @@ export function storeShareUrl(slug: string, referralCode?: string | null) {
 
 // Shown to people: "nestlyapp.site/tolas-fabrics" (no https://www.).
 export const displayUrl = (url: string) => url.replace(/^https?:\/\/(www\.)?/, "");
+
+// A collection's link: nestlyapp.site/{store}/{collection} (src/proxy.ts
+// sends it to /c/{store}/{collection} with the referral code). Stores whose
+// name clashes with a site page use the /c/ address directly.
+export function collectionShareUrl(storeSlug: string, slug: string) {
+  if (STORE_SLUG.test(storeSlug) && !SITE_PAGES.has(storeSlug)) return `${SITE_URL}/${storeSlug}/${slug}`;
+  return `${SITE_URL}/c/${storeSlug}/${slug}`;
+}

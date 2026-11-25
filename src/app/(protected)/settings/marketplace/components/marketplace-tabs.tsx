@@ -5,6 +5,7 @@ import {
   BarChart3,
   ClipboardList,
   House,
+  Layers,
   Link2,
   LayoutDashboard,
   Package,
@@ -17,7 +18,7 @@ import {
 
 // The page's ?tab= values. They stay as they were so every existing link
 // (emails, notifications, buttons) still opens the right place.
-export type Tab = "dashboard" | "products" | "lives" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
+export type Tab = "dashboard" | "products" | "collections" | "lives" | "links" | "orders" | "customers" | "returns" | "analytics" | "earnings" | "store";
 
 interface Props {
   active: Tab;
@@ -44,6 +45,7 @@ const SECTIONS: { id: string; label: string; icon: Icon; tabs: { id: Tab; label:
     icon: Package,
     tabs: [
       { id: "products", label: "Products", icon: Package },
+      { id: "collections", label: "Collections", icon: Layers },
       { id: "lives", label: "Go live", icon: Radio },
       { id: "links", label: "Pay links", icon: Link2 },
     ],
