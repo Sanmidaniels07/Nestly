@@ -63,7 +63,7 @@ const sections: LegalSection[] = [
           private and use two-factor authentication if you can. Tell us straight away if you think someone else has access to your account.
         </p>
         <p>
-          You can delete your account at any time from <strong>Settings → Account</strong>. Some records (for example completed orders, which sellers and
+          You can delete your account at any time from <strong>Me → Settings → Account</strong>. Some records (for example completed orders, which sellers and
           payment providers rely on) are kept as described in our <Link href="/privacy">Privacy Policy</Link>.
         </p>
       </>

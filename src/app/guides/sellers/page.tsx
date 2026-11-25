@@ -8,14 +8,14 @@ import { OG_IMAGE } from "@/src/lib/site";
 export const metadata: Metadata = {
   title: "Seller guide - open your store on Nestly",
   description:
-    "Step by step: apply to sell on Nestly, set up your store, payout account and delivery, list products, handle orders and get paid.",
+    "Step by step: open your shop on Nestly in minutes, set up payouts and delivery, list products, share your links and collections, handle orders and get paid.",
   alternates: { canonical: "/guides/sellers" },
   openGraph: { title: "How to sell on Nestly", url: "/guides/sellers", images: [OG_IMAGE] },
 };
 
 const parts: GuidePart[] = [
   {
-    heading: "Get approved",
+    heading: "Open your shop",
     steps: [
       {
         id: "account",
@@ -30,19 +30,24 @@ const parts: GuidePart[] = [
       },
       {
         id: "apply",
-        title: "Apply to become a seller",
-        where: { label: "Marketplace → Open your store (or Dashboard → Become a seller)", href: "/marketplace/sell" },
+        title: "Start selling - about 2 minutes",
+        where: { label: "Me → Start selling on Nestly", href: "/marketplace/sell" },
         body: (
           <>
-            <p>On the Become a seller page:</p>
+            <p>Quick start takes you from &quot;I want to sell&quot; to a link you can send a buyer:</p>
             <ul>
-              <li>Check the box that shows the <strong>commission</strong> Nestly takes for each category.</li>
               <li>
-                Add your <strong>CAC registration number</strong> if your business is registered (optional - you can add it later).
+                <strong>Your shop:</strong> its name (usually your Instagram or WhatsApp business name) and{" "}
+                <strong>I agree to the Seller Agreement</strong> (read it <Link href="/seller-terms">here</Link>). Your CAC number and social pages
+                are optional - you can add them later. You&apos;ll see the <strong>commission</strong> for each category; you keep delivery fees in
+                full.
               </li>
               <li>
-                Tick <strong>I agree to the Seller Agreement</strong> (read it <Link href="/seller-terms">here</Link>) and tap{" "}
-                <strong>Continue</strong>.
+                <strong>Get paid:</strong> your bank and account number, checked with your bank. You can skip this for now - sales wait safely until
+                you add it.
+              </li>
+              <li>
+                <strong>Your first link:</strong> a pay link for something you sell, ready to send to a buyer on WhatsApp or Instagram.
               </li>
             </ul>
           </>
@@ -50,11 +55,12 @@ const parts: GuidePart[] = [
       },
       {
         id: "approval",
-        title: "Wait for approval",
+        title: "Nestly reviews your new shop",
         body: (
           <p>
-            The Nestly team reviews every application. You&apos;ll get a notification in the app when you&apos;re approved. If an application is
-            rejected you&apos;ll see the reason, and you can apply again after 3 days.
+            Your shop is live straight away. The Nestly team reviews every new shop, usually within a day. Until then your earnings are held safely
+            and paid once you&apos;re reviewed and the buyer has their order, and one order can be up to the limit shown in Seller Hub. You&apos;ll be
+            notified when it&apos;s done.
           </p>
         ),
       },
@@ -65,13 +71,13 @@ const parts: GuidePart[] = [
     steps: [
       {
         id: "store",
-        title: "Create your store",
-        where: { label: "Become a seller page → Set up your store", href: "/marketplace/sell" },
+        title: "Complete your store",
+        where: { label: "Seller Hub → Store", href: "/settings/marketplace?tab=store" },
         body: (
           <>
             <p>
-              Only the <strong>store name</strong> is required, but a complete store sells better. Add a logo, a banner, a short description of what you
-              sell, your email, phone and address, then tap <strong>Create store</strong>.
+              Only the <strong>store name</strong> is needed to start, but a complete store sells better. Add a logo, a banner, a short description of
+              what you sell, your email, phone and address.
             </p>
             <ul>
               <li>Your email, phone, Instagram, Facebook and TikTok are private - only you and the Nestly team see them.</li>
@@ -79,12 +85,12 @@ const parts: GuidePart[] = [
             </ul>
           </>
         ),
-        tip: "Everything you need next is in the Seller Hub (Settings → Seller Hub). Its Dashboard shows a checklist of what's left before buyers can order.",
+        tip: "Everything is in Seller Hub - in the menu, or Me → Seller Hub. It has five sections: Home, Products, Orders, Money and Store. The card at the top always shows the next thing to do before buyers can order.",
       },
       {
         id: "payout",
         title: "Add your payout bank account",
-        where: { label: "Seller Hub → Store settings → Payout details", href: "/settings/marketplace?tab=store" },
+        where: { label: "Seller Hub → Store → Payout details", href: "/settings/marketplace?tab=store#payout-account" },
         body: (
           <p>
             Choose your <strong>bank</strong>, enter your 10-digit <strong>account number</strong> and tap <strong>Verify &amp; activate</strong>. This
@@ -96,7 +102,7 @@ const parts: GuidePart[] = [
       {
         id: "delivery",
         title: "Set your delivery zones or pickup",
-        where: { label: "Seller Hub → Store settings → Delivery zones", href: "/settings/marketplace?tab=store" },
+        where: { label: "Seller Hub → Store → Delivery zones", href: "/settings/marketplace?tab=store#delivery-zones" },
         body: (
           <>
             <p>
@@ -121,18 +127,29 @@ const parts: GuidePart[] = [
       {
         id: "policies",
         title: "Add your store policies",
-        where: { label: "Seller Hub → Store settings → Store policies", href: "/settings/marketplace?tab=store" },
+        where: { label: "Seller Hub → Store → Store policies", href: "/settings/marketplace?tab=store" },
         body: (
           <p>
-            Write your <strong>return</strong>, <strong>shipping</strong> and <strong>warranty</strong> policies and tap <strong>Save policies</strong>.
-            They appear on your store page and help buyers shop with confidence.
+            Write your <strong>shipping</strong> and <strong>warranty</strong> policies and tap <strong>Save policies</strong>. They appear on your
+            store page and help buyers shop with confidence. Returns are covered by Nestly&apos;s policy for every store.
+          </p>
+        ),
+      },
+      {
+        id: "brand",
+        title: "Make it yours: your brand colour",
+        where: { label: "Seller Hub → Store → Brand colour", href: "/settings/marketplace?tab=store#brand-colour" },
+        body: (
+          <p>
+            Pick one of the ready colours or your own. Your store page, your products and your pay links use it for buttons, prices and links. The
+            preview shows it in light and dark mode - if a colour would be hard to read, we shade it slightly so writing on it stays clear.
           </p>
         ),
       },
       {
         id: "verify",
         title: "Get your verified badge (optional)",
-        where: { label: "Seller Hub → Add CAC number", href: "/settings/marketplace" },
+        where: { label: "Seller Hub → the card at the top", href: "/settings/marketplace" },
         body: (
           <p>
             Registered with the Corporate Affairs Commission? Add your CAC number. Once Nestly checks it, your store gets a verified badge - buyers are
@@ -151,8 +168,16 @@ const parts: GuidePart[] = [
         where: { label: "Seller Hub → Products → Add product", href: "/settings/marketplace/components/products/new" },
         body: (
           <>
-            <p>The form walks you through Basic info, Pricing, Specifications, Images and Review. You&apos;ll need:</p>
+            <p>
+              It starts with <strong>photos</strong>, then walks you through Details, Pricing, Specifications and Review. If you see{" "}
+              <strong>Fill it in for me</strong> under your photos, we can write the name, description, category and details from them - you check
+              everything before it goes live. You&apos;ll need:
+            </p>
             <ul>
+              <li>
+                <strong>photos</strong> - up to 10 (PNG, JPG or WEBP, under 25MB each - big photos are resized automatically). The first is the cover
+                buyers see;
+              </li>
               <li>
                 a <strong>product name</strong>, <strong>category</strong>, <strong>description</strong> and a unique <strong>SKU</strong> (your own
                 code for the item);
@@ -160,9 +185,6 @@ const parts: GuidePart[] = [
               <li>
                 a <strong>selling price</strong> and <strong>stock quantity</strong> - the form shows the commission and exactly what you&apos;ll
                 receive;
-              </li>
-              <li>
-                <strong>photos</strong> - up to 10 (PNG, JPG or WEBP, under 25MB each - big photos are resized automatically). At least one is needed to publish;
               </li>
               <li>
                 how it&apos;s <strong>delivered</strong> - bike, car or truck - so it&apos;s only offered on zones that can carry it.
@@ -190,7 +212,8 @@ const parts: GuidePart[] = [
           <>
             <p>
               Choose <strong>Publish immediately</strong> to go live, or <strong>Save as draft</strong> to finish later. You can edit a product any
-              time.
+              time - tap it in <strong>Seller Hub → Products</strong> to see its details, stock and everything you can do with it (view it in your
+              shop, edit, share a pay link, archive). Each small icon beside a product says what it does when you point at it or press and hold.
             </p>
             <ul>
               <li>Orders already placed keep the details buyers saw when they ordered.</li>
@@ -210,12 +233,13 @@ const parts: GuidePart[] = [
       {
         id: "share",
         title: "Share your store and bring buyers",
-        where: { label: "Seller Hub → Dashboard → Share your store", href: "/settings/marketplace" },
+        where: { label: "Seller Hub → Share (next to your shop's name)", href: "/settings/marketplace" },
         body: (
           <>
             <p>
-              Copy your store link, share it to WhatsApp, Facebook or X in one tap, download a <strong>story image</strong> for Instagram and WhatsApp
-              Status, or print your <strong>QR code</strong> for your shop and packaging.
+              Your store has a short link - <strong>nestlyapp.site/your-shop</strong> - easy to put in your bio or say out loud. Copy it, share it to
+              WhatsApp, Facebook or X in one tap, download a <strong>story image</strong> for Instagram and WhatsApp Status, or print your{" "}
+              <strong>QR code</strong> for your shop and packaging. If you rename your shop, old links keep working.
             </p>
             <p>
               <strong>Referral reward:</strong> when someone joins Nestly through your link, you pay 2% less commission on their orders from your store
@@ -230,9 +254,28 @@ const parts: GuidePart[] = [
         ),
       },
       {
+        id: "collections",
+        title: "Share a few products as one link: collections",
+        where: { label: "Seller Hub → Products → Collections", href: "/settings/marketplace?tab=collections" },
+        body: (
+          <>
+            <p>
+              Tap <strong>New collection</strong>, give it a name (e.g. &quot;Owambe outfits&quot; or &quot;New this week&quot;), an optional line
+              for buyers, and pick the products - in the order buyers should see them. Not in your shop yet? Tap <strong>Add a new product</strong>:
+              you add it as usual and come straight back with it picked.
+            </p>
+            <p>
+              Each collection gets its own link - <strong>nestlyapp.site/your-shop/owambe-outfits</strong>. Buyers see just those products with
+              prices, choose sizes and quantities and pay once, with or without an account. Stock goes down as they sell, like any order. Switch a
+              collection off or edit it any time - the link stays the same.
+            </p>
+          </>
+        ),
+      },
+      {
         id: "payment-links",
-        title: "Close DM sales with a payment link",
-        where: { label: "Seller Hub → Payment links", href: "/settings/marketplace?tab=links" },
+        title: "Close DM sales with a pay link",
+        where: { label: "Seller Hub → Products → Pay links", href: "/settings/marketplace?tab=links" },
         body: (
           <>
             <p>
@@ -245,6 +288,10 @@ const parts: GuidePart[] = [
               The buyer pays through Nestly and their money is held until they receive it, so people who are scared to pay a stranger will buy. It
               becomes a normal order: you&apos;re notified, you deliver, they give you their delivery code, and you get paid - the usual commission
               applies. Set a quantity above 1 to keep one link in your bio for something you sell often. Pause or edit a link any time.
+            </p>
+            <p>
+              Already listed it? Tap the product in <strong>Products</strong> and choose <strong>Share pay link</strong> - the link uses the
+              product&apos;s price, options and stock.
             </p>
           </>
         ),
@@ -288,7 +335,7 @@ const parts: GuidePart[] = [
       {
         id: "paid",
         title: "Get paid",
-        where: { label: "Seller Hub → Earnings", href: "/settings/marketplace?tab=earnings" },
+        where: { label: "Seller Hub → Money", href: "/settings/marketplace?tab=earnings" },
         body: (
           <>
             <p>
@@ -298,7 +345,7 @@ const parts: GuidePart[] = [
               worth and when it pays.
             </p>
             <p>
-              If a buyer reports a problem, answer it in <strong>Returns</strong> within 48 hours (24 for perishables) - refund, send a replacement, or
+              If a buyer reports a problem, answer it in <strong>Orders → Returns</strong> within 48 hours (24 for perishables) - refund, send a replacement, or
               tell us why you disagree. That order&apos;s payout waits until it&apos;s sorted. Nestly pays Paystack&apos;s fees out of its commission,
               so you receive your full share.
             </p>
@@ -308,7 +355,7 @@ const parts: GuidePart[] = [
       {
         id: "returns",
         title: "Handle returns and reviews",
-        where: { label: "Seller Hub → Returns", href: "/settings/marketplace?tab=returns" },
+        where: { label: "Seller Hub → Orders → Returns", href: "/settings/marketplace?tab=returns" },
         body: (
           <p>
             Nestly&apos;s returns policy covers every store: buyers can report an item that&apos;s damaged, spoiled, faulty, wrong or not as described
@@ -343,8 +390,8 @@ export default function SellerGuidePage() {
       title="Sell on Nestly, step by step"
       intro={
         <p>
-          From creating your account to your first payout. Follow the steps in order - most sellers are ready to take orders the same day they&apos;re
-          approved.
+          From creating your account to your first payout. Most sellers open their shop and send their first pay link in a few minutes - then
+          finish setting up as they go.
         </p>
       }
       parts={parts}

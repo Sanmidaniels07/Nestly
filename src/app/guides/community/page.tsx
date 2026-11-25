@@ -31,7 +31,7 @@ const parts: GuidePart[] = [
       {
         id: "profile",
         title: "Make your profile yours",
-        where: { label: "Settings → Profile", href: "/settings/profile" },
+        where: { label: "Me → Settings → Profile", href: "/settings/profile" },
         body: (
           <p>
             Pick a <strong>username</strong>, add a profile photo and cover, a short bio, your location and work, and the things you&apos;re into.
@@ -57,7 +57,7 @@ const parts: GuidePart[] = [
       {
         id: "post",
         title: "Post to your feed",
-        where: { label: "Feed → What's happening today?", href: "/feed" },
+        where: { label: "Shop → Feed → What's happening today?", href: "/feed" },
         body: (
           <p>
             Write up to 2,000 characters, add up to 10 photos or videos, and use <strong>#hashtags</strong> so people can find your post - tap any
@@ -126,13 +126,13 @@ const parts: GuidePart[] = [
       {
         id: "notifications",
         title: "Choose your notifications",
-        where: { label: "Settings → Notifications", href: "/settings/notifications" },
+        where: { label: "Me → Settings → Notifications", href: "/settings/notifications" },
         body: <p>Turn notifications on or off for likes, comments, new followers, messages, marketplace orders and announcements.</p>,
       },
       {
         id: "security",
         title: "Secure your account",
-        where: { label: "Settings → Security", href: "/settings/security" },
+        where: { label: "Me → Settings → Security", href: "/settings/security" },
         body: (
           <p>
             Turn on <strong>two-factor authentication</strong> with an authenticator app, and check <strong>Active sessions</strong> under Account to
@@ -153,7 +153,7 @@ const parts: GuidePart[] = [
       {
         id: "control",
         title: "Make it comfortable",
-        where: { label: "Settings → Appearance / Account", href: "/settings/appearance" },
+        where: { label: "Me → Settings → Appearance / Account", href: "/settings/appearance" },
         body: (
           <p>
             Choose light, dark or match your phone under Appearance. You can change your password - or permanently delete your account - under
