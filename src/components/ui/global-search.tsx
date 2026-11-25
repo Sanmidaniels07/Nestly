@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, BadgeCheck, Hash, Search, Store, Users2, X } from "lucide-react";
+import { featureOn } from "@/src/lib/features";
 
 import { useQuickSearch } from "@/src/hooks/use-quick-search";
 import UserAvatar from "@/src/components/ui/user-avatar";
@@ -154,7 +155,7 @@ export function MobileSearch() {
                 <SearchResults search={search} />
               ) : (
                 <p className="px-6 py-10 text-center text-[13.5px] text-subtle">
-                  Search for people, stores, communities, hashtags and posts.
+                  Search for people, stores, hashtags and posts.
                 </p>
               )}
             </div>
@@ -173,7 +174,7 @@ function SearchResults({ search }: { search: SearchState }) {
     (data.users.length > 0 ||
       (data.stores?.length ?? 0) > 0 ||
       data.posts.length > 0 ||
-      data.communities.length > 0 ||
+      (featureOn.communities && data.communities.length > 0) ||
       data.hashtags.length > 0);
 
   if (isLoading) {
@@ -234,7 +235,7 @@ function SearchResults({ search }: { search: SearchState }) {
         </ResultGroup>
       )}
 
-      {!!data?.communities.length && (
+      {featureOn.communities && !!data?.communities.length && (
         <ResultGroup label="Communities">
           {data.communities.map((community) => (
             <ResultRow key={community.id} onClick={() => go(`/communities/${community.slug}`)}>

@@ -19,6 +19,7 @@ import {
   Sunrise,
   Sunset,
 } from "lucide-react";
+import { featureOn } from "@/src/lib/features";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 
 import { UserDashboard } from "@/src/types/user-dashboard";
@@ -116,7 +117,7 @@ function buildHighlights(data: UserDashboard): Highlight[] {
       href: "/marketplace/orders",
     });
   }
-  if (event) {
+  if (event && featureOn.events) {
     items.push({ icon: CalendarDays, label: `Upcoming: ${event.title}`, href: `/events/${event.id}` });
   }
 
@@ -189,7 +190,7 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
               </ul>
             ) : (
               <p className="mt-5 max-w-lg text-[15px] leading-relaxed text-white/75">
-                You&apos;re all caught up. Share something with your communities or see what&apos;s new.
+                You&apos;re all caught up. Share something or see what&apos;s new.
               </p>
             ))}
 
@@ -209,13 +210,21 @@ export default function HeroCard({ name, data, profileCompletion }: HeroCardProp
                 <Store size={17} />
                 Manage store
               </Link>
-            ) : (
+            ) : featureOn.communities ? (
               <Link
                 href="/communities"
                 className="whitespace-nowrap inline-flex h-11 flex-auto items-center justify-center gap-2 rounded-2xl px-4 sm:h-12 sm:flex-none border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
               >
                 <Compass size={17} />
                 Explore communities
+              </Link>
+            ) : (
+              <Link
+                href="/marketplace"
+                className="whitespace-nowrap inline-flex h-11 flex-auto items-center justify-center gap-2 rounded-2xl px-4 sm:h-12 sm:flex-none border border-white/20 bg-white/10 text-[13.5px] font-semibold sm:px-6 sm:text-[14px] backdrop-blur-xl transition-colors hover:bg-white/[0.18]"
+              >
+                <Compass size={17} />
+                Explore the marketplace
               </Link>
             )}
             {isActiveSeller && (

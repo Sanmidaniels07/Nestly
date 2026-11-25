@@ -11,18 +11,20 @@ import { useToggleFollow } from "@/src/hooks/use-toggle-follow";
 import { useToggleCommunityMembership } from "@/src/hooks/use-toggle-community-membership";
 import { SearchResultType, SearchStore, SearchUser } from "@/src/types/search";
 import { Community } from "@/src/types/community";
+import { featureOn } from "@/src/lib/features";
 import UserAvatar from "@/src/components/ui/user-avatar";
 import FollowButton from "@/src/components/social/follow-button";
 import PostCard from "../feed/main-feed/post-card";
 import Pagination from "@/src/components/ui/pagination";
 
-const TABS: { id: SearchResultType; label: string }[] = [
+const ALL_TABS: { id: SearchResultType; label: string }[] = [
   { id: "users", label: "People" },
   { id: "stores", label: "Stores" },
   { id: "posts", label: "Posts" },
   { id: "communities", label: "Communities" },
   { id: "hashtags", label: "Hashtags" },
 ];
+const TABS = ALL_TABS.filter((t) => t.id !== "communities" || featureOn.communities);
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
@@ -73,7 +75,7 @@ function SearchPageContent() {
         <div className="rounded-2xl border border-dashed border-line bg-surface-sunken px-8 py-16 text-center">
           <Search className="mx-auto h-8 w-8 text-faint" strokeWidth={1.5} />
           <p className="mt-4 text-[13.5px] text-subtle">
-            Use the search bar above to find people, stores, posts, communities, and hashtags.
+            Use the search bar above to find people, stores, posts and hashtags.
           </p>
         </div>
       ) : isLoading ? (

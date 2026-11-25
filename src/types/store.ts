@@ -53,6 +53,8 @@ export interface Store {
   description?: string | null;
   logo?: string | null;
   banner?: string | null;
+  // "#rrggbb" - the seller's brand colour; null = Nestly's colours.
+  brandColor?: string | null;
   email?: string | null;
   phone?: string | null;
   address?: string | null;
@@ -119,6 +121,8 @@ export interface CreateStorePayload {
   returnPolicy?: string;
   shippingPolicy?: string;
   warrantyPolicy?: string;
+  // "#rrggbb"; "" goes back to Nestly's colours.
+  brandColor?: string;
   // Username, @username, profile link or phone number - "" removes it.
   instagram?: string;
   facebook?: string;

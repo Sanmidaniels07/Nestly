@@ -20,6 +20,7 @@ import { useSession } from "@/src/hooks/use-session";
 import { CardGridSkeleton } from "@/src/components/skeletons/card-grid-skeleton";
 import { StatTilesSkeleton } from "@/src/components/skeletons/stat-tiles-skeleton";
 import TrustRecord from "@/src/components/trust/trust-record";
+import BrandScope from "@/src/components/ui/brand-scope";
 
 interface Props {
   slug: string;
@@ -66,6 +67,7 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
   const isOwner = !!authUser && store.seller?.user.id === authUser.id;
 
   return (
+    <BrandScope color={store.brandColor}>
     <div className="mx-auto max-w-[1600px] space-y-6 px-5 py-8 lg:px-8">
       {store.isSuspended && <SuspendedNotice what="store" />}
       <SellerCover store={store} />
@@ -84,5 +86,6 @@ export default function SellerStorePage({ slug, initialStore, initialProducts }:
         isOwner={isOwner}
       />
     </div>
+    </BrandScope>
   );
 }

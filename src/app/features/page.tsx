@@ -14,6 +14,7 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
+import { featureOn } from "@/src/lib/features";
 
 import Button from "@/src/components/ui/button";
 import GuestGuard from "@/src/components/guards/GuestGuard";
@@ -173,7 +174,9 @@ export default function FeaturesPage() {
         </section>
 
         <section className="mx-auto mt-24 max-w-6xl space-y-20 px-4 sm:space-y-28 sm:px-6">
-          {features.map((feature, i) => (
+          {features
+            .filter((f) => (f.screen !== "Communities" || featureOn.communities) && (f.screen !== "Events" || featureOn.events))
+            .map((feature, i) => (
             <FeatureRow key={feature.title} feature={feature} reversed={i % 2 === 1} />
           ))}
         </section>

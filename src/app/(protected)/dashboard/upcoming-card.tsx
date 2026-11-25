@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Cake, CalendarDays, MapPin, Users2 } from "lucide-react";
 
 import UserAvatar from "@/src/components/ui/user-avatar";
+import { featureOn } from "@/src/lib/features";
 import { UserDashboard } from "@/src/types/user-dashboard";
 import { birthdayLabel, plural, shortDate } from "./format";
 
@@ -13,13 +14,16 @@ interface Props {
 }
 
 export default function UpcomingCard({ birthdays, community }: Props) {
-  const events = community.upcomingEvents;
+  const events = featureOn.events ? community.upcomingEvents : [];
   const isEmpty = birthdays.length === 0 && events.length === 0;
+  // Only birthdays left while events are off: nothing coming up, no card.
+  if (isEmpty && !featureOn.events) return null;
 
   return (
     <section className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
       <div className="flex items-center justify-between">
         <h2 className="font-[family-name:var(--font-fraunces)] text-[20px] text-ink">Coming up</h2>
+        {featureOn.communities && (
         <Link
           href="/communities"
           className="flex items-center gap-1 text-[12.5px] text-muted hover:text-violet-600 dark:hover:text-violet-400"
@@ -27,6 +31,7 @@ export default function UpcomingCard({ birthdays, community }: Props) {
           <Users2 size={13} />
           {plural(community.communitiesJoined, "community")}
         </Link>
+        )}
       </div>
 
       {isEmpty && (

@@ -17,6 +17,7 @@ import Skeleton from "@/src/components/ui/skeleton";
 import SuspendedNotice from "@/src/components/ui/suspended-notice";
 import { useSession } from "@/src/hooks/use-session";
 import { useRecordProductView } from "@/src/hooks/use-recommendations";
+import BrandScope from "@/src/components/ui/brand-scope";
 import ProductSection from "@/src/app/(protected)/marketplace/sections/product-section";
 
 interface Props {
@@ -84,6 +85,7 @@ export default function ProductDetailsPage({ id, initialProduct, delivery }: Pro
   }
 
   return (
+    <BrandScope color={product.store?.brandColor}>
     <div className="mx-auto max-w-7xl px-4 py-8">
       {product.store?.isSuspended && (
         <div className="mb-6">
@@ -115,5 +117,6 @@ export default function ProductDetailsPage({ id, initialProduct, delivery }: Pro
         <ProductSection title="You may also like" subtitle="Similar products" products={related} />
       </div>
     </div>
+    </BrandScope>
   );
 }
