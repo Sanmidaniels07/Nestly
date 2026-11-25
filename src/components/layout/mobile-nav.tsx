@@ -1,142 +1,55 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, MoreHorizontal, X } from "lucide-react";
+import { motion } from "framer-motion";
+
 import { isNavActive, useVisibleNavigation } from "@/src/hooks/use-visible-navigation";
-import { supportWhatsAppUrl } from "@/src/lib/support";
 import { cn } from "@/src/lib/utils";
 
-const VISIBLE_COUNT = 4;
-
+// The phone's bottom bar: Shop, Orders, Messages, (Seller Hub,) Me. Four or
+// five fixed places, no "More" - everything else is one tap away in Me.
 export default function MobileNav() {
   const pathname = usePathname();
-  const [moreOpen, setMoreOpen] = useState(false);
-  const isActive = (href: string) => isNavActive(href, pathname);
-  const visibleNavigation = useVisibleNavigation();
-
-  const primaryItems = visibleNavigation.slice(0, VISIBLE_COUNT);
-  const overflowItems = visibleNavigation.slice(VISIBLE_COUNT);
-
-  const isOverflowActive = overflowItems.some((item) => isActive(item.href));
+  const items = useVisibleNavigation().filter((item) => item.mobile);
 
   return (
-    <>
-      <nav
-        className="fixed bottom-0 left-0 right-0 z-50 border-t border-line bg-surface/90 backdrop-blur-2xl lg:hidden"
-        style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
-      >
-        <div className="flex items-center justify-around px-1 py-2">
-          {primaryItems.map((item) => {
-            const active = isActive(item.href);
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className="flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5"
-              >
-                <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", active ? "bg-violet-50 dark:bg-violet-500/10" : "")}>
-                  <item.icon size={20} className={active ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
-                </div>
-                <span className={cn("text-[10.5px] font-medium", active ? "text-violet-600 dark:text-violet-400" : "text-subtle")}>
-                  {item.title}
-                </span>
-              </Link>
-            );
-          })}
-
-          {overflowItems.length > 0 && (
-            <button
-              onClick={() => setMoreOpen(true)}
-              className="flex flex-1 flex-col items-center gap-1 rounded-xl py-1.5"
+    <nav
+      aria-label="Main"
+      className="fixed bottom-0 left-0 right-0 z-50 border-t border-line bg-surface/90 backdrop-blur-2xl lg:hidden"
+      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+    >
+      <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-1.5 pt-1.5">
+        {items.map((item) => {
+          const active = isNavActive(item.href, pathname);
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              aria-current={active ? "page" : undefined}
+              className="relative flex min-w-0 flex-1 flex-col items-center gap-0.5 rounded-2xl py-1.5 transition-transform active:scale-95"
             >
-              <div className={cn("flex h-9 w-9 items-center justify-center rounded-full", isOverflowActive ? "bg-violet-50 dark:bg-violet-500/10" : "")}>
-                <MoreHorizontal size={20} className={isOverflowActive ? "text-violet-600 dark:text-violet-400" : "text-subtle"} />
-              </div>
-              <span className={cn("text-[10.5px] font-medium", isOverflowActive ? "text-violet-600 dark:text-violet-400" : "text-subtle")}>
-                More
+              <span className="relative flex h-8 w-14 items-center justify-center">
+                {active && (
+                  <motion.span
+                    layoutId="mobile-nav-active"
+                    className="absolute inset-0 rounded-full bg-violet-100 dark:bg-violet-500/20"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
+                <item.icon
+                  size={21}
+                  strokeWidth={active ? 2.3 : 1.9}
+                  className={cn("relative", active ? "text-violet-700 dark:text-violet-300" : "text-muted")}
+                />
               </span>
-            </button>
-          )}
-        </div>
-      </nav>
-
-      {/* More sheet */}
-      <AnimatePresence>
-        {moreOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMoreOpen(false)}
-              className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm lg:hidden"
-            />
-
-            <motion.div
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-surface p-5 lg:hidden"
-              style={{ paddingBottom: "calc(env(safe-area-inset-bottom) + 20px)" }}
-            >
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="font-[family-name:var(--font-fraunces)] text-[19px] text-ink">
-                  More
-                </h3>
-                <button
-                  onClick={() => setMoreOpen(false)}
-                  aria-label="Close"
-                  className="rounded-full p-2 text-muted hover:bg-surface-2"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              <div className="grid grid-cols-4 gap-3">
-                {overflowItems.map((item) => {
-                  const active = isActive(item.href);
-
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      onClick={() => setMoreOpen(false)}
-                      className="flex flex-col items-center gap-1.5 rounded-xl py-3"
-                    >
-                      <div className={cn("flex h-11 w-11 items-center justify-center rounded-full", active ? "bg-violet-50 dark:bg-violet-500/10" : "bg-surface-2")}>
-                        <item.icon size={20} className={active ? "text-violet-600 dark:text-violet-400" : "text-muted"} />
-                      </div>
-                      <span className={cn("text-center text-[11.5px] font-medium leading-tight", active ? "text-violet-600 dark:text-violet-400" : "text-ink-2")}>
-                        {item.title}
-                      </span>
-                    </Link>
-                  );
-                })}
-
-                {/* External: opens the Nestly Support WhatsApp chat. */}
-                <a
-                  href={supportWhatsAppUrl("Hi Nestly Support, I need help with ")}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setMoreOpen(false)}
-                  className="flex flex-col items-center gap-1.5 rounded-xl py-3"
-                >
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#25D366]/15">
-                    <MessageCircle size={20} className="text-[#128C7E] dark:text-[#25D366]" />
-                  </div>
-                  <span className="text-center text-[11.5px] font-medium leading-tight text-ink-2">Support</span>
-                </a>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-    </>
+              <span className={cn("truncate text-[11px]", active ? "font-semibold text-violet-700 dark:text-violet-300" : "font-medium text-muted")}>
+                {item.title}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
   );
 }

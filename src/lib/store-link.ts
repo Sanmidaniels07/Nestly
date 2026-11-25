@@ -6,7 +6,7 @@ import { SITE_URL } from "./site";
 export const SITE_PAGES = new Set([
   "about", "account", "admin", "api", "app", "apple-icon", "blog", "cart", "chip-in", "checkout", "communities",
   "contact", "dashboard", "demo", "events", "explore", "faq", "features", "feed", "feeds", "followers", "following",
-  "forgot-password", "gift", "guides", "hashtags", "help", "home", "icon", "live", "llms", "login", "logout",
+  "forgot-password", "gift", "guides", "hashtags", "help", "home", "icon", "live", "llms", "login", "logout", "me",
   "manifest", "marketplace", "messages", "nestly", "notifications", "orders", "partners", "pay", "post", "pricing",
   "privacy", "profile", "resend-verification", "reset-password", "robots", "s", "search", "sell", "seller",
   "seller-terms", "session-expired", "settings", "shop", "signup", "sitemap", "staging", "store", "stores",

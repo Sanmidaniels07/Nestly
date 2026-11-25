@@ -6,10 +6,10 @@ import { useAuthStore } from "../store/auth-store";
 import { useMySeller } from "./use-my-seller";
 
 /**
- * Side-nav items for the current user: Admin only for admins, Seller Hub only
+ * Nav items for the current user: Admin only for admins, Seller Hub only
  * for people who've applied to sell or been approved (pending or approved,
  * with or without a store yet). Rejected applicants and shoppers use the
- * "Become a seller" route instead.
+ * "Start selling" row in Me instead.
  */
 export function useVisibleNavigation() {
   const user = useAuthStore((state) => state.user);
@@ -17,19 +17,35 @@ export function useVisibleNavigation() {
   const isSeller = !!seller && seller.status !== "REJECTED";
 
   return navigation.filter((item) => {
-    if ("feature" in item && item.feature && !featureOn[item.feature]) return false;
+    if (item.feature && !featureOn[item.feature]) return false;
     if (item.adminOnly && user?.role !== "ADMIN") return false;
-    if ("sellerOnly" in item && item.sellerOnly && !isSeller) return false;
+    if (item.sellerOnly && !isSeller) return false;
     return true;
   });
 }
 
+// Your own pages: they light up Me although their address isn't /me.
+const ME_PAGES = ["/me", "/profile", "/settings", "/notifications", "/marketplace/saved", "/marketplace/gifts", "/marketplace/returns"];
+
+const pathOf = (href: string) => href.split("?")[0];
+const matches = (href: string, pathname: string) => {
+  const path = pathOf(href);
+  return pathname === path || pathname.startsWith(`${path}/`);
+};
+
 /**
- * Is `href` the active nav item for `pathname`? Seller Hub lives under
- * /settings, so Settings must not also light up while you're in it.
+ * Is `href` the active nav item for `pathname`? The most specific item wins:
+ * /marketplace/orders lights Orders (not Shop), Seller Hub (under /settings)
+ * doesn't light Me, and Me covers profile, settings and your other pages.
  */
 export function isNavActive(href: string, pathname: string) {
-  if (href === "/dashboard") return pathname === href;
-  if (href === "/settings" && pathname.startsWith("/settings/marketplace")) return false;
-  return pathname === href || pathname.startsWith(`${href}/`);
+  const best = navigation
+    .map((item) => pathOf(item.href))
+    .filter((path) => matches(path, pathname))
+    .sort((a, b) => b.length - a.length)[0];
+  // A specific section (Orders, Messages, Seller Hub...).
+  if (best && best !== "/marketplace") return best === pathOf(href);
+  const isMePage = ME_PAGES.some((page) => matches(page, pathname));
+  if (href === "/me") return isMePage;
+  return !isMePage && best === href;
 }

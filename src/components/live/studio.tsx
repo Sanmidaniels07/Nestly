@@ -230,7 +230,7 @@ export function Studio({ live }: { live: SellerLive }) {
   const minimize = () => {
     setShowZoom(false);
     if (window.history.length > 1) router.back();
-    else router.push("/dashboard");
+    else router.push("/marketplace");
   };
   const expand = () => router.push(`/marketplace/live/${live.id}`);
 

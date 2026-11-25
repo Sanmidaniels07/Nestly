@@ -3,10 +3,14 @@
 import FeedLeftSidebar from "./left-sidebar/left-sidebar-center";
 import FeedCenter from "./main-feed/feed-center";
 import FeedRightSidebar from "./right-sidebar/right-sidebar-center";
+import ShopTabs from "@/src/components/layout/shop-tabs";
 
 export default function FeedPage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 pb-20 pt-6 sm:px-6">
+    <div className="mx-auto max-w-7xl px-4 pb-20 pt-4 sm:px-6 sm:pt-6">
+      <div className="mb-5 flex justify-center lg:justify-start">
+        <ShopTabs />
+      </div>
       {/* minmax(0,1fr) + min-w-0: without them the feed column grows to fit
           wide content while it loads (e.g. the stories strip), so the page
           overflowed on phones for a second or two. The right sidebar only
