@@ -63,7 +63,7 @@ export default function MarketplaceHero() {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
-      className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-700 via-violet-600 to-indigo-700 text-white shadow-[0_30px_70px_-35px_rgba(76,29,149,0.7)]"
+      className="relative z-0 overflow-hidden rounded-3xl bg-gradient-to-br from-violet-700 via-violet-600 to-indigo-700 text-white shadow-[0_30px_70px_-35px_rgba(76,29,149,0.7)]"
     >
       {/* Texture + glows */}
       <div className="pointer-events-none absolute inset-0 opacity-25 [background-image:radial-gradient(rgba(255,255,255,.55)_1.2px,transparent_1.2px)] [background-size:22px_22px] [mask-image:linear-gradient(120deg,#000,transparent_75%)]" />
@@ -73,23 +73,25 @@ export default function MarketplaceHero() {
       <div className="relative grid gap-10 px-5 pb-8 pt-8 sm:px-10 sm:pt-12 lg:grid-cols-[1.1fr_1fr] lg:px-12">
         {/* Left */}
         <div className="flex min-w-0 flex-col justify-center">
-          <span className="font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.28em] text-violet-200">
+          {/* Phones: the greeting above already asks what they want - go
+              straight to search and categories. */}
+          <span className="hidden font-[family-name:var(--font-mono)] text-[11.5px] uppercase tracking-[0.28em] text-violet-200 sm:block">
             Nestly Marketplace
           </span>
 
-          <h1 className="mt-4 font-[family-name:var(--font-fraunces)] text-[40px] leading-[1.05] sm:text-[54px]">
+          <h1 className="mt-4 hidden font-[family-name:var(--font-fraunces)] text-[40px] leading-[1.05] sm:block sm:text-[54px]">
             Shop with sellers
             <br />
             <em className="not-italic text-violet-200">you can trust.</em>
           </h1>
 
-          <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-violet-100/90">
+          <p className="mt-5 hidden max-w-lg text-[15.5px] leading-relaxed text-violet-100/90 sm:block">
             Discover trusted stores near you — pay securely, track every order and confirm delivery with your own code.
           </p>
 
           <form
             onSubmit={handleSearch}
-            className="mt-7 flex max-w-xl items-center gap-2 rounded-2xl bg-white p-1.5 pl-4 shadow-[0_18px_40px_-18px_rgba(20,8,60,0.6)]"
+            className="flex max-w-xl items-center gap-2 sm:mt-7 rounded-2xl bg-white p-1.5 pl-4 shadow-[0_18px_40px_-18px_rgba(20,8,60,0.6)]"
           >
             <Search size={19} className="shrink-0 text-violet-600" />
             <input
