@@ -115,7 +115,7 @@ export default function ProductRow({ product, selected, onToggleSelect }: Props)
       <td className="whitespace-nowrap px-4 py-3 pr-5">
         <div className="flex items-center justify-end gap-1">
           {product.status === "PUBLISHED" && (
-            <ActionTip label="Share a pay link - buyers pay without an account">
+            <ActionTip label="Share a pay link buyers can pay with">
             <button
               type="button"
               onClick={() => setSharingPayLink(true)}
