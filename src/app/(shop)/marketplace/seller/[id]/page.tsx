@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { permanentRedirect } from "next/navigation";
 
 import { NotFoundError, jsonLd, serverGet } from "@/src/lib/server-api";
 import { stateLabel } from "@/src/lib/locations";
@@ -10,6 +11,7 @@ import SellerStorePage from "./store-page";
 
 interface Props {
   params: Promise<{ id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 const clip = (text: string, max: number) => {
@@ -98,9 +100,18 @@ const storeJsonLd = (store: Store) => ({
       : undefined,
 });
 
-export default async function StorePage({ params }: Props) {
+export default async function StorePage({ params, searchParams }: Props) {
   const { id: slug } = await params;
   const { response } = await loadStore(slug);
+  // An old name (the store was renamed): move to the current one, keeping
+  // ?ref= and the rest.
+  if (response && response.data.slug !== slug) {
+    const query = new URLSearchParams();
+    for (const [key, value] of Object.entries(await searchParams)) {
+      for (const v of [value].flat()) if (v !== undefined) query.append(key, v);
+    }
+    permanentRedirect(`/marketplace/seller/${response.data.slug}${query.size ? `?${query}` : ""}`);
+  }
   const products = response
     ? await serverGet<Paginated<"products", Product>>(`/stores/${encodeURIComponent(slug)}/products?limit=12`).catch(() => null)
     : null;
