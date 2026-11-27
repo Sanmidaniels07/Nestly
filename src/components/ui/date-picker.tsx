@@ -1,7 +1,7 @@
 "use client";
 
-import { useId, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { useEffect, useId, useRef, useState } from "react";
+import { Check, ChevronDown } from "lucide-react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { MONTHS, toYMD } from "./calendar-picker";
@@ -149,6 +149,9 @@ function BirthdayFields({ label, value, onChange, error, minAge, maxAge }: Field
   );
 }
 
+// One of the Day / Month / Year boxes. Our own list (not the browser's native
+// one, which every phone and browser draws in its own system blue), styled
+// like the rest of Nestly: violet highlight and a tick on the chosen value.
 function Dropdown({
   label,
   value,
@@ -162,17 +165,133 @@ function Dropdown({
   options: { value: string; label: string }[];
   className: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const [active, setActive] = useState(0);
+  const boxRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
+  const typed = useRef({ text: "", at: 0 });
+  const listId = useId();
+  const selected = options.find((option) => option.value === value);
+
+  const openList = () => {
+    setActive(Math.max(0, options.findIndex((option) => option.value === value)));
+    setOpen(true);
+  };
+  const close = (refocus = true) => {
+    setOpen(false);
+    if (refocus) triggerRef.current?.focus();
+  };
+  const choose = (option: { value: string }) => {
+    onChange(option.value);
+    close();
+  };
+
+  // Focus the list when it opens; close it on a tap outside.
+  useEffect(() => {
+    if (!open) return;
+    listRef.current?.focus();
+    const onPointer = (e: MouseEvent | TouchEvent) => {
+      if (boxRef.current && !boxRef.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("touchstart", onPointer);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("touchstart", onPointer);
+    };
+  }, [open]);
+
+  // Keep the highlighted (or chosen) value in view.
+  useEffect(() => {
+    if (!open) return;
+    listRef.current?.querySelector<HTMLElement>(`[data-index="${active}"]`)?.scrollIntoView({ block: "nearest" });
+  }, [active, open]);
+
+  const onListKey = (e: React.KeyboardEvent) => {
+    const last = options.length - 1;
+    if (e.key === "ArrowDown") setActive((i) => Math.min(i + 1, last));
+    else if (e.key === "ArrowUp") setActive((i) => Math.max(i - 1, 0));
+    else if (e.key === "Home") setActive(0);
+    else if (e.key === "End") setActive(last);
+    else if (e.key === "Enter" || e.key === " ") {
+      if (options[active]) choose(options[active]);
+    } else if (e.key === "Escape") close();
+    else if (e.key === "Tab") return setOpen(false);
+    else if (e.key.length === 1) {
+      // Type to jump: "19" goes to the first 19xx year, "o" to Oct.
+      const now = e.timeStamp;
+      typed.current = { text: (now - typed.current.at < 800 ? typed.current.text : "") + e.key.toLowerCase(), at: now };
+      const hit = options.findIndex((option) => option.label.toLowerCase().startsWith(typed.current.text));
+      if (hit >= 0) setActive(hit);
+    } else return;
+    e.preventDefault();
+  };
+
   return (
-    <div className="relative">
-      <select aria-label={label} value={value} onChange={(e) => onChange(e.target.value)} className={cn(className, !value && "text-subtle")}>
-        <option value="">{label}</option>
-        {options.map((option) => (
-          <option key={option.value} value={option.value} className="text-ink">
-            {option.label}
-          </option>
-        ))}
-      </select>
-      <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-subtle" />
+    <div ref={boxRef} className="relative">
+      <button
+        ref={triggerRef}
+        type="button"
+        aria-label={selected ? `${label}: ${selected.label}` : label}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-controls={open ? listId : undefined}
+        data-dob-field={label}
+        onClick={() => (open ? close(false) : openList())}
+        onKeyDown={(e) => {
+          if (!open && (e.key === "ArrowDown" || e.key === "ArrowUp")) {
+            e.preventDefault();
+            openList();
+          }
+        }}
+        className={cn(className, "text-left", open && "border-violet-400 bg-surface", !selected && "text-subtle")}
+      >
+        {selected ? selected.label : label}
+      </button>
+      <ChevronDown
+        size={16}
+        className={cn("pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-subtle transition-transform", open && "rotate-180 text-violet-500")}
+      />
+
+      {open && (
+        <div
+          ref={listRef}
+          id={listId}
+          role="listbox"
+          aria-label={label}
+          tabIndex={-1}
+          aria-activedescendant={`${listId}-${active}`}
+          onKeyDown={onListKey}
+          className="absolute left-0 top-full z-[70] mt-1.5 max-h-60 min-w-full overflow-y-auto rounded-2xl border border-line bg-surface p-1 shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)] outline-none"
+        >
+          {options.map((option, index) => {
+            const isSelected = option.value === value;
+            return (
+              <div
+                key={option.value}
+                id={`${listId}-${index}`}
+                data-index={index}
+                role="option"
+                aria-selected={isSelected}
+                onMouseEnter={() => setActive(index)}
+                onClick={() => choose(option)}
+                className={cn(
+                  "flex cursor-pointer items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-[15px] sm:py-2 sm:text-[14px]",
+                  isSelected
+                    ? "bg-violet-50 font-semibold text-violet-700 dark:bg-violet-500/15 dark:text-violet-300"
+                    : index === active
+                      ? "bg-surface-2 text-ink"
+                      : "text-ink-2"
+                )}
+              >
+                {option.label}
+                {isSelected && <Check size={15} className="shrink-0 text-violet-600 dark:text-violet-400" />}
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

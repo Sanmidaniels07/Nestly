@@ -199,7 +199,7 @@ export default function BankPicker({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-full z-50 mt-2 overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]">
+        <div className="absolute left-0 right-0 top-full z-[70] mt-2 overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_20px_60px_-16px_rgba(15,15,20,0.25)]">
           <div className="flex items-center gap-2 border-b border-line px-3.5">
             <Search size={16} className="shrink-0 text-subtle" />
             <input
