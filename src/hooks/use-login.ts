@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { login } from "../services/auth.services";
 import { useAuthStore } from "../store/auth-store";
 import { getSafeReturnTo, rememberReturnTo, rememberedReturnTo } from "../lib/return-to";
+import { APP_HOME } from "../constants/navigation";
 import { useEffect } from "react";
 import {
   ApiErrorResponse,
@@ -65,7 +66,7 @@ export const useLogin = () => {
         return;
       }
 
-      router.push(returnTo ?? rememberedReturnTo() ?? "/marketplace");
+      router.push(returnTo ?? rememberedReturnTo() ?? APP_HOME);
     },
 
     onError: (error) => {

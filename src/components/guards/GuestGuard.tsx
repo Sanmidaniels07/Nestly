@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/src/hooks/use-auth";
 import AppSplash from "@/src/components/ui/app-splash";
 import { getSafeReturnTo, rememberedReturnTo } from "@/src/lib/return-to";
+import { APP_HOME } from "@/src/constants/navigation";
 
 interface Props {
   children: ReactNode;
@@ -53,7 +54,7 @@ export default function GuestGuard({
       getSafeReturnTo(new URLSearchParams(window.location.search).get("returnTo")) ?? rememberedReturnTo();
 
     router.replace(
-      returnTo ?? "/marketplace"
+      returnTo ?? APP_HOME
     );
   }, [
     isHydrated,

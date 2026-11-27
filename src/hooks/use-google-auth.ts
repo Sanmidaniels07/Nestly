@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 import { googleAuth } from "../services/auth.services";
 import { useAuthStore } from "../store/auth-store";
 import { getSafeReturnTo, rememberReturnTo, rememberedReturnTo } from "../lib/return-to";
+import { APP_HOME } from "../constants/navigation";
 import { referralCode } from "../lib/referral";
 import { trafficSource } from "../lib/traffic-source";
 import { trackAdSignUp } from "../lib/ad-tags";
@@ -44,7 +45,7 @@ export const useGoogleAuth = () => {
       }
 
       toast.success("Logged in successfully");
-      router.push(returnTo ?? rememberedReturnTo() ?? "/marketplace");
+      router.push(returnTo ?? rememberedReturnTo() ?? APP_HOME);
     },
 
     onError: (error) => {

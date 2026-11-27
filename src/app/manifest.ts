@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 
 import { SITE_DESCRIPTION, SITE_NAME } from "../lib/site";
+import { APP_HOME } from "../constants/navigation";
 
 // Lets phones "Add to home screen" with the Nestly name, icon and colours.
 export default function manifest(): MetadataRoute.Manifest {
@@ -9,7 +10,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: SITE_NAME,
     short_name: SITE_NAME,
     description: SITE_DESCRIPTION,
-    start_url: "/marketplace",
+    start_url: APP_HOME,
     display: "standalone",
     background_color: "#F5F7FA",
     theme_color: "#7C3AED",

@@ -10,9 +10,10 @@ import {
   CalendarDays,
 } from "lucide-react";
 
-// Where people land after logging in: the shop. Everything personal
-// (profile, settings, notifications, birthdays) lives under Me.
-export const APP_HOME = "/marketplace";
+// Where people land after logging in (and where the installed app opens):
+// the feed, the first item in the side menu. Everything personal (profile,
+// settings, notifications, birthdays) lives under Me.
+export const APP_HOME = "/feed";
 
 export interface NavItem {
   title: string;

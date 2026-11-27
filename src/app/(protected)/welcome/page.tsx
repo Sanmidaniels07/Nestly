@@ -17,6 +17,7 @@ import UserAvatar from "@/src/components/ui/user-avatar";
 import Skeleton from "@/src/components/ui/skeleton";
 import { useFormDraft } from "@/src/hooks/use-form-draft";
 import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
+import { APP_HOME } from "@/src/constants/navigation";
 
 const welcomeSchema = z.object({
   username: z
@@ -79,7 +80,7 @@ export default function WelcomePage() {
     clearSaved();
   };
 
-  const next = () => router.push(rememberedReturnTo() ?? "/marketplace");
+  const next = () => router.push(rememberedReturnTo() ?? APP_HOME);
 
   const skip = () => {
     clearSaved();

@@ -21,7 +21,8 @@ export default function MobileNav() {
     >
       <div className="mx-auto flex max-w-lg items-stretch justify-around px-2 pb-1.5 pt-1.5">
         {items.map((item) => {
-          const active = isNavActive(item.href, pathname);
+          // Phones have no Feed button: the feed is a tab on Shop, so Shop lights up there.
+          const active = isNavActive(item.href, pathname) || (item.href === "/marketplace" && (pathname === "/feed" || pathname.startsWith("/feed/")));
           return (
             <Link
               key={item.href}
