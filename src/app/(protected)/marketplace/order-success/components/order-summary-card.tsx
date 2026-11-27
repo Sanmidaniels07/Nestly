@@ -71,10 +71,11 @@ function ShopBlock({ shop }: { shop: Shop }) {
           <span className="min-w-0">
             <span className="block truncate text-[14px] font-semibold text-ink">{shop.name}</span>
             {shipment && (
-              <span className="flex items-center gap-1 text-[12px] text-muted">
-                {shipment.type === "PICKUP" ? <MapPin size={11} /> : <Truck size={11} />}
-                {shipment.type === "PICKUP" ? "Pickup" : shipment.optionName}
-                {shipment.fee > 0 ? ` · ${money(shipment.fee)}` : shipment.type === "PICKUP" ? "" : " · Free"}
+              <span className="flex min-w-0 items-center gap-1 text-[12px] text-muted">
+                {shipment.type === "PICKUP" ? <MapPin size={11} className="shrink-0" /> : <Truck size={11} className="shrink-0" />}
+                {/* Zone names can be long ("Balogun Market / Ikoyi / Lekki..."): one line. */}
+                <span className="min-w-0 truncate">{shipment.type === "PICKUP" ? "Pickup" : shipment.optionName}</span>
+                <span className="shrink-0">{shipment.fee > 0 ? `· ${money(shipment.fee)}` : shipment.type === "PICKUP" ? "" : "· Free"}</span>
               </span>
             )}
           </span>

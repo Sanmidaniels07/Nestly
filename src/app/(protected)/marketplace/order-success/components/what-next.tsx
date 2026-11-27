@@ -49,7 +49,7 @@ export default function WhatNext({ order }: { order: Order }) {
               {shipment?.type === "PICKUP"
                 ? `Collect it at ${shipment.pickupAddress || "the seller's store"} once they say it's ready.`
                 : shipment
-                  ? `${shipment.optionName}${shipment.eta ? ` · ${shipment.eta}` : ""}${order.address?.city ? ` to ${order.address.city}` : ""}.`
+                  ? `${shipment.optionName}${shipment.eta ? ` · ${shipment.eta}` : ""}.`
                   : "The seller will arrange delivery with you."}
             </span>
           </p>
