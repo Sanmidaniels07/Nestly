@@ -79,12 +79,14 @@ function OrderSuccessContent() {
 
       {order.gift && <GiftNotice order={order} />}
 
-      <div className="grid items-start gap-5 lg:grid-cols-[1.1fr_1fr]">
-        <div className="space-y-5">
+      {/* minmax(0, ...) + min-w-0: long one-line text (a delivery zone name)
+          must not stretch the columns wider than a phone screen. */}
+      <div className="grid grid-cols-[minmax(0,1fr)] items-start gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
+        <div className="min-w-0 space-y-5">
           {!order.gift && <WhatNext order={order} />}
           {order.gift && <OrderSummaryCard order={order} />}
         </div>
-        <div className="space-y-5">
+        <div className="min-w-0 space-y-5">
           {!order.gift && <OrderSummaryCard order={order} />}
           <ProtectionStrip />
         </div>
