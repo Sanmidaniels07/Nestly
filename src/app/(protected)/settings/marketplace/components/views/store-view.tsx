@@ -17,6 +17,7 @@ import { useImageUpload } from "@/src/hooks/use-image-upload";
 import { useBanks } from "@/src/hooks/use-banks";
 import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
 import { useFormDraft } from "@/src/hooks/use-form-draft";
+import BankPicker from "@/src/components/ui/bank-picker";
 import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import Input from "@/src/components/ui/input";
 import Button from "@/src/components/ui/button";
@@ -264,7 +265,7 @@ function StoreDetailsForm({ storeId }: { storeId: string }) {
 
 function PayoutDetailsForm({ slug }: { slug: string }) {
   const { data: store } = useMyStore();
-  const { data: banks } = useBanks();
+  const { data: banks, isLoading: banksLoading } = useBanks();
   const { mutate: setupPayoutAccount, isPending } = useSetupPayoutAccount();
 
   const [editing, setEditing] = useState(false);
@@ -351,21 +352,18 @@ function PayoutDetailsForm({ slug }: { slug: string }) {
         <div className="mt-6 space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="mb-2 block text-[13.5px] font-medium text-ink-2">
+              <label htmlFor="payout-bank" className="mb-2 block text-[13.5px] font-medium text-ink-2">
                 Bank
               </label>
-              <select
+              <BankPicker
+                id="payout-bank"
+                banks={banks}
                 value={bankCode}
-                onChange={(e) => setBankCode(e.target.value)}
+                onChange={setBankCode}
+                loading={banksLoading}
+                placeholder="Select your bank"
                 className="h-14 w-full rounded-3xl border border-line bg-surface px-5 text-[14px] text-ink outline-none transition-colors focus:border-violet-400"
-              >
-                <option value="">Select your bank</option>
-                {banks?.map((bank) => (
-                  <option key={bank.code} value={bank.code}>
-                    {bank.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
             <Input
               label="Account number"

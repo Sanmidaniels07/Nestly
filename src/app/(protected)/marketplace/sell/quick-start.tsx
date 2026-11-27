@@ -20,6 +20,7 @@ import { useQuickStartSeller } from "@/src/hooks/use-quick-start-seller";
 import { useBanks } from "@/src/hooks/use-banks";
 import { useSetupPayoutAccount } from "@/src/hooks/use-setup-payout-account";
 import { useCategories } from "@/src/hooks/use-categories";
+import BankPicker from "@/src/components/ui/bank-picker";
 import { useFormDraft } from "@/src/hooks/use-form-draft";
 import DraftRestoredNotice from "@/src/components/ui/draft-restored-notice";
 import { CAC_COMPANY_TYPES, cacTypeFromNumber } from "@/src/lib/cac";
@@ -426,14 +427,7 @@ function BankStep({ slug, storeName, onDone }: { slug: string; storeName: string
         <label htmlFor="qs-bank" className={label}>
           Bank
         </label>
-        <select id="qs-bank" value={bankCode} onChange={(e) => setBankCode(e.target.value)} className={field} disabled={banksLoading}>
-          <option value="">{banksLoading ? "Loading banks…" : "Choose your bank"}</option>
-          {banks?.map((bank) => (
-            <option key={bank.code} value={bank.code}>
-              {bank.name}
-            </option>
-          ))}
-        </select>
+        <BankPicker id="qs-bank" banks={banks} value={bankCode} onChange={setBankCode} loading={banksLoading} className={field} />
       </div>
       <div>
         <label htmlFor="qs-acct" className={label}>

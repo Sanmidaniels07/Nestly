@@ -44,7 +44,6 @@ import ZonePicker, { ZoneOption } from "@/src/app/(protected)/marketplace/checko
 import { ApiResponse } from "@/src/types/api";
 import { PublicPaymentLink } from "@/src/types/payment-link";
 import GuestDetails, { GuestDetailsValue, emptyGuest, guestProblem } from "@/src/components/guest-checkout/guest-details";
-import BrandScope from "@/src/components/ui/brand-scope";
 import ProductDetailsBlock from "@/src/components/marketplace/product-details-block";
 import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
 
@@ -80,7 +79,7 @@ export default function PayLinkPage({ code, initialLink }: Props) {
   }
 
   return (
-    <BrandScope color={link.store.brandColor}>
+    <>
     <div className="mx-auto max-w-6xl px-4 pb-20 pt-6 sm:pt-8">
       <div className="mb-5 flex items-center gap-2 text-[12.5px] font-semibold text-emerald-700 dark:text-emerald-300">
         <Lock size={14} /> Secure payment link · Nestly
@@ -96,7 +95,7 @@ export default function PayLinkPage({ code, initialLink }: Props) {
         </div>
       </div>
     </div>
-    </BrandScope>
+    </>
   );
 }
 

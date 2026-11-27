@@ -12,7 +12,6 @@ import toast from "react-hot-toast";
 import { getPublicCollection } from "@/src/services/collection.services";
 import { addToCart } from "@/src/services/cart.services";
 import { useAuth } from "@/src/hooks/use-auth";
-import BrandScope from "@/src/components/ui/brand-scope";
 import Skeleton from "@/src/components/ui/skeleton";
 import ProductDetailsBlock from "@/src/components/marketplace/product-details-block";
 import OptionPicker from "@/src/app/(shop)/marketplace/product/[id]/components/buy-box-components/option-picker";
@@ -136,7 +135,7 @@ export default function CollectionPage({ store, slug, initial }: Props) {
   };
 
   return (
-    <BrandScope color={data.store.brandColor}>
+    <>
       <div className="mx-auto max-w-3xl space-y-5 px-1 pb-40 pt-4 sm:pt-6">
         {/* Who's selling, and what this is */}
         <section className="overflow-hidden rounded-3xl border border-line bg-surface">
@@ -216,7 +215,7 @@ export default function CollectionPage({ store, slug, initial }: Props) {
           </div>
         </div>
       )}
-    </BrandScope>
+    </>
   );
 }
 

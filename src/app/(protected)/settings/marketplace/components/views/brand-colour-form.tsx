@@ -17,7 +17,8 @@ const normalise = (value: string) => {
   return /^[0-9a-f]{6}$/.test(full) ? `#${full}` : null;
 };
 
-// The seller's brand colour on their store page, products and pay links.
+// The seller's brand colour, on their store page only. Product, pay link,
+// collection and checkout pages keep Nestly's colours.
 // Any colour can be picked: it's shaded where needed so text and buttons
 // stay readable in light and dark mode, and the preview shows exactly that.
 export default function BrandColourForm({ store }: { store: Store }) {
@@ -47,7 +48,7 @@ export default function BrandColourForm({ store }: { store: Store }) {
         <Link href={`/marketplace/seller/${store.slug}`} className="font-semibold text-violet-700 hover:underline dark:text-violet-300">
           store page
         </Link>
-        , your products and your pay links. Pick any colour - we shade it where needed so everything stays easy to read, in light and dark
+        . Your products, pay links and checkout keep Nestly&apos;s colours. Pick any colour - we shade it where needed so everything stays easy to read, in light and dark
         mode.
       </p>
 

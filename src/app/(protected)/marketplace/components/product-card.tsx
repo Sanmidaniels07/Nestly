@@ -39,7 +39,7 @@ export default function ProductCard({ product, compact = false, badge, deliveryN
   return (
     <article
       className="
-        overflow-hidden rounded-2xl border border-line bg-surface
+        flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface
         transition-all hover:-translate-y-1 hover:border-violet-200 dark:hover:border-violet-500/30 hover:shadow-xl
       "
     >
@@ -87,9 +87,11 @@ export default function ProductCard({ product, compact = false, badge, deliveryN
       </div>
 
       {/* Content */}
-      <div className={compact ? "space-y-2.5 p-4" : "space-y-3.5 p-5"}>
+      {/* flex-1 + the button's mt-auto: every card's button lines up at the
+          bottom, however long the title or whether there's a delivery note. */}
+      <div className={`flex flex-1 flex-col ${compact ? "space-y-2.5 p-4" : "space-y-3.5 p-5"}`}>
         {product.store && (
-          <span className="truncate text-[12px] text-muted">
+          <span className="block truncate text-[12px] text-muted">
             {product.store.name}
           </span>
         )}
@@ -103,7 +105,7 @@ export default function ProductCard({ product, compact = false, badge, deliveryN
 
         <h3
           className={`
-            font-[family-name:var(--font-fraunces)] leading-tight text-ink
+            line-clamp-2 min-h-[2.5em] font-[family-name:var(--font-fraunces)] leading-tight text-ink
             ${compact ? "text-[17px]" : "text-[21px]"}
           `}
         >
@@ -150,7 +152,7 @@ export default function ProductCard({ product, compact = false, badge, deliveryN
         <Link
           href={`/marketplace/product/${product.id}`}
           className="
-            block rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600
+            mt-auto block rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600
             py-2.5 text-center text-[13.5px] font-semibold text-white
             transition-all hover:brightness-110
           "

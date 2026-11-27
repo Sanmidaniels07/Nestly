@@ -141,7 +141,7 @@ const parts: GuidePart[] = [
         where: { label: "Seller Hub → Store → Brand colour", href: "/settings/marketplace?tab=store#brand-colour" },
         body: (
           <p>
-            Pick one of the ready colours or your own. Your store page, your products and your pay links use it for buttons, prices and links. The
+            Pick one of the ready colours or your own. Your store page uses it for buttons, prices and links (product pages, pay links and checkout keep Nestly&apos;s colours). The
             preview shows it in light and dark mode - if a colour would be hard to read, we shade it slightly so writing on it stays clear.
           </p>
         ),

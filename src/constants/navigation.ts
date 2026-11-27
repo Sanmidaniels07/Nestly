@@ -27,9 +27,10 @@ export interface NavItem {
 }
 
 export const navigation: NavItem[] = [
-  { title: "Shop", href: "/marketplace", icon: ShoppingBag, mobile: true },
-  // On phones the feed is a tab at the top of Shop.
+  // Feed comes first in the side menu. On phones it's a tab at the top of
+  // Shop instead (no bottom-bar item).
   { title: "Feed", href: "/feed", icon: Newspaper },
+  { title: "Shop", href: "/marketplace", icon: ShoppingBag, mobile: true },
   { title: "Orders", href: "/marketplace/orders", icon: Package, mobile: true },
   { title: "Messages", href: "/messages", icon: MessageCircle, mobile: true },
   // The sellers' workspace (dashboard, products, orders, earnings). Lives
